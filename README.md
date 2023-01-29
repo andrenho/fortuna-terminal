@@ -9,7 +9,7 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
    - Up to 64 simultaneous sprites in 4 different layers
    - A 32 color palette, programmable per layer
    - 41x28 matrix of text
- - Audio - 3 programmable wave audio + 1 PGM audio channel
+ - Audio via HDMI - 3 programmable wave audio + 1 PGM audio channel
  - Keyboard input
  - Mouse input
  - Joystick input
