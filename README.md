@@ -22,9 +22,13 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  The terminal can be connected to a microprocessor or microcontroller through the following means:
  
  - UART - speeds from 300 bps up to 1Mbps
-   - UART-A - an additional wire indicates text mode vs command mode
-   - UART-B - user the same protocol as the other communcation modules
+   - UART-A - simple UART communication - no graphics mode or audio
+   - UART-B - like UART-A, but an additional wire indicates text mode vs command mode
+   - UART-C - user the same protocol as the other communcation modules
  - I²C - with the terminal operating as a slave
  - SPI - with the terminal operating as master, and requesting updates at regular intervals
  - TCP/IP (using ZeroMQ) - also allowing connection via Wi-Fi on the Pi
  - Bluetooth (?)
+ - The following additional wires provide further functionality:
+   - an OUTPUT line indicates when a new frame has finished drawing
+   - on OUTPUT line allows the terminal to reset the computer
