@@ -2,6 +2,7 @@
   - [ ] Create schematic
   - [ ] Build prototype
 - Software
+  - [ ] Create protocol
   - [ ] Setup project
   - [ ] Write SDL basic terminal - install on RPI
   - [ ] Write menu infrastructure
