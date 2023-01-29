@@ -15,7 +15,9 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  - Keyboard input
  - Mouse input
  - Joystick input
- - UART I/O - provide functionality to extend I/O to serial
+ - UART I/O - provide functionality to extend I/O to serial (?)
+ - Graphics via composite (?)
+ - Audio via headphone jack (?)
  
  The terminal can be connected to a microprocessor or microcontroller through the following means:
  
