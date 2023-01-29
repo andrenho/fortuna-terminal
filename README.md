@@ -22,3 +22,5 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  - UART - speeds from 300 bps up to 1Mbps
  - I²C - with the terminal operating as a slave
  - SPI - with the terminal operating as master, and requesting updates at regular intervals
+ - TCP/IP - also allowing connection via Wi-Fi on the Pi
+ - Bluetooth (?)
