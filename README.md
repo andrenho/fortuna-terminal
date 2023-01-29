@@ -1,4 +1,4 @@
-# fortuna-terminal
+# Fortuna Terminal
 
 ![image](https://user-images.githubusercontent.com/84652/215353776-29afeb20-d336-4596-835f-49292c930799.png)
 
