@@ -23,7 +23,11 @@ Options::Options(int argc, char **argv)
         int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
-                { 0, 0, 0, 0 },
+                { "communication-mode", required_argument, nullptr, 'c' },
+                { "terminal-type", required_argument, nullptr, 't' },
+                { "baud", required_argument, nullptr, 'b' },
+                { "port", required_argument, nullptr, 'p' },
+                { nullptr, 0, nullptr, 0 },
         };
 
         c = getopt_long(argc, argv, "c:t:b:h", long_options, &option_index);
