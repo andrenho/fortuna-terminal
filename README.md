@@ -1,5 +1,7 @@
 # fortuna-terminal
 
+![image](https://user-images.githubusercontent.com/84652/215353776-29afeb20-d336-4596-835f-49292c930799.png)
+
 Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna-computers.github.io/). As a terminal, it provides the following functionality:
 
  - A 40 or 80-column terminal
