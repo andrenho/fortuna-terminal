@@ -29,6 +29,7 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  - SPI - with the terminal operating as master, and requesting updates at regular intervals
  - TCP/IP (using ZeroMQ) - also allowing connection via Wi-Fi on the Pi
  - Bluetooth (?)
+ - emcc - for generating WebAssembly code and interacting with a javascript emulator
  - The following additional wires provide further functionality:
    - an OUTPUT line indicates when a new frame has finished drawing
    - on OUTPUT line allows the terminal to reset the computer
