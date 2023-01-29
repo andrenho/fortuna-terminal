@@ -1,0 +1,14 @@
+- Hardware
+  - [ ] Create schematic
+  - [ ] Build prototype
+- Software
+  - [ ] Setup project
+  - [ ] Write SDL basic terminal - install on RPI
+  - [ ] Write menu infrastructure
+  - [ ] Write UART support
+  - [ ] Write I²C support
+  - [ ] Write SPI support
+  - [ ] Write graphics mode
+  - [ ] Write audio support
+  - [ ] Write keyboard / mouse / joystick support
+  - [ ] Write UART bypass
