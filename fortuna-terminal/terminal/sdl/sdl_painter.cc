@@ -77,10 +77,12 @@ void SDL_Painter::draw_text_cell(TextLayer const& text_layer, uint16_t line, uin
     Char chr = text_layer.chr(line, column);
     uint8_t c = chr.chr;
 
+    unsigned int offset_x = (SDL_Terminal::GRAPHICS_W / 2) - (TEXT_CHAR_W * text_layer.columns() / 2);
+    unsigned int offset_y = (SDL_Terminal::GRAPHICS_H / 2) - (TEXT_CHAR_H * text_layer.lines() / 2);
     unsigned int orig_x = (c / 16) * TEXT_CHAR_W;
     unsigned int orig_y = (c % 16) * TEXT_CHAR_H;
-    unsigned int dest_x = (column * TEXT_CHAR_W);
-    unsigned int dest_y = (line * TEXT_CHAR_H);
+    unsigned int dest_x = (column * TEXT_CHAR_W) + offset_x;
+    unsigned int dest_y = (line * TEXT_CHAR_H) + offset_y;
 
     Cursor const& cursor = text_layer.cursor();
 
