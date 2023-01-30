@@ -6,13 +6,12 @@
 
 static void print_help(int exit_status)
 {
-    std::cout << R"(
-    -c, --communication-mode        One of "echo", "uart-a", "uart-b", "uart-c", "i2c", "spi", "tcp-ip", "emcc"
+    std::cout << R"(-c, --communication-mode        One of "echo", "uart-a", "uart-b", "uart-c", "i2c", "spi", "tcp-ip", "emcc"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
     -b, --baud                      Baud speed for UART (default: 57600)
     -p, --port                      TCP/IP port (default: 8027)
     -d, --debug                     Print lots of debugging information
-    )";
+)";
     exit(exit_status);
 }
 
@@ -100,6 +99,10 @@ Options::Options(int argc, char **argv)
                     std::cerr << "Invalid port number.\n";
                     exit(EXIT_FAILURE);
                 }
+                break;
+
+            case 'd':
+                debug_mode = true;
                 break;
 
             case '?':
