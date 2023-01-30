@@ -104,23 +104,6 @@ void SDL_Terminal::initialize()
         print_renderer_details(true);
 }
 
-void SDL_Terminal::update()
-{
-    SDL_Event ev;
-    while (SDL_PollEvent(&ev)) {
-        if ((ev.type == SDL_QUIT) || (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_ESCAPE))
-            running_ = false;
-    }
-
-    // deep background
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer_);
-
-    // TODO
-
-    SDL_RenderPresent(renderer_);
-}
-
 SDL_Terminal::~SDL_Terminal()
 {
     if (renderer_)
@@ -129,6 +112,25 @@ SDL_Terminal::~SDL_Terminal()
         SDL_DestroyWindow(window_);
     if (initialized_)
         SDL_Quit();
+}
+
+void SDL_Terminal::do_events(OutputQueue &output_queue)
+{
+    SDL_Event ev;
+    while (SDL_PollEvent(&ev)) {
+        if ((ev.type == SDL_QUIT) || (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_ESCAPE))
+            running_ = false;
+    }
+}
+
+void SDL_Terminal::draw(const Scene &scene) const
+{
+    // deep background
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer_);
+
+    // TODO
+    SDL_RenderPresent(renderer_);
 }
 
 

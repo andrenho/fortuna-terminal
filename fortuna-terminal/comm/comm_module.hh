@@ -10,16 +10,15 @@ class CommunicationModule
 {
 public:
     virtual void initialize() {}
-    virtual void run() {}
+    virtual void run([[maybe_unused]] Protocol const* protocol) {}
     virtual void finalize() { running_ = false; };
 
-    static std::unique_ptr<CommunicationModule> make_communication_module(Options const& options, Protocol const* protocol);
+    virtual void notify_vsync();
+
+    static std::unique_ptr<CommunicationModule> make_communication_module(Options const& options);
 
 protected:
-    explicit CommunicationModule(Protocol const* protocol) : protocol_(protocol) {}
-
     bool running_ = true;
-    Protocol const* protocol_;
 };
 
 #endif //COMM_MODULE_HH_

@@ -6,12 +6,13 @@
 class SDL_Terminal : public Terminal
 {
 public:
-    explicit SDL_Terminal(Scene const& scene, OutputQueue& output_queue, bool window_mode)
-        : Terminal(scene, output_queue), window_mode_(window_mode) {}
+    explicit SDL_Terminal(bool window_mode)
+        : window_mode_(window_mode) {}
     ~SDL_Terminal() override;
 
     void initialize() override;
-    void update() override;
+    void do_events(OutputQueue &output_queue) override;
+    void draw(const Scene &scene) const override;
 
 private:
     void print_video_details() const;

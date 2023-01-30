@@ -7,22 +7,18 @@
 
 class Terminal
 {
-protected:
-    explicit Terminal(Scene const& scene, OutputQueue& output_queue) : scene_(scene), output_queue_(output_queue) {}
-
 public:
     virtual ~Terminal() = default;
 
     virtual void initialize() {}
-    virtual void update() = 0;
+    virtual void do_events(OutputQueue& output_queue) = 0;
+    virtual void draw(Scene const& scene) const = 0;
 
     bool running() const { return running_; }
 
-    static std::unique_ptr<Terminal> make_terminal(const Options &options, Scene const& scene, OutputQueue& output_queue);
+    static std::unique_ptr<Terminal> make_terminal(const Options &options);
 
 protected:
-    Scene const& scene_;
-    OutputQueue& output_queue_;
     bool         running_ = true;
 };
 
