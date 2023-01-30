@@ -2,11 +2,15 @@
 #define OPTIONS_HH_
 
 enum class CommunicationMode {
-    NotChosen, Echo, UART_A, UART_B, UART_C, I2C, SPI, TcpIp, Emcc
+    NotChosen, Echo, UART, I2C, SPI, TcpIp, Emcc
 };
 
 enum class TerminalType {
     SDL, Text,
+};
+
+enum class Protocol {
+    Fortuna, Ansi, Fortuna_Ansi,
 };
 
 class Options {
@@ -15,9 +19,11 @@ public:
 
     CommunicationMode communication_mode = CommunicationMode::NotChosen;
     TerminalType      terminal_type = TerminalType::SDL;
+    Protocol          protocol = Protocol::Fortuna;
     unsigned int      baud = 56700;
     unsigned int      port = 8027;
     bool              debug_mode = false;
+    bool              window_mode = false;
 
 private:
     void validate_options() const;

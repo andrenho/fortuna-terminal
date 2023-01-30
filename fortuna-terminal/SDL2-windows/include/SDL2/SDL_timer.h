@@ -49,7 +49,7 @@ extern "C" {
  * deprecated.
  *
  * \returns an unsigned 32-bit value representing the number of milliseconds
- *          since the SDL library initialized.
+ *          since the SDL library initialized_.
  *
  * \since This function is available since SDL 2.0.0.
  *
@@ -75,7 +75,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
  * ```
  *
  * \returns an unsigned 64-bit value representing the number of milliseconds
- *          since the SDL library initialized.
+ *          since the SDL library initialized_.
  *
  * \since This function is available since SDL 2.0.18.
  */

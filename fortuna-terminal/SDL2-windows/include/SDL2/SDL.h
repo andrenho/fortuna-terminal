@@ -102,7 +102,7 @@ extern "C" {
  * SDL_InitSubSystem() might be preferred.
  *
  * The file I/O (for example: SDL_RWFromFile) and threading (SDL_CreateThread)
- * subsystems are initialized by default. Message boxes
+ * subsystems are initialized_ by default. Message boxes
  * (SDL_ShowSimpleMessageBox) also attempt to work without initializing the
  * video subsystem, in hopes of being useful in showing an error dialog when
  * SDL_Init fails. You must specifically initialize other subsystems if you
@@ -183,10 +183,10 @@ extern DECLSPEC int SDLCALL SDL_InitSubSystem(Uint32 flags);
 extern DECLSPEC void SDLCALL SDL_QuitSubSystem(Uint32 flags);
 
 /**
- * Get a mask of the specified subsystems which are currently initialized.
+ * Get a mask of the specified subsystems which are currently initialized_.
  *
  * \param flags any of the flags used by SDL_Init(); see SDL_Init for details.
- * \returns a mask of all initialized subsystems if `flags` is 0, otherwise it
+ * \returns a mask of all initialized_ subsystems if `flags` is 0, otherwise it
  *          returns the initialization status of the specified subsystems.
  *
  *          The return value does not include SDL_INIT_NOPARACHUTE.
@@ -199,10 +199,10 @@ extern DECLSPEC void SDLCALL SDL_QuitSubSystem(Uint32 flags);
 extern DECLSPEC Uint32 SDLCALL SDL_WasInit(Uint32 flags);
 
 /**
- * Clean up all initialized subsystems.
+ * Clean up all initialized_ subsystems.
  *
  * You should call this function even if you have already shutdown each
- * initialized subsystem with SDL_QuitSubSystem(). It is safe to call this
+ * initialized_ subsystem with SDL_QuitSubSystem(). It is safe to call this
  * function even in the case of errors in initialization.
  *
  * If you start a subsystem using a call to that subsystem's init function

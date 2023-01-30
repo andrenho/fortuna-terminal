@@ -301,7 +301,7 @@ extern DECLSPEC void SDLCALL SDL_SensorClose(SDL_Sensor *sensor);
  * This is called automatically by the event loop if sensor events are
  * enabled.
  *
- * This needs to be called from the thread that initialized the sensor
+ * This needs to be called from the thread that initialized_ the sensor
  * subsystem.
  *
  * \since This function is available since SDL 2.0.9.

@@ -44,7 +44,7 @@ extern "C" {
 /**
  *  \brief Draw a string in the currently set font.
  *
- *  \param renderer The renderer to draw on.
+ *  \param renderer The renderer_ to draw on.
  *  \param x The X coordinate of the upper left corner of the character.
  *  \param y The Y coordinate of the upper left corner of the character.
  *  \param c The character to draw.
@@ -58,7 +58,7 @@ int SDLTest_DrawCharacter(SDL_Renderer *renderer, int x, int y, Uint32 c);
  *
  *  The font currently only supports characters in the Basic Latin and Latin-1 Supplement sets.
  *
- *  \param renderer The renderer to draw on.
+ *  \param renderer The renderer_ to draw on.
  *  \param x The X coordinate of the upper left corner of the string.
  *  \param y The Y coordinate of the upper left corner of the string.
  *  \param s The string to draw.
@@ -79,39 +79,39 @@ typedef struct SDLTest_TextWindow
 } SDLTest_TextWindow;
 
 /**
- *  \brief Create a multi-line text output window
+ *  \brief Create a multi-line text output window_
  *
- *  \param x The X coordinate of the upper left corner of the window.
- *  \param y The Y coordinate of the upper left corner of the window.
- *  \param w The width of the window (currently ignored)
- *  \param h The height of the window (currently ignored)
+ *  \param x The X coordinate of the upper left corner of the window_.
+ *  \param y The Y coordinate of the upper left corner of the window_.
+ *  \param w The width of the window_ (currently ignored)
+ *  \param h The height of the window_ (currently ignored)
  *
- *  \returns the new window, or NULL on failure.
+ *  \returns the new window_, or NULL on failure.
  *
  *  \since This function is available since SDL 2.24.0
  */
 SDLTest_TextWindow *SDLTest_TextWindowCreate(int x, int y, int w, int h);
 
 /**
- *  \brief Display a multi-line text output window
+ *  \brief Display a multi-line text output window_
  *
  *  This function should be called every frame to display the text
  *
- *  \param textwin The text output window
- *  \param renderer The renderer to use for display
+ *  \param textwin The text output window_
+ *  \param renderer The renderer_ to use for display
  *
  *  \since This function is available since SDL 2.24.0
  */
 void SDLTest_TextWindowDisplay(SDLTest_TextWindow *textwin, SDL_Renderer *renderer);
 
 /**
- *  \brief Add text to a multi-line text output window
+ *  \brief Add text to a multi-line text output window_
  *
  *  Adds UTF-8 text to the end of the current text. The newline character starts a
  *  new line of text. The backspace character deletes the last character or, if the
  *  line is empty, deletes the line and goes to the end of the previous line.
  *
- *  \param textwin The text output window
+ *  \param textwin The text output window_
  *  \param fmt A printf() style format string
  *  \param ...  additional parameters matching % tokens in the `fmt` string, if any
  *
@@ -120,33 +120,33 @@ void SDLTest_TextWindowDisplay(SDLTest_TextWindow *textwin, SDL_Renderer *render
 void SDLTest_TextWindowAddText(SDLTest_TextWindow *textwin, SDL_PRINTF_FORMAT_STRING const char *fmt, ...) SDL_PRINTF_VARARG_FUNC(2);
 
 /**
- *  \brief Add text to a multi-line text output window
+ *  \brief Add text to a multi-line text output window_
  *
  *  Adds UTF-8 text to the end of the current text. The newline character starts a
  *  new line of text. The backspace character deletes the last character or, if the
  *  line is empty, deletes the line and goes to the end of the previous line.
  *
- *  \param textwin The text output window
- *  \param text The text to add to the window
- *  \param len The length, in bytes, of the text to add to the window
+ *  \param textwin The text output window_
+ *  \param text The text to add to the window_
+ *  \param len The length, in bytes, of the text to add to the window_
  *
  *  \since This function is available since SDL 2.24.0
  */
 void SDLTest_TextWindowAddTextWithLength(SDLTest_TextWindow *textwin, const char *text, size_t len);
 
 /**
- *  \brief Clear the text in a multi-line text output window
+ *  \brief Clear the text in a multi-line text output window_
  *
- *  \param textwin The text output window
+ *  \param textwin The text output window_
  *
  *  \since This function is available since SDL 2.24.0
  */
 void SDLTest_TextWindowClear(SDLTest_TextWindow *textwin);
 
 /**
- *  \brief Free the storage associated with a multi-line text output window
+ *  \brief Free the storage associated with a multi-line text output window_
  *
- *  \param textwin The text output window
+ *  \param textwin The text output window_
  *
  *  \since This function is available since SDL 2.24.0
  */

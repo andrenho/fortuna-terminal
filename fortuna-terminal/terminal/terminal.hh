@@ -11,6 +11,8 @@ protected:
     explicit Terminal(CommunicationModule& comm) : comm_(comm) {}
 
 public:
+    virtual ~Terminal() = default;
+
     virtual void initialize() {}
     virtual void update() = 0;
 

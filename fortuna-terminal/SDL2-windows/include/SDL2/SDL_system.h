@@ -77,14 +77,14 @@ extern DECLSPEC int SDLCALL SDL_Direct3D9GetAdapterIndex( int displayIndex );
 typedef struct IDirect3DDevice9 IDirect3DDevice9;
 
 /**
- * Get the D3D9 device associated with a renderer.
+ * Get the D3D9 device associated with a renderer_.
  *
  * Once you are done using the device, you should release it to avoid a
  * resource leak.
  *
- * \param renderer the renderer from which to get the associated D3D device
- * \returns the D3D9 device associated with given renderer or NULL if it is
- *          not a D3D9 renderer; call SDL_GetError() for more information.
+ * \param renderer the renderer_ from which to get the associated D3D device
+ * \returns the D3D9 device associated with given renderer_ or NULL if it is
+ *          not a D3D9 renderer_; call SDL_GetError() for more information.
  *
  * \since This function is available since SDL 2.0.1.
  */
@@ -93,14 +93,14 @@ extern DECLSPEC IDirect3DDevice9* SDLCALL SDL_RenderGetD3D9Device(SDL_Renderer *
 typedef struct ID3D11Device ID3D11Device;
 
 /**
- * Get the D3D11 device associated with a renderer.
+ * Get the D3D11 device associated with a renderer_.
  *
  * Once you are done using the device, you should release it to avoid a
  * resource leak.
  *
- * \param renderer the renderer from which to get the associated D3D11 device
- * \returns the D3D11 device associated with given renderer or NULL if it is
- *          not a D3D11 renderer; call SDL_GetError() for more information.
+ * \param renderer the renderer_ from which to get the associated D3D11 device
+ * \returns the D3D11 device associated with given renderer_ or NULL if it is
+ *          not a D3D11 renderer_; call SDL_GetError() for more information.
  *
  * \since This function is available since SDL 2.0.16.
  */
@@ -113,14 +113,14 @@ extern DECLSPEC ID3D11Device* SDLCALL SDL_RenderGetD3D11Device(SDL_Renderer * re
 typedef struct ID3D12Device ID3D12Device;
 
 /**
- * Get the D3D12 device associated with a renderer.
+ * Get the D3D12 device associated with a renderer_.
  *
  * Once you are done using the device, you should release it to avoid a
  * resource leak.
  *
- * \param renderer the renderer from which to get the associated D3D12 device
- * \returns the D3D12 device associated with given renderer or NULL if it is
- *          not a D3D12 renderer; call SDL_GetError() for more information.
+ * \param renderer the renderer_ from which to get the associated D3D12 device
+ * \returns the D3D12 device associated with given renderer_ or NULL if it is
+ *          not a D3D12 renderer_; call SDL_GetError() for more information.
  *
  * \since This function is available since SDL 2.24.0.
  */
@@ -188,7 +188,7 @@ extern DECLSPEC int SDLCALL SDL_LinuxSetThreadPriorityAndPolicy(Sint64 threadID,
 /* Platform specific functions for iOS */
 #ifdef __IPHONEOS__
 
-#define SDL_iOSSetAnimationCallback(window, interval, callback, callbackParam) SDL_iPhoneSetAnimationCallback(window, interval, callback, callbackParam)
+#define SDL_iOSSetAnimationCallback(window_, interval, callback, callbackParam) SDL_iPhoneSetAnimationCallback(window_, interval, callback, callbackParam)
 
 /**
  * Use this function to set the animation callback on Apple iOS.
@@ -210,7 +210,7 @@ extern DECLSPEC int SDLCALL SDL_LinuxSetThreadPriorityAndPolicy(Sint64 threadID,
  * This functions is also accessible using the macro
  * SDL_iOSSetAnimationCallback() since SDL 2.0.4.
  *
- * \param window the window for which the animation callback should be set
+ * \param window_ the window_ for which the animation callback should be set
  * \param interval the number of frames after which **callback** will be
  *                 called
  * \param callback the function to call for every frame.
@@ -222,7 +222,7 @@ extern DECLSPEC int SDLCALL SDL_LinuxSetThreadPriorityAndPolicy(Sint64 threadID,
  *
  * \sa SDL_iPhoneSetEventPump
  */
-extern DECLSPEC int SDLCALL SDL_iPhoneSetAnimationCallback(SDL_Window * window, int interval, void (SDLCALL *callback)(void*), void *callbackParam);
+extern DECLSPEC int SDLCALL SDL_iPhoneSetAnimationCallback(SDL_Window * window_, int interval, void (SDLCALL *callback)(void*), void *callbackParam);
 
 #define SDL_iOSSetEventPump(enabled) SDL_iPhoneSetEventPump(enabled)
 

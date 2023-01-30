@@ -250,7 +250,7 @@ typedef struct SDL_AudioCVT
  *  \name Driver discovery functions
  *
  *  These functions return the list of built in audio drivers, in the
- *  order that they are normally initialized by default.
+ *  order that they are normally initialized_ by default.
  */
 /* @{ */
 
@@ -279,7 +279,7 @@ extern DECLSPEC int SDLCALL SDL_GetNumAudioDrivers(void);
  * Use this function to get the name of a built in audio driver.
  *
  * The list of audio drivers is given in the order that they are normally
- * initialized by default; the drivers that seem more reasonable to choose
+ * initialized_ by default; the drivers that seem more reasonable to choose
  * first (as far as the SDL developers believe) are earlier in the list.
  *
  * The names of drivers are all simple, low-ASCII identifiers, like "alsa",
@@ -325,7 +325,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetAudioDriver(int index);
 extern DECLSPEC int SDLCALL SDL_AudioInit(const char *driver_name);
 
 /**
- * Use this function to shut down audio if you initialized it with
+ * Use this function to shut down audio if you initialized_ it with
  * SDL_AudioInit().
  *
  * This function is used internally, and should not be used unless you have a
@@ -349,7 +349,7 @@ extern DECLSPEC void SDLCALL SDL_AudioQuit(void);
  * the returned string.
  *
  * \returns the name of the current audio driver or NULL if no driver has been
- *          initialized.
+ *          initialized_.
  *
  * \since This function is available since SDL 2.0.0.
  *
@@ -507,7 +507,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetAudioDeviceName(int index,
  *              SDL_GetNumAudioDevices() - 1
  * \param iscapture non-zero to query the list of recording devices, zero to
  *                  query the list of output devices.
- * \param spec The SDL_AudioSpec to be initialized by this function.
+ * \param spec The SDL_AudioSpec to be initialized_ by this function.
  * \returns 0 on success, nonzero on error
  *
  * \since This function is available since SDL 2.0.16.
@@ -539,7 +539,7 @@ extern DECLSPEC int SDLCALL SDL_GetAudioDeviceSpec(int index,
  * \param name A pointer to be filled with the name of the default device (can
  *             be NULL). Please call SDL_free() when you are done with this
  *             pointer!
- * \param spec The SDL_AudioSpec to be initialized by this function.
+ * \param spec The SDL_AudioSpec to be initialized_ by this function.
  * \param iscapture non-zero to query the default recording device, zero to
  *                  query the default output device.
  * \returns 0 on success, nonzero on error
@@ -901,7 +901,7 @@ extern DECLSPEC void SDLCALL SDL_FreeWAV(Uint8 * audio_buf);
  * Initialize an SDL_AudioCVT structure for conversion.
  *
  * Before an SDL_AudioCVT structure can be used to convert audio data it must
- * be initialized with source and destination information.
+ * be initialized_ with source and destination information.
  *
  * This function will zero out every field of the SDL_AudioCVT, so it must be
  * called before the application fills in the final buffer information.
@@ -944,7 +944,7 @@ extern DECLSPEC int SDLCALL SDL_BuildAudioCVT(SDL_AudioCVT * cvt,
  * has called SDL_BuildAudioCVT() to prepare the conversion information and
  * then filled in the buffer details.
  *
- * Once the application has initialized the `cvt` structure using
+ * Once the application has initialized_ the `cvt` structure using
  * SDL_BuildAudioCVT(), allocated an audio buffer and filled it with audio
  * data in the source format, this function will convert the buffer, in-place,
  * to the desired format.

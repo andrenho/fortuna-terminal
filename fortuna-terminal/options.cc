@@ -6,10 +6,12 @@
 
 static void print_help(int exit_status)
 {
-    std::cout << R"(-c, --communication-mode        One of "echo", "uart-a", "uart-b", "uart-c", "i2c", "spi", "tcp-ip", "emcc"
+    std::cout << R"(-c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcp-ip"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
+    -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
     -b, --baud                      Baud speed for UART (default: 57600)
     -p, --port                      TCP/IP port (default: 8027)
+    -w, --window_                    Window mode (as opposed to the default, which is full screen)
     -d, --debug                     Print lots of debugging information
 )";
     exit(exit_status);
@@ -24,13 +26,15 @@ Options::Options(int argc, char **argv)
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "terminal-type", required_argument, nullptr, 't' },
+                { "protocol", required_argument, nullptr, 'r' },
                 { "baud", required_argument, nullptr, 'b' },
                 { "port", required_argument, nullptr, 'p' },
+                { "window", no_argument, nullptr, 'w' },
                 { "debug", no_argument, nullptr, 'd' },
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:t:b:hd", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:t:b:hdw", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -50,20 +54,14 @@ Options::Options(int argc, char **argv)
                 std::string comm(optarg);
                 if (comm == "echo")
                     communication_mode = CommunicationMode::Echo;
-                else if (comm == "uart-a")
-                    communication_mode = CommunicationMode::UART_A;
-                else if (comm == "uart-b")
-                    communication_mode = CommunicationMode::UART_B;
-                else if (comm == "uart-c")
-                    communication_mode = CommunicationMode::UART_C;
+                else if (comm == "uart")
+                    communication_mode = CommunicationMode::UART;
                 else if (comm == "i2c")
                     communication_mode = CommunicationMode::I2C;
                 else if (comm == "spi")
                     communication_mode = CommunicationMode::SPI;
                 else if (comm == "tcp-ip")
                     communication_mode = CommunicationMode::TcpIp;
-                else if (comm == "emcc")
-                    communication_mode = CommunicationMode::Emcc;
                 else {
                     std::cerr << "Unsupported communication mode.\n";
                     exit(EXIT_FAILURE);
@@ -79,6 +77,21 @@ Options::Options(int argc, char **argv)
                     terminal_type = TerminalType::Text;
                 else {
                     std::cerr << "Unsupported terminal type.\n";
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            }
+
+            case 'r': {
+                std::string pp(optarg);
+                if (pp == "fortuna")
+                    protocol = Protocol::Fortuna;
+                else if (pp == "ansi")
+                    protocol = Protocol::Ansi;
+                else if (pp == "fortuna+ansi")
+                    protocol = Protocol::Fortuna_Ansi;
+                else {
+                    std::cerr << "Unsupported protocol.\n";
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -106,7 +119,12 @@ Options::Options(int argc, char **argv)
                 debug_mode = true;
                 break;
 
+            case 'w':
+                window_mode = true;
+                break;
+
             case '?':
+                std::cerr << "Invalid switch.\n";
                 exit(EXIT_FAILURE);
         }
 

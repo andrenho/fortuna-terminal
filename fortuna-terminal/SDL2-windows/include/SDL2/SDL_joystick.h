@@ -304,7 +304,7 @@ extern DECLSPEC SDL_JoystickID SDLCALL SDL_JoystickGetDeviceInstanceID(int devic
  * used to identify the joystick in future events. See
  * SDL_JoystickInstanceID() for more details about instance IDs.
  *
- * The joystick subsystem must be initialized before a joystick can be opened
+ * The joystick subsystem must be initialized_ before a joystick can be opened
  * for use.
  *
  * \param device_index the index of the joystick to query

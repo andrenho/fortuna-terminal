@@ -55,9 +55,9 @@ typedef struct SDL_Keysym
 /* Function prototypes */
 
 /**
- * Query the window which currently has keyboard focus.
+ * Query the window_ which currently has keyboard focus.
  *
- * \returns the window with keyboard focus.
+ * \returns the window_ with keyboard focus.
  *
  * \since This function is available since SDL 2.0.0.
  */
@@ -247,7 +247,7 @@ extern DECLSPEC SDL_Keycode SDLCALL SDL_GetKeyFromName(const char *name);
  * Start accepting Unicode text input events.
  *
  * This function will start accepting Unicode text input events in the focused
- * SDL window, and start emitting SDL_TextInputEvent (SDL_TEXTINPUT) and
+ * SDL window_, and start emitting SDL_TextInputEvent (SDL_TEXTINPUT) and
  * SDL_TextEditingEvent (SDL_TEXTEDITING) events. Please use this function in
  * pair with SDL_StopTextInput().
  *
@@ -281,7 +281,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_IsTextInputActive(void);
 extern DECLSPEC void SDLCALL SDL_StopTextInput(void);
 
 /**
- * Dismiss the composition window/IME without disabling the subsystem.
+ * Dismiss the composition window_/IME without disabling the subsystem.
  *
  * \since This function is available since SDL 2.0.22.
  *
@@ -291,7 +291,7 @@ extern DECLSPEC void SDLCALL SDL_StopTextInput(void);
 extern DECLSPEC void SDLCALL SDL_ClearComposition(void);
 
 /**
- * Returns if an IME Composite or Candidate window is currently shown.
+ * Returns if an IME Composite or Candidate window_ is currently shown.
  *
  * \since This function is available since SDL 2.0.22.
  */
@@ -304,7 +304,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_IsTextInputShown(void);
  * called before SDL_StartTextInput, although some platforms support moving
  * the rectangle even while text input (and a composition) is active.
  *
- * Note: If you want to use the system native IME window, try setting hint
+ * Note: If you want to use the system native IME window_, try setting hint
  * **SDL_HINT_IME_SHOW_UI** to **1**, otherwise this function won't give you
  * any feedback.
  *
@@ -331,9 +331,9 @@ extern DECLSPEC void SDLCALL SDL_SetTextInputRect(const SDL_Rect *rect);
 extern DECLSPEC SDL_bool SDLCALL SDL_HasScreenKeyboardSupport(void);
 
 /**
- * Check whether the screen keyboard is shown for given window.
+ * Check whether the screen keyboard is shown for given window_.
  *
- * \param window the window for which screen keyboard should be queried
+ * \param window the window_ for which screen keyboard should be queried
  * \returns SDL_TRUE if screen keyboard is shown or SDL_FALSE if not.
  *
  * \since This function is available since SDL 2.0.0.

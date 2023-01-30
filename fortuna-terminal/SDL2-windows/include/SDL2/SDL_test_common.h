@@ -142,7 +142,7 @@ SDLTest_CommonState *SDLTest_CommonCreateState(char **argv, Uint32 flags);
 /**
  * \brief Process one common argument.
  *
- * \param state The common state describing the test window to create.
+ * \param state The common state describing the test window_ to create.
  * \param index The index of the argument to process in argv[].
  *
  * \returns the number of arguments processed (i.e. 1 for --fullscreen, 2 for --video [videodriver], or -1 on error.
@@ -158,7 +158,7 @@ int SDLTest_CommonArg(SDLTest_CommonState * state, int index);
  *  This uses the SDL_Log() function and splits up output to be friendly to
  *  80-character-wide terminals.
  *
- * \param state The common state describing the test window for the app.
+ * \param state The common state describing the test window_ for the app.
  * \param argv0 argv[0], as passed to main/SDL_main.
  * \param options an array of strings for application specific options. The last element of the array should be NULL.
  */
@@ -172,15 +172,15 @@ void SDLTest_CommonLogUsage(SDLTest_CommonState * state, const char *argv0, cons
  *  function are valid until SDLTest_CommonQuit() is called, in which case
  *  those strings' memory is freed and can no longer be used.
  *
- * \param state The common state describing the test window to create.
+ * \param state The common state describing the test window_ to create.
  * \returns a string with usage information
  */
 const char *SDLTest_CommonUsage(SDLTest_CommonState * state);
 
 /**
- * \brief Open test window.
+ * \brief Open test window_.
  *
- * \param state The common state describing the test window to create.
+ * \param state The common state describing the test window_ to create.
  *
  * \returns SDL_TRUE if initialization succeeded, false otherwise
  */
@@ -189,7 +189,7 @@ SDL_bool SDLTest_CommonInit(SDLTest_CommonState * state);
 /**
  * \brief Easy argument handling when test app doesn't need any custom args.
  *
- * \param state The common state describing the test window to create.
+ * \param state The common state describing the test window_ to create.
  * \param argc argc, as supplied to SDL_main
  * \param argv argv, as supplied to SDL_main
  *
@@ -200,7 +200,7 @@ SDL_bool SDLTest_CommonDefaultArgs(SDLTest_CommonState * state, const int argc, 
 /**
  * \brief Common event handler for test windows.
  *
- * \param state The common state used to create test window.
+ * \param state The common state used to create test window_.
  * \param event The event to handle.
  * \param done Flag indicating we are done.
  *
@@ -208,18 +208,18 @@ SDL_bool SDLTest_CommonDefaultArgs(SDLTest_CommonState * state, const int argc, 
 void SDLTest_CommonEvent(SDLTest_CommonState * state, SDL_Event * event, int *done);
 
 /**
- * \brief Close test window.
+ * \brief Close test window_.
  *
- * \param state The common state used to create test window.
+ * \param state The common state used to create test window_.
  *
  */
 void SDLTest_CommonQuit(SDLTest_CommonState * state);
 
 /**
- * \brief Draws various window information (position, size, etc.) to the renderer.
+ * \brief Draws various window_ information (position, size, etc.) to the renderer_.
  *
- * \param renderer The renderer to draw to.
- * \param window The window whose information should be displayed.
+ * \param renderer The renderer_ to draw to.
+ * \param window The window_ whose information should be displayed.
  * \param usedHeight Returns the height used, so the caller can draw more below.
  *
  */

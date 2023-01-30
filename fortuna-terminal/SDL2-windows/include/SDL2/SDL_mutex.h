@@ -68,7 +68,7 @@ typedef struct SDL_mutex SDL_mutex;
  *
  * SDL mutexes are reentrant.
  *
- * \returns the initialized and unlocked mutex or NULL on failure; call
+ * \returns the initialized_ and unlocked mutex or NULL on failure; call
  *          SDL_GetError() for more information.
  *
  * \since This function is available since SDL 2.0.0.

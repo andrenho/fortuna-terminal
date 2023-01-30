@@ -437,7 +437,7 @@ extern DECLSPEC void SDLCALL SDL_FreeFormat(SDL_PixelFormat *format);
 /**
  * Create a palette structure with the specified number of color entries.
  *
- * The palette entries are initialized to white.
+ * The palette entries are initialized_ to white.
  *
  * \param ncolors represents the number of color entries in the color palette
  * \returns a new SDL_Palette structure on success or NULL on failure (e.g. if

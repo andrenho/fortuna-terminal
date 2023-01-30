@@ -70,7 +70,7 @@ typedef VkSurfaceKHR SDL_vulkanSurface; /* for compatibility with Tizen */
  *
  * This should be called after initializing the video driver, but before
  * creating any Vulkan windows. If no Vulkan loader library is loaded, the
- * default library will be loaded upon creation of the first Vulkan window.
+ * default library will be loaded upon creation of the first Vulkan window_.
  *
  * It is fairly common for Vulkan applications to link with libvulkan instead
  * of explicitly loading it at run time. This will work with SDL provided the
@@ -142,10 +142,10 @@ extern DECLSPEC void SDLCALL SDL_Vulkan_UnloadLibrary(void);
  * required extensions, SDL_FALSE will be returned instead of SDL_TRUE, to
  * indicate that not all the required extensions were returned.
  *
- * The `window` parameter is currently needed to be valid as of SDL 2.0.8,
+ * The `window_` parameter is currently needed to be valid as of SDL 2.0.8,
  * however, this parameter will likely be removed in future releases
  *
- * \param window A window for which the required Vulkan instance extensions
+ * \param window A window_ for which the required Vulkan instance extensions
  *               should be retrieved (will be deprecated in a future release)
  * \param pCount A pointer to an unsigned int corresponding to the number of
  *               extensions to be returned
@@ -162,13 +162,13 @@ extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_GetInstanceExtensions(SDL_Window *wi
                                                                   const char **pNames);
 
 /**
- * Create a Vulkan rendering surface for a window.
+ * Create a Vulkan rendering surface for a window_.
  *
- * The `window` must have been created with the `SDL_WINDOW_VULKAN` flag and
+ * The `window_` must have been created with the `SDL_WINDOW_VULKAN` flag and
  * `instance` must have been created with extensions returned by
  * SDL_Vulkan_GetInstanceExtensions() enabled.
  *
- * \param window The window to which to attach the Vulkan surface
+ * \param window The window_ to which to attach the Vulkan surface
  * \param instance The Vulkan instance handle
  * \param surface A pointer to a VkSurfaceKHR handle to output the newly
  *                created surface
@@ -184,10 +184,10 @@ extern DECLSPEC SDL_bool SDLCALL SDL_Vulkan_CreateSurface(SDL_Window *window,
                                                           VkSurfaceKHR* surface);
 
 /**
- * Get the size of the window's underlying drawable dimensions in pixels.
+ * Get the size of the window_'s underlying drawable dimensions in pixels.
  *
  * This may differ from SDL_GetWindowSize() if we're rendering to a high-DPI
- * drawable, i.e. the window was created with `SDL_WINDOW_ALLOW_HIGHDPI` on a
+ * drawable, i.e. the window_ was created with `SDL_WINDOW_ALLOW_HIGHDPI` on a
  * platform with high-DPI support (Apple calls this "Retina"), and not
  * disabled by the `SDL_HINT_VIDEO_HIGHDPI_DISABLED` hint.
  *

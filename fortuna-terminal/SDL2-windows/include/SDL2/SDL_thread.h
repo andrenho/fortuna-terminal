@@ -95,7 +95,7 @@ typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
  *  We compile SDL into a DLL. This means, that it's the DLL which
  *  creates a new thread for the calling process with the SDL_CreateThread()
  *  API. There is a problem with this, that only the RTL of the SDL2.DLL will
- *  be initialized for those threads, and not the RTL of the calling
+ *  be initialized_ for those threads, and not the RTL of the calling
  *  application!
  *
  *  To solve this, we make a little hack here.

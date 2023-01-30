@@ -44,7 +44,7 @@ void SDL_Terminal::print_renderer_details(bool selected) const
         }
     } else {
         SDL_RendererInfo info;
-        SDL_GetRendererInfo( renderer, &info );
+        SDL_GetRendererInfo(renderer_, &info );
         std::cout << "SDL_RENDER_DRIVER selected: " << info.name;
     }
     std::cout << "\n";
@@ -61,22 +61,31 @@ void SDL_Terminal::initialize()
         std::cerr << "SDL_Init(): " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
     }
-    initialized = true;
+    initialized_ = true;
 
     if (debug_mode)
         std::cout << "SDL_VIDEODRIVER selected: " << SDL_GetCurrentVideoDriver() << "\n";
 
-    SDL_DisplayMode mode;
-    SDL_GetDesktopDisplayMode(0, &mode);
-    std::cout <<"Desktop size is " << mode.w << " x " << mode.h << "\n";
+    int win_w, win_h;
+    if (window_mode_) {
+        win_w = GRAPHICS_W * WINDOWED_ZOOM;
+        win_h = GRAPHICS_H * WINDOWED_ZOOM;
+    } else {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(0, &mode);
+        std::cout <<"Desktop size is " << mode.w << " x " << mode.h << "\n";
 
-    window = SDL_CreateWindow(
+        win_w = mode.w;
+        win_h = mode.h;
+    }
+
+    window_ = SDL_CreateWindow(
             "Fortuna-3 emulator",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            mode.w, mode.h,
+            win_w, win_h,
             SDL_WINDOW_OPENGL
     );
-    if (!window) {
+    if (!window_) {
         std::cerr << "SDL_CreateWindow(): " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
     }
@@ -85,8 +94,8 @@ void SDL_Terminal::initialize()
     if (debug_mode)
         print_renderer_details(false);
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer_) {
         std::cerr << "SDL_CreateRenderer(): " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
     }
@@ -104,21 +113,21 @@ void SDL_Terminal::update()
     }
 
     // deep background
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer_);
 
     // TODO
 
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer_);
 }
 
 SDL_Terminal::~SDL_Terminal()
 {
-    if (renderer)
-        SDL_DestroyRenderer(renderer);
-    if (window)
-        SDL_DestroyWindow(window);
-    if (initialized)
+    if (renderer_)
+        SDL_DestroyRenderer(renderer_);
+    if (window_)
+        SDL_DestroyWindow(window_);
+    if (initialized_)
         SDL_Quit();
 }
 
