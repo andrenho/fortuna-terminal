@@ -7,7 +7,6 @@
 
 static void print_video_details()
 {
-    /*
     SDL_Init(0);
 
     std::cout << "Testing video drivers...\n";
@@ -31,7 +30,6 @@ static void print_video_details()
         std::cout << SDL_GetVideoDriver(i);
     }
     std::cout << "\n";
-     */
 }
 
 
