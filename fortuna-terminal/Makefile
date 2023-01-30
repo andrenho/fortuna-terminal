@@ -1,7 +1,8 @@
 OBJ=main.o debug.o options.o \
-    protocol/protocol.o protocol/fortunaprotocol.o \
+	scene/textlayer.o \
+    protocol/protocol.o protocol/fortunaprotocol.o protocol/ansiprotocol.o \
 	comm/comm_module.o comm/echo.o \
-	terminal/terminal.o terminal/sdl/sdl_terminal.o
+	terminal/terminal.o terminal/sdl/sdl_terminal.o terminal/sdl/sdl_painter.o
 EXE=fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -std=c++17 -I.

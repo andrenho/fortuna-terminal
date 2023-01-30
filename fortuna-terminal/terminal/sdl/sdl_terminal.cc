@@ -33,24 +33,6 @@ void SDL_Terminal::print_video_details() const
 }
 
 
-void SDL_Terminal::print_renderer_details(bool selected) const
-{
-    if (!selected) {
-        std::cout << "SDL_RENDER_DRIVER available: ";
-        for (int i = 0; i < SDL_GetNumRenderDrivers(); ++i) {
-            SDL_RendererInfo info;
-            SDL_GetRenderDriverInfo(i, &info);
-            std::cout << info.name << " ";
-        }
-    } else {
-        SDL_RendererInfo info;
-        SDL_GetRendererInfo(renderer_, &info );
-        std::cout << "SDL_RENDER_DRIVER selected: " << info.name;
-    }
-    std::cout << "\n";
-}
-
-
 void SDL_Terminal::initialize()
 {
     if (debug_mode)
@@ -91,24 +73,22 @@ void SDL_Terminal::initialize()
     }
     SDL_ShowCursor(SDL_DISABLE);
 
-    if (debug_mode)
-        print_renderer_details(false);
-
-    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer_) {
-        std::cerr << "SDL_CreateRenderer(): " << SDL_GetError() << "\n";
-        exit(EXIT_FAILURE);
+    if (debug_mode) {
+        std::cout << "SDL_RENDER_DRIVER available: ";
+        for (int i = 0; i < SDL_GetNumRenderDrivers(); ++i) {
+            SDL_RendererInfo info;
+            SDL_GetRenderDriverInfo(i, &info);
+            std::cout << info.name << " ";
+        }
+        std::cout << "\n";
     }
-    SDL_RenderSetLogicalSize(renderer_, GRAPHICS_W, GRAPHICS_H);
 
-    if (debug_mode)
-        print_renderer_details(true);
+    sdl_painter.initialize(window_);
 }
 
 SDL_Terminal::~SDL_Terminal()
 {
-    if (renderer_)
-        SDL_DestroyRenderer(renderer_);
+    sdl_painter.finalize();
     if (window_)
         SDL_DestroyWindow(window_);
     if (initialized_)
@@ -126,22 +106,9 @@ void SDL_Terminal::do_events(OutputQueue &output_queue)
 
 void SDL_Terminal::draw(const Scene &scene) const
 {
-    // deep background
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer_);
+    sdl_painter.draw_deep_background();
+    sdl_painter.draw_background(scene.text_layer);
+    sdl_painter.draw_text(scene.text_layer);
 
-    draw_background(scene.text_layer);
-
-    // TODO
-    SDL_RenderPresent(renderer_);
+    sdl_painter.present();
 }
-
-void SDL_Terminal::draw_background(TextLayer const& text_layer) const
-{
-    Color bg = text_layer.palette_color(text_layer.background_color);
-    SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
-    SDL_Rect r = {0, 0, GRAPHICS_W, GRAPHICS_H };
-    SDL_RenderFillRect(renderer_, &r);
-}
-
-

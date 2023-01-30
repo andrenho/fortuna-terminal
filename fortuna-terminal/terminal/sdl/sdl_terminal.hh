@@ -2,6 +2,7 @@
 #define SDL_TERMINAL_HH_
 
 #include "../terminal.hh"
+#include "terminal/sdl/sdl_painter.hh"
 
 class SDL_Terminal : public Terminal
 {
@@ -14,19 +15,18 @@ public:
     void do_events(OutputQueue &output_queue) override;
     void draw(const Scene &scene) const override;
 
-private:
-    void print_video_details() const;
-    void print_renderer_details(bool selected) const;
-
-    void draw_background(TextLayer const& layer) const;
-
-    bool window_mode_;
-    bool initialized_ = false;
-    struct SDL_Window* window_ = nullptr;
-    struct SDL_Renderer* renderer_ = nullptr;
-
     static const int GRAPHICS_W = 256;
     static const int GRAPHICS_H = 256;
+
+private:
+    void print_video_details() const;
+
+    bool window_mode_;
+
+    SDL_Painter          sdl_painter;
+    bool                 initialized_ = false;
+    struct SDL_Window*   window_ = nullptr;
+
     static const int WINDOWED_ZOOM = 3;
 };
 
