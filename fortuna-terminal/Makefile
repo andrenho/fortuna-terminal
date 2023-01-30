@@ -6,7 +6,7 @@ CPPFLAGS=-Wall -Wextra -std=gnu11 -I.
 ifeq ($(OS),Windows_NT)
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CFLAGS} -ISDL2-windows/include -O0 -ggdb
-	LDFLAGS = -LSDL2-windows/lib -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2
+	LDFLAGS = -LSDL2-windows/lib -lSDL2main -lSDL2
 else
 	CPPFLAGS := ${CFLAGS} `sdl2-config --cflags` -O3
 	LDFLAGS := ${CFLAGS} `sdl2-config --libs`
