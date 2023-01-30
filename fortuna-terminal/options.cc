@@ -110,7 +110,7 @@ Options::Options(int argc, char **argv)
                 exit(EXIT_FAILURE);
         }
 
-        if (optind < argc)
+        if (optind > argc)
             print_help(EXIT_FAILURE);
     }
 
