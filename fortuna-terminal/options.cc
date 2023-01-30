@@ -26,6 +26,7 @@ Options::Options(int argc, char **argv)
                 { "terminal-type", required_argument, nullptr, 't' },
                 { "baud", required_argument, nullptr, 'b' },
                 { "port", required_argument, nullptr, 'p' },
+                { "debug", no_argument, nullptr, 'd' },
                 { nullptr, 0, nullptr, 0 },
         };
 
