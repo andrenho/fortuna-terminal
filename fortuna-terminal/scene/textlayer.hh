@@ -3,8 +3,9 @@
 
 #include <cstdint>
 #include "palette.hh"
+#include "layer.hh"
 
-class TextLayer {
+class TextLayer : public Layer {
 public:
     uint8_t background_color = Color::BLACK;
 };

@@ -18,6 +18,8 @@ private:
     void print_video_details() const;
     void print_renderer_details(bool selected) const;
 
+    void draw_background(TextLayer const& layer) const;
+
     bool window_mode_;
     bool initialized_ = false;
     struct SDL_Window* window_ = nullptr;

@@ -5,7 +5,7 @@
 
 class Layer {
 public:
-    Color palette_color(uint8_t idx) { return palette_.color[idx % Palette::SIZE]; }
+    Color palette_color(uint8_t idx) const { return palette_.color[idx % Palette::SIZE]; }
 
 protected:
     Palette palette_;

@@ -99,6 +99,7 @@ void SDL_Terminal::initialize()
         std::cerr << "SDL_CreateRenderer(): " << SDL_GetError() << "\n";
         exit(EXIT_FAILURE);
     }
+    SDL_RenderSetLogicalSize(renderer_, GRAPHICS_W, GRAPHICS_H);
 
     if (debug_mode)
         print_renderer_details(true);
@@ -129,8 +130,18 @@ void SDL_Terminal::draw(const Scene &scene) const
     SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer_);
 
+    draw_background(scene.text_layer);
+
     // TODO
     SDL_RenderPresent(renderer_);
+}
+
+void SDL_Terminal::draw_background(TextLayer const& text_layer) const
+{
+    Color bg = text_layer.palette_color(text_layer.background_color);
+    SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
+    SDL_Rect r = {0, 0, GRAPHICS_W, GRAPHICS_H };
+    SDL_RenderFillRect(renderer_, &r);
 }
 
 
