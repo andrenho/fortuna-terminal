@@ -1,14 +1,14 @@
-#include "communicationmodule.hh"
+#include "comm_module.hh"
 
 #include <iostream>
 
 #include "echo.hh"
 
-std::unique_ptr<CommunicationModule> CommunicationModule::make_communication_module(Options const& options)
+std::unique_ptr<CommunicationModule> CommunicationModule::make_communication_module(Options const& options, SyncQueue<OutputEvent>& output)
 {
     switch (options.communication_mode) {
         case CommunicationMode::Echo:
-            return std::make_unique<Echo>();
+            return std::make_unique<Echo>(output);
         default:
             std::cerr << "Unsupported communication module.\n";
             exit(EXIT_FAILURE);

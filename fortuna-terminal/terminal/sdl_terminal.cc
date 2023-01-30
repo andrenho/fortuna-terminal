@@ -1,4 +1,4 @@
-#include "sdlterminal.hh"
+#include "sdl_terminal.hh"
 
 #include <SDL2/SDL.h>
 #include <iostream>

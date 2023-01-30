@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "sdlterminal.hh"
+#include "sdl_terminal.hh"
 
 std::unique_ptr<Terminal> Terminal::make_terminal(const Options &options, CommunicationModule& comm)
 {

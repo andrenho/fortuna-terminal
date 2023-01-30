@@ -1,5 +1,5 @@
-#ifndef SDLTERMINAL_HH_
-#define SDLTERMINAL_HH_
+#ifndef SDL_TERMINAL_HH_
+#define SDL_TERMINAL_HH_
 
 #include "terminal.hh"
 
@@ -21,4 +21,4 @@ private:
     struct SDL_Renderer* renderer = nullptr;
 };
 
-#endif //SDLTERMINAL_HH_
+#endif //SDL_TERMINAL_HH_

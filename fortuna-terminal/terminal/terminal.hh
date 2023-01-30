@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "../options.hh"
-#include "../comm/communicationmodule.hh"
+#include "../comm/comm_module.hh"
 
 class Terminal
 {
