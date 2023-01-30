@@ -6,6 +6,7 @@
 #include "comm/communicationmodule.hh"
 #include "options.hh"
 #include "terminal/terminal.hh"
+#include "debug.hh"
 
 int main(int argc, char* argv[])
 {

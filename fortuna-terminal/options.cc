@@ -4,8 +4,6 @@
 
 #include <getopt.h>
 
-bool debug_mode = false;
-
 static void print_help(int exit_status)
 {
     std::cout << R"(

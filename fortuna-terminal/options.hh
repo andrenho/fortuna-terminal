@@ -1,8 +1,6 @@
 #ifndef OPTIONS_HH_
 #define OPTIONS_HH_
 
-extern bool debug_mode;
-
 enum class CommunicationMode {
     NotChosen, Echo, UART_A, UART_B, UART_C, I2C, SPI, TcpIp, Emcc
 };
