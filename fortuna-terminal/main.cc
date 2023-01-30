@@ -9,6 +9,7 @@ using namespace std::chrono_literals;
 #include "protocol/protocol.hh"
 #include "event/outputevent.hh"
 #include "scene/scene.hh"
+#include "event/inputevent.hh"
 
 int main(int argc, char* argv[])
 {
@@ -18,8 +19,9 @@ int main(int argc, char* argv[])
 
     // initialization
     OutputQueue output_queue;
+    InputQueue input_queue;
     Scene scene;
-    auto protocol = Protocol::make_protocol(options, output_queue, scene);
+    auto protocol = Protocol::make_protocol(options, input_queue, output_queue);
 
     auto communication_module = CommunicationModule::make_communication_module(options);
     auto terminal = Terminal::make_terminal(options);
@@ -33,9 +35,9 @@ int main(int argc, char* argv[])
     // main thread loop
     while(terminal->running()) {
 
-        scene.update();
-
         auto start_frame = std::chrono::high_resolution_clock::now();
+
+        scene.update(input_queue);
 
         terminal->do_events(output_queue);
         terminal->draw(scene);

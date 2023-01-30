@@ -5,7 +5,9 @@
 
 class AnsiProtocol : public Protocol {
 public:
-    AnsiProtocol(OutputQueue& queue, Scene& scene) : Protocol(queue, scene) {}
+    AnsiProtocol(InputQueue& input_queue, OutputQueue &output_queue) : Protocol(input_queue, output_queue) {}
+
+    void input(uint8_t byte) override;
 };
 
 #endif //ANSIPROTOCOL_HH_

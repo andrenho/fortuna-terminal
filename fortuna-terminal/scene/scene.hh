@@ -3,11 +3,12 @@
 
 #include "palette.hh"
 #include "textlayer.hh"
+#include "event/inputevent.hh"
 
 struct Scene {
     TextLayer text_layer;
 
-    void update();
+    void update(InputQueue& input_queue);
 };
 
 #endif //SCENE_HH_

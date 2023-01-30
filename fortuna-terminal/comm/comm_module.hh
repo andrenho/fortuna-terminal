@@ -10,7 +10,7 @@ class CommunicationModule
 {
 public:
     virtual void initialize() {}
-    virtual void run([[maybe_unused]] Protocol const* protocol) {}
+    virtual void run([[maybe_unused]] Protocol* protocol) {}
     virtual void finalize() { running_ = false; };
 
     virtual void notify_vsync();

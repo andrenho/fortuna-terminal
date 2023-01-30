@@ -25,22 +25,32 @@ class TextLayer : public Layer {
 public:
     TextLayer();
 
-    void update();
+    void update_blink();
 
-    Cursor const& cursor() const { return cursor_; }
-    Char const&   chr(uint16_t line, uint16_t column) const { return matrix_[line * columns_ + column]; }
-    unsigned int  columns() const { return columns_; }
-    unsigned int  lines() const { return lines_; }
+    [[nodiscard]] Cursor const& cursor() const { return cursor_; }
+    [[nodiscard]] Char const&   chr(uint16_t line, uint16_t column) const { return matrix_[line * columns_ + column]; }
+    [[nodiscard]] unsigned int  columns() const { return columns_; }
+    [[nodiscard]] unsigned int  lines() const { return lines_; }
 
-    uint8_t background_color = Color::BLACK;
+    [[nodiscard]] uint8_t background_color() const { return background_color_; }
+
+    void add_char(uint8_t c);
 
 private:
     unsigned int            columns_ = 40;
     unsigned int            lines_ = 25;
 
-    Cursor                  cursor_;
+    uint8_t background_color_ = Color::BLACK;
+    uint8_t foreground_color_ = Color::WHITE;
+
+    Cursor cursor_;
     std::unique_ptr<Char[]> matrix_ = nullptr;
     std::chrono::time_point<std::chrono::system_clock> cursor_last_blink_;
+
+    Char& chr(uint16_t line, uint16_t column) { return matrix_[line * columns_ + column]; }
+
+    void text_advance_line();
+    void text_advance_cursor();
 };
 
 #endif //TEXTLAYER_HH_

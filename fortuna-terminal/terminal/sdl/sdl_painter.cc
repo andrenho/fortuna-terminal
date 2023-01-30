@@ -54,7 +54,7 @@ void SDL_Painter::draw_deep_background() const
 
 void SDL_Painter::draw_background(const TextLayer &text_layer) const
 {
-    Color bg = text_layer.palette_color(text_layer.background_color);
+    Color bg = text_layer.palette_color(text_layer.background_color());
     SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
     SDL_Rect r = {0, 0, SDL_Terminal::GRAPHICS_W, SDL_Terminal::GRAPHICS_H };
     SDL_RenderFillRect(renderer_, &r);
@@ -92,7 +92,7 @@ void SDL_Painter::draw_text_cell(TextLayer const& text_layer, uint16_t line, uin
         SDL_Rect r = { (int) dest_x, (int) dest_y, TEXT_CHAR_W, TEXT_CHAR_H };
         SDL_RenderFillRect(renderer_, &r);
 
-        Color bg = text_layer.palette_color(text_layer.background_color);
+        Color bg = text_layer.palette_color(text_layer.background_color());
         SDL_SetTextureColorMod(font_, bg.r, bg.g, bg.b);
 
     } else {
