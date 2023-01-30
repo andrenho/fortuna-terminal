@@ -36,3 +36,5 @@ Communication can happen over the following protocols:
  - Fortuna: uses the [Fortuna Communication Protocol](https://docs.google.com/spreadsheets/d/1n-Tddk_1RplzINRn6SIJ1oKEY4TRZD6mcdNHknaA9lI/edit?usp=sharing)
  - Ansi: partial support to the [VT-100 Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
  - Fortuna+Ansi: same as Ansi, but an additional wire allows other commands to be sent via the same line.
+
+![image](https://user-images.githubusercontent.com/84652/215522943-4a49742b-2685-4be5-937b-ea4e165cff82.png)
