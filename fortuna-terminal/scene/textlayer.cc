@@ -22,9 +22,7 @@ void TextLayer::update_blink()
 
 void TextLayer::add_char(uint8_t c)
 {
-    Char& ch = chr(cursor_.y, cursor_.x);
-    ch.chr = c;
-    ch.color = foreground_color_;
+    chr(cursor_.y, cursor_.x) = { c, foreground_color_ };
 
     text_advance_cursor();
     cursor_.blink_state = true;
@@ -33,17 +31,17 @@ void TextLayer::add_char(uint8_t c)
 
 void TextLayer::text_advance_line()
 {
-    /*
     cursor_.x = 0;
     ++cursor_.y;
     if (cursor_.y >= lines_) {
-        for (size_t y = 0; y < (lines_ - 1); ++y)
-            memcpy(matrix[y], matrix[y+1], columns_ * sizeof(Char));
+        for (size_t y = 0; y < (lines_ - 1); ++y) {
+            for (size_t x = 0; x < columns_; ++x)
+                chr(y, x) = chr(y+1, x);
+        }
         --cursor_.y;
         for (size_t x = 0; x < columns_; ++x)
-            matrix[cursor_.y][x] = (Char) {' ', foreground_color_ };
+            chr(cursor_.y, x) = {' ', foreground_color_ };
     }
-     */
 }
 
 void TextLayer::text_advance_cursor()
