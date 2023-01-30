@@ -21,7 +21,6 @@ Options::Options(int argc, char **argv)
     int c;
 
     while (true) {
-        int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },

@@ -1,8 +1,5 @@
 #include <iostream>
 
-#include <getopt.h>
-#include <memory>
-
 #include "comm/communicationmodule.hh"
 #include "options.hh"
 #include "terminal/terminal.hh"
