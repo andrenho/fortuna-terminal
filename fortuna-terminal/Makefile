@@ -1,5 +1,5 @@
 OBJ=main.o debug.o options.o \
-	scene/textlayer.o \
+	scene/scene.o scene/textlayer.o \
     protocol/protocol.o protocol/fortunaprotocol.o protocol/ansiprotocol.o \
 	comm/comm_module.o comm/echo.o \
 	terminal/terminal.o terminal/sdl/sdl_terminal.o terminal/sdl/sdl_painter.o

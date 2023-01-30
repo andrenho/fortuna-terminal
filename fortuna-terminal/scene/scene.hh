@@ -6,6 +6,8 @@
 
 struct Scene {
     TextLayer text_layer;
+
+    void update();
 };
 
 #endif //SCENE_HH_

@@ -32,6 +32,9 @@ int main(int argc, char* argv[])
 
     // main thread loop
     while(terminal->running()) {
+
+        scene.update();
+
         auto start_frame = std::chrono::high_resolution_clock::now();
 
         terminal->do_events(output_queue);

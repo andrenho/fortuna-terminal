@@ -2,6 +2,7 @@
 #define TEXTLAYER_HH_
 
 #include <cstdint>
+#include <chrono>
 #include <memory>
 
 #include "palette.hh"
@@ -13,7 +14,6 @@ struct Cursor {
     uint8_t  color = Color::ORANGE;
     bool     visible = true;
     bool     blink_state = true;
-    uint64_t last_blink = 0;
 };
 
 struct Char {
@@ -25,13 +25,14 @@ class TextLayer : public Layer {
 public:
     TextLayer();
 
-    uint8_t                 background_color = Color::BLACK;
+    void update();
 
     Cursor const& cursor() const { return cursor_; }
-    Char const& chr(uint16_t line, uint16_t column) const { return matrix_[line * columns_ + column]; }
+    Char const&   chr(uint16_t line, uint16_t column) const { return matrix_[line * columns_ + column]; }
+    unsigned int  columns() const { return columns_; }
+    unsigned int  lines() const { return lines_; }
 
-    unsigned int columns() const { return columns_; }
-    unsigned int lines() const { return lines_; }
+    uint8_t background_color = Color::BLACK;
 
 private:
     unsigned int            columns_ = 40;
@@ -39,6 +40,7 @@ private:
 
     Cursor                  cursor_;
     std::unique_ptr<Char[]> matrix_ = nullptr;
+    std::chrono::time_point<std::chrono::system_clock> cursor_last_blink_;
 };
 
 #endif //TEXTLAYER_HH_
