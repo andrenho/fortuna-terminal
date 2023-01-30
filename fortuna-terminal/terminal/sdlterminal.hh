@@ -8,6 +8,7 @@ class SDL_Terminal : public Terminal
 public:
     explicit SDL_Terminal(CommunicationModule& comm) : Terminal(comm) {}
 
+    void initialize() override;
     void update() override;
 };
 
