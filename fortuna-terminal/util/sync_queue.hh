@@ -7,11 +7,11 @@
 #include <mutex>
 #include <queue>
 
-// Thread-safe queue
+// Thread-safe queue_
 template <typename T>
 class SyncQueue {
 private:
-    // Underlying queue
+    // Underlying queue_
     std::queue<T> m_queue;
 
     // mutex for thread synchronization
@@ -21,7 +21,7 @@ private:
     std::condition_variable m_cond;
 
 public:
-    // Pushes an element to the queue
+    // Pushes an element to the queue_
     void push(T item)
     {
 
@@ -36,14 +36,14 @@ public:
         m_cond.notify_one();
     }
 
-    // Pops an element off the queue
+    // Pops an element off the queue_
     T pop()
     {
 
         // acquire lock
         std::unique_lock<std::mutex> lock(m_mutex);
 
-        // wait until queue is not empty
+        // wait until queue_ is not empty
         m_cond.wait(lock,
                     [this]() { return !m_queue.empty(); });
 

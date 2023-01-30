@@ -9,7 +9,7 @@ enum class TerminalType {
     SDL, Text,
 };
 
-enum class Protocol {
+enum class ProtocolType {
     Fortuna, Ansi, Fortuna_Ansi,
 };
 
@@ -19,7 +19,7 @@ public:
 
     CommunicationMode communication_mode = CommunicationMode::NotChosen;
     TerminalType      terminal_type = TerminalType::SDL;
-    Protocol          protocol = Protocol::Fortuna;
+    ProtocolType      protocol = ProtocolType::Fortuna;
     unsigned int      baud = 56700;
     unsigned int      port = 8027;
     bool              debug_mode = false;

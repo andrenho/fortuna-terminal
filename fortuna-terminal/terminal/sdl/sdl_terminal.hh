@@ -1,13 +1,14 @@
 #ifndef SDL_TERMINAL_HH_
 #define SDL_TERMINAL_HH_
 
-#include "terminal.hh"
+#include "../terminal.hh"
 
 class SDL_Terminal : public Terminal
 {
 public:
-    explicit SDL_Terminal(CommunicationModule& comm, bool window_mode) : Terminal(comm), window_mode_(window_mode) {}
-    virtual ~SDL_Terminal();
+    explicit SDL_Terminal(Scene const& scene, OutputQueue& output_queue, bool window_mode)
+        : Terminal(scene, output_queue), window_mode_(window_mode) {}
+    ~SDL_Terminal() override;
 
     void initialize() override;
     void update() override;

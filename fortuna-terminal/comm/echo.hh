@@ -5,7 +5,7 @@
 
 class Echo : public CommunicationModule {
 public:
-    explicit Echo(SyncQueue<OutputEvent>& output_event_queue) : CommunicationModule(output_event_queue) {}
+    explicit Echo(Protocol const* protocol) : CommunicationModule(protocol) {}
 };
 
 #endif //ECHO_HH_

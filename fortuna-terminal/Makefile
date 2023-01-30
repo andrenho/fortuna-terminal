@@ -1,4 +1,7 @@
-OBJ=main.o debug.o options.o comm/comm_module.o comm/echo.o terminal/terminal.o terminal/sdl_terminal.o
+OBJ=main.o debug.o options.o \
+    protocol/protocol.o protocol/fortunaprotocol.o \
+	comm/comm_module.o comm/echo.o \
+	terminal/terminal.o terminal/sdl/sdl_terminal.o
 EXE=fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -std=gnu11 -I.

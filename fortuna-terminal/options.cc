@@ -85,11 +85,11 @@ Options::Options(int argc, char **argv)
             case 'r': {
                 std::string pp(optarg);
                 if (pp == "fortuna")
-                    protocol = Protocol::Fortuna;
+                    protocol = ProtocolType::Fortuna;
                 else if (pp == "ansi")
-                    protocol = Protocol::Ansi;
+                    protocol = ProtocolType::Ansi;
                 else if (pp == "fortuna+ansi")
-                    protocol = Protocol::Fortuna_Ansi;
+                    protocol = ProtocolType::Fortuna_Ansi;
                 else {
                     std::cerr << "Unsupported protocol.\n";
                     exit(EXIT_FAILURE);

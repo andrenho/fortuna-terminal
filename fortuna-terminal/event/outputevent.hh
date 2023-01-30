@@ -1,7 +1,9 @@
-#ifndef OUTPUT_EVENT_HH_
-#define OUTPUT_EVENT_HH_
+#ifndef OUTPUTEVENT_HH_
+#define OUTPUTEVENT_HH_
 
 #include <cstdint>
+
+#include "../util/sync_queue.hh"
 
 enum class OutputEventType { Keydown };
 enum struct KeyType : uint8_t { Regular, Special };
@@ -28,4 +30,6 @@ struct OutputEvent {
     };
 };
 
-#endif //OUTPUT_EVENT_HH_
+using OutputQueue = SyncQueue<OutputEvent>;
+
+#endif //OUTPUTEVENT_HH_

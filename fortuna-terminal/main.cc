@@ -3,19 +3,22 @@
 #include "debug.hh"
 #include "options.hh"
 #include "comm/comm_module.hh"
-#include "event/output_event.hh"
 #include "terminal/terminal.hh"
 #include "util/sync_queue.hh"
+#include "protocol/protocol.hh"
+#include "event/outputevent.hh"
+#include "scene/scene.hh"
 
 int main(int argc, char* argv[])
 {
     const Options options(argc, argv);
     debug_mode = options.debug_mode;
 
-    auto output_event_queue = SyncQueue<OutputEvent>();
-
-    auto communication_module = CommunicationModule::make_communication_module(options, output_event_queue);
-    auto terminal = Terminal::make_terminal(options, *communication_module);
+    OutputQueue output_queue;
+    Scene scene;
+    auto protocol = Protocol::make_protocol(options, output_queue, scene);
+    auto communication_module = CommunicationModule::make_communication_module(options, protocol.get());
+    auto terminal = Terminal::make_terminal(options, scene, output_queue);
 
     terminal->initialize();
     communication_module->initialize();

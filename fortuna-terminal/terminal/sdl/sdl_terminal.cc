@@ -1,9 +1,9 @@
 #include "sdl_terminal.hh"
 
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
 #include <iostream>
 
-#include "../debug.hh"
+#include "../../debug.hh"
 
 void SDL_Terminal::print_video_details() const
 {
