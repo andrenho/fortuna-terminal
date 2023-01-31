@@ -37,4 +37,4 @@ Communication can happen over the following protocols:
  - Ansi: partial support to the [VT-100 Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
  - Fortuna+Ansi: same as Ansi, but an additional wire allows other commands to be sent via the same line.
 
-![image](https://user-images.githubusercontent.com/84652/215522943-4a49742b-2685-4be5-937b-ea4e165cff82.png)
+![image](https://user-images.githubusercontent.com/84652/215804976-7d3786c7-9bce-4a90-9154-df26b0a7fa0b.png)
