@@ -19,7 +19,7 @@ private:
     void translate_escape_sequence(InputQueue &queue);
     void rollback_escape_sequence(InputQueue &queue);
     void parse_ansi_sequence(char command, unsigned int p1, unsigned int p2, InputQueue &input_queue);
-    uint8_t text_ansi_color(int number) const;
+    [[nodiscard]] uint8_t text_ansi_color(unsigned int number) const;
 };
 
 #endif //ANSIPROTOCOL_HH_

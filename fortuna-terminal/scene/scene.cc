@@ -3,9 +3,12 @@
 void Scene::process_input_queue(InputQueue& input_queue)
 {
     std::optional<InputEvent> o_event;
-    while ((o_event = input_queue.pop())) {
+    while ((o_event = input_queue.dequeue_noblock())) {
         auto const& event = o_event.value();
         switch (event.type) {
+
+            case InputEventType::NoEvent:
+                break;
 
             case InputEventType::TextPrintChar:
                 text_layer.add_char(event.p1);

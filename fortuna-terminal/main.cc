@@ -55,6 +55,8 @@ int main(int argc, char* argv[])
 
     // clean up
     communication_module->finalize();
+    input_queue.release_lock();
+    output_queue.release_lock();
     input_thread.join();
     output_thread.join();
 }

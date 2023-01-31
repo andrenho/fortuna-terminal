@@ -8,26 +8,36 @@
 #include <queue>
 #include <optional>
 
-// Thread-safe queue_
 template <typename T>
 class SyncQueue {
 private:
-    // Underlying queue_
     std::queue<T> m_queue;
-
-    // mutex for thread synchronization
     std::mutex m_mutex;
+    std::condition_variable m_cond;
 
 public:
-    // Pushes an element to the queue_
-    void push(T item)
+    void enqueue(T item)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_queue.push(item);
+        m_cond.notify_one();
     }
 
-    // Pops an element off the queue_
-    std::optional<T> pop()
+    T dequeue_block()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+
+        // wait until queue is not empty
+        m_cond.wait(lock,
+                    [this]() { return !m_queue.empty(); });
+
+        T item = m_queue.front();
+        m_queue.pop();
+
+        return item;
+    }
+
+    std::optional<T> dequeue_noblock()
     {
         std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -38,6 +48,11 @@ public:
         m_queue.pop();
 
         return item;
+    }
+
+    void release_lock()
+    {
+        enqueue(T());
     }
 };
 

@@ -14,7 +14,7 @@ void AnsiProtocol::input(uint8_t byte, InputQueue& input_queue)
 {
     if (!escape_mode) {
         if (byte != '\e') {
-            input_queue.push({InputEventType::TextPrintChar, {byte } });
+            input_queue.enqueue({InputEventType::TextPrintChar, {byte}});
         } else {
             escape_mode = true;
             escape_sequence = "";
@@ -51,35 +51,35 @@ void AnsiProtocol::rollback_escape_sequence(InputQueue& input_queue)
 {
     escape_mode = false;
     for (uint8_t byte: escape_sequence)
-        input_queue.push({InputEventType::TextPrintChar, { byte } });
+        input_queue.enqueue({InputEventType::TextPrintChar, byte});
 }
 
 void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned int p2, InputQueue& input_queue)
 {
     switch (command) {
         case 'A':
-            input_queue.push({ InputEventType::TextMoveUp, {(uint8_t) std::max(p1, 1U)} });
+            input_queue.enqueue({InputEventType::TextMoveUp, (uint8_t) std::max(p1, 1U)});
             break;
         case 'B':
-            input_queue.push({ InputEventType::TextMoveDown, {(uint8_t) std::max(p1, 1U)} });
+            input_queue.enqueue({InputEventType::TextMoveDown, (uint8_t) std::max(p1, 1U)});
             break;
         case 'C':
-            input_queue.push({ InputEventType::TextMoveForward, {(uint8_t) std::max(p1, 1U)} });
+            input_queue.enqueue({InputEventType::TextMoveForward, (uint8_t) std::max(p1, 1U)});
             break;
         case 'D':
-            input_queue.push({ InputEventType::TextMoveBackward, {(uint8_t) std::max(p1, 1U)} });
+            input_queue.enqueue({InputEventType::TextMoveBackward, (uint8_t) std::max(p1, 1U)});
             break;
         case 'H':
-            input_queue.push({ InputEventType::TextMoveTo, {(uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)}});
+            input_queue.enqueue({InputEventType::TextMoveTo, (uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)});
             break;
         case 'J':
-            input_queue.push({ InputEventType::TextClearScreen, {0, 0} });
+            input_queue.enqueue(InputEvent {InputEventType::TextClearScreen});
             break;
         case 'm':
             if (p1 == 0)
-                input_queue.push({ InputEventType::TextResetFormatting, {0, 0} });
+                input_queue.enqueue(InputEvent {InputEventType::TextResetFormatting});
             else
-                input_queue.push({ InputEventType::TextSetColor, { text_ansi_color(p2) } });
+                input_queue.enqueue({InputEventType::TextSetColor, text_ansi_color(p2)});
             break;
         default:
             rollback_escape_sequence(input_queue);
@@ -87,7 +87,7 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
     }
 }
 
-uint8_t AnsiProtocol::text_ansi_color(int number) const
+uint8_t AnsiProtocol::text_ansi_color(unsigned int number) const
 {
     switch (number) {
         case 30: return Color::BLACK;
@@ -117,16 +117,16 @@ uint8_t AnsiProtocol::text_ansi_color(int number) const
  *                     *
  ***********************/
 
-void AnsiProtocol::output_key_event(bool is_down, uint8_t key_code, KeyModifiers key_modifiers)
+void AnsiProtocol::output_key_event(bool is_down, uint8_t key_code, [[maybe_unused]] KeyModifiers key_modifiers)
 {
     // TODO - manage key modifiers
 
     if (is_down) {
-        output_queue_.push(key_code);
+        output_queue_.enqueue(key_code);
     }
 }
 
-void AnsiProtocol::output_special_key_event(bool is_down, SpecialKey special_key, KeyModifiers key_modifiers)
+void AnsiProtocol::output_special_key_event(bool is_down, SpecialKey special_key, [[maybe_unused]] KeyModifiers key_modifiers)
 {
     // TODO - manage key modifiers
 
@@ -164,5 +164,5 @@ void AnsiProtocol::output_special_key_event(bool is_down, SpecialKey special_key
         default: break;
     }
     for (uint8_t c : str)
-        output_queue_.push(c);
+        output_queue_.enqueue(c);
 }
