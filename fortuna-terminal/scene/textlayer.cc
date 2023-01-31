@@ -62,3 +62,31 @@ void TextLayer::text_advance_cursor()
     if (cursor_.x >= columns_)
         text_advance_line();
 }
+
+void TextLayer::move_cursor_relative(int y, int x)
+{
+    cursor_.x = std::max(0, std::min((int) columns_, cursor_.x + x));
+    cursor_.y = std::max(0, std::min((int) lines_, cursor_.y + y));
+}
+
+void TextLayer::move_cursor_to(unsigned int x, unsigned int y)
+{
+    cursor_.x = std::max(0U, std::min(columns_, x - 1));
+    cursor_.y = std::max(0U, std::min(lines_, y - 1));
+}
+
+void TextLayer::set_color(uint8_t color)
+{
+    foreground_color_ = (color % Palette::SIZE);
+}
+
+void TextLayer::clear_screen()
+{
+    for (size_t i = 0; i < (columns_ * lines_); ++i)
+        matrix_[i] = { ' ', foreground_color_ };
+}
+
+void TextLayer::reset_formatting()
+{
+    foreground_color_ = Color::WHITE;
+}

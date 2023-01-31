@@ -36,6 +36,12 @@ public:
 
     void add_char(uint8_t c);
 
+    void move_cursor_relative(int y, int x);
+    void move_cursor_to(unsigned int x, unsigned int y);
+    void set_color(uint8_t color);
+    void clear_screen();
+    void reset_formatting();
+
 private:
     unsigned int            columns_ = 40;
     unsigned int            lines_ = 25;
