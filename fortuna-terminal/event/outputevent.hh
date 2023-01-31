@@ -5,7 +5,7 @@
 
 #include "../util/sync_queue.hh"
 
-enum class OutputEventType { Keydown, Keyup };
+enum class OutputEventType { Keydown, Keyup, TextInput };
 enum struct KeyType : uint8_t { Regular, Special };
 enum struct SpecialKey : uint8_t {
     Esc, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
@@ -26,8 +26,11 @@ struct KeyCode {
 struct OutputEvent {
     OutputEventType type;
     union {
-        KeyCode key_code;
+        KeyCode key_code {};
+        char text_input[32];
     };
+
+    explicit OutputEvent(OutputEventType type) : type(type) {}
 };
 
 using OutputQueue = SyncQueue<OutputEvent>;

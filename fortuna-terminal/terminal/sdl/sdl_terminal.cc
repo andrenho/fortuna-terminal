@@ -106,6 +106,13 @@ void SDL_Terminal::do_events(OutputQueue &output_queue)
                 running_ = false;
                 break;
 
+            case SDL_TEXTINPUT: {
+                auto event = OutputEvent { OutputEventType::TextInput };
+                memcpy(event.text_input, ev.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE);
+                output_queue.push(event);
+                break;
+            }
+
             case SDL_KEYDOWN:
                 add_keyboard_event(true, ev.key, output_queue);
                 break;
@@ -123,16 +130,15 @@ void SDL_Terminal::add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Outpu
     if (is_down && key.keysym.sym == SDLK_q && (key.keysym.mod & KMOD_CTRL))
         running_ = false;
     if (key.keysym.sym <= 127) {
-        output_queue.push(OutputEvent {
-            is_down ? OutputEventType::Keydown : OutputEventType::Keyup,
-            { {
+        OutputEvent output_event { is_down ? OutputEventType::Keydown : OutputEventType::Keyup };
+        output_event.key_code = KeyCode {
                 {(uint8_t) key.keysym.sym},
                 KeyType::Regular,
                 (key.keysym.mod & KMOD_SHIFT) != 0,
                 (key.keysym.mod & KMOD_CTRL) != 0,
                 (key.keysym.mod & KMOD_ALT) != 0,
-            } }
-        });
+        };
+        output_queue.push(output_event);
     }
 }
 
