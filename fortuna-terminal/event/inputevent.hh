@@ -12,7 +12,10 @@ enum class InputEventType {
 struct InputEvent {
     InputEventType type;
     union {
-        uint8_t p1;
+        struct {
+            uint8_t p1 = 0;
+            uint8_t p2 = 0;
+        };
     };
 };
 

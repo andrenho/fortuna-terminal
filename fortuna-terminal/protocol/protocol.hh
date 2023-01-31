@@ -16,7 +16,7 @@ public:
 
     static std::unique_ptr<Protocol> make_protocol(Options const &options);
 
-    virtual void input(uint8_t byte, InputQueue& input_queue) const = 0;
+    virtual void input(uint8_t byte, InputQueue& input_queue) = 0;
     virtual std::vector<uint8_t> process_output_queue(OutputQueue& output_queue) const = 0;
 };
 
