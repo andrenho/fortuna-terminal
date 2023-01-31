@@ -97,6 +97,7 @@ void UART::finalize()
 {
     char c = 'X';
     write(fd, &c, 1);  // this is to unlock the read, so that the thread can join
+    usleep(100);
 
     if (fd != 0)
         close(fd);
