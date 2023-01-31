@@ -11,10 +11,10 @@ public:
     virtual ~Terminal() = default;
 
     virtual void initialize() {}
-    virtual void do_events(OutputQueue& output_queue) = 0;
+    virtual void do_events(Protocol& protocol) = 0;
     virtual void draw(Scene const& scene) const = 0;
 
-    bool running() const { return running_; }
+    [[nodiscard]] bool running() const { return running_; }
 
     static std::unique_ptr<Terminal> make_terminal(const Options &options);
 

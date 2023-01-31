@@ -6,7 +6,7 @@
 class Echo : public CommunicationModule {
 public:
     void run_input_from_device_thread(Protocol* protocol, InputQueue* input_queue) override;
-    void write_to_device(std::vector<uint8_t> data) override;
+    void run_output_to_device_thread(OutputQueue *queue) override;
 
 private:
     SyncQueue<uint8_t> buffer;

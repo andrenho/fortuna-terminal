@@ -5,10 +5,12 @@
 
 class AnsiProtocol : public Protocol {
 public:
-    void input(uint8_t byte, InputQueue& input_queue) override;
-    std::vector<uint8_t> process_output_queue(OutputQueue &output_queue) const override;
+    explicit AnsiProtocol(OutputQueue& output_queue) : Protocol(output_queue) {}
 
-    void push_special_key(SpecialKey key, std::vector<uint8_t>& r) const;
+    void input(uint8_t byte, InputQueue& input_queue) override;
+
+    void output_key_event(bool is_down, uint8_t key_code, KeyModifiers key_modifiers) override;
+    void output_special_key_event(bool is_down, SpecialKey special_key, KeyModifiers key_modifiers) override;
 
 private:
     bool escape_mode = false;

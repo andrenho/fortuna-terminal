@@ -13,7 +13,7 @@ public:
     ~SDL_Terminal() override;
 
     void initialize() override;
-    void do_events(OutputQueue &output_queue) override;
+    void do_events(Protocol& protocol) override;
     void draw(const Scene &scene) const override;
 
     static const int GRAPHICS_W = 256;
@@ -21,7 +21,7 @@ public:
 
 private:
     void print_video_details() const;
-    void add_keyboard_event(bool is_down, SDL_KeyboardEvent key, OutputQueue &output_queue);
+    void add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Protocol& protocol);
 
     bool window_mode_;
 

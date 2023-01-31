@@ -6,13 +6,15 @@
 
 static void print_help(int exit_status)
 {
-    std::cout << R"(-c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcp-ip"
+    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcp-ip"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
     -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
-    -b, --baud                      Baud speed for UART (default: 57600)
-    -p, --port                      TCP/IP port (default: 8027)
-    -w, --window_                    Window mode (as opposed to the default, which is full screen)
+    -w, --window                    Window mode (as opposed to the default, which is full screen)
     -d, --debug                     Print lots of debugging information
+Options valid for `uart`:
+    -P, --port                      Serial port (default: /dev/serial0)
+    -B, --baud                      Baud speed for UART (default: 57600)
+    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)
 )";
     exit(exit_status);
 }
@@ -27,14 +29,17 @@ Options::Options(int argc, char **argv)
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "terminal-type", required_argument, nullptr, 't' },
                 { "protocol", required_argument, nullptr, 'r' },
-                { "baud", required_argument, nullptr, 'b' },
-                { "port", required_argument, nullptr, 'p' },
                 { "window", no_argument, nullptr, 'w' },
                 { "debug", no_argument, nullptr, 'd' },
+                // serial
+                { "port", required_argument, nullptr, 'P' },
+                { "baud", required_argument, nullptr, 'B' },
+                { "uart-settings", required_argument, nullptr, 'U' },
+                // end
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:t:b:r:hdw", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:t:r:hdwP:B:U:", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -97,30 +102,34 @@ Options::Options(int argc, char **argv)
                 break;
             }
 
-            case 'b':
-                try {
-                    baud = std::stoi(optarg);
-                } catch (std::exception&) {
-                    std::cerr << "Invalid baud number.\n";
-                    exit(EXIT_FAILURE);
-                }
-                break;
-
-            case 'p':
-                try {
-                    port = std::stoi(optarg);
-                } catch (std::exception&) {
-                    std::cerr << "Invalid port number.\n";
-                    exit(EXIT_FAILURE);
-                }
-                break;
-
             case 'd':
                 debug_mode = true;
                 break;
 
             case 'w':
                 window_mode = true;
+                break;
+
+            case 'B':
+                try {
+                    serial.baud = std::stoi(optarg);
+                } catch (std::exception&) {
+                    std::cerr << "Invalid baud number.\n";
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
+            case 'P':
+                try {
+                    serial.port = optarg;
+                } catch (std::exception&) {
+                    std::cerr << "Invalid port.\n";
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
+            case 'U':
+                parse_uart_settings(optarg);
                 break;
 
             case '?':
@@ -141,4 +150,18 @@ void Options::validate_options() const
         std::cerr << "Communication mode not chosen.\n";
         exit(EXIT_FAILURE);
     }
+}
+
+void Options::parse_uart_settings(std::string const &s)
+{
+    if (s.length() != 3) {
+        std::cerr << "Invalid UART settings.\n";
+        exit(EXIT_FAILURE);
+    }
+    if (s[0] != '8') {
+        std::cerr << "Invalid UART settings: only 8-bit communication is supported.\n";
+        exit(EXIT_FAILURE);
+    }
+    serial.stop_bits = s[1] - '0';
+    serial.parity = s[2];
 }

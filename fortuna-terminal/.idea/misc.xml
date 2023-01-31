@@ -8,7 +8,7 @@
       <file path="$PROJECT_DIR$" />
     </sourceRoots>
     <libraryRoots>
-      <file path="$PROJECT_DIR$/SDL2-windows" />
+      <file path="$PROJECT_DIR$/lib/SDL2-windows" />
     </libraryRoots>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

@@ -2,6 +2,12 @@
 
 #include <regex>
 
+/***********************
+ *                     *
+ *        INPUT        *
+ *                     *
+ ***********************/
+
 static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))?)?(\w))", std::regex_constants::ECMAScript);
 
 void AnsiProtocol::input(uint8_t byte, InputQueue& input_queue)
@@ -46,30 +52,6 @@ void AnsiProtocol::rollback_escape_sequence(InputQueue& input_queue)
     escape_mode = false;
     for (uint8_t byte: escape_sequence)
         input_queue.push({InputEventType::TextPrintChar, { byte } });
-}
-
-std::vector<uint8_t> AnsiProtocol::process_output_queue(OutputQueue &output_queue) const
-{
-    std::vector<uint8_t> r;
-
-    std::optional<OutputEvent> o_event;
-    while ((o_event = output_queue.pop())) {
-        auto const& event = o_event.value();
-        switch (event.type) {
-            case OutputEventType::Keydown:
-                if (event.key_code.key_type == KeyType::Special)
-                    push_special_key(event.key_code.special_key, r);
-                break;
-            case OutputEventType::Keyup:
-                break;
-            case OutputEventType::TextInput:
-                for (const char* c = event.text_input; *c; ++c)
-                    r.push_back(*c);
-                break;
-        }
-    }
-
-    return r;
 }
 
 void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned int p2, InputQueue& input_queue)
@@ -128,10 +110,31 @@ uint8_t AnsiProtocol::text_ansi_color(int number) const
     }
 }
 
-void AnsiProtocol::push_special_key(SpecialKey key, std::vector<uint8_t>& r) const
+
+/***********************
+ *                     *
+ *       OUTPUT        *
+ *                     *
+ ***********************/
+
+void AnsiProtocol::output_key_event(bool is_down, uint8_t key_code, KeyModifiers key_modifiers)
 {
+    // TODO - manage key modifiers
+
+    if (is_down) {
+        output_queue_.push(key_code);
+    }
+}
+
+void AnsiProtocol::output_special_key_event(bool is_down, SpecialKey special_key, KeyModifiers key_modifiers)
+{
+    // TODO - manage key modifiers
+
+    if (!is_down)
+        return;
+
     std::string str;
-    switch (key) {
+    switch (special_key) {
         case SpecialKey::Esc: str = "\e"; break;
         case SpecialKey::F1: str = "\e[11"; break;
         case SpecialKey::F2: str = "\e[12"; break;
@@ -161,5 +164,5 @@ void AnsiProtocol::push_special_key(SpecialKey key, std::vector<uint8_t>& r) con
         default: break;
     }
     for (uint8_t c : str)
-        r.push_back(c);
+        output_queue_.push(c);
 }

@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     OutputQueue output_queue;
     InputQueue input_queue;
     Scene scene;
-    auto protocol = Protocol::make_protocol(options);
+    auto protocol = Protocol::make_protocol(options, output_queue);
 
     auto communication_module = CommunicationModule::make_communication_module(options);
     auto terminal = Terminal::make_terminal(options);
@@ -30,9 +30,12 @@ int main(int argc, char* argv[])
     communication_module->initialize();
 
     // start communication thread
-    std::thread comm_thread(
+    std::thread input_thread(
             &CommunicationModule::run_input_from_device_thread, communication_module.get(),
             protocol.get(), &input_queue);
+    std::thread output_thread(
+            &CommunicationModule::run_output_to_device_thread, communication_module.get(),
+            &output_queue);
 
     // main thread loop
     while(terminal->running()) {
@@ -41,8 +44,7 @@ int main(int argc, char* argv[])
 
         scene.process_input_queue(input_queue);
 
-        terminal->do_events(output_queue);
-        communication_module->write_to_device(protocol->process_output_queue(output_queue));
+        terminal->do_events(*protocol);
         terminal->draw(scene);
 
         auto end_frame = std::chrono::high_resolution_clock::now();
@@ -53,5 +55,6 @@ int main(int argc, char* argv[])
 
     // clean up
     communication_module->finalize();
-    comm_thread.join();
+    input_thread.join();
+    output_thread.join();
 }
