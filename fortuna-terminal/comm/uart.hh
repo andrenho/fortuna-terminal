@@ -5,7 +5,7 @@
 
 class UART : public CommunicationModule {
 public:
-    explicit UART(OutputQueue& output_queue, InputQueue& input_queue, SerialOptions const& serial_options, Protocol& protocol)
+    explicit UART(OutputQueue& output_queue, InputQueue& input_queue, Protocol& protocol, SerialOptions const& serial_options)
         : CommunicationModule(output_queue, input_queue, protocol), serial_options_(serial_options) {}
 
     void initialize() override;
