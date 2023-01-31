@@ -16,9 +16,13 @@ std::vector<uint8_t> AnsiProtocol::process_output_queue(OutputQueue &output_queu
         auto const& event = o_event.value();
         switch (event.type) {
             case OutputEventType::Keydown:
-                r.push_back(event.key_code.code);
+                // r.push_back(event.key_code.code);  // TODO - translate char
                 break;
             case OutputEventType::Keyup:
+                break;
+            case OutputEventType::TextInput:
+                for (const char* c = event.text_input; *c; ++c)
+                    r.push_back(*c);
                 break;
         }
     }
