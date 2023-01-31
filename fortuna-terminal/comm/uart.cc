@@ -95,6 +95,9 @@ void UART::run_output_to_device_thread()
 
 void UART::finalize()
 {
+    char c = 'X';
+    write(fd, &c, 1);  // this is to unlock the read, so that the thread can join
+
     if (fd != 0)
         close(fd);
     CommunicationModule::finalize();
