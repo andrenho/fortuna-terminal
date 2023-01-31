@@ -13,7 +13,7 @@ ifeq ($(OS),Windows_NT)
 	LDFLAGS = -Llib/SDL2-windows/lib -lSDL2main -lSDL2
 else
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O3
-	LDFLAGS := ${CFLAGS} `sdl2-config --libs`
+	LDFLAGS := ${CFLAGS} `sdl2-config --libs` -lpthread
 endif
 
 all: ${EXE}
