@@ -4,12 +4,15 @@
 #include <cstdint>
 #include "../util/sync_queue.hh"
 
-enum class InputEventType { PrintChar };
+enum class InputEventType {
+    TextPrintChar, TextMoveUp, TextMoveDown, TextMoveForward, TextMoveBackward, TextMoveTo, TextSetColor,
+    TextClearScreen, TextResetFormatting,
+};
 
 struct InputEvent {
     InputEventType type;
     union {
-        uint8_t print_char;
+        uint8_t p1;
     };
 };
 

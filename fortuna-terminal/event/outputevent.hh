@@ -9,7 +9,8 @@ enum class OutputEventType { Keydown, Keyup, TextInput };
 enum struct KeyType : uint8_t { Regular, Special };
 enum struct SpecialKey : uint8_t {
     Esc, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
-    Insert, Home, End, PageUp, PageDown, Up, Down, Left, Right,
+    Insert, Home, End, PageUp, PageDown, Up, Down, Left, Right, Enter, Backspace,
+    Delete, PrintScreen, PauseBreak,
 };
 
 struct KeyCode {

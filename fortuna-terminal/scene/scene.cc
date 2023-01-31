@@ -7,8 +7,8 @@ void Scene::process_input_queue(InputQueue& input_queue)
         auto const& event = o_event.value();
         switch (event.type) {
 
-            case InputEventType::PrintChar:
-                text_layer.add_char(event.print_char);
+            case InputEventType::TextPrintChar:
+                text_layer.add_char(event.p1);
                 break;
         }
     }

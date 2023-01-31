@@ -22,9 +22,21 @@ void TextLayer::update_blink()
 
 void TextLayer::add_char(uint8_t c)
 {
-    chr(cursor_.y, cursor_.x) = { c, foreground_color_ };
-
-    text_advance_cursor();
+    switch (c) {
+        case '\n':
+            text_advance_line();
+            break;
+        case '\b':
+            if (cursor_.x > 0) {
+                --cursor_.x;
+                add_char(' ');
+                --cursor_.x;
+            }
+            break;
+        default:
+            chr(cursor_.y, cursor_.x) = { c, foreground_color_ };
+            text_advance_cursor();
+    }
     cursor_.blink_state = true;
     cursor_last_blink_ = std::chrono::high_resolution_clock::now();
 }
