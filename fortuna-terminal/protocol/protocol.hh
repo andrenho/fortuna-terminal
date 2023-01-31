@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 #include "../options.hh"
 #include "../scene/scene.hh"
@@ -13,15 +14,10 @@ class Protocol {
 public:
     virtual ~Protocol() = default;
 
-    static std::unique_ptr<Protocol> make_protocol(Options const &options, InputQueue &input_queue, OutputQueue &output_queue);
+    static std::unique_ptr<Protocol> make_protocol(Options const &options);
 
-    virtual void input(uint8_t byte) = 0;
-
-protected:
-    Protocol(InputQueue& input_queue, OutputQueue &output_queue) : input_queue_(input_queue), output_queue_(output_queue) {}
-
-    InputQueue& input_queue_;
-    OutputQueue &output_queue_;
+    virtual void input(uint8_t byte, InputQueue& input_queue) const = 0;
+    virtual std::vector<uint8_t> process_output_queue(OutputQueue& output_queue) const = 0;
 };
 
 #endif //PROTOCOL_HH_

@@ -2,6 +2,8 @@
 #define COMM_MODULE_HH_
 
 #include <memory>
+#include <vector>
+
 #include "../options.hh"
 #include "../util/sync_queue.hh"
 #include "../protocol/protocol.hh"
@@ -9,8 +11,11 @@
 class CommunicationModule
 {
 public:
+    virtual ~CommunicationModule() = default;
+
     virtual void initialize() {}
-    virtual void run([[maybe_unused]] Protocol* protocol) {}
+    virtual void run_input_from_device_thread([[maybe_unused]] Protocol*, InputQueue*) {}
+    virtual void write_to_device(std::vector<uint8_t>) {}
     virtual void finalize() { running_ = false; };
 
     virtual void notify_vsync();

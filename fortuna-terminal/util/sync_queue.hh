@@ -31,7 +31,7 @@ public:
     {
         std::unique_lock<std::mutex> lock(m_mutex);
 
-        if (!m_queue.empty())
+        if (m_queue.empty())
             return {};
 
         T item = m_queue.front();

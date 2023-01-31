@@ -8,7 +8,7 @@
 struct Scene {
     TextLayer text_layer;
 
-    void update(InputQueue& input_queue);
+    void process_input_queue(InputQueue& input_queue);
 };
 
 #endif //SCENE_HH_

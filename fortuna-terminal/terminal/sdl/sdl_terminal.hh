@@ -3,6 +3,7 @@
 
 #include "../terminal.hh"
 #include "terminal/sdl/sdl_painter.hh"
+#include "SDL2/SDL_events.h"
 
 class SDL_Terminal : public Terminal
 {
@@ -20,6 +21,7 @@ public:
 
 private:
     void print_video_details() const;
+    void add_keyboard_event(bool is_down, SDL_KeyboardEvent key, OutputQueue &output_queue);
 
     bool window_mode_;
 

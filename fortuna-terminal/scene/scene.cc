@@ -1,6 +1,6 @@
 #include "scene.hh"
 
-void Scene::update(InputQueue& input_queue)
+void Scene::process_input_queue(InputQueue& input_queue)
 {
     std::optional<InputEvent> o_event;
     while ((o_event = input_queue.pop())) {
