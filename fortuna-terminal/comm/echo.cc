@@ -1,16 +1,16 @@
 #include "echo.hh"
 
-void Echo::run_input_from_device_thread(Protocol* protocol, InputQueue* input_queue)
+void Echo::run_input_from_device_thread()
 {
     while (running_) {
-        protocol->input(buffer.dequeue_block(), *input_queue);
+        protocol_.input(buffer.dequeue_block(), input_queue_);
     }
 }
 
-void Echo::run_output_to_device_thread(OutputQueue *output_queue)
+void Echo::run_output_to_device_thread()
 {
     while (running_) {
-        buffer.enqueue(output_queue->dequeue_block());
+        buffer.enqueue(output_queue_.dequeue_block());
     }
 }
 

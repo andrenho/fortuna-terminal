@@ -12,7 +12,8 @@ ifeq ($(OS),Windows_NT)
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include -O0 -ggdb
 	LDFLAGS = -Llib/SDL2-windows/lib -lSDL2main -lSDL2
 else
-	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O3
+	OBJ := ${OBJ} comm/uart.o
+	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O3 -DCOMM_UART
 	LDFLAGS := ${CFLAGS} `sdl2-config --libs` -lpthread
 endif
 
