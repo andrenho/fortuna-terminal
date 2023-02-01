@@ -16,8 +16,6 @@ public:
     void finalize() override;
 
 private:
-    void error_message(std::string const& msg, bool describe_errno);
-
     SerialOptions const& serial_options_;
     int fd = 0;
 };
