@@ -22,6 +22,10 @@ struct SerialOptions {
     uint8_t           stop_bits = 1;
 };
 
+struct TCPIPOptions {
+    std::string port = "8076";
+};
+
 class Options {
 public:
     Options(int argc, char* argv[]);
@@ -32,6 +36,7 @@ public:
     bool              debug_mode = false;
     bool              window_mode = false;
     SerialOptions     serial;
+    TCPIPOptions      tcpip;
 
 private:
     void validate_options() const;

@@ -1,7 +1,7 @@
 OBJ=main.o debug.o options.o \
 	scene/scene.o scene/textlayer.o \
     protocol/protocol.o protocol/ansiprotocol.o \
-	comm/comm_module.o comm/echo.o \
+	comm/comm_module.o comm/echo.o comm/tcpip.o \
 	terminal/terminal.o terminal/sdl/sdl_terminal.o terminal/sdl/sdl_painter.o
 EXE=fortuna-terminal
 
@@ -10,7 +10,7 @@ CPPFLAGS=-Wall -Wextra -std=c++17 -I.
 ifeq ($(OS),Windows_NT)
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include -O0 -ggdb
-	LDFLAGS = -Llib/SDL2-windows/lib -lSDL2main -lSDL2
+	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lSDL2main -lSDL2
 else
 	OBJ := ${OBJ} comm/uart.o
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O3 -DCOMM_UART

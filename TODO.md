@@ -37,6 +37,7 @@
     - [ ] ...
   - [ ] Write UART bypass (?)
   - [ ] Additional GPIO wires support
+    - [ ] Suspend
     - [ ] VSYNC
     - [ ] RESET
   - [ ] Bluetooth support

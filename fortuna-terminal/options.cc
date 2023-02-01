@@ -6,15 +6,17 @@
 
 static void print_help(int exit_status)
 {
-    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcp-ip"
+    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
     -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
     -w, --window                    Window mode (as opposed to the default, which is full screen)
     -d, --debug                     Print lots of debugging information
 Options valid for `uart`:
-    -P, --port                      Serial port (default: /dev/serial0)
+    -P, --serial-port               Serial port (default: /dev/serial0)
     -B, --baud                      Baud speed for UART (default: 57600)
     -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)
+Options valid for `tcpip`:
+    -R, --tcpip-port                TCP/IP port (default: 8076)
 )";
     exit(exit_status);
 }
@@ -32,14 +34,16 @@ Options::Options(int argc, char **argv)
                 { "window", no_argument, nullptr, 'w' },
                 { "debug", no_argument, nullptr, 'd' },
                 // serial
-                { "port", required_argument, nullptr, 'P' },
+                { "serial-port", required_argument, nullptr, 'P' },
                 { "baud", required_argument, nullptr, 'B' },
                 { "uart-settings", required_argument, nullptr, 'U' },
+                // tcp/ip
+                { "tcpip-port", required_argument, nullptr, 'R' },
                 // end
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:t:r:hdwP:B:U:", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:t:r:hdwP:B:U:R:", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -65,7 +69,7 @@ Options::Options(int argc, char **argv)
                     communication_mode = CommunicationMode::I2C;
                 else if (comm == "spi")
                     communication_mode = CommunicationMode::SPI;
-                else if (comm == "tcp-ip")
+                else if (comm == "tcpip")
                     communication_mode = CommunicationMode::TcpIp;
                 else {
                     std::cerr << "Unsupported communication mode.\n";
@@ -130,6 +134,15 @@ Options::Options(int argc, char **argv)
 
             case 'U':
                 parse_uart_settings(optarg);
+                break;
+
+            case 'R':
+                try {
+                    tcpip.port = optarg;
+                } catch (std::exception&) {
+                    std::cerr << "Invalid TCP/IP port.\n";
+                    exit(EXIT_FAILURE);
+                }
                 break;
 
             case '?':

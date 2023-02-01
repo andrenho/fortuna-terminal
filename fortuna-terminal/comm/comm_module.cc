@@ -1,8 +1,11 @@
 #include "comm_module.hh"
 
 #include <iostream>
+#include <cstring>
 
 #include "echo.hh"
+#include "tcpip.hh"
+
 #ifdef COMM_UART
 #  include "uart.hh"
 #endif
@@ -18,6 +21,8 @@ CommunicationModule::make_communication_module(Options const &options, OutputQue
         case CommunicationMode::UART:
             return std::make_unique<UART>(output_queue, input_queue, protocol, options.serial);
 #endif
+        case CommunicationMode::TcpIp:
+            return std::make_unique<TCPIP>(output_queue, input_queue, protocol, options.tcpip);
         default:
             std::cerr << "Unsupported communication module.\n";
             exit(EXIT_FAILURE);
@@ -27,4 +32,20 @@ CommunicationModule::make_communication_module(Options const &options, OutputQue
 void CommunicationModule::notify_vsync()
 {
     // TODO
+}
+
+void CommunicationModule::error_message(std::string const &msg, bool describe_errno)
+{
+    std::string pmsg = msg;
+    if (describe_errno)
+        pmsg += std::string(": ") + strerror(errno) + "\n";
+    else
+        pmsg += ".\n";
+
+    std::cerr << pmsg;
+
+    input_queue_.enqueue({ InputEventType::TextSetColor, Color::RED });
+    for (char c: pmsg)
+        input_queue_.enqueue({ InputEventType::TextPrintChar, (uint8_t) c });
+    input_queue_.enqueue(InputEvent { InputEventType::TextResetFormatting });
 }

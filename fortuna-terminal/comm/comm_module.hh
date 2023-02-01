@@ -31,6 +31,8 @@ protected:
     OutputQueue& output_queue_;
     InputQueue& input_queue_;
     Protocol& protocol_;
+
+    void error_message(std::string const &msg, bool describe_errno);
 };
 
 #endif //COMM_MODULE_HH_
