@@ -1,14 +1,18 @@
 #if _WIN32
-#include <winsock2.h>
-#include <wspiapi.h>
+#  include <winsock2.h>
+#  include <wspiapi.h>
 #else
-#include <sys/socket.h>
+#  include <sys/socket.h>
+#  include <sys/types.h>
+#  include <sys/socket.h>
+#  include <netdb.h>
+#  include <unistd.h>
+#  define INVALID_SOCKET -1
 #endif
 
 #include "tcpip.hh"
 
 #include <thread>
-#include <io.h>
 
 #include "debug.hh"
 
