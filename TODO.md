@@ -1,15 +1,42 @@
 - Hardware
   - [ ] Create schematic
   - [ ] Build prototype
+  - [ ] Create test project
 - Software
-  - [ ] Create protocol
-  - [ ] Setup project
-  - [ ] Write SDL basic terminal - install on RPI
-  - [ ] Write menu infrastructure
-  - [ ] Write UART support
-  - [ ] Write I²C support
-  - [ ] Write SPI support
-  - [ ] Write graphics mode
-  - [ ] Write audio support
+  - [x] Setup project
+  - [x] Write SDL basic terminal - install on RPI
+  - [x] Write UART support
+  - [ ] TCP/IP communication module
+  - [ ] Create Fortuna protocol
+    - [ ] Implement protocol
+    - [ ] Write TCP/IP testing program
+  - [ ] PTY communication module
+    - [ ] Improve ANSI protocol
+  - [ ] Function keys
+    - [ ] Reset
+    - [ ] Change to 40/80 columns
+  - [ ] Write I²C slave support
+  - [ ] Emulator support
+  - [ ] Write SPI master support
   - [ ] Write keyboard / mouse / joystick support
-  - [ ] Write UART bypass
+    - [ ] Keyboard support
+    - [ ] Mouse support
+    - [ ] Joystick support
+  - [ ] Write menu infrastructure
+    - [ ] Change communication module on the fly
+      - [ ] Configure communication modules
+    - [ ] Change protocol on the fly
+    - [ ] Additional function
+    - [ ] Activate debug mode
+    - [ ] Additional options
+      - [ ] Reset
+      - [ ] Change to 40/80 columns
+  - [ ] Write graphics mode
+    - [ ] ...
+  - [ ] Write audio support
+    - [ ] ...
+  - [ ] Write UART bypass (?)
+  - [ ] Additional GPIO wires support
+    - [ ] VSYNC
+    - [ ] RESET
+  - [ ] Bluetooth support
