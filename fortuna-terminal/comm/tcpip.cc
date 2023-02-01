@@ -13,6 +13,7 @@
 #include "tcpip.hh"
 
 #include <thread>
+#include <fcntl.h>
 
 #include "debug.hh"
 
@@ -122,8 +123,8 @@ void TCPIP::run_input_from_device_thread()
 void TCPIP::run_output_to_device_thread()
 {
     while (running_) {
-        while (running_) {
-            uint8_t c = output_queue_.dequeue_block();
+        uint8_t c = output_queue_.dequeue_block();
+        if (client_connected) {
             int n = send(client_fd, reinterpret_cast<char const *>(&c), 1, 0);
             if (n == 0) {
                 if (debug_mode)

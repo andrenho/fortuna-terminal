@@ -28,7 +28,7 @@ private:
     SOCKET sock_fd = 0;
     SOCKET client_fd = 0;
 
-    static const int BACKLOG = 10;
+    static const int BACKLOG = 1;
 
     bool client_connected = false;
 };
