@@ -53,9 +53,10 @@ int main(int argc, char* argv[])
     }
 
     // clean up
-    communication_module->finalize();
     input_queue.release_lock();
     output_queue.release_lock();
-    input_thread.join();
-    output_thread.join();
+    communication_module->finalize();
+    std::this_thread::sleep_for(200ms);
+    input_thread.detach();
+    output_thread.detach();
 }

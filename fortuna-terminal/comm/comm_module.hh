@@ -19,7 +19,7 @@ public:
     virtual void initialize() {}
     virtual void run_input_from_device_thread() {}
     virtual void run_output_to_device_thread() {}
-    virtual void finalize() { running_ = false; };
+    virtual void finalize() { running_ = false; }
 
     virtual void notify_vsync();
 
