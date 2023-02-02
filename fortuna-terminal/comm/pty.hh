@@ -20,6 +20,8 @@ public:
 private:
     PTYOptions const &pty_options_;
     int master_fd = 0;
+
+    void client_disconnected();
 };
 
 #endif //PTY_HH_

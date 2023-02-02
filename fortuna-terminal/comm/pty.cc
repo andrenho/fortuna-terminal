@@ -1,4 +1,5 @@
 #include "pty.hh"
+#include "debugmode.hh"
 
 #include <cstdlib>
 #include <fcntl.h>
@@ -25,10 +26,13 @@ void PTY::run_input_from_device_thread()
     while (running_) {
         uint8_t c;
         int n = read(master_fd, &c, 1);
-        if (n < 0)
+        if (n == 0) {
+            client_disconnected();
+        } else if (n < 0) {
             error_message("Failure reading from the PTY", true);
-        else
+        } else {
             protocol_.input_char(c);
+        }
     }
 }
 
@@ -36,13 +40,28 @@ void PTY::run_output_to_device_thread()
 {
     while (running_) {
         uint8_t c = output_queue_.dequeue_block();
-        if (write(master_fd, &c, 1) < 0)
-            error_message("Failure writing to the PTY", true);
+        if (master_fd != 0) {
+            int n = write(master_fd, &c, 1);
+            if (n == 0) {
+                client_disconnected();
+            } else if (n < 0) {
+                error_message("Failure writing to the PTY", true);
+            }
+        }
     }
+}
+
+void PTY::client_disconnected()
+{
+    close(master_fd);
+    master_fd = 0;
+    if (debug_mode)
+        std::cout << "PTY client disconnected.\n";
 }
 
 void PTY::finalize()
 {
     CommunicationModule::finalize();
-    close(master_fd);
+    if (master_fd != 0)
+        close(master_fd);
 }
