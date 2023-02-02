@@ -1,5 +1,5 @@
 - Hardware
-  - [ ] Create schematic
+  - [x] Create schematic
   - [ ] Build prototype
   - [ ] Create test project
 - Software
@@ -11,7 +11,7 @@
   - [x] Create Fortuna protocol
     - [x] Implement protocol
     - [x] Deal with invalid requests on protocol
-  - [ ] PTY communication module
+  - [x] PTY communication module
     - [ ] Improve ANSI protocol
   - [ ] Test real world communication
     - [ ] Create test circuit
