@@ -6,6 +6,7 @@
 #include "echo.hh"
 #include "tcpip.hh"
 #include "debug.hh"
+#include "pty.hh"
 
 #ifdef COMM_UART
 #  include "uart.hh"
@@ -18,14 +19,18 @@ CommunicationModule::make_communication_module(Options const &options, OutputQue
     switch (options.communication_mode) {
         case CommunicationMode::Echo:
             return std::make_unique<Echo>(output_queue, input_queue, protocol);
-#ifdef COMM_UART
-        case CommunicationMode::UART:
-            return std::make_unique<UART>(output_queue, input_queue, protocol, options.serial);
-#endif
         case CommunicationMode::TcpIp:
             return std::make_unique<TCPIP>(output_queue, input_queue, protocol, options.tcpip);
         case CommunicationMode::Debug:
             return std::make_unique<Debug>(output_queue, input_queue, protocol);
+#ifdef COMM_UART
+            case CommunicationMode::UART:
+            return std::make_unique<UART>(output_queue, input_queue, protocol, options.serial);
+#endif
+#ifdef COMM_PTY
+        case CommunicationMode::PTY:
+            return std::make_unique<PTY>(output_queue, input_queue, protocol, options.pty);
+#endif
         default:
             std::cerr << "Unsupported communication module.\n";
             exit(EXIT_FAILURE);

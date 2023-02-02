@@ -13,9 +13,6 @@
     - [x] Deal with invalid requests on protocol
   - [ ] PTY communication module
     - [ ] Improve ANSI protocol
-  - [ ] Function keys
-    - [ ] Reset
-    - [ ] Change to 40/80 columns
   - [ ] Test real world communication
     - [ ] Create test circuit
     - [ ] Create client communication library (?)
@@ -24,6 +21,9 @@
     - [ ] Increase protocol reliability
       - [ ] Add responses (?)
       - [ ] Add checksum
+  - [ ] Function keys
+    - [ ] Reset
+    - [ ] Change to 40/80 columns
   - [ ] Emulator support
   - [ ] Write TCP/IP testing program (?)
   - [ ] Write keyboard / mouse / joystick support

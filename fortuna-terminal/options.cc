@@ -6,7 +6,7 @@
 
 static void print_help(int exit_status)
 {
-    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip", "debug"
+    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip", "pty", "debug"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
     -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
     -w, --window                    Window mode (as opposed to the default, which is full screen)
@@ -17,6 +17,8 @@ Options valid for `uart`:
     -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)
 Options valid for `tcpip`:
     -R, --tcpip-port                TCP/IP port (default: 8076)
+Options valid for `pty`:
+    -S, --shell                     Shell executable (default: /bin/sh)
 )";
     exit(exit_status);
 }
@@ -71,6 +73,8 @@ Options::Options(int argc, char **argv)
                     communication_mode = CommunicationMode::SPI;
                 else if (comm == "tcpip")
                     communication_mode = CommunicationMode::TcpIp;
+                else if (comm == "pty")
+                    communication_mode = CommunicationMode::PTY;
                 else if (comm == "debug")
                     communication_mode = CommunicationMode::Debug;
                 else {
@@ -147,6 +151,10 @@ Options::Options(int argc, char **argv)
                 }
                 break;
 
+            case 'S':
+                pty.shell = optarg;
+                break;
+
             case '?':
                 std::cerr << "Invalid switch.\n";
                 exit(EXIT_FAILURE);
@@ -179,4 +187,14 @@ void Options::parse_uart_settings(std::string const &s)
     }
     serial.stop_bits = s[1] - '0';
     serial.parity = s[2];
+
+    if (communication_mode == CommunicationMode::Echo && protocol != ProtocolType::Ansi) {
+        std::cerr << "Echo mode only works with ANSI protocol.\n";
+        exit(EXIT_FAILURE);
+    }
+
+    if (communication_mode == CommunicationMode::PTY && protocol != ProtocolType::Ansi) {
+        std::cerr << "PTY mode only works with ANSI protocol.\n";
+        exit(EXIT_FAILURE);
+    }
 }

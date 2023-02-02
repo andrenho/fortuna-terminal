@@ -4,7 +4,7 @@
 #include <string>
 
 enum class CommunicationMode {
-    NotChosen, Echo, UART, I2C, SPI, TcpIp, Emcc, Debug
+    NotChosen, Echo, UART, I2C, SPI, TcpIp, Emcc, Debug, PTY
 };
 
 enum class TerminalType {
@@ -26,6 +26,10 @@ struct TCPIPOptions {
     std::string port = "8076";
 };
 
+struct PTYOptions {
+    std::string shell = "/bin/sh";
+};
+
 class Options {
 public:
     Options(int argc, char* argv[]);
@@ -37,6 +41,7 @@ public:
     bool              window_mode = false;
     SerialOptions     serial;
     TCPIPOptions      tcpip;
+    PTYOptions        pty;
 
 private:
     void validate_options() const;
