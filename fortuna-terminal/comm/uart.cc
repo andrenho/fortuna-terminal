@@ -1,5 +1,6 @@
 #include "uart.hh"
 #include "debugmode.hh"
+#include "../protocol/protocol.hh"
 
 #include <cerrno>
 #include <cstdio>
