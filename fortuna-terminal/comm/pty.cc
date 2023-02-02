@@ -6,10 +6,15 @@
 #include <unistd.h>
 #include <pty.h>
 #include <fcntl.h>
+#include <termios.h>
 
-void PTY::initialize()
+void PTY::initialize(size_t lines, size_t columns)
 {
-    pid_t pid = forkpty(&master_fd, nullptr, nullptr, nullptr);  // TODO - set winsize
+    struct winsize winp;
+    winp.ws_row = lines;
+    winp.ws_col = columns;
+
+    pid_t pid = forkpty(&master_fd, nullptr, nullptr, &winp);  // TODO - set winsize
     if (pid == 0) {
         // this is the child process that will execute the shell
         execl(pty_options_.shell.c_str(), pty_options_.shell.c_str(), nullptr);

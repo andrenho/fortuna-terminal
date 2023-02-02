@@ -183,3 +183,8 @@ void SDL_Terminal::draw(const Scene &scene) const
 
     sdl_painter.present();
 }
+
+void SDL_Terminal::window_size(size_t *lines, size_t *columns) const
+{
+
+}

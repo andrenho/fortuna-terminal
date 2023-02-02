@@ -11,7 +11,7 @@ public:
     PTY(OutputQueue& output_queue, InputQueue& input_queue, Protocol& protocol, PTYOptions const& pty_options)
         : CommunicationModule(output_queue, input_queue, protocol), pty_options_(pty_options) {}
 
-    void initialize() override;
+    void initialize(size_t lines, size_t columns) override;
     void finalize() override;
 
     void run_input_from_device_thread() override;

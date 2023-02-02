@@ -17,7 +17,7 @@
 
 #include "../debugmode.hh"
 
-void TCPIP::initialize()
+void TCPIP::initialize(size_t, size_t)
 {
 #if _WIN32
     WSADATA wsaData;

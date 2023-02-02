@@ -12,7 +12,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-void UART::initialize()
+void UART::initialize(size_t, size_t)
 {
     fd = open(serial_options_.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd < 0) {

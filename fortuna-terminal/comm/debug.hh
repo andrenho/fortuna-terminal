@@ -1,5 +1,5 @@
 #ifndef DEBUGMODE_HH_
-#define DEBUG_HH_
+#define DEBUGMODE_HH_
 
 #include "comm_module.hh"
 

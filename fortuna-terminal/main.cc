@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     Scene scene;
 
     terminal->initialize();
-    communication_module->initialize();
+    communication_module->initialize(scene.text_layer.lines(), scene.text_layer.columns());
 
     // start communication thread
     std::thread input_thread(
