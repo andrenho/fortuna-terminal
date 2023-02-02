@@ -62,11 +62,6 @@ void SDL_Painter::draw_background(const TextLayer &text_layer) const
 
 void SDL_Painter::draw_text(const TextLayer &text_layer) const
 {
-    /*
-    SDL_Color fg = palette_color(COLOR_WHITE);
-    SDL_SetTextureColorMod(font, fg.r, fg.g, fg.b);
-    */
-
     for (size_t line = 0; line < text_layer.lines(); ++line)
         for (size_t column = 0; column < text_layer.columns(); ++column)
             draw_text_cell(text_layer, line, column);

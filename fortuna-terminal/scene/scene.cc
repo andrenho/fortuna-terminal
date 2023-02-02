@@ -30,7 +30,7 @@ void Scene::process_input_queue(InputQueue& input_queue)
                 text_layer.move_cursor_to(event.p2, event.p1);
                 break;
             case InputEventType::TextSetColor:
-                text_layer.set_color(event.p2);
+                text_layer.set_color(event.p1);
                 break;
             case InputEventType::TextClearScreen:
                 text_layer.clear_screen();
