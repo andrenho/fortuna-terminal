@@ -25,12 +25,12 @@ CommunicationModule::make_communication_module()
         case CommunicationMode::Debug:
             return std::make_unique<Debug>();
 #ifdef COMM_UART
-            case CommunicationMode::UART:
-            return std::make_unique<UART>(output_queue, input_queue, protocol, options.serial);
+        case CommunicationMode::UART:
+            return std::make_unique<UART>();
 #endif
 #ifdef COMM_PTY
         case CommunicationMode::PTY:
-            return std::make_unique<PTY>(output_queue, input_queue, protocol, options.pty);
+            return std::make_unique<PTY>();
 #endif
         default:
             std::cerr << "Unsupported communication module.\n";

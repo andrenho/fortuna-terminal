@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
 
     // initialization
     protocol = Protocol::make_protocol();
-
     communication_module = CommunicationModule::make_communication_module();
     terminal = Terminal::make_terminal();
 
