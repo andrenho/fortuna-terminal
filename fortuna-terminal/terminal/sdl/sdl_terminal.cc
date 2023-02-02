@@ -165,7 +165,7 @@ void SDL_Terminal::add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Proto
             default: return;
         }
         if (special_key.has_value()) {
-            KeyModifiers key_modifiers;
+            KeyMod key_modifiers;
             key_modifiers.shift = (key.keysym.mod & KMOD_SHIFT) != 0;
             key_modifiers.control = (key.keysym.mod & KMOD_CTRL) != 0;
             key_modifiers.alt = (key.keysym.mod & KMOD_ALT) != 0;

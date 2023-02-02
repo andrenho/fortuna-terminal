@@ -114,7 +114,7 @@ void TCPIP::run_input_from_device_thread()
             } else if (n < 0) {
                 error_message("Failure reading from client", true);
             } else {
-                protocol_.input(c, input_queue_);
+                protocol_.input_char(c, input_queue_);
             }
         }
     }

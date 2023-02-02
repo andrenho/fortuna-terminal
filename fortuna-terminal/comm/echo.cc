@@ -3,7 +3,7 @@
 void Echo::run_input_from_device_thread()
 {
     while (running_) {
-        protocol_.input(buffer.dequeue_block(), input_queue_);
+        protocol_.input_char(buffer.dequeue_block(), input_queue_);
     }
 }
 
