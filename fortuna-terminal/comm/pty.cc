@@ -30,6 +30,7 @@ void PTY::run_input_from_device_thread()
             client_disconnected();
         } else if (n < 0) {
             error_message("Failure reading from the PTY", true);
+            client_disconnected();
         } else {
             protocol_.input_char(c);
         }
@@ -46,6 +47,7 @@ void PTY::run_output_to_device_thread()
                 client_disconnected();
             } else if (n < 0) {
                 error_message("Failure writing to the PTY", true);
+                client_disconnected();
             }
         }
     }
