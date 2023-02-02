@@ -8,9 +8,10 @@ static void print_help(int exit_status)
 {
     std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip", "pty", "debug"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
-    -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
+    -p, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
     -w, --window                    Window mode (as opposed to the default, which is full screen)
     -d, --debug                     Print lots of debugging information
+    -b, --debug-bytes               Print all bytes received (green) and transmitted (red)
 Options valid for `uart`:
     -P, --serial-port               Serial port (default: /dev/serial0)
     -B, --baud                      Baud speed for UART (default: 57600)
@@ -32,9 +33,10 @@ void Options::parse_commandline_args(int argc, char **argv)
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "terminal-type", required_argument, nullptr, 't' },
-                { "protocol", required_argument, nullptr, 'r' },
+                { "protocol", required_argument, nullptr, 'p' },
                 { "window", no_argument, nullptr, 'w' },
                 { "debug", no_argument, nullptr, 'd' },
+                { "debug-bytes", no_argument, nullptr, 'b' },
                 // serial
                 { "serial-port", required_argument, nullptr, 'P' },
                 { "baud", required_argument, nullptr, 'B' },
@@ -45,7 +47,7 @@ void Options::parse_commandline_args(int argc, char **argv)
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:t:r:hdwP:B:U:R:", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:t:p:hdbwP:B:U:R:", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -97,7 +99,7 @@ void Options::parse_commandline_args(int argc, char **argv)
                 break;
             }
 
-            case 'r': {
+            case 'p': {
                 std::string pp(optarg);
                 if (pp == "fortuna")
                     protocol = ProtocolType::Fortuna;
@@ -114,6 +116,10 @@ void Options::parse_commandline_args(int argc, char **argv)
 
             case 'd':
                 debug_mode = true;
+                break;
+
+            case 'b':
+                debug_bytes = true;
                 break;
 
             case 'w':

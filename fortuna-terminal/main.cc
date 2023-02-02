@@ -2,7 +2,6 @@
 
 using namespace std::chrono_literals;
 
-#include "debugmode.hh"
 #include "options.hh"
 #include "comm/comm_module.hh"
 #include "terminal/terminal.hh"
@@ -24,7 +23,6 @@ int main(int argc, char* argv[])
 {
     // parse options
     options.parse_commandline_args(argc, argv);
-    debug_mode = options.debug_mode;
 
     // initialization
     protocol = Protocol::make_protocol();

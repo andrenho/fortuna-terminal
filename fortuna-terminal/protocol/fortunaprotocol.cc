@@ -1,5 +1,4 @@
 #include "fortunaprotocol.hh"
-#include "debugmode.hh"
 #include "global.hh"
 
 #include <functional>
@@ -105,7 +104,7 @@ void FortunaProtocol::output_special_key_event(bool is_down, SpecialKey special_
 
 void FortunaProtocol::protocol_error(FP_Response error_code, std::vector<uint8_t> const& buffer)
 {
-    if (debug_mode) {
+    if (options.debug_mode) {
         std::cerr << "Communication error, response code "
                   << std::hex << std::setw(2) << std::setfill('0') << (int) error_code << " (buffer:";
         for (uint8_t byte: buffer)

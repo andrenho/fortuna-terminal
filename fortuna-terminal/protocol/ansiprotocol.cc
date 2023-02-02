@@ -2,7 +2,6 @@
 
 #include <regex>
 
-#include "../debugmode.hh"
 #include "global.hh"
 
 /***********************
@@ -62,12 +61,12 @@ void AnsiProtocol::rollback_escape_sequence()
 {
     escape_mode = false;
     if (escape_sequence.size() >= 2 && escape_sequence[1] == '?') {
-        if (debug_mode)
+        if (options.debug_mode)
             std::cerr << "Unsupported ANSI sequence received: '^" << escape_sequence << "'.\n";
     } else {
         for (uint8_t byte: escape_sequence)
             input_queue.enqueue({InputEventType::TextPrintChar, byte});
-        if (debug_mode)
+        if (options.debug_mode)
             std::cerr << "Invalid ANSI sequence received: '^" << escape_sequence << "'.\n";
     }
 }

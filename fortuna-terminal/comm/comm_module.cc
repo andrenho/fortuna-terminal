@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <iomanip>
 
 #include "global.hh"
 
@@ -57,4 +58,16 @@ void CommunicationModule::error_message(std::string const &msg, bool describe_er
     for (char c: pmsg)
         input_queue.enqueue({ InputEventType::TextPrintChar, (uint8_t) c });
     input_queue.enqueue(InputEvent { InputEventType::TextResetFormatting });
+}
+
+void CommunicationModule::debug_received_byte(uint8_t byte) const
+{
+    if (options.debug_bytes)
+        std::cout << "[\e[0;32m" << std::hex << std::setw(2) << std::setfill('0') << byte << " \e[0m]" << std::flush;
+}
+
+void CommunicationModule::debug_sent_byte(uint8_t byte) const
+{
+    if (options.debug_bytes)
+        std::cout << "\e[0;31m" << std::hex << std::setw(2) << std::setfill('0') << byte << " \e[0m" << std::flush;
 }

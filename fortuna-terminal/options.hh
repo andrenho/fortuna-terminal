@@ -38,6 +38,7 @@ public:
     TerminalType      terminal_type = TerminalType::SDL;
     ProtocolType      protocol = ProtocolType::Fortuna;
     bool              debug_mode = false;
+    bool              debug_bytes = false;
     bool              window_mode = false;
     SerialOptions     serial;
     TCPIPOptions      tcpip;
