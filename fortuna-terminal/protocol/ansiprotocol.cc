@@ -15,7 +15,7 @@ static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))?)?(\w))", s
 void AnsiProtocol::input_char(uint8_t byte)
 {
     if (!escape_mode) {
-        if (byte != '\e') {
+        if (byte != '\e' && byte != 13) {
             input_queue_.enqueue({InputEventType::TextPrintChar, byte});
         } else {
             escape_mode = true;
