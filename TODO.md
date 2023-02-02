@@ -8,8 +8,8 @@
   - [x] Write UART support
   - [x] TCP/IP communication module
   - [ ] Bug: colors are not working
-  - [ ] Create Fortuna protocol
-    - [ ] Implement protocol
+  - [x] Create Fortuna protocol
+    - [x] Implement protocol
     - [ ] Write TCP/IP testing program
   - [ ] PTY communication module
     - [ ] Improve ANSI protocol

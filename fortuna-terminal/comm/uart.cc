@@ -1,5 +1,5 @@
 #include "uart.hh"
-#include "debug.hh"
+#include "debugmode.hh"
 
 #include <cerrno>
 #include <cstdio>
