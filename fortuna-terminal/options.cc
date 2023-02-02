@@ -118,7 +118,7 @@ Options::Options(int argc, char **argv)
 
             case 'B':
                 try {
-                    serial.baud = std::stoi(optarg);
+                    serial.baud = std::stoll(optarg);
                 } catch (std::exception&) {
                     std::cerr << "Invalid baud number.\n";
                     exit(EXIT_FAILURE);

@@ -16,7 +16,7 @@ enum class ProtocolType {
 };
 
 struct SerialOptions {
-    unsigned int      baud = 56700;
+    size_t            baud = 56700;
     std::string       port = "/dev/serial0";
     char              parity = 'N';
     uint8_t           stop_bits = 1;
