@@ -1,5 +1,4 @@
 #include "pty.hh"
-#include "debugmode.hh"
 #include "../global.hh"
 
 #include <cstdlib>
@@ -64,7 +63,7 @@ void PTY::client_disconnected()
 {
     close(master_fd);
     master_fd = 0;
-    if (debug_mode)
+    if (options.debug_mode)
         std::cout << "PTY client disconnected.\n";
 }
 

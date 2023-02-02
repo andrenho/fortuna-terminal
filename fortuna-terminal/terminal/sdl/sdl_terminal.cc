@@ -3,7 +3,6 @@
 #include "SDL2/SDL.h"
 #include <iostream>
 
-#include "../../debugmode.hh"
 #include "global.hh"
 
 void SDL_Terminal::print_video_details() const
@@ -36,7 +35,7 @@ void SDL_Terminal::print_video_details() const
 
 void SDL_Terminal::initialize()
 {
-    if (debug_mode)
+    if (options.debug_mode)
         print_video_details();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -46,7 +45,7 @@ void SDL_Terminal::initialize()
     }
     initialized_ = true;
 
-    if (debug_mode)
+    if (options.debug_mode)
         std::cout << "SDL_VIDEODRIVER selected: " << SDL_GetCurrentVideoDriver() << "\n";
 
     int win_w, win_h;
@@ -74,7 +73,7 @@ void SDL_Terminal::initialize()
     }
     SDL_ShowCursor(SDL_DISABLE);
 
-    if (debug_mode) {
+    if (options.debug_mode) {
         std::cout << "SDL_RENDER_DRIVER available: ";
         for (int i = 0; i < SDL_GetNumRenderDrivers(); ++i) {
             SDL_RendererInfo info;

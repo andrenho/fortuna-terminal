@@ -1,10 +1,10 @@
 #include "sdl_painter.hh"
 #include "sdl_terminal.hh"
-#include "debugmode.hh"
 
 #include <SDL2/SDL.h>
 
 #include "font.hh"
+#include "global.hh"
 
 void SDL_Painter::initialize(struct SDL_Window* window)
 {
@@ -15,7 +15,7 @@ void SDL_Painter::initialize(struct SDL_Window* window)
     }
     SDL_RenderSetLogicalSize(renderer_, SDL_Terminal::GRAPHICS_W, SDL_Terminal::GRAPHICS_H);
 
-    if (debug_mode) {
+    if (options.debug_mode) {
         SDL_RendererInfo info;
         SDL_GetRendererInfo(renderer_, &info );
         std::cout << "SDL_RENDER_DRIVER selected: " << info.name << "\n";

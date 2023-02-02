@@ -1,4 +1,4 @@
-OBJ=main.o debugmode.o options.o \
+OBJ=main.o options.o \
 	scene/scene.o scene/textlayer.o \
     protocol/protocol.o protocol/ansiprotocol.o protocol/fortunaprotocol.o \
 	comm/comm_module.o comm/echo.o comm/tcpip.o comm/debug.o \

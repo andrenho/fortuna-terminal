@@ -26,6 +26,8 @@ public:
 protected:
     bool running_ = true;
 
+    void debug_received_byte(uint8_t byte) const;
+    void debug_sent_byte(uint8_t byte) const;
     void error_message(std::string const &msg, bool describe_errno);
 };
 

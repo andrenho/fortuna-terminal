@@ -16,7 +16,6 @@
 #include <fcntl.h>
 
 #include "../global.hh"
-#include "../debugmode.hh"
 
 void TCPIP::initialize()
 {
@@ -99,7 +98,7 @@ void TCPIP::run_input_from_device_thread()
             }
             client_connected = true;
             
-            if (debug_mode)
+            if (options.debug_mode)
                 std::cout << "Client connected.\n";
 
         } else {
@@ -109,7 +108,7 @@ void TCPIP::run_input_from_device_thread()
             uint8_t c;
             int n = recv(client_fd, reinterpret_cast<char *>(&c), 1, 0);
             if (n == 0) {
-                if (debug_mode)
+                if (options.debug_mode)
                     std::cout << "Client disconnected.\n";
                 client_connected = false;
             } else if (n < 0) {
@@ -128,7 +127,7 @@ void TCPIP::run_output_to_device_thread()
         if (client_connected) {
             int n = send(client_fd, reinterpret_cast<char const *>(&c), 1, 0);
             if (n == 0) {
-                if (debug_mode)
+                if (options.debug_mode)
                     std::cout << "Client disconnected.\n";
                 client_connected = false;
             } else if (n < 0) {

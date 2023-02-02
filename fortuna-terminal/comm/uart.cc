@@ -1,6 +1,5 @@
 #include "uart.hh"
 #include "../protocol/protocol.hh"
-#include "../debugmode.hh"
 
 #include <cerrno>
 #include <cstdio>
@@ -21,7 +20,7 @@ void UART::initialize()
         error_message("Error opening serial port: ", true);
         return;
     }
-    if (debug_mode)
+    if (options.debug_mode)
         std::cout << "Serial port initialized.\n";
 
     fcntl(fd, F_SETFL, 0);
@@ -70,7 +69,7 @@ void UART::initialize()
         return;
     }
 
-    if (debug_mode)
+    if (options.debug_mode)
         printf("Serial port configured.\n");
 
 }
