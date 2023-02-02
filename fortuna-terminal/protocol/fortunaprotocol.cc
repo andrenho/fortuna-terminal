@@ -1,7 +1,7 @@
 #include "fortunaprotocol.hh"
 
+#include <functional>
 #include <vector>
-
 
 void FortunaProtocol::input_char(uint8_t byte, InputQueue &input_queue)
 {
