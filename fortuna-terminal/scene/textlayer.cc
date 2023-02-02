@@ -49,7 +49,7 @@ void TextLayer::text_advance_line()
     cursor_.x = 0;
     ++cursor_.y;
     if (cursor_.y >= lines_) {
-        for (size_t y = 0; y < (lines_ - 1); ++y) {
+        for (size_t y = (scroll_start_ - 1); y < (scroll_end_ - 1); ++y) {
             for (size_t x = 0; x < columns_; ++x)
                 chr(y, x) = chr(y+1, x);
         }
@@ -120,4 +120,10 @@ void TextLayer::clear_line()
 {
     for (size_t x = 0; x < columns_; ++x)
         chr(cursor_.y, x) = { ' ', foreground_color_ };
+}
+
+void TextLayer::set_scroll_region(uint8_t start, uint8_t end)
+{
+    scroll_start_ = start;
+    scroll_end_ = end;
 }

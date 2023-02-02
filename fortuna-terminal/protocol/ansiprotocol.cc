@@ -98,6 +98,9 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
             else
                 input_queue_.enqueue({InputEventType::TextSetColor, text_ansi_color(p2)});
             break;
+        case 'r':
+            input_queue_.enqueue({InputEventType::SetScrollRegion, (uint8_t) p1, (uint8_t) p2});
+            break;
         default:
             rollback_escape_sequence();
             break;

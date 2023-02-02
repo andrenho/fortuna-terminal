@@ -45,9 +45,13 @@ public:
     void clear_to_end_of_line();
     void clear_line();
 
+    void set_scroll_region(uint8_t start, uint8_t end);
+
 private:
     unsigned int            columns_ = 40;
     unsigned int            lines_ = 25;
+    unsigned int            scroll_start_ = 1;
+    unsigned int            scroll_end_ = lines_;
 
     uint8_t background_color_ = Color::BLACK;
     uint8_t foreground_color_ = Color::WHITE;

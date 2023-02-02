@@ -47,6 +47,9 @@ void Scene::process_input_queue(InputQueue& input_queue)
             case InputEventType::TextClearLine:
                 text_layer.clear_line();
                 break;
+            case InputEventType::SetScrollRegion:
+                text_layer.set_scroll_region(event.p1, event.p2);
+                break;
         }
     }
 

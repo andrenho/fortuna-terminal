@@ -46,6 +46,9 @@ static const struct {
         { FP_TEXT_CLEAR_LINE, 1, [](uint8_t, uint8_t) {
             return InputEvent { InputEventType::TextClearLine };
         } },
+        { FP_TEXT_SET_SCROLL_REGION, 1, [](uint8_t p1, uint8_t p2) {
+            return InputEvent { InputEventType::SetScrollRegion, p1, p2 };
+        } }
 };
 
 void FortunaProtocol::input_char(uint8_t byte)
