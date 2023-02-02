@@ -103,3 +103,21 @@ void TextLayer::tab()
     }
     cursor_.x = next_tab;
 }
+
+void TextLayer::clear_to_beginning_of_line()
+{
+    for (size_t x = 0; x <= cursor_.x; ++x)
+        chr(cursor_.y, x) = { ' ', foreground_color_ };
+}
+
+void TextLayer::clear_to_end_of_line()
+{
+    for (size_t x = cursor_.x; x < columns_; ++x)
+        chr(cursor_.y, x) = { ' ', foreground_color_ };
+}
+
+void TextLayer::clear_line()
+{
+    for (size_t x = 0; x < columns_; ++x)
+        chr(cursor_.y, x) = { ' ', foreground_color_ };
+}

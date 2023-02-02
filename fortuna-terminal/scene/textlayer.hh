@@ -41,6 +41,9 @@ public:
     void set_color(uint8_t color);
     void clear_screen();
     void reset_formatting();
+    void clear_to_beginning_of_line();
+    void clear_to_end_of_line();
+    void clear_line();
 
 private:
     unsigned int            columns_ = 40;

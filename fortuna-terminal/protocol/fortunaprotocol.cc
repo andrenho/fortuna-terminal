@@ -37,6 +37,15 @@ static const struct {
         { FP_TEXT_CLEAR_SCREEN, 1, [](uint8_t, uint8_t) {
             return InputEvent { InputEventType::TextClearScreen };
         } },
+        { FP_TEXT_CLEAR_TO_BOL, 1, [](uint8_t, uint8_t) {
+            return InputEvent { InputEventType::TextClearToBeginningOfLine };
+        } },
+        { FP_TEXT_CLEAR_TO_EOL, 1, [](uint8_t, uint8_t) {
+            return InputEvent { InputEventType::TextClearToEndOfLine };
+        } },
+        { FP_TEXT_CLEAR_LINE, 1, [](uint8_t, uint8_t) {
+            return InputEvent { InputEventType::TextClearLine };
+        } },
 };
 
 void FortunaProtocol::input_char(uint8_t byte)

@@ -84,6 +84,14 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
         case 'J':
             input_queue_.enqueue(InputEvent {InputEventType::TextClearScreen});
             break;
+        case 'K':
+            if (p1 == 0)
+                input_queue_.enqueue(InputEvent { InputEventType::TextClearToEndOfLine });
+            else if (p1 == 1)
+                input_queue_.enqueue(InputEvent { InputEventType::TextClearToBeginningOfLine });
+            else if (p1 == 2)
+                input_queue_.enqueue(InputEvent { InputEventType::TextClearLine });
+            break;
         case 'm':
             if (p1 == 0)
                 input_queue_.enqueue(InputEvent {InputEventType::TextResetFormatting});

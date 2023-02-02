@@ -38,6 +38,15 @@ void Scene::process_input_queue(InputQueue& input_queue)
             case InputEventType::TextResetFormatting:
                 text_layer.reset_formatting();
                 break;
+            case InputEventType::TextClearToBeginningOfLine:
+                text_layer.clear_to_beginning_of_line();
+                break;
+            case InputEventType::TextClearToEndOfLine:
+                text_layer.clear_to_end_of_line();
+                break;
+            case InputEventType::TextClearLine:
+                text_layer.clear_line();
+                break;
         }
     }
 
