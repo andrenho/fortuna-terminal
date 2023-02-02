@@ -15,13 +15,21 @@ static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))?)?(\w))", s
 void AnsiProtocol::input_char(uint8_t byte)
 {
     if (!escape_mode) {
-        if (byte != '\e' && byte != 13) {
-            input_queue_.enqueue({InputEventType::TextPrintChar, byte});
+        if (byte != '\e') {
+            if (byte != 13)
+                input_queue_.enqueue({InputEventType::TextPrintChar, byte});
         } else {
             escape_mode = true;
             escape_sequence = "";
         }
     } else {
+        if (byte == '\e') {
+            rollback_escape_sequence();
+            escape_mode = true;
+            escape_sequence = "";
+            return;
+        }
+
         escape_sequence += (char) byte;
 
         if (std::isalpha(byte))
@@ -54,12 +62,12 @@ void AnsiProtocol::rollback_escape_sequence()
     escape_mode = false;
     if (escape_sequence.size() >= 2 && escape_sequence[1] == '?') {
         if (debug_mode)
-            std::cerr << "Unsupported ANSI sequence received: '" << escape_sequence << "'.\n";
+            std::cerr << "Unsupported ANSI sequence received: '^" << escape_sequence << "'.\n";
     } else {
         for (uint8_t byte: escape_sequence)
             input_queue_.enqueue({InputEventType::TextPrintChar, byte});
         if (debug_mode)
-            std::cerr << "Invalid ANSI sequence received: '" << escape_sequence << "'.\n";
+            std::cerr << "Invalid ANSI sequence received: '^" << escape_sequence << "'.\n";
     }
 }
 

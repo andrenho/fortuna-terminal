@@ -16,6 +16,7 @@ void PTY::initialize(size_t lines, size_t columns)
 
     pid_t pid = forkpty(&master_fd, nullptr, nullptr, &winp);  // TODO - set winsize
     if (pid == 0) {
+        setenv("TERM", "linux", 1);
         // this is the child process that will execute the shell
         execl(pty_options_.shell.c_str(), pty_options_.shell.c_str(), nullptr);
     }
