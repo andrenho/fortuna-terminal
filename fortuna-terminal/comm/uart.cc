@@ -1,6 +1,6 @@
 #include "uart.hh"
-#include "debugmode.hh"
 #include "../protocol/protocol.hh"
+#include "../debugmode.hh"
 
 #include <cerrno>
 #include <cstdio>
@@ -81,7 +81,7 @@ void UART::run_input_from_device_thread()
         if (n < 0)
             error_message("Failure reading from serial", true);
         else
-            protocol_.input(c, input_queue_);
+            protocol_.input_char(c, input_queue_);
     }
 }
 
