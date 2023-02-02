@@ -47,6 +47,8 @@ public:
 
     void set_scroll_region(uint8_t start, uint8_t end);
 
+    void delete_char_under_cursor();
+
 private:
     unsigned int            columns_ = 40;
     unsigned int            lines_ = 25;

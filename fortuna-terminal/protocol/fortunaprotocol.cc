@@ -48,6 +48,9 @@ static const struct {
         } },
         { FP_TEXT_SET_SCROLL_REGION, 1, [](uint8_t p1, uint8_t p2) {
             return InputEvent { InputEventType::SetScrollRegion, p1, p2 };
+        } },
+        { FP_TEXT_DEL_CHAR_UNDER_CURSOR, 1, [](uint8_t, uint8_t) {
+            return InputEvent { InputEventType::DeleteCharUnderCursor };
         } }
 };
 

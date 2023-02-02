@@ -50,6 +50,9 @@ void Scene::process_input_queue(InputQueue& input_queue)
             case InputEventType::SetScrollRegion:
                 text_layer.set_scroll_region(event.p1, event.p2);
                 break;
+            case InputEventType::DeleteCharUnderCursor:
+                text_layer.delete_char_under_cursor();
+                break;
         }
     }
 

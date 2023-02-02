@@ -7,7 +7,7 @@
 enum class InputEventType {
     NoEvent, TextPrintChar, TextMoveUp, TextMoveDown, TextMoveForward, TextMoveBackward, TextMoveTo, TextSetColor,
     TextClearScreen, TextResetFormatting, TextClearToBeginningOfLine, TextClearToEndOfLine, TextClearLine,
-    SetScrollRegion,
+    SetScrollRegion, DeleteCharUnderCursor,
 };
 
 struct InputEvent {

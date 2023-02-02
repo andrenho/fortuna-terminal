@@ -127,3 +127,8 @@ void TextLayer::set_scroll_region(uint8_t start, uint8_t end)
     scroll_start_ = start;
     scroll_end_ = end;
 }
+
+void TextLayer::delete_char_under_cursor()
+{
+    chr(cursor_.y, cursor_.x) = { ' ', foreground_color_ };
+}

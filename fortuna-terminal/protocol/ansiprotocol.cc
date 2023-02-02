@@ -99,6 +99,14 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
                 input_queue_.enqueue(InputEvent { InputEventType::TextClearToBeginningOfLine });
             else if (p1 == 2)
                 input_queue_.enqueue(InputEvent { InputEventType::TextClearLine });
+            else
+                rollback_escape_sequence();
+            break;
+        case 'P':
+            if (p1 == 0)
+                input_queue_.enqueue(InputEvent { InputEventType::DeleteCharUnderCursor });
+            else
+                rollback_escape_sequence();
             break;
         case 'm':
             if (p1 == 0)
