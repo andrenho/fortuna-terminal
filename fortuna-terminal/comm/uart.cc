@@ -79,10 +79,12 @@ void UART::run_input_from_device_thread()
     while (running_) {
         uint8_t c;
         int n = read(fd, &c, 1);
-        if (n < 0)
+        if (n < 0) {
             error_message("Failure reading from serial", true);
-        else
+        } else {
             protocol->input_char(c);
+            debug_received_byte(c);
+        }
     }
 }
 
@@ -92,6 +94,8 @@ void UART::run_output_to_device_thread()
         uint8_t c = output_queue.dequeue_block();
         if (write(fd, &c, 1) < 0)
             error_message("Failure writing to serial", true);
+        else
+            debug_sent_byte(c);
         tcdrain(fd);
     }
 }

@@ -203,5 +203,10 @@ void Options::parse_uart_settings(std::string const &s)
         std::cerr << "PTY mode only works with ANSI protocol.\n";
         exit(EXIT_FAILURE);
     }
+
+    if (communication_mode == CommunicationMode::Debug && debug_bytes) {
+        std::cerr << "Can't use communication module 'debug' and 'debug_bytes' at the same time.\n";
+        exit(EXIT_FAILURE);
+    }
 }
 

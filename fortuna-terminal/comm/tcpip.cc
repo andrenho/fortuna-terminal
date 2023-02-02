@@ -114,6 +114,7 @@ void TCPIP::run_input_from_device_thread()
             } else if (n < 0) {
                 error_message("Failure reading from client", true);
             } else {
+                debug_received_byte(c);
                 protocol->input_char(c);
             }
         }
@@ -132,6 +133,8 @@ void TCPIP::run_output_to_device_thread()
                 client_connected = false;
             } else if (n < 0) {
                 error_message("Failure writing to client", true);
+            } else {
+                debug_sent_byte(c);
             }
         }
     }
