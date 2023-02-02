@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../../debugmode.hh"
+#include "global.hh"
 
 void SDL_Terminal::print_video_details() const
 {
@@ -95,7 +96,7 @@ SDL_Terminal::~SDL_Terminal()
         SDL_Quit();
 }
 
-void SDL_Terminal::do_events(Protocol& protocol)
+void SDL_Terminal::do_events()
 {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
@@ -108,23 +109,23 @@ void SDL_Terminal::do_events(Protocol& protocol)
 
             case SDL_TEXTINPUT: {
                 for (const char* c = ev.text.text; *c; ++c)
-                    protocol.output_key_event(true, *c, {});
+                    protocol->output_key_event(true, *c, {});
                 break;
             }
 
             case SDL_KEYDOWN:
-                add_keyboard_event(true, ev.key, protocol);
+                add_keyboard_event(true, ev.key);
                 break;
 
             case SDL_KEYUP:
-                add_keyboard_event(false, ev.key, protocol);
+                add_keyboard_event(false, ev.key);
                 break;
         }
 
     }
 }
 
-void SDL_Terminal::add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Protocol& protocol)
+void SDL_Terminal::add_keyboard_event(bool is_down, SDL_KeyboardEvent key)
 {
     if (is_down && key.keysym.sym == SDLK_q && (key.keysym.mod & KMOD_CTRL))
         running_ = false;
@@ -170,12 +171,12 @@ void SDL_Terminal::add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Proto
             key_modifiers.control = (key.keysym.mod & KMOD_CTRL) != 0;
             key_modifiers.alt = (key.keysym.mod & KMOD_ALT) != 0;
 
-            protocol.output_special_key_event(is_down, *special_key, key_modifiers);
+            protocol->output_special_key_event(is_down, *special_key, key_modifiers);
         }
     }
 }
 
-void SDL_Terminal::draw(const Scene &scene) const
+void SDL_Terminal::draw() const
 {
     sdl_painter.draw_deep_background();
     sdl_painter.draw_background(scene.text_layer);

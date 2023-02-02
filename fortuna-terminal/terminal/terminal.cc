@@ -2,9 +2,10 @@
 
 #include <iostream>
 
+#include "global.hh"
 #include "sdl/sdl_terminal.hh"
 
-std::unique_ptr<Terminal> Terminal::make_terminal(const Options &options)
+std::unique_ptr<Terminal> Terminal::make_terminal()
 {
     switch (options.terminal_type) {
         case TerminalType::SDL:

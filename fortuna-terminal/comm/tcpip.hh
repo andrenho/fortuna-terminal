@@ -9,10 +9,7 @@
 
 class TCPIP : public CommunicationModule {
 public:
-    explicit TCPIP(OutputQueue& output_queue, InputQueue& input_queue, Protocol& protocol, TCPIPOptions const& tcpip_options)
-        : CommunicationModule(output_queue, input_queue, protocol), tcpip_options_(tcpip_options) {}
-
-    void initialize(size_t lines, size_t columns) override;
+    void initialize() override;
 
     void run_input_from_device_thread() override;
     void run_output_to_device_thread() override;
@@ -20,8 +17,6 @@ public:
     void finalize() override;
 
 private:
-    TCPIPOptions const &tcpip_options_;
-
 #ifndef _WIN32
 #define SOCKET int
 #endif

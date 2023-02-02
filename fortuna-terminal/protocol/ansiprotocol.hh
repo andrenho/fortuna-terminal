@@ -5,8 +5,6 @@
 
 class AnsiProtocol : public Protocol {
 public:
-    explicit AnsiProtocol(InputQueue& input_queue, OutputQueue& output_queue) : Protocol(input_queue, output_queue) {}
-
     void input_char(uint8_t byte) override;
 
     void output_key_event(bool is_down, uint8_t key_code, KeyMod keymod) override;

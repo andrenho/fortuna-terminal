@@ -1,8 +1,8 @@
 #include "debug.hh"
+#include "global.hh"
 
 #include <string>
 #include <iostream>
-#include <sstream>
 #include <iomanip>
 
 void Debug::run_input_from_device_thread()
@@ -19,14 +19,14 @@ void Debug::run_input_from_device_thread()
         }
 
         for (const auto& byte : bytes)
-            protocol_.input_char(byte);
+            protocol->input_char(byte);
     }
 }
 
 void Debug::run_output_to_device_thread()
 {
     while (running_) {
-        uint8_t c = output_queue_.dequeue_block();
+        uint8_t c = output_queue.dequeue_block();
         std::cout << std::setfill('0') << std::setw(2) << std::hex << static_cast<int>(c) << ' ';
         std::flush(std::cout);
     }

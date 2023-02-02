@@ -1,5 +1,6 @@
 #include "pty.hh"
 #include "debugmode.hh"
+#include "../global.hh"
 
 #include <cstdlib>
 #include <fcntl.h>
@@ -8,17 +9,17 @@
 #include <fcntl.h>
 #include <termios.h>
 
-void PTY::initialize(size_t lines, size_t columns)
+void PTY::initialize()
 {
     struct winsize winp;
-    winp.ws_row = lines;
-    winp.ws_col = columns;
+    winp.ws_row = scene.text_layer.lines();
+    winp.ws_col = scene.text_layer.columns();
 
     pid_t pid = forkpty(&master_fd, nullptr, nullptr, &winp);  // TODO - set winsize
     if (pid == 0) {
         setenv("TERM", "linux", 1);
         // this is the child process that will execute the shell
-        execl(pty_options_.shell.c_str(), pty_options_.shell.c_str(), nullptr);
+        execl(options.pty.shell.c_str(), options.pty.shell.c_str(), nullptr);
     }
 
     // make read blocking
@@ -38,7 +39,7 @@ void PTY::run_input_from_device_thread()
             error_message("Failure reading from the PTY", true);
             client_disconnected();
         } else {
-            protocol_.input_char(c);
+            protocol->input_char(c);
         }
     }
 }
@@ -46,7 +47,7 @@ void PTY::run_input_from_device_thread()
 void PTY::run_output_to_device_thread()
 {
     while (running_) {
-        uint8_t c = output_queue_.dequeue_block();
+        uint8_t c = output_queue.dequeue_block();
         if (master_fd != 0) {
             int n = write(master_fd, &c, 1);
             if (n == 0) {

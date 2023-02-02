@@ -12,9 +12,11 @@
 #include <termios.h>
 #include <unistd.h>
 
-void UART::initialize(size_t, size_t)
+#include "../global.hh"
+
+void UART::initialize()
 {
-    fd = open(serial_options_.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+    fd = open(options.serial.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd < 0) {
         error_message("Error opening serial port: ", true);
         return;
@@ -81,14 +83,14 @@ void UART::run_input_from_device_thread()
         if (n < 0)
             error_message("Failure reading from serial", true);
         else
-            protocol_.input_char(c);
+            protocol->input_char(c);
     }
 }
 
 void UART::run_output_to_device_thread()
 {
     while (running_) {
-        uint8_t c = output_queue_.dequeue_block();
+        uint8_t c = output_queue.dequeue_block();
         if (write(fd, &c, 1) < 0)
             error_message("Failure writing to serial", true);
         tcdrain(fd);

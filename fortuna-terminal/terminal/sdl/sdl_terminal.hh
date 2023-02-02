@@ -13,15 +13,15 @@ public:
     ~SDL_Terminal() override;
 
     void initialize() override;
-    void do_events(Protocol& protocol) override;
-    void draw(const Scene &scene) const override;
+    void do_events() override;
+    void draw() const override;
 
     static const int GRAPHICS_W = 256;
     static const int GRAPHICS_H = 256;
 
 private:
     void print_video_details() const;
-    void add_keyboard_event(bool is_down, SDL_KeyboardEvent key, Protocol& protocol);
+    void add_keyboard_event(bool is_down, SDL_KeyboardEvent key);
 
     bool window_mode_;
 

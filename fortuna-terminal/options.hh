@@ -32,7 +32,7 @@ struct PTYOptions {
 
 class Options {
 public:
-    Options(int argc, char* argv[]);
+    void              parse_commandline_args(int argc, char* argv[]);
 
     CommunicationMode communication_mode = CommunicationMode::NotChosen;
     TerminalType      terminal_type = TerminalType::SDL;

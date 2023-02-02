@@ -1,5 +1,6 @@
 #include "fortunaprotocol.hh"
 #include "debugmode.hh"
+#include "global.hh"
 
 #include <functional>
 #include <vector>
@@ -67,7 +68,7 @@ void FortunaProtocol::input_char(uint8_t byte)
         if (cmd == command.command && sz == command.expected_size) {
             uint8_t p1 = sz > 1 ? buffer.at(1) : 0;
             uint8_t p2 = sz > 2 ? buffer.at(2) : 0;
-            input_queue_.enqueue(command.f(p1, p2));
+            input_queue.enqueue(command.f(p1, p2));
             buffer.clear();
             return;
         }
@@ -89,7 +90,7 @@ void FortunaProtocol::output_key_event(bool is_down, uint8_t key_code, KeyMod ke
     event.key = key_code;
     event.mod = keymod;
     for (size_t i = 0; i < sizeof(event); ++i)
-        output_queue_.enqueue(*(reinterpret_cast<uint8_t*>(&event) + i));
+        output_queue.enqueue(*(reinterpret_cast<uint8_t*>(&event) + i));
 }
 
 void FortunaProtocol::output_special_key_event(bool is_down, SpecialKey special_key, KeyMod keymod)
@@ -99,7 +100,7 @@ void FortunaProtocol::output_special_key_event(bool is_down, SpecialKey special_
     event.special_key = special_key;
     event.mod = keymod;
     for (size_t i = 0; i < sizeof(event); ++i)
-        output_queue_.enqueue(*(reinterpret_cast<uint8_t*>(&event) + i));
+        output_queue.enqueue(*(reinterpret_cast<uint8_t*>(&event) + i));
 }
 
 void FortunaProtocol::protocol_error(FP_Response error_code, std::vector<uint8_t> const& buffer)

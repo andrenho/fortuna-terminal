@@ -15,9 +15,10 @@
 #include <thread>
 #include <fcntl.h>
 
+#include "../global.hh"
 #include "../debugmode.hh"
 
-void TCPIP::initialize(size_t, size_t)
+void TCPIP::initialize()
 {
 #if _WIN32
     WSADATA wsaData;
@@ -34,7 +35,7 @@ void TCPIP::initialize(size_t, size_t)
 
     int rv;
     struct addrinfo* servinfo;
-    if ((rv = getaddrinfo(nullptr, tcpip_options_.port.c_str(), &hints, &servinfo)) != 0) {
+    if ((rv = getaddrinfo(nullptr, options.tcpip.port.c_str(), &hints, &servinfo)) != 0) {
         error_message(std::string("Error getting addrinfo: ") + gai_strerror(rv), false);
         return;
     }
@@ -114,7 +115,7 @@ void TCPIP::run_input_from_device_thread()
             } else if (n < 0) {
                 error_message("Failure reading from client", true);
             } else {
-                protocol_.input_char(c);
+                protocol->input_char(c);
             }
         }
     }
@@ -123,7 +124,7 @@ void TCPIP::run_input_from_device_thread()
 void TCPIP::run_output_to_device_thread()
 {
     while (running_) {
-        uint8_t c = output_queue_.dequeue_block();
+        uint8_t c = output_queue.dequeue_block();
         if (client_connected) {
             int n = send(client_fd, reinterpret_cast<char const *>(&c), 1, 0);
             if (n == 0) {

@@ -23,7 +23,7 @@ Options valid for `pty`:
     exit(exit_status);
 }
 
-Options::Options(int argc, char **argv)
+void Options::parse_commandline_args(int argc, char **argv)
 {
     int c;
 
@@ -198,3 +198,4 @@ void Options::parse_uart_settings(std::string const &s)
         exit(EXIT_FAILURE);
     }
 }
+

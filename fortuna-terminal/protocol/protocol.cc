@@ -2,14 +2,15 @@
 #include "protocol.hh"
 #include "ansiprotocol.hh"
 #include "fortunaprotocol.hh"
+#include "global.hh"
 
-std::unique_ptr<Protocol> Protocol::make_protocol(Options const& options, InputQueue& input_queue, OutputQueue& output_queue)
+std::unique_ptr<Protocol> Protocol::make_protocol()
 {
     switch (options.protocol) {
         case ProtocolType::Ansi:
-            return std::make_unique<AnsiProtocol>(input_queue, output_queue);
+            return std::make_unique<AnsiProtocol>();
         case ProtocolType::Fortuna:
-            return std::make_unique<FortunaProtocol>(input_queue, output_queue);
+            return std::make_unique<FortunaProtocol>();
         default:
             std::cerr << "Unsupported protocol.\n";
             exit(EXIT_FAILURE);

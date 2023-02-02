@@ -6,8 +6,6 @@
 
 class FortunaProtocol : public Protocol {
 public:
-    explicit FortunaProtocol(InputQueue& input_queue, OutputQueue& output_queue) : Protocol(input_queue, output_queue) {}
-
     void input_char(uint8_t byte) override;
     void output_key_event(bool is_down, uint8_t key_code, KeyMod keymod) override;
     void output_special_key_event(bool is_down, SpecialKey special_key, KeyMod keymod) override;

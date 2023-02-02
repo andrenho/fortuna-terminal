@@ -12,25 +12,19 @@
 class CommunicationModule
 {
 public:
-    CommunicationModule(OutputQueue& output_queue, InputQueue& input_queue, Protocol& protocol)
-        : output_queue_(output_queue), input_queue_(input_queue), protocol_(protocol) {}
     virtual ~CommunicationModule() = default;
 
-    virtual void initialize([[maybe_unused]] size_t lines, [[maybe_unused]] size_t columns) {}
+    virtual void initialize() {}
     virtual void run_input_from_device_thread() {}
     virtual void run_output_to_device_thread() {}
     virtual void finalize() { running_ = false; }
 
     virtual void notify_vsync();
 
-    static std::unique_ptr<CommunicationModule> make_communication_module(
-            Options const& options, OutputQueue& output_queue, InputQueue& input_queue, Protocol& protocol);
+    static std::unique_ptr<CommunicationModule> make_communication_module();
 
 protected:
     bool running_ = true;
-    OutputQueue& output_queue_;
-    InputQueue& input_queue_;
-    Protocol& protocol_;
 
     void error_message(std::string const &msg, bool describe_errno);
 };
