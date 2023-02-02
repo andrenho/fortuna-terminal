@@ -15,7 +15,6 @@ public:
     void initialize() override;
     void do_events(Protocol& protocol) override;
     void draw(const Scene &scene) const override;
-    void window_size(size_t *lines, size_t *columns) const override;
 
     static const int GRAPHICS_W = 256;
     static const int GRAPHICS_H = 256;

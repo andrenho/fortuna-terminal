@@ -16,7 +16,7 @@ public:
         : output_queue_(output_queue), input_queue_(input_queue), protocol_(protocol) {}
     virtual ~CommunicationModule() = default;
 
-    virtual void initialize(size_t lines, size_t columns) {}
+    virtual void initialize([[maybe_unused]] size_t lines, [[maybe_unused]] size_t columns) {}
     virtual void run_input_from_device_thread() {}
     virtual void run_output_to_device_thread() {}
     virtual void finalize() { running_ = false; }
