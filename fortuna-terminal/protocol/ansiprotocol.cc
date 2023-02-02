@@ -117,7 +117,10 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
             break;
         case 'n':
             if (p1 == 6) {
-                // TODO
+                std::string response = "\e[" + std::to_string(scene.text_layer.cursor().y + 1) + ";"
+                        + std::to_string(scene.text_layer.cursor().x + 1) + "R";
+                for (char c: response)
+                    output_queue.enqueue(c);
             } else {
                 rollback_escape_sequence();
             }
