@@ -16,7 +16,7 @@ void AnsiProtocol::input_char(uint8_t byte)
 {
     if (!escape_mode) {
         if (byte != '\e') {
-            input_queue_.enqueue({InputEventType::TextPrintChar, {byte}});
+            input_queue_.enqueue({InputEventType::TextPrintChar, byte});
         } else {
             escape_mode = true;
             escape_sequence = "";

@@ -57,6 +57,7 @@ private:
 
     void text_advance_line();
     void text_advance_cursor();
+    void tab();
 };
 
 #endif //TEXTLAYER_HH_

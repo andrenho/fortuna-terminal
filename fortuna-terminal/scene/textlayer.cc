@@ -26,6 +26,9 @@ void TextLayer::add_char(uint8_t c)
         case '\n':
             text_advance_line();
             break;
+        case '\t':
+            tab();
+            break;
         case '\b':
             if (cursor_.x > 0) {
                 --cursor_.x;
@@ -89,4 +92,14 @@ void TextLayer::clear_screen()
 void TextLayer::reset_formatting()
 {
     foreground_color_ = Color::WHITE;
+}
+
+void TextLayer::tab()
+{
+    size_t next_tab = ((cursor_.x / 8) * 8) + 8;
+    if (next_tab >= columns_) {
+        next_tab = 0;
+        text_advance_line();
+    }
+    cursor_.x = next_tab;
 }
