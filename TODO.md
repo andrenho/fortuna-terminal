@@ -10,17 +10,22 @@
   - [x] Bug: colors are not working
   - [x] Create Fortuna protocol
     - [x] Implement protocol
-    - [ ] Add responses to protocol (?)
-    - [ ] Deal with invalid requests on protocol
-    - [ ] Write TCP/IP testing program
+    - [x] Deal with invalid requests on protocol
   - [ ] PTY communication module
     - [ ] Improve ANSI protocol
   - [ ] Function keys
     - [ ] Reset
     - [ ] Change to 40/80 columns
-  - [ ] Write I²C slave support
+  - [ ] Test real world communication
+    - [ ] Create test circuit
+    - [ ] Create client communication library (?)
+    - [ ] Write I²C slave support
+    - [ ] Write SPI master support
+    - [ ] Increase protocol reliability
+      - [ ] Add responses (?)
+      - [ ] Add checksum
   - [ ] Emulator support
-  - [ ] Write SPI master support
+  - [ ] Write TCP/IP testing program (?)
   - [ ] Write keyboard / mouse / joystick support
     - [ ] Keyboard support
     - [ ] Mouse support

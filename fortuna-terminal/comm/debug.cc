@@ -19,7 +19,7 @@ void Debug::run_input_from_device_thread()
         }
 
         for (const auto& byte : bytes)
-            protocol_.input_char(byte, input_queue_);
+            protocol_.input_char(byte);
     }
 }
 

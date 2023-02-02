@@ -6,11 +6,14 @@
 
 class FortunaProtocol : public Protocol {
 public:
-    explicit FortunaProtocol(OutputQueue& output_queue) : Protocol(output_queue) {}
+    explicit FortunaProtocol(InputQueue& input_queue, OutputQueue& output_queue) : Protocol(input_queue, output_queue) {}
 
-    void input_char(uint8_t byte, InputQueue &input_queue) override;
+    void input_char(uint8_t byte) override;
     void output_key_event(bool is_down, uint8_t key_code, KeyMod keymod) override;
     void output_special_key_event(bool is_down, SpecialKey special_key, KeyMod keymod) override;
+
+private:
+    void protocol_error(FP_Response error_code, std::vector<uint8_t> const& buffer);
 };
 
 #endif //FORTUNAPROTOCOL_HH_

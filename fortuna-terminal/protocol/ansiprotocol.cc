@@ -10,11 +10,11 @@
 
 static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))?)?(\w))", std::regex_constants::ECMAScript);
 
-void AnsiProtocol::input_char(uint8_t byte, InputQueue& input_queue)
+void AnsiProtocol::input_char(uint8_t byte)
 {
     if (!escape_mode) {
         if (byte != '\e') {
-            input_queue.enqueue({InputEventType::TextPrintChar, {byte}});
+            input_queue_.enqueue({InputEventType::TextPrintChar, {byte}});
         } else {
             escape_mode = true;
             escape_sequence = "";
@@ -23,14 +23,14 @@ void AnsiProtocol::input_char(uint8_t byte, InputQueue& input_queue)
         escape_sequence += (char) byte;
 
         if (std::isalpha(byte))
-            translate_escape_sequence(input_queue);
+            translate_escape_sequence();
         else if (escape_sequence.size() > 16)
-            rollback_escape_sequence(input_queue);
+            rollback_escape_sequence();
     }
 }
 
 
-void AnsiProtocol::translate_escape_sequence(InputQueue& input_queue)
+void AnsiProtocol::translate_escape_sequence()
 {
     std::smatch matches;
     if(std::regex_match(escape_sequence, matches, ansi_escape_sequence_regex)) {
@@ -40,49 +40,49 @@ void AnsiProtocol::translate_escape_sequence(InputQueue& input_queue)
             p1 = std::stoi(matches[1].str());
         if (!matches[2].str().empty())
             p2 = std::stoi(matches[2].str());
-        parse_ansi_sequence(command, p1, p2, input_queue);
+        parse_ansi_sequence(command, p1, p2);
     } else {
-        rollback_escape_sequence(input_queue);
+        rollback_escape_sequence();
     }
     escape_mode = false;
 }
 
-void AnsiProtocol::rollback_escape_sequence(InputQueue& input_queue)
+void AnsiProtocol::rollback_escape_sequence()
 {
     escape_mode = false;
     for (uint8_t byte: escape_sequence)
-        input_queue.enqueue({InputEventType::TextPrintChar, byte});
+        input_queue_.enqueue({InputEventType::TextPrintChar, byte});
 }
 
-void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned int p2, InputQueue& input_queue)
+void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned int p2)
 {
     switch (command) {
         case 'A':
-            input_queue.enqueue({InputEventType::TextMoveUp, (uint8_t) std::max(p1, 1U)});
+            input_queue_.enqueue({InputEventType::TextMoveUp, (uint8_t) std::max(p1, 1U)});
             break;
         case 'B':
-            input_queue.enqueue({InputEventType::TextMoveDown, (uint8_t) std::max(p1, 1U)});
+            input_queue_.enqueue({InputEventType::TextMoveDown, (uint8_t) std::max(p1, 1U)});
             break;
         case 'C':
-            input_queue.enqueue({InputEventType::TextMoveForward, (uint8_t) std::max(p1, 1U)});
+            input_queue_.enqueue({InputEventType::TextMoveForward, (uint8_t) std::max(p1, 1U)});
             break;
         case 'D':
-            input_queue.enqueue({InputEventType::TextMoveBackward, (uint8_t) std::max(p1, 1U)});
+            input_queue_.enqueue({InputEventType::TextMoveBackward, (uint8_t) std::max(p1, 1U)});
             break;
         case 'H':
-            input_queue.enqueue({InputEventType::TextMoveTo, (uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)});
+            input_queue_.enqueue({InputEventType::TextMoveTo, (uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)});
             break;
         case 'J':
-            input_queue.enqueue(InputEvent {InputEventType::TextClearScreen});
+            input_queue_.enqueue(InputEvent {InputEventType::TextClearScreen});
             break;
         case 'm':
             if (p1 == 0)
-                input_queue.enqueue(InputEvent {InputEventType::TextResetFormatting});
+                input_queue_.enqueue(InputEvent {InputEventType::TextResetFormatting});
             else
-                input_queue.enqueue({InputEventType::TextSetColor, text_ansi_color(p2)});
+                input_queue_.enqueue({InputEventType::TextSetColor, text_ansi_color(p2)});
             break;
         default:
-            rollback_escape_sequence(input_queue);
+            rollback_escape_sequence();
             break;
     }
 }

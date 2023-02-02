@@ -27,6 +27,11 @@ typedef struct __attribute__((packed)) {
     uint8_t             p2      : 8;
 } FP_InputCommand;
 
+// return values (not used yet)
+typedef enum __attribute__((packed)) {
+    FP_OK, FP_INVALID_COMMAND, FP_INVALID_PARAMETER,
+} FP_Response;
+
 /**************************
  *                        *
  *        OUTPUT          *

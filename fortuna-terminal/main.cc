@@ -20,12 +20,13 @@ int main(int argc, char* argv[])
     // initialization
     OutputQueue output_queue;
     InputQueue input_queue;
-    Scene scene;
-    auto protocol = Protocol::make_protocol(options, output_queue);
+    auto protocol = Protocol::make_protocol(options, input_queue, output_queue);
 
     auto communication_module = CommunicationModule::make_communication_module(
             options, output_queue, input_queue, *protocol);
     auto terminal = Terminal::make_terminal(options);
+
+    Scene scene;
 
     terminal->initialize();
     communication_module->initialize();
