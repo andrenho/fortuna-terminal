@@ -7,7 +7,7 @@
   - [x] Write SDL basic terminal - install on RPI
   - [x] Write UART support
   - [x] TCP/IP communication module
-  - [ ] Bug: error with colors not working
+  - [ ] Bug: colors are not working
   - [ ] Create Fortuna protocol
     - [ ] Implement protocol
     - [ ] Write TCP/IP testing program
