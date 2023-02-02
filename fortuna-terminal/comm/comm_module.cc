@@ -5,6 +5,7 @@
 
 #include "echo.hh"
 #include "tcpip.hh"
+#include "debug.hh"
 
 #ifdef COMM_UART
 #  include "uart.hh"
@@ -23,6 +24,8 @@ CommunicationModule::make_communication_module(Options const &options, OutputQue
 #endif
         case CommunicationMode::TcpIp:
             return std::make_unique<TCPIP>(output_queue, input_queue, protocol, options.tcpip);
+        case CommunicationMode::Debug:
+            return std::make_unique<Debug>(output_queue, input_queue, protocol);
         default:
             std::cerr << "Unsupported communication module.\n";
             exit(EXIT_FAILURE);

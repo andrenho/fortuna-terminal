@@ -2,7 +2,7 @@
 
 using namespace std::chrono_literals;
 
-#include "debug.hh"
+#include "debugmode.hh"
 #include "options.hh"
 #include "comm/comm_module.hh"
 #include "terminal/terminal.hh"

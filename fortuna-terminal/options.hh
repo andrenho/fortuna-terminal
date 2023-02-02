@@ -4,7 +4,7 @@
 #include <string>
 
 enum class CommunicationMode {
-    NotChosen, Echo, UART, I2C, SPI, TcpIp, Emcc
+    NotChosen, Echo, UART, I2C, SPI, TcpIp, Emcc, Debug
 };
 
 enum class TerminalType {

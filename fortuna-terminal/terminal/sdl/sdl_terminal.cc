@@ -3,7 +3,7 @@
 #include "SDL2/SDL.h"
 #include <iostream>
 
-#include "../../debug.hh"
+#include "../../debugmode.hh"
 
 void SDL_Terminal::print_video_details() const
 {

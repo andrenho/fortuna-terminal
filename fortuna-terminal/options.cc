@@ -6,7 +6,7 @@
 
 static void print_help(int exit_status)
 {
-    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip"
+    std::cout <<R"(    -c, --communication-mode        One of "echo", "uart", "i2c", "spi", "tcpip", "debug"
     -t, --terminal-type             One of "sdl", "text" (default: sdl)
     -r, --protocol                  One of "fortuna", "ansi" or "fortuna+ansi" (default: ansi)
     -w, --window                    Window mode (as opposed to the default, which is full screen)
@@ -71,6 +71,8 @@ Options::Options(int argc, char **argv)
                     communication_mode = CommunicationMode::SPI;
                 else if (comm == "tcpip")
                     communication_mode = CommunicationMode::TcpIp;
+                else if (comm == "debug")
+                    communication_mode = CommunicationMode::Debug;
                 else {
                     std::cerr << "Unsupported communication mode.\n";
                     exit(EXIT_FAILURE);

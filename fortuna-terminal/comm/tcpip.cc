@@ -15,7 +15,7 @@
 #include <thread>
 #include <fcntl.h>
 
-#include "debug.hh"
+#include "../debugmode.hh"
 
 void TCPIP::initialize()
 {

@@ -1,7 +1,7 @@
-OBJ=main.o debug.o options.o \
+OBJ=main.o debugmode.o options.o \
 	scene/scene.o scene/textlayer.o \
     protocol/protocol.o protocol/ansiprotocol.o protocol/fortunaprotocol.o \
-	comm/comm_module.o comm/echo.o comm/tcpip.o \
+	comm/comm_module.o comm/echo.o comm/tcpip.o comm/debug.o \
 	terminal/terminal.o terminal/sdl/sdl_terminal.o terminal/sdl/sdl_painter.o
 EXE=fortuna-terminal
 

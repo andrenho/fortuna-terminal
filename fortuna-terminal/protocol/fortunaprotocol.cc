@@ -29,8 +29,8 @@ void FortunaProtocol::input_char(uint8_t byte, InputQueue &input_queue)
 
     for (auto const& command: commands) {
         if (cmd == command.command && sz == command.expected_size) {
-            uint8_t p1 = sz >= 1 ? buffer.at(1) : 0;
-            uint8_t p2 = sz >= 2 ? buffer.at(2) : 0;
+            uint8_t p1 = sz > 1 ? buffer.at(1) : 0;
+            uint8_t p2 = sz > 2 ? buffer.at(2) : 0;
             input_queue.enqueue(command.f(p1, p2));
             buffer.clear();
         }

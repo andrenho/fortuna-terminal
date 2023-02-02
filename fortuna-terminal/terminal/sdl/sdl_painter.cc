@@ -1,6 +1,6 @@
 #include "sdl_painter.hh"
 #include "sdl_terminal.hh"
-#include "debug.hh"
+#include "debugmode.hh"
 
 #include <SDL2/SDL.h>
 
