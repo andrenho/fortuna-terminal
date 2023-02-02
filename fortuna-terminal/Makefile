@@ -14,7 +14,7 @@ ifeq ($(OS),Windows_NT)
 else
 	OBJ := ${OBJ} comm/uart.o comm/pty.o
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O3 -DCOMM_UART -DCOMM_PTY
-	LDFLAGS := ${CFLAGS} `sdl2-config --libs` -lpthread
+	LDFLAGS := ${CFLAGS} `sdl2-config --libs` -lpthread -lutil
 endif
 
 all: ${EXE}
