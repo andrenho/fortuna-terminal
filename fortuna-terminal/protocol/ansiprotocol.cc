@@ -2,6 +2,8 @@
 
 #include <regex>
 
+#include "../debugmode.hh"
+
 /***********************
  *                     *
  *        INPUT        *
@@ -50,8 +52,15 @@ void AnsiProtocol::translate_escape_sequence()
 void AnsiProtocol::rollback_escape_sequence()
 {
     escape_mode = false;
-    for (uint8_t byte: escape_sequence)
-        input_queue_.enqueue({InputEventType::TextPrintChar, byte});
+    if (escape_sequence.size() >= 2 && escape_sequence[1] == '?') {
+        if (debug_mode)
+            std::cerr << "Unsupported ANSI sequence received: '" << escape_sequence << "'.\n";
+    } else {
+        for (uint8_t byte: escape_sequence)
+            input_queue_.enqueue({InputEventType::TextPrintChar, byte});
+        if (debug_mode)
+            std::cerr << "Invalid ANSI sequence received: '" << escape_sequence << "'.\n";
+    }
 }
 
 void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned int p2)
