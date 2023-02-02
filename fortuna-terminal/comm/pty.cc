@@ -11,7 +11,7 @@ void PTY::initialize()
     pid_t pid = forkpty(&master_fd, nullptr, nullptr, nullptr);  // TODO - set winsize
     if (pid == 0) {
         // this is the child process that will execute the shell
-        execl(pty_options_.shell.c_str(), (char *) nullptr);
+        execl(pty_options_.shell.c_str(), pty_options_.shell.c_str(), nullptr);
     }
 
     // make read blocking
