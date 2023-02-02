@@ -25,45 +25,45 @@ void UART::initialize()
 
     fcntl(fd, F_SETFL, 0);
 
-    struct termios options;
-    if (tcgetattr (fd, &options) != 0)
+    struct termios opt;
+    if (tcgetattr (fd, &opt) != 0)
     {
         error_message("Could not get current serial attributes: ", true);
         return;
     }
 
-    if (cfsetspeed(&options, (speed_t) serial_options_.baud) < 0) {
+    if (cfsetspeed(&opt, (speed_t) options.serial.baud) < 0) {
         error_message("Could not set current serial baud speed: ", true);
         return;
     }
 
-    options.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
+    opt.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
 
-    options.c_cflag &= ~CSIZE; /* Mask the character size bits */
-    options.c_cflag |= CS8; /* Select 8 data bits */
+    opt.c_cflag &= ~CSIZE; /* Mask the character size bits */
+    opt.c_cflag |= CS8; /* Select 8 data bits */
 
-    if (serial_options_.parity == 'N') {
-        options.c_cflag &= ~PARENB;
-    } else if (serial_options_.parity == 'O') {
-        options.c_cflag |= PARENB;
-        options.c_cflag |= PARODD;
-    } else if (serial_options_.parity == 'E') {
-        options.c_cflag |= PARENB;
-        options.c_cflag &= ~PARODD;
+    if (options.serial.parity == 'N') {
+        opt.c_cflag &= ~PARENB;
+    } else if (options.serial.parity == 'O') {
+        opt.c_cflag |= PARENB;
+        opt.c_cflag |= PARODD;
+    } else if (options.serial.parity == 'E') {
+        opt.c_cflag |= PARENB;
+        opt.c_cflag &= ~PARODD;
     }
 
-    if (serial_options_.stop_bits == 2)
-        options.c_cflag |= CSTOPB;
+    if (options.serial.stop_bits == 2)
+        opt.c_cflag |= CSTOPB;
     else
-        options.c_cflag &= ~CSTOPB;
+        opt.c_cflag &= ~CSTOPB;
 
-    options.c_cflag &= ~CRTSCTS;  // disable flow control
+    opt.c_cflag &= ~CRTSCTS;  // disable flow control
 
-    options.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-    options.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    options.c_oflag &= ~OPOST;
+    opt.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+    opt.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    opt.c_oflag &= ~OPOST;
 
-    if (tcsetattr (fd, TCSANOW, &options) != 0)
+    if (tcsetattr (fd, TCSANOW, &opt) != 0)
     {
         error_message("Could not set current serial attributes: ", true);
         return;
