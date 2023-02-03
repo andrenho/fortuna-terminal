@@ -52,7 +52,10 @@ void AnsiProtocol::translate_escape_sequence()
             p1 = std::stoi(matches[1].str());
         if (!matches[2].str().empty())
             p2 = std::stoi(matches[2].str());
-        parse_ansi_sequence(command, p1, p2);
+        if (escape_sequence.size() > 2 && escape_sequence[1] == '?')
+            parse_custom_ansi_sequence(command, p1, p2);
+        else
+            parse_ansi_sequence(command, p1, p2);
     } else {
         rollback_escape_sequence();
     }
@@ -128,6 +131,27 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
             break;
         case 'r':
             input_queue.enqueue({InputEventType::SetScrollRegion, (uint8_t) p1, (uint8_t) p2});
+            break;
+        default:
+            rollback_escape_sequence();
+            break;
+    }
+}
+
+void AnsiProtocol::parse_custom_ansi_sequence(char command, unsigned int p1, unsigned int p2)
+{
+    switch (command) {
+        case 'l':
+            if (p1 == 2004)
+                /* ignore */;
+            else
+                rollback_escape_sequence();
+            break;
+        case 'h':
+            if (p1 == 2004)
+                /* ignore */;
+            else
+                rollback_escape_sequence();
             break;
         default:
             rollback_escape_sequence();
@@ -214,3 +238,4 @@ void AnsiProtocol::output_special_key_event(bool is_down, SpecialKey special_key
     for (uint8_t c : str)
         output_queue.enqueue(c);
 }
+

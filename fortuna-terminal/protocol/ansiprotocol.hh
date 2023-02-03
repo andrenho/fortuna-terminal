@@ -18,6 +18,8 @@ private:
     void rollback_escape_sequence();
     void parse_ansi_sequence(char command, unsigned int p1, unsigned int p2);
     [[nodiscard]] uint8_t text_ansi_color(unsigned int number) const;
+
+    void parse_custom_ansi_sequence(char command, unsigned int p1, unsigned int p2);
 };
 
 #endif //ANSIPROTOCOL_HH_
