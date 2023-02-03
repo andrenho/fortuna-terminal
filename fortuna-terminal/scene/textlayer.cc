@@ -72,7 +72,7 @@ void TextLayer::move_cursor_relative(int y, int x)
     cursor_.y = std::max(0, std::min((int) lines_, cursor_.y + y));
 }
 
-void TextLayer::move_cursor_to(unsigned int x, unsigned int y)
+void TextLayer::move_cursor_to(unsigned int y, unsigned int x)
 {
     cursor_.x = std::max(0U, std::min(columns_, x - 1));
     cursor_.y = std::max(0U, std::min(lines_, y - 1));

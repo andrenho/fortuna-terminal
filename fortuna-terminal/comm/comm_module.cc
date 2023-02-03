@@ -67,6 +67,8 @@ void CommunicationModule::debug_received_byte(uint8_t byte) const
             std::cout << "[\e[0;32m" << (char) byte << "\e[0m] " << std::flush;
         else
             std::cout << "[\e[0;32m" << std::hex << std::setw(2) << std::setfill('0') << (int) byte << "\e[0m] " << std::flush;
+        if (byte == 10)
+            std::cout << "\n" << std::flush;
     }
 }
 
@@ -77,5 +79,7 @@ void CommunicationModule::debug_sent_byte(uint8_t byte) const
             std::cout << "'\e[0;31m" << (char) byte << "\e[0m' " << std::flush;
         else
             std::cout << "\e[0;31m" << std::hex << std::setw(2) << std::setfill('0') << (int) byte << "\e[0m " << std::flush;
+        if (byte == 10)
+            std::cout << "\n" << std::flush;
     }
 }

@@ -37,7 +37,7 @@ public:
     void add_char(uint8_t c);
 
     void move_cursor_relative(int y, int x);
-    void move_cursor_to(unsigned int x, unsigned int y);
+    void move_cursor_to(unsigned int y, unsigned int x);
     void set_color(uint8_t color);
     void clear_screen();
     void reset_formatting();
@@ -54,6 +54,7 @@ private:
     unsigned int            lines_ = 25;
     unsigned int            scroll_start_ = 1;
     unsigned int            scroll_end_ = lines_;
+    bool                    insertion_mode_ = true;
 
     uint8_t background_color_ = Color::BLACK;
     uint8_t foreground_color_ = Color::WHITE;

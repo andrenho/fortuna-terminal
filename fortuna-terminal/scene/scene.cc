@@ -16,19 +16,19 @@ void Scene::process_input_queue()
                 break;
 
             case InputEventType::TextMoveUp:
-                text_layer.move_cursor_relative(0, -event.p1);
-                break;
-            case InputEventType::TextMoveDown:
-                text_layer.move_cursor_relative(0, event.p1);
-                break;
-            case InputEventType::TextMoveForward:
-                text_layer.move_cursor_relative(event.p1, 0);
-                break;
-            case InputEventType::TextMoveBackward:
                 text_layer.move_cursor_relative(-event.p1, 0);
                 break;
+            case InputEventType::TextMoveDown:
+                text_layer.move_cursor_relative(event.p1, 0);
+                break;
+            case InputEventType::TextMoveForward:
+                text_layer.move_cursor_relative(0, event.p1);
+                break;
+            case InputEventType::TextMoveBackward:
+                text_layer.move_cursor_relative(0, -event.p1);
+                break;
             case InputEventType::TextMoveTo:
-                text_layer.move_cursor_to(event.p2, event.p1);
+                text_layer.move_cursor_to(event.p1, event.p2);
                 break;
             case InputEventType::TextSetColor:
                 text_layer.set_color(event.p1);
