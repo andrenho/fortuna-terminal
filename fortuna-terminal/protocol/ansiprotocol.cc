@@ -83,55 +83,74 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
     switch (command) {
         case 'A':
             input_queue.enqueue({InputEventType::TextMoveUp, (uint8_t) std::max(p1, 1U)});
+            debug_special("TextMoveUp", p1);
             break;
         case 'B':
             input_queue.enqueue({InputEventType::TextMoveDown, (uint8_t) std::max(p1, 1U)});
+            debug_special("TextMoveDown", p1);
             break;
         case 'C':
             input_queue.enqueue({InputEventType::TextMoveForward, (uint8_t) std::max(p1, 1U)});
+            debug_special("TextMoveForward", p1);
             break;
         case 'D':
             input_queue.enqueue({InputEventType::TextMoveBackward, (uint8_t) std::max(p1, 1U)});
+            debug_special("TextMoveBackwards", p1);
             break;
         case 'H':
             input_queue.enqueue({InputEventType::TextMoveTo, (uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)});
+            debug_special("TextMoveTo", p1, p2);
             break;
         case 'h':
-            if (p1 == 4)
+            if (p1 == 4) {
                 input_queue.enqueue({ InputEventType::SetInsertionMode, 1 });
-            else
+                debug_special("SetInsertionMode", 1);
+            } else {
                 rollback_escape_sequence();
+            }
             break;
         case 'J':
             input_queue.enqueue(InputEvent {InputEventType::TextClearScreen});
+            debug_special("TextClearScreen");
             break;
         case 'K':
-            if (p1 == 0)
+            if (p1 == 0) {
                 input_queue.enqueue(InputEvent { InputEventType::TextClearToEndOfLine });
-            else if (p1 == 1)
+                debug_special("TextClearToEndOfLine");
+            } else if (p1 == 1) {
                 input_queue.enqueue(InputEvent { InputEventType::TextClearToBeginningOfLine });
-            else if (p1 == 2)
+                debug_special("TextClearToBeginningOfLine");
+            } else if (p1 == 2) {
                 input_queue.enqueue(InputEvent { InputEventType::TextClearLine });
-            else
+                debug_special("TextClearLine");
+            } else {
                 rollback_escape_sequence();
+            }
             break;
         case 'l':
-            if (p1 == 4)
+            if (p1 == 4) {
                 input_queue.enqueue({ InputEventType::SetInsertionMode, 0 });
-            else
+                debug_special("SetInsertionMode", 0);
+            } else {
                 rollback_escape_sequence();
+            }
             break;
         case 'P':
-            if (p1 == 0)
+            if (p1 == 0) {
                 input_queue.enqueue(InputEvent { InputEventType::DeleteCharUnderCursor });
-            else
+                debug_special("DeleteCharUnderCursor");
+            } else {
                 rollback_escape_sequence();
+            }
             break;
         case 'm':
-            if (p1 == 0)
+            if (p1 == 0) {
                 input_queue.enqueue(InputEvent {InputEventType::TextResetFormatting});
-            else
+                debug_special("TextResetFormatting");
+            } else {
                 input_queue.enqueue({InputEventType::TextSetColor, text_ansi_color(p2)});
+                debug_special("TextSetColor", p2);
+            }
             break;
         case 'n':
             if (p1 == 6) {
@@ -145,6 +164,7 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
             break;
         case 'r':
             input_queue.enqueue({InputEventType::SetScrollRegion, (uint8_t) p1, (uint8_t) p2});
+            debug_special("SetScrollRegion", p1, p2);
             break;
         default:
             rollback_escape_sequence();

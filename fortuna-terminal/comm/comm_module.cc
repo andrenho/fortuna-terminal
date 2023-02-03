@@ -83,3 +83,4 @@ void CommunicationModule::debug_sent_byte(uint8_t byte) const
             std::cout << "\n" << std::flush;
     }
 }
+

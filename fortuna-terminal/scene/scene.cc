@@ -1,5 +1,7 @@
 #include "scene.hh"
-#include "global.hh"
+
+#include "../options.hh"
+#include "../global.hh"
 
 void Scene::process_input_queue()
 {
@@ -10,11 +12,9 @@ void Scene::process_input_queue()
 
             case InputEventType::NoEvent:
                 break;
-
             case InputEventType::TextPrintChar:
                 text_layer.add_char(event.p1);
                 break;
-
             case InputEventType::TextMoveUp:
                 text_layer.move_cursor_relative(-event.p1, 0);
                 break;

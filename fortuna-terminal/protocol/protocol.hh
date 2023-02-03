@@ -22,6 +22,11 @@ public:
     virtual void output_special_key_event(bool is_down, SpecialKey special_key, KeyMod keymod) = 0;
 
     static std::unique_ptr<Protocol> make_protocol();
+
+protected:
+    void debug_special(std::string const &str) const;
+    void debug_special(std::string const &str, uint8_t p1) const;
+    void debug_special(std::string const &str, uint8_t p1, uint8_t p2) const;
 };
 
 #endif //PROTOCOL_HH_
