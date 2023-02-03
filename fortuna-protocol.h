@@ -24,6 +24,7 @@ typedef enum __attribute__((packed)) {
     FP_TEXT_CLEAR_LINE,           // no parameter
     FP_TEXT_SET_SCROLL_REGION,    // 2 parameters (start and end line)
     FP_TEXT_DEL_CHAR_UNDER_CURSOR, // no parameter
+    FP_TEXT_SET_INSERTION_MODE,   // 1 parameter (bool)
 } FP_InputCommandType;
 
 typedef struct __attribute__((packed)) {

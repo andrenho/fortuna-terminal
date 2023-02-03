@@ -54,6 +54,12 @@ void Scene::process_input_queue()
             case InputEventType::DeleteCharUnderCursor:
                 text_layer.delete_char_under_cursor();
                 break;
+            case InputEventType::Beep:
+                // TODO
+                break;
+            case InputEventType::SetInsertionMode:
+                text_layer.set_insertion_mode(event.p1);
+                break;
         }
     }
 

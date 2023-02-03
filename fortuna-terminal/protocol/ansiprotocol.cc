@@ -94,6 +94,12 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
         case 'H':
             input_queue.enqueue({InputEventType::TextMoveTo, (uint8_t) std::max(p1, 1U), (uint8_t) std::max(p2, 1U)});
             break;
+        case 'h':
+            if (p1 == 4)
+                input_queue.enqueue({ InputEventType::SetInsertionMode, 1 });
+            else
+                rollback_escape_sequence();
+            break;
         case 'J':
             input_queue.enqueue(InputEvent {InputEventType::TextClearScreen});
             break;
@@ -104,6 +110,12 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
                 input_queue.enqueue(InputEvent { InputEventType::TextClearToBeginningOfLine });
             else if (p1 == 2)
                 input_queue.enqueue(InputEvent { InputEventType::TextClearLine });
+            else
+                rollback_escape_sequence();
+            break;
+        case 'l':
+            if (p1 == 4)
+                input_queue.enqueue({ InputEventType::SetInsertionMode, 0 });
             else
                 rollback_escape_sequence();
             break;
@@ -138,7 +150,7 @@ void AnsiProtocol::parse_ansi_sequence(char command, unsigned int p1, unsigned i
     }
 }
 
-void AnsiProtocol::parse_custom_ansi_sequence(char command, unsigned int p1, unsigned int p2)
+void AnsiProtocol::parse_custom_ansi_sequence(char command, unsigned int p1, unsigned int)
 {
     switch (command) {
         case 'l':

@@ -51,6 +51,9 @@ static const struct {
         } },
         { FP_TEXT_DEL_CHAR_UNDER_CURSOR, 1, [](uint8_t, uint8_t) {
             return InputEvent { InputEventType::DeleteCharUnderCursor };
+        } },
+        { FP_TEXT_SET_INSERTION_MODE, 2, [](uint8_t p1, uint8_t) {
+            return InputEvent { InputEventType::SetInsertionMode, p1 };
         } }
 };
 

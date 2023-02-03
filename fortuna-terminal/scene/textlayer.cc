@@ -37,6 +37,10 @@ void TextLayer::add_char(uint8_t c)
             }
             break;
         default:
+            if (insertion_mode_) {
+                for (int x = (int) columns_ - 2; x >= cursor_.x; --x)
+                    chr(cursor_.y, x + 1) = chr(cursor_.y, x);
+            }
             chr(cursor_.y, cursor_.x) = { c, foreground_color_ };
             text_advance_cursor();
     }

@@ -44,6 +44,7 @@ public:
     void clear_to_beginning_of_line();
     void clear_to_end_of_line();
     void clear_line();
+    void set_insertion_mode(bool active) { insertion_mode_ = active; }
 
     void set_scroll_region(uint8_t start, uint8_t end);
 
