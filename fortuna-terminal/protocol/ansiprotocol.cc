@@ -18,7 +18,9 @@ void AnsiProtocol::input_char(uint8_t byte)
         if (byte != '\e') {
             if (byte == 7)
                 input_queue.enqueue(InputEvent {InputEventType::Beep });
-            if (byte != 13)
+            else if (byte == 8)
+                input_queue.enqueue(InputEvent { InputEventType::TextMoveBackward, 1 });
+            else if (byte != 13)
                 input_queue.enqueue({InputEventType::TextPrintChar, byte});
         } else {
             escape_mode = true;
