@@ -10,7 +10,7 @@
  *                     *
  ***********************/
 
-static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))?)?(\w))", std::regex_constants::ECMAScript);
+static std::regex ansi_escape_sequence_regex(R"(\[(?:(\d+)(?:;(\d+))*)?(\w))", std::regex_constants::ECMAScript);
 
 void AnsiProtocol::input_char(uint8_t byte)
 {
