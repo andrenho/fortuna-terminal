@@ -20,20 +20,20 @@ std::unique_ptr<Protocol> Protocol::make_protocol()
 void Protocol::debug_special(std::string const &str) const
 {
     if (options.debug_bytes) {
-        std::cout << "\e[0;34m(" << str << ")\e[0m ";
+        std::cout << "\e[0;36m(" << str << ")\e[0m\n";
     }
 }
 
 void Protocol::debug_special(std::string const &str, uint8_t p1) const
 {
     if (options.debug_bytes) {
-        std::cout << "\e[0;34m(" << str << ", " << (int) p1 << ")\e[0m ";
+        std::cout << "\e[0;36m(" << str << ", " << (int) p1 << ")\e[0m\n";
     }
 }
 
 void Protocol::debug_special(std::string const &str, uint8_t p1, uint8_t p2) const
 {
     if (options.debug_bytes) {
-        std::cout << "\e[0;34m(" << str << ", " << (int) p1 << ", " << (int) p2 << ")\e[0m ";
+        std::cout << "\e[0;36m(" << str << ", " << (int) p1 << ", " << (int) p2 << ")\e[0m\n";
     }
 }

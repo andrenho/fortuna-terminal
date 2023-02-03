@@ -55,7 +55,7 @@ private:
     unsigned int            lines_ = 25;
     unsigned int            scroll_start_ = 1;
     unsigned int            scroll_end_ = lines_;
-    bool                    insertion_mode_ = true;
+    bool                    insertion_mode_ = false;
 
     uint8_t background_color_ = Color::BLACK;
     uint8_t foreground_color_ = Color::WHITE;
