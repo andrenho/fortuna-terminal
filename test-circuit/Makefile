@@ -1,8 +1,8 @@
 # Project name
-PROJECT=ft-test 
+PROJECT=fttest
 
 # Object files (one for each source file)
-OBJECTS=main.o uart.o i2c.o
+OBJECTS=main.o uart.o
 
 # Avrdude configuration to connect on the PI. See avrdude_gpio.conf.
 # Can be one of: pi_rst, pi_cs0, pi_cs1 or pi_gpio, depending on the RESET line in AVR.
@@ -43,7 +43,7 @@ ${PROJECT}.hex: ${PROJECT}.elf
 
 ${PROJECT}.elf: ${OBJECTS}
 	$(CC) -mmcu=${MCU_GCC} ${CFLAGS} ${CPPFLAGS} -o $@ $^ -Wl,--gc-sections
-	#avr-size -C --mcu=${MCU_GCC} ${PROJECT}.elf	
+	avr-size -C --mcu=${MCU_GCC} ${PROJECT}.elf	
 
 test-connection:
 	sudo avrdude ${AVRDUDE_FLAGS}
