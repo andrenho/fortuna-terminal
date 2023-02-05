@@ -1,7 +1,7 @@
 - Hardware
   - [x] Create schematic
-  - [ ] Build prototype
-  - [ ] Create test project
+  - [x] Build prototype
+  - [x] Create test project
 - Software
   - [x] Setup project
   - [x] Write SDL basic terminal - install on RPI
@@ -14,7 +14,7 @@
   - [x] PTY communication module
     - [ ] Improve ANSI protocol
   - [ ] Test real world communication
-    - [ ] Create test circuit
+    - [x] Create test circuit
     - [ ] Create client communication library (?)
     - [ ] Write I²C slave support
     - [ ] Write SPI master support
