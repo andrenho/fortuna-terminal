@@ -15,26 +15,27 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  - Keyboard input
  - Mouse input
  - Joystick input
- - UART I/O - provide functionality to extend I/O to serial (?)
- - Graphics via composite (?)
- - Audio via headphone jack (?)
  
- The terminal can be connected to a microprocessor or microcontroller through the following means:
+ The terminal can be connected to a computer, microprocessor or microcontroller through the following means:
  
  - UART - speeds from 300 bps up to 1Mbps
- - I²C - with the terminal operating as a slave
+ - I²C - with the terminal operating as master, and requesting updates at regular intervals
  - SPI - with the terminal operating as master, and requesting updates at regular intervals
- - TCP/IP (using ZeroMQ) - also allowing connection via Wi-Fi on the Pi
+ - TCP/IP - also allowing connection via Wi-Fi on the Pi
  - Bluetooth (?)
  - emcc - for generating WebAssembly code and interacting with a javascript emulator
+ - pty - connect a terminal to the underlying Linux of the terminal itself (the Raspberry Pi)
  - The following additional wires provide further functionality:
-   - an OUTPUT line indicates when a new frame has finished drawing
-   - on OUTPUT line allows the terminal to reset the computer
+   - an VSYNC line indicates when a new frame has finished drawing
+   - on RESET line allows the terminal to reset the computer
+   - a SUSPEND line stops communication for some time (allowing the SPI lines to be used for something else, for example)
 
 Communication can happen over the following protocols:
 
- - Fortuna: uses the [Fortuna Communication Protocol](https://docs.google.com/spreadsheets/d/1n-Tddk_1RplzINRn6SIJ1oKEY4TRZD6mcdNHknaA9lI/edit?usp=sharing)
- - Ansi: partial support to the [VT-100 Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
- - Fortuna+Ansi: same as Ansi, but an additional wire allows other commands to be sent via the same line.
-
-![image](https://user-images.githubusercontent.com/84652/215804976-7d3786c7-9bce-4a90-9154-df26b0a7fa0b.png)
+ - Fortuna: uses the [Fortuna Communication Protocol](https://github.com/andrenho/fortuna-terminal/wiki/Fortuna-Protocol). It provides error detection, flow control and retransmission in case of errors. With this protocol, all functionality in Fortuna Terminal is supported.
+ - Ansi: support to the [Linux Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
+ - Fortuna+Ansi: same as Ansi, but an additional wire allows special commands (such as graphics) to be sent via the same line.
+ 
+ Techincal information:
+ 
+See the wiki for [more detailed technical information](https://github.com/andrenho/fortuna-terminal/wiki)!
