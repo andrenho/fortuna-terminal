@@ -2,6 +2,8 @@
 
 ![image](https://user-images.githubusercontent.com/84652/215353776-29afeb20-d336-4596-835f-49292c930799.png)
 
+### Functionalities
+
 Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna-computers.github.io/). As a terminal, it provides the following functionality:
 
  - A 40 or 80-column terminal
@@ -15,6 +17,8 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
  - Keyboard input
  - Mouse input
  - Joystick input
+ 
+ ### Communication
  
  The terminal can be connected to a computer, microprocessor or microcontroller through the following means:
  
@@ -30,12 +34,14 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
    - on RESET line allows the terminal to reset the computer
    - a SUSPEND line stops communication for some time (allowing the SPI lines to be used for something else, for example)
 
+### Protocols
+
 Communication can happen over the following protocols:
 
  - Fortuna: uses the [Fortuna Communication Protocol](https://github.com/andrenho/fortuna-terminal/wiki/Fortuna-Protocol). It provides error detection, flow control and retransmission in case of errors. With this protocol, all functionality in Fortuna Terminal is supported.
  - Ansi: support to the [Linux Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
  - Fortuna+Ansi: same as Ansi, but an additional wire allows special commands (such as graphics) to be sent via the same line.
  
- Techincal information:
+### Additional techincal information
  
 See the wiki for [more detailed technical information](https://github.com/andrenho/fortuna-terminal/wiki)!
