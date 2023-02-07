@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -19,9 +20,9 @@ static CommFunctions comm_f = { NULL, NULL, NULL };
 
 static pthread_t       thread_input_ = 0,
                        thread_output_ = 0;
-static pthread_mutex_t mutex_input_ = 0,
-                       mutex_output_ = 0;
-static pthread_cond_t  output_has_data_ = 0;
+static pthread_mutex_t mutex_input_,
+                       mutex_output_;
+static pthread_cond_t  output_has_data_;
 static bool            threads_running_ = false;
 
 // synchronized buffers
