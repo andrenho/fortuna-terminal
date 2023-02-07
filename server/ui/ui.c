@@ -1,6 +1,8 @@
 #include "ui.h"
 #include "error/error.h"
 #include "painter.h"
+#include "protocol/protocol.h"
+#include "protocol/fortuna-protocol.h"
 
 #include <stdio.h>
 
@@ -102,13 +104,18 @@ int ui_do_events()
                 running_ = false;
                 break;
 
-                /*
             case SDL_TEXTINPUT: {
-                for (const char* c = ev.text.text; *c; ++c)
-                    protocol->output_key_event(true, *c, {});
+                protocol_terminal_event(&(FP_Command) {
+                        .command = FP_EVENT_KEYSTROKE,
+                        .var = (FP_VariableLengthCommand) {
+                                .length = strlen(ev.text.text),
+                                .data = (uint8_t *) ev.text.text,
+                        },
+                });
                 break;
             }
 
+                /*
             case SDL_KEYDOWN:
                 add_keyboard_event(true, ev.key);
                 break;

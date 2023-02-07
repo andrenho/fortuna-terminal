@@ -1,6 +1,7 @@
 #ifndef FORTUNA_PROTOCOL_H_
 #define FORTUNA_PROTOCOL_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 /**************************
@@ -81,7 +82,7 @@ typedef enum __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
     uint8_t  length;
     uint8_t* data;
-} VariableLengthCommand;
+} FP_VariableLengthCommand;
 
 typedef enum __attribute__((packed)) {
     Esc = 128, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
@@ -101,7 +102,7 @@ typedef struct __attribute__((packed)) {
         SpecialKey special_key;
     };
     KeyMod mod;
-} KeyEvent;
+} FP_KeyEvent;
 
 typedef struct __attribute__((packed)) {
     FP_CommandType command;
@@ -110,8 +111,8 @@ typedef struct __attribute__((packed)) {
             uint8_t        p1;
             uint8_t        p2;
         };
-        VariableLengthCommand var;
-        KeyEvent key;
+        FP_VariableLengthCommand var;
+        FP_KeyEvent key;
     };
 } FP_Command;
 
