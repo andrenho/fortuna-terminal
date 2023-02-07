@@ -8,8 +8,9 @@
 
 #define WINDOWED_ZOOM 3
 
-static bool initialized_ = false;
-SDL_Window * window_ = NULL;
+static bool        initialized_ = false;
+static SDL_Window* window_ = NULL;
+static bool        running_ = true;
 
 static void print_video_details()
 {
@@ -82,25 +83,50 @@ int ui_init(Options* options)
         printf("\n");
     }
 
-    return painter_init();
+    return painter_init(window_, options);
 }
 
 bool ui_running()
 {
-    // TODO
-    return 0;
+    return running_;
 }
 
 int ui_do_events()
 {
-    // TODO
+    SDL_Event ev;
+    while (SDL_PollEvent(&ev)) {
+
+        switch (ev.type) {
+
+            case SDL_QUIT:
+                running_ = false;
+                break;
+
+                /*
+            case SDL_TEXTINPUT: {
+                for (const char* c = ev.text.text; *c; ++c)
+                    protocol->output_key_event(true, *c, {});
+                break;
+            }
+
+            case SDL_KEYDOWN:
+                add_keyboard_event(true, ev.key);
+                break;
+
+            case SDL_KEYUP:
+                add_keyboard_event(false, ev.key);
+                break;
+                 */
+        }
+
+    }
+
     return 0;
 }
 
-int ui_draw()
+int ui_draw(Scene* scene)
 {
-    // TODO
-    return 0;
+    return painter_draw(scene);
 }
 
 int ui_destroy()
@@ -108,5 +134,9 @@ int ui_destroy()
     int r = painter_destroy();
     if (r != OK)
         return r;
+    if (window_)
+        SDL_DestroyWindow(window_);
+    if (initialized_)
+        SDL_Quit();
     return 0;
 }

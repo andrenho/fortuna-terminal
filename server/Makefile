@@ -3,6 +3,7 @@ OBJ=main.o \
 	error/error.o \
 	options/options.o \
 	protocol/protocol.o \
+	scene/scene.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
 
