@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <unistd.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
         Uint64 end_frame = SDL_GetTicks64();
         if (end_frame < (start_frame + 16))
-            usleep((end_frame - (start_frame + 16)) * 1000);
+            nanosleep(&(struct timespec) { .tv_sec = 0, .tv_nsec = (long) (end_frame - (start_frame + 16)) * 1000000 }, NULL);
 
         comm_notify_vsync();
     }
