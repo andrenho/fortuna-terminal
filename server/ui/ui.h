@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include "../options/options.h"
 
+#define GRAPHICS_W 256
+#define GRAPHICS_H 256
+
 int  ui_init(Options* options);
 bool ui_running();
 int  ui_do_events();

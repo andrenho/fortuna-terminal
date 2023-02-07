@@ -3,7 +3,7 @@ OBJ=main.o \
 	error/error.o \
 	options/options.o \
 	protocol/protocol.o \
-	ui/ui.o
+	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -I. -fstack-protector -fstack-protector-strong -D_FORTIFY_SOURCE=2 -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings

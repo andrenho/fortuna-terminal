@@ -1,7 +1,10 @@
 #ifndef ERROR_H_
 #define ERROR_H_
 
-#define OK 0
+typedef enum {
+    OK = 0,
+    ERR_SDL = -1,
+} Error;
 
 void error_check(int f);
 
