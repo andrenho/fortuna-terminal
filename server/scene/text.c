@@ -37,9 +37,17 @@ int text_init(Text* text)
     for (size_t y = 0; y < text->lines; ++y)
         for (size_t x = 0; x < text->columns; ++x)
             // text_set(text, y, x, ' ');
-            text_set(text, y, x, i);
+            text_set(text, y, x, i++);
 
     palette_init(&text->palette);
 
     return 0;
+}
+
+void text_update_blink(Text* text)
+{
+    if (SDL_GetTicks64() > text->cursor_last_blink + 600) {
+        text->cursor.blink_state = !text->cursor.blink_state;
+        text->cursor_last_blink = SDL_GetTicks64();
+    }
 }

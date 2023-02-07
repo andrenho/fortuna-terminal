@@ -126,6 +126,7 @@ int ui_do_events()
 
 int ui_draw(Scene* scene)
 {
+    text_update_blink(&scene->text);
     return painter_draw(scene);
 }
 

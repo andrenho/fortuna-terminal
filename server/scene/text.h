@@ -39,5 +39,6 @@ typedef struct {
 
 int  text_init(Text* text);
 Char text_get(Text* text, unsigned int y, unsigned int x);
+void text_update_blink(Text* text);
 
 #endif //TEXT_H_
