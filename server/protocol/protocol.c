@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "../comm/comm.h"
+#include "ansi.h"
+#include "error/error.h"
 
 #define INPUTBUF_SZ  (32 * 1024)
 #define OUTPUTBUF_SZ (32 * 1024)
@@ -20,8 +22,13 @@ static size_t          input_buf_sz_ = 0,
 
 int protocol_init(Options* options)
 {
-    (void) options;
-    return 0;
+    switch (options->protocol) {
+        case PR_ANSI:
+            protocol_f = (ProtocolFunctions) { ansi_process_pending_input, ansi_terminal_event };
+            return 0;
+        default:
+            return ERR_NOT_IMPLEMENTED;
+    }
 }
 
 void protocol_process_pending_data(Scene* scene)

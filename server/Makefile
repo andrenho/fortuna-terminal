@@ -2,7 +2,7 @@ OBJ=main.o \
 	comm/comm.o comm/echo.o \
 	error/error.o \
 	options/options.o \
-	protocol/protocol.o \
+	protocol/protocol.o protocol/ansi.o \
 	scene/scene.o scene/text.o scene/palette.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
