@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
     }
 
     // clean up
-    comm_stop();
+    comm_finalize();
     ui_destroy();
 
     return EXIT_SUCCESS;

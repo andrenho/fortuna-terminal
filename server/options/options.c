@@ -179,7 +179,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
             case 'B':
                 options->serial.baud = strtol(optarg, NULL, 10);
                 if (errno == ERANGE || errno == EINVAL)
-                    return errno;
+                    return ERR_LIBC;
                 break;
 
             case 'P':
@@ -193,7 +193,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
             case 'R':
                 options->tcpip.port = strtol(optarg, NULL, 10);
                 if (errno == ERANGE || errno == EINVAL)
-                    return errno;
+                    return ERR_LIBC;
                 break;
 
             case 'S':

@@ -7,13 +7,13 @@ OBJ=main.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
 
-CPPFLAGS=-Wall -Wextra -I. -fstack-protector -fstack-protector-strong -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings
+CPPFLAGS=-Wall -Wextra -I. -fstack-protector -fstack-protector-strong -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings -D_GNU_SOURCE -pthread
 CFLAGS=-std=c11
 
 ifeq ($(OS),Windows_NT)
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include -O0 -ggdb
-	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
+	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2 -lpthread
 else
 	OBJ := ${OBJ} # comm/uart.o comm/pty.o
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O0 -ggdb -DCOMM_UART -DCOMM_PTY
