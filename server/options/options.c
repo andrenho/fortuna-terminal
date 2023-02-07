@@ -8,9 +8,32 @@
 
 #include "error/error.h"
 
-if (communication_mode == CommunicationMode::NotChosen) {
-std::cerr << "Communication mode not chosen.\n";
-exit(EXIT_FAILURE);
+static void validate_options(Options* options)
+{
+    if (options->comm_mode == CM_NOT_CHOSEN) {
+        fprintf(stderr, "Communication mode not chosen.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (options->comm_mode == CM_ECHO && options->protocol != PR_ANSI) {
+        fprintf(stderr, "Echo mode only works with ANSI protocol.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (options->comm_mode == CM_PTY && options->protocol != PR_ANSI) {
+        fprintf(stderr, "PTY mode only works with ANSI protocol.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (options->comm_mode == CM_SPI && options->protocol != PR_FORTUNA) {
+        fprintf(stderr, "SPI mode only works with FORTUNA protocol.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (options->comm_mode == CM_DEBUG && options->debug_bytes) {
+        fprintf(stderr, "Can't use communication module 'debug' and 'debug_bytes' at the same time.\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 static void print_help(int exit_status)
@@ -30,6 +53,21 @@ static void print_help(int exit_status)
     printf("    -S, --shell                     Shell executable (default: /bin/sh)\n");
 
     exit(exit_status);
+}
+
+
+static void parse_uart_settings(const char* opt, Options* options)
+{
+    if (strlen(opt) != 3) {
+        fprintf(stderr, "Invalid UART settings.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (opt[0] != '8') {
+        fprintf(stderr, "Invalid UART settings: only 8-bit communication is supported.\n");
+        exit(EXIT_FAILURE);
+    }
+    options->serial.stop_bits = opt[1] - '0';
+    options->serial.parity = opt[2];
 }
 
 
@@ -149,7 +187,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
                 break;
 
             case 'U':
-                parse_uart_settings(optarg);
+                parse_uart_settings(optarg, options);
                 break;
 
             case 'R':
@@ -171,7 +209,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
             print_help(EXIT_FAILURE);
     }
 
-    validate_options();
+    validate_options(options);
 
     return OK;
 }
