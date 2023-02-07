@@ -43,6 +43,17 @@ int text_init(Text* text)
     return 0;
 }
 
+static void text_advance_cursor(Text* text)
+{
+    ++text->cursor.x;
+}
+
+void text_add_char(Text* text, uint8_t c)
+{
+    text_set(text, text->cursor.y, text->cursor.x, c);
+    text_advance_cursor(text);
+}
+
 void text_update_blink(Text* text)
 {
     if (SDL_GetTicks64() > text->cursor_last_blink + 600) {

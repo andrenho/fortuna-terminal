@@ -39,6 +39,7 @@ void protocol_process_pending_data(Scene* scene)
     if (bytes_processed < 0)
         error_check(bytes_processed);
     memmove(input_buf_, &input_buf_[bytes_processed], input_buf_sz_ - bytes_processed);
+    input_buf_sz_ -= bytes_processed;
 
     // process pending outputs
     if (output_buf_sz_ > 0) {

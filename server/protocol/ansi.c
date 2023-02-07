@@ -6,9 +6,9 @@
 
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
-    (void) buffer; (void) bufsz; (void) scene;
-    // TODO
-    return 0;
+    for (size_t i = 0; i < bufsz; ++i)
+       text_add_char(&scene->text, buffer[i]);
+    return (ssize_t) bufsz;
 }
 
 ssize_t ansi_terminal_event(FP_Command* command, uint8_t* buffer, size_t max_bufsz)

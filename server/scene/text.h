@@ -41,4 +41,6 @@ int  text_init(Text* text);
 Char text_get(Text* text, unsigned int y, unsigned int x);
 void text_update_blink(Text* text);
 
+void text_add_char(Text* text, uint8_t c);
+
 #endif //TEXT_H_
