@@ -2,6 +2,7 @@
 #define ERROR_H_
 
 #include <errno.h>
+#include <sys/types.h>
 
 typedef enum {
     OK = 0,

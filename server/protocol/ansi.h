@@ -2,6 +2,8 @@
 #define ANSI_H_
 
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "../scene/scene.h"
 #include "fortuna-protocol.h"
 
