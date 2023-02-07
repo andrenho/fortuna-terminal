@@ -2,6 +2,7 @@
 #define ECHO_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 int echo_init();
 int echo_recv(uint8_t* byte);
