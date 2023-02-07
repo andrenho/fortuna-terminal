@@ -33,11 +33,10 @@ int text_init(Text* text)
     };
     text->cursor_last_blink = SDL_GetTicks();
 
-    uint8_t i = 0;
     for (size_t y = 0; y < text->lines; ++y)
         for (size_t x = 0; x < text->columns; ++x)
-            // text_set(text, y, x, ' ');
-            text_set(text, y, x, i++);
+            text_set(text, y, x, ' ');
+            // text_set(text, y, x, y * text->columns + x);
 
     palette_init(&text->palette);
 

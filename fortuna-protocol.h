@@ -79,33 +79,12 @@ typedef enum __attribute__((packed)) {
 } FP_CommandType;
 
 typedef struct __attribute__((packed)) {
-    FP_CommandType command;
-    union {
-        uint8_t        p1;
-        uint8_t        p2;
-    };
-} FP_Command;
-
-// return values (not used yet)
-typedef enum __attribute__((packed)) {
-    FP_OK, FP_INVALID_COMMAND, FP_INVALID_PARAMETER,
-} FP_Response;
-
-/**************************
- *                        *
- *        OUTPUT          *
- *                        *
- **************************/
+    uint8_t  length;
+    uint8_t* data;
+} VariableLengthCommand;
 
 typedef enum __attribute__((packed)) {
-    FP_KEY_PRESS,
-    FP_KEY_RELEASE,
-    FP_SPECIAL_KEY_PRESS,
-    FP_SPECIAL_KEY_RELEASE,
-} FP_OutputEventType;
-
-typedef enum __attribute__((packed)) {
-    Esc, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
+    Esc = 128, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
     Insert, Home, End, PageUp, PageDown, Up, Down, Left, Right, Enter, Backspace,
     Delete, PrintScreen, PauseBreak,
 } SpecialKey;
@@ -117,12 +96,23 @@ typedef struct __attribute__((packed)) {
 } KeyMod;
 
 typedef struct __attribute__((packed)) {
-    FP_OutputEventType event : 8;
     union {
-        uint8_t        key         : 8;
-        SpecialKey     special_key : 8;
+        uint8_t    key;
+        SpecialKey special_key;
     };
-    KeyMod             mod;
-} FP_OutputEvent;
+    KeyMod mod;
+} KeyEvent;
+
+typedef struct __attribute__((packed)) {
+    FP_CommandType command;
+    union {
+        struct {
+            uint8_t        p1;
+            uint8_t        p2;
+        };
+        VariableLengthCommand var;
+        KeyEvent key;
+    };
+} FP_Command;
 
 #endif //FORTUNA_PROTOCOL_H_

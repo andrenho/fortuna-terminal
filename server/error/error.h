@@ -14,6 +14,6 @@ typedef enum {
     ERR_NO_DATA = -7,  // not an error
 } Error;
 
-void error_check(int f);
+void error_check(ssize_t f);
 
 #endif //ERROR_H_

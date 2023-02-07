@@ -6,7 +6,7 @@
 
 #include <SDL2/SDL.h>
 
-void error_check(int f)
+void error_check(ssize_t f)
 {
     switch (f) {
         case OK:
