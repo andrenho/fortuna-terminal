@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 
         Uint64 start_frame = SDL_GetTicks64();
 
-        // scene_process_input_queue();
+        protocol_process_pending_input(&scene);
 
         ui_do_events();
         ui_draw(&scene);

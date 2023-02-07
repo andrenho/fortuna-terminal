@@ -1,5 +1,5 @@
 OBJ=main.o \
-	comm/comm.o \
+	comm/comm.o comm/echo.o \
 	error/error.o \
 	options/options.o \
 	protocol/protocol.o \
