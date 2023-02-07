@@ -89,7 +89,7 @@ static void* comm_output_thread_run()
 {
     while (threads_running_) {
 
-        uint8_t buffer[output_buf_sz_];
+        uint8_t buffer[OUTPUTBUF_SZ];
         size_t sz = 0;
 
         pthread_mutex_lock(&mutex_output_);
@@ -116,10 +116,12 @@ size_t comm_unload_input_queue(uint8_t* dest, size_t max_sz)
 {
     size_t sz = (input_buf_sz_ < max_sz) ? input_buf_sz_ : max_sz;
 
-    pthread_mutex_lock(&mutex_input_);
-    memcpy(dest, input_buf_, sz);
-    input_buf_sz_ = 0;
-    pthread_mutex_unlock(&mutex_input_);
+    if (sz > 0) {
+        pthread_mutex_lock(&mutex_input_);
+        memcpy(dest, input_buf_, sz);
+        input_buf_sz_ = 0;
+        pthread_mutex_unlock(&mutex_input_);
+    }
 
     return sz;
 }
