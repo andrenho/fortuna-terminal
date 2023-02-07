@@ -31,15 +31,20 @@ static void painter_draw_deep_background()
     SDL_RenderClear(renderer_);
 }
 
+static void painter_draw_background(Scene* scene)
+{
+    Color bg = scene->palette.color[scene->bg_color];
+    SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(renderer_, &(SDL_Rect) {0, 0, GRAPHICS_W, GRAPHICS_H });
+}
+
 int painter_draw(Scene* scene)
 {
     painter_draw_deep_background();
-    /*
-    painter_draw_background(scene.text_layer);
-    painter_draw_text(scene.text_layer);
-    */
+    painter_draw_background(scene);
+    // painter_draw_text(scene.text_layer);
 
-    SDL_RenderClear(renderer_);
+    SDL_RenderPresent(renderer_);
 
     return 0;
 }

@@ -4,6 +4,9 @@
 #include "text.h"
 
 typedef struct {
+    uint8_t      bg_color;
+    Palette      palette;
+
     Text text;
 } Scene;
 

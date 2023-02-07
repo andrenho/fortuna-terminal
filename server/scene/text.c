@@ -17,7 +17,6 @@ int text_init(Text* text)
     text->scroll_end = text->lines;
     text->insertion_mode = false;
 
-    text->bg_color = COLOR_BLACK;
     text->fg_color = COLOR_WHITE;
 
     text->cursor = (Cursor) {

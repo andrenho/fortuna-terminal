@@ -32,7 +32,6 @@ typedef struct {
     unsigned int scroll_end;
     bool         insertion_mode;
 
-    uint8_t      bg_color;
     uint8_t      fg_color;
 
     Palette      palette;
