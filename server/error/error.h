@@ -1,6 +1,8 @@
 #ifndef ERROR_H_
 #define ERROR_H_
 
+#include <errno.h>
+
 typedef enum {
     OK = 0,
     ERR_SDL = -1,
