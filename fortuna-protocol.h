@@ -76,13 +76,15 @@ typedef enum __attribute__((packed)) {
 
     // TODO - commands to create and play/pause music, and to create and play special effects
 
-} FP_InputCommandType;
+} FP_CommandType;
 
 typedef struct __attribute__((packed)) {
-    FP_InputCommandType command : 8;
-    uint8_t             p1      : 8;
-    uint8_t             p2      : 8;
-} FP_InputCommand;
+    FP_CommandType command;
+    union {
+        uint8_t        p1;
+        uint8_t        p2;
+    };
+} FP_Command;
 
 // return values (not used yet)
 typedef enum __attribute__((packed)) {
