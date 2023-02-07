@@ -6,6 +6,7 @@
 typedef enum {
     OK = 0,
     ERR_SDL = -1,
+    ERR_FAIL = -2,
 } Error;
 
 void error_check(int f);

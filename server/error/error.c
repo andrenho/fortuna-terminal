@@ -12,6 +12,8 @@ void error_check(int f)
             break;
         case ERR_SDL:
             fprintf(stderr, "SDL error: %s\n", SDL_GetError());
+        case ERR_FAIL:
+            break;
     }
 
     if (f != OK)

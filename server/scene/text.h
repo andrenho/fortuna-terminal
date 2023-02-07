@@ -37,6 +37,7 @@ typedef struct {
     Palette      palette;
 } Text;
 
-int text_init(Text* text);
+int  text_init(Text* text);
+Char text_get(Text* text, unsigned int y, unsigned int x);
 
 #endif //TEXT_H_

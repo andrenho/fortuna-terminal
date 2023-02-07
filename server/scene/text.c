@@ -9,6 +9,11 @@ static void text_set(Text* text, unsigned int y, unsigned int x, uint8_t c)
     text->matrix[y * text->columns + x] = (Char) { c, text->fg_color };
 }
 
+Char text_get(Text* text, unsigned int y, unsigned int x)
+{
+    return text->matrix[y * text->columns + x];
+}
+
 int text_init(Text* text)
 {
     text->columns = 40;
@@ -28,9 +33,11 @@ int text_init(Text* text)
     };
     text->cursor_last_blink = SDL_GetTicks();
 
+    uint8_t i = 0;
     for (size_t y = 0; y < text->lines; ++y)
         for (size_t x = 0; x < text->columns; ++x)
-            text_set(text, y, x, ' ');
+            // text_set(text, y, x, ' ');
+            text_set(text, y, x, i);
 
     palette_init(&text->palette);
 
