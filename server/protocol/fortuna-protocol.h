@@ -85,9 +85,9 @@ typedef struct __attribute__((packed)) {
 } FP_VariableLengthCommand;
 
 typedef enum __attribute__((packed)) {
-    Esc = 128, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, Tab, CapsLock, Win,
-    Insert, Home, End, PageUp, PageDown, Up, Down, Left, Right, Enter, Backspace,
-    Delete, PrintScreen, PauseBreak,
+    SK_ESC = 128, SK_F1, SK_F2, SK_F3, SK_F4, SK_F5, SK_F6, SK_F7, SK_F8, SK_F9, SK_F10, SK_F11, SK_F12, SK_TAB, SK_CAPSLOCK, SK_WIN,
+    SK_INSERT, SK_HOME, SK_END, SK_PAGEUP, SK_PAGEDOWN, SK_UP, SK_DOWN, SK_LEFT, SK_RIGHT, SK_ENTER, SK_BACKSPACE,
+    SK_DELETE, SK_PRINTSCREEN, SK_PAUSEBREAK,
 } SpecialKey;
 
 typedef struct __attribute__((packed)) {

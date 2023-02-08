@@ -21,6 +21,13 @@ ssize_t ansi_terminal_event(FP_Command* command, uint8_t* buffer, size_t max_buf
             memcpy(buffer, command->var.data, command->var.length);
             return command->var.length;
 
+        case FP_EVENT_KEY_PRESS:
+            if (command->key.key < 32 || command->key.key >= 127) {
+                buffer[0] = command->key.key;
+                return 1;
+            }
+            break;
+
         default:
             break;
     }
