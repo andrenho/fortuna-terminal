@@ -54,6 +54,11 @@ int comm_init(Options* options, size_t lines, size_t columns)
             comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
             return pty_init(&options->pty, lines, columns);
 #endif
+#ifdef COMM_UART
+        case CM_UART:
+            comm_f = (CommFunctions) { uart_recv, uart_send, uart_finalize };
+            return uart_init(&options->serial);
+#endif
         default:
             return ERR_NOT_IMPLEMENTED;
     }
