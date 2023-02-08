@@ -2,7 +2,7 @@ Rewrite from C++
  - Communication
    - [x] TCP/IP
    - [x] PTY
-   - [ ] UART
+   - [x] UART
  - Protocols
    - [ ] ANSI (basic stuff)
  - Scene

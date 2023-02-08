@@ -9,6 +9,7 @@
 #include "error/error.h"
 #include "echo.h"
 #include "pty.h"
+#include "uart.h"
 #include "tcpip.h"
 
 #define INPUTBUF_SZ  (32 * 1024)
