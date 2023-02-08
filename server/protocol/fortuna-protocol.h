@@ -43,6 +43,7 @@ typedef enum __attribute__((packed)) {
     FP_TEXT_CLEAR_LINE              = 0x1e, // clear the line under the cursor
     FP_TEXT_CLEAR_CHAR              = 0x1f, // clear the char under the cursor
     FP_TEXT_INSERTION_MODE          = 0x20, // set insertion mode inactive (0) or active (1)
+    FP_TEXT_BEEP                    = 0x21, // sends a beep to the terminal
 
     // queries
 

@@ -43,4 +43,16 @@ void text_update_blink(Text* text);
 
 void text_add_char(Text* text, uint8_t c);
 
+void text_move_cursor_relative(Text* text, int y, int x);
+void text_move_cursor_to(Text* text, unsigned int y, unsigned int x);
+void text_set_color(Text* text, uint8_t color);
+void text_clear_screen(Text* text);
+void text_reset_formatting(Text* text);
+void text_clear_to_beginning_of_line(Text* text);
+void text_clear_to_end_of_line(Text* text);
+void text_clear_line(Text* text);
+void text_set_insertion_mode(Text* text, bool active);
+void text_set_scroll_region(Text* text, uint8_t start, uint8_t end);
+void text_delete_char_under_cursor(Text* text);
+
 #endif //TEXT_H_
