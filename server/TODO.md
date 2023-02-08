@@ -9,7 +9,7 @@ Rewrite from C++
    - [x] Text layer
  - UI
    - [x] Keyboard events / special keys
- - [ ] Merge to master
+ - [x] Merge to master
    
 Protocols
  - [ ] ANSI (rewrite)
