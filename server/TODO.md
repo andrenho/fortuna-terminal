@@ -6,9 +6,9 @@ Rewrite from C++
  - Protocols
    - [x] ANSI (basic stuff)
  - Scene
-   - [ ] Text layer
+   - [x] Text layer
  - UI
-   - [ ] Keyboard events / special keys
+   - [x] Keyboard events / special keys
  - [ ] Merge to master
    
 Protocols
