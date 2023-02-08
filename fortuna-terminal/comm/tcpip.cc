@@ -14,6 +14,8 @@
 
 #include <thread>
 #include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
 
 #include "../global.hh"
 
