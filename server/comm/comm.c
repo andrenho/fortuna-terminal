@@ -36,8 +36,10 @@ static size_t          input_buf_sz_ = 0,
 
 static bool            debug_mode = false;
 
-int comm_init(Options* options)
+int comm_init(Options* options, size_t lines, size_t columns)
 {
+    (void) lines; (void) columns;
+
     debug_mode = options->debug_mode;
 
     switch (options->comm_mode) {
@@ -50,7 +52,7 @@ int comm_init(Options* options)
 #ifdef COMM_PTY
         case CM_PTY:
             comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
-            return pty_init(&options->pty);
+            return pty_init(&options->pty, lines, columns);
 #endif
         default:
             return ERR_NOT_IMPLEMENTED;
