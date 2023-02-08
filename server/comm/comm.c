@@ -1,13 +1,15 @@
 #include "comm.h"
-#include "error/error.h"
-#include "echo.h"
-#include "tcpip.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+
+#include "error/error.h"
+#include "echo.h"
+#include "pty.h"
+#include "tcpip.h"
 
 #define INPUTBUF_SZ  (32 * 1024)
 #define OUTPUTBUF_SZ (32 * 1024)
@@ -45,6 +47,11 @@ int comm_init(Options* options)
         case CM_TCPIP:
             comm_f = (CommFunctions) { tcpip_recv, tcpip_send, tcpip_finalize };
             return tcpip_init(&options->tcpip);
+#ifdef COMM_PTY
+        case CM_PTY:
+            comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
+            return pty_init(&options->pty);
+#endif
         default:
             return ERR_NOT_IMPLEMENTED;
     }

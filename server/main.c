@@ -16,14 +16,14 @@ int main(int argc, char* argv[])
     Options options;
     error_check(options_parse_cmdline(argc, argv, &options));
 
-    // intialization
-    protocol_init(&options);
-    error_check(comm_init(&options));
-    error_check(ui_init(&options));
-
     // create scene
     Scene scene;
     scene_init(&scene);
+
+    // intialization
+    protocol_init(&options);
+    error_check(comm_init(&options, scene.text.lines, scene.text.columns));
+    error_check(ui_init(&options));
 
     // start communication thread(s)
     comm_run();

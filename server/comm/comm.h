@@ -3,7 +3,7 @@
 
 #include "../options/options.h"
 
-int    comm_init(Options* options);
+int    comm_init(Options* options, size_t lines, size_t columns);
 int    comm_run();
 size_t comm_unload_input_queue(uint8_t* dest, size_t max_sz);
 int    comm_add_to_output_queue(uint8_t* data, uint8_t sz);
