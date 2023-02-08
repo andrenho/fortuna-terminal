@@ -124,7 +124,7 @@ int tcpip_recv(uint8_t* byte)
 int tcpip_send(const uint8_t* data, size_t sz)
 {
     if (client_connected) {
-        int n = send(client_fd, (char *) data, sz, 0);
+        int n = send(client_fd, (char *) data, (int) sz, 0);
         if (n == 0) {
             printf("Client disconnected.\n");
             client_connected = false;
