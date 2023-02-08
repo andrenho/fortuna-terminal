@@ -12,7 +12,7 @@ static int master_fd = 0;
 
 int pty_init(PTYOptions* pty_options, size_t lines, size_t columns)
 {
-    struct winsize winp = { lines, columns };
+    struct winsize winp = { lines, columns, 0 , 0 };
 
     pid_t pid = forkpty(&master_fd, NULL, NULL, &winp);
     if (pid == 0) {

@@ -24,6 +24,8 @@ static SOCKET client_fd = 0;
 static bool client_connected = false;
 
 #include <fcntl.h>
+#include <string.h>
+#include <stdio.h>
 
 int tcpip_init(const TCPIPOptions* tcpip_options)
 {

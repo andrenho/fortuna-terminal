@@ -1,5 +1,6 @@
 #include "comm.h"
 
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
