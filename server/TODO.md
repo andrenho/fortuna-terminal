@@ -21,7 +21,7 @@ Additional signal wires
  - [ ] RESET
  - [ ] CMD (?)
 
-UART / SPI
+Communication
  - [ ] Create client library
  - UART 
     - [ ] Write UART/ANSI test code in microcontroller
@@ -32,6 +32,8 @@ UART / SPI
  - I²C
     - [ ] I²C support in server
     - [ ] I²C in client library
+ - TCP/IP client
+   - [ ] Implement
 
 Text
  - 80 columns
@@ -53,3 +55,4 @@ Audio
 Other
  - [ ] Bluetooth support
  - [ ] Additional communication (ex. debug over serial)
+ - [ ] SSH communication

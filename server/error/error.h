@@ -6,14 +6,18 @@
 
 typedef enum {
     OK = 0,
-    ERR_SDL = -1,
-    ERR_FAIL = -2,
-    ERR_NOT_IMPLEMENTED = -3,
-    ERR_LIBC = -4,
-    ERR_BUF_OVERFLOW = -5,
-    ERR_COMMUNICATION_CLOSED = -6,
-    ERR_NO_DATA = -7,  // not an error
+    ERR_NO_DATA = -1,  // not an error
+    ERR_SDL = -2,
+    ERR_FAIL = -3,
+    ERR_NOT_IMPLEMENTED = -4,
+    ERR_LIBC = -5,
+    ERR_BUF_OVERFLOW = -6,
+    ERR_COMMUNICATION_CLOSED = -7,
+    ERR_MESSAGE = -8,
 } Error;
+
+#define ERR_MSG_SZ 512
+extern char error_message[ERR_MSG_SZ];
 
 void error_check(ssize_t f);
 

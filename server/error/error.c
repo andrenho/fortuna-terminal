@@ -6,12 +6,14 @@
 
 #include <SDL2/SDL.h>
 
+char error_message[ERR_MSG_SZ] = {0};
+
 void error_check(ssize_t f)
 {
     switch (f) {
         case OK:
         case ERR_NO_DATA:
-            break;
+            return;
         case ERR_SDL:
             fprintf(stderr, "SDL error: %s\n", SDL_GetError());
             break;
@@ -29,7 +31,12 @@ void error_check(ssize_t f)
         case ERR_COMMUNICATION_CLOSED:
             fprintf(stderr, "Communication channel closed.\n");
             break;
+        case ERR_MESSAGE:
+            fprintf(stderr, "%s\n", error_message);
+            break;
         default:
             fprintf(stderr, "An undefined error happenend.\n");
     }
+
+    exit(EXIT_FAILURE);
 }

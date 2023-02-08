@@ -1,6 +1,7 @@
 #include "comm.h"
 #include "error/error.h"
 #include "echo.h"
+#include "tcpip.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -41,6 +42,9 @@ int comm_init(Options* options)
         case CM_ECHO:
             comm_f = (CommFunctions) { echo_recv, echo_send, echo_finalize };
             return echo_init();
+        case CM_TCPIP:
+            comm_f = (CommFunctions) { tcpip_recv, tcpip_send, tcpip_finalize };
+            return tcpip_init(&options->tcpip);
         default:
             return ERR_NOT_IMPLEMENTED;
     }
@@ -165,10 +169,8 @@ int comm_finalize()
     threads_running_ = false;
     usleep(100000);
 
-    pthread_cancel(thread_input_);
-    pthread_join(thread_input_, NULL);
-    pthread_cancel(thread_output_);
-    pthread_join(thread_output_, NULL);
+    pthread_kill(thread_input_, 9);
+    pthread_kill(thread_output_, 9);
 
     pthread_cond_destroy(&output_has_data_);
 
