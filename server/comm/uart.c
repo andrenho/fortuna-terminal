@@ -27,7 +27,7 @@ int uart_init(SerialOptions* serial_options)
     if (tcgetattr(fd, &opt) != 0)
         error_check(ERR_LIBC);
 
-    if (cfsetspeed(&opt, (speed_t) options.serial.baud) < 0)
+    if (cfsetspeed(&opt, (speed_t) serial_options->baud) < 0)
         error_check(ERR_LIBC);
 
     opt.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
