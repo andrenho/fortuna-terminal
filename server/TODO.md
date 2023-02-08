@@ -1,7 +1,7 @@
 Rewrite from C++
  - Communication
    - [x] TCP/IP
-   - [ ] PTY
+   - [x] PTY
    - [ ] UART
  - Protocols
    - [ ] ANSI (basic stuff)
