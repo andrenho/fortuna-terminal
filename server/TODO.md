@@ -4,7 +4,7 @@ Rewrite from C++
    - [x] PTY
    - [x] UART
  - Protocols
-   - [ ] ANSI (basic stuff)
+   - [x] ANSI (basic stuff)
  - Scene
    - [ ] Text layer
  - UI
