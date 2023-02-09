@@ -44,58 +44,32 @@ ssize_t ansi_terminal_event(FP_Command* command, uint8_t* buffer, size_t max_buf
                     case SK_TAB:        return seq(buffer, "\t");
                     case SK_BACKSPACE:  return seq(buffer, "\b");
                     case SK_F1:         return seq(buffer, "\e[[A");
-                    case SK_F2:
-                        break;
-                    case SK_F3:
-                        break;
-                    case SK_F4:
-                        break;
-                    case SK_F5:
-                        break;
-                    case SK_F6:
-                        break;
-                    case SK_F7:
-                        break;
-                    case SK_F8:
-                        break;
-                    case SK_F9:
-                        break;
-                    case SK_F10:
-                        break;
-                    case SK_F11:
-                        break;
-                    case SK_F12:
-                        break;
+                    case SK_F2:         return seq(buffer, "\e[[B");
+                    case SK_F3:         return seq(buffer, "\e[[C");
+                    case SK_F4:         return seq(buffer, "\e[[D");
+                    case SK_F5:         return seq(buffer, "\e[[E");
+                    case SK_F6:         return seq(buffer, "\e[17~");
+                    case SK_F7:         return seq(buffer, "\e[18~");
+                    case SK_F8:         return seq(buffer, "\e[19~");
+                    case SK_F9:         return seq(buffer, "\e[20~");
+                    case SK_F10:        return seq(buffer, "\e[21~");
+                    case SK_F11:        return seq(buffer, "\e[23~");
+                    case SK_F12:        return seq(buffer, "\e[24~");
+                    case SK_INSERT:     return seq(buffer, "\e[2~");
+                    case SK_HOME:       return seq(buffer, "\e[1~");
+                    case SK_END:        return seq(buffer, "\e[4~");
+                    case SK_PAGEUP:     return seq(buffer, "\e[5~");
+                    case SK_PAGEDOWN:   return seq(buffer, "\e[6~");
+                    case SK_UP:         return seq(buffer, "\e[A");
+                    case SK_DOWN:       return seq(buffer, "\e[B");
+                    case SK_LEFT:       return seq(buffer, "\e[D");
+                    case SK_RIGHT:      return seq(buffer, "\e[C");
+                    case SK_DELETE:     return seq(buffer, "\e[3~");
+                    case SK_PRINTSCREEN:
+                    case SK_PAUSEBREAK:
                     case SK_CAPSLOCK:
-                        break;
                     case SK_WIN:
                         break;
-                    case SK_INSERT:
-                        break;
-                    case SK_HOME:
-                        break;
-                    case SK_END:
-                        break;
-                    case SK_PAGEUP:
-                        break;
-                    case SK_PAGEDOWN:
-                        break;
-                    case SK_UP:
-                        break;
-                    case SK_DOWN:
-                        break;
-                    case SK_LEFT:
-                        break;
-                    case SK_RIGHT:
-                        break;
-                    case SK_DELETE:
-                        break;
-                    case SK_PRINTSCREEN:
-                        break;
-                    case SK_PAUSEBREAK:
-                        break;
-                    default:
-                        fprintf(stderr, "Currently unsupported key pressed: %d\n", command->key.special_key);
                 }
             }
             break;

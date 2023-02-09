@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include <string.h>
+#include <unistd.h>
 
 static pthread_mutex_t mutex;
 
@@ -18,10 +19,13 @@ int echo_init()
 
 int echo_recv(uint8_t* byte)
 {
-    if (buffer_sz_ == 0)
+    if (buffer_sz_ == 0) {
+        usleep(1000);
         return ERR_NO_DATA;
+    }
     pthread_mutex_lock(&mutex);
-    *byte = buffer_[--buffer_sz_];
+    *byte = buffer_[0];
+    memmove(buffer_, &buffer_[1], --buffer_sz_);
     pthread_mutex_unlock(&mutex);
     return 0;
 }
