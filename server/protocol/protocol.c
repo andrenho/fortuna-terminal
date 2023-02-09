@@ -11,17 +11,19 @@
 
 typedef struct {
     ssize_t (* process_pending_input)(const uint8_t* buffer, size_t bufsz, Scene* scene);
-    ssize_t (* terminal_event)(FP_Command* command, uint8_t* buffer, size_t max_bufsz);
+    int     (* terminal_event)(FP_Command* command, Buffer* output_buffer_);
 } ProtocolFunctions;
 static ProtocolFunctions protocol_f = { NULL, NULL };
 
 static uint8_t         input_buf_[INPUTBUF_SZ];
-static uint8_t         output_buf_[OUTPUTBUF_SZ];
-static size_t          input_buf_sz_ = 0,
-                       output_buf_sz_ = 0;
+static size_t          input_buf_sz_ = 0;
 
-int protocol_init(Options* options)
+static Buffer* output_buffer_ = NULL;
+
+int protocol_init(Options* options, Buffer* output_buffer)
 {
+    output_buffer_ = output_buffer;
+
     switch (options->protocol) {
         case PR_ANSI:
             protocol_f = (ProtocolFunctions) { ansi_process_pending_input, ansi_terminal_event };
@@ -31,7 +33,7 @@ int protocol_init(Options* options)
     }
 }
 
-void protocol_process_pending_data(Scene* scene)
+void protocol_process_input_queue(Scene* scene)
 {
     // process pending inputs
     size_t sz = comm_unload_input_queue(input_buf_, INPUTBUF_SZ);
@@ -43,19 +45,9 @@ void protocol_process_pending_data(Scene* scene)
         memmove(input_buf_, &input_buf_[bytes_processed], bytes_processed);
         input_buf_sz_ -= bytes_processed;
     }
-
-    // process pending outputs
-    if (output_buf_sz_ > 0) {
-        comm_add_to_output_queue(output_buf_, output_buf_sz_);
-        output_buf_sz_ = 0;
-    }
 }
 
 void protocol_terminal_event(FP_Command* command)
 {
-    ssize_t r = protocol_f.terminal_event(command, &output_buf_[output_buf_sz_], OUTPUTBUF_SZ - output_buf_sz_);
-    if (r < 0)
-        error_check(r);
-    else
-        output_buf_sz_ += r;
+    error_check(protocol_f.terminal_event(command, output_buffer_));
 }

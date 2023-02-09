@@ -13,8 +13,7 @@
 #include "uart.h"
 #include "tcpip.h"
 
-#define INPUTBUF_SZ  (32 * 1024)
-#define OUTPUTBUF_SZ (32 * 1024)
+#define BUFFER_SZ (32 * 1024)
 
 typedef struct {
     int (* recv)(uint8_t* byte);
@@ -29,12 +28,6 @@ static pthread_mutex_t mutex_input_,
                        mutex_output_;
 static pthread_cond_t  output_has_data_;
 static bool            threads_running_ = false;
-
-// synchronized buffers
-static uint8_t         input_buf_[INPUTBUF_SZ];
-static uint8_t         output_buf_[OUTPUTBUF_SZ];
-static size_t          input_buf_sz_ = 0,
-                       output_buf_sz_ = 0;
 
 static bool            debug_mode = false;
 
@@ -83,94 +76,60 @@ static void print_bytes(const uint8_t* bytes, size_t sz, int color)
     }
 }
 
-static void* comm_input_thread_run()
+static void* comm_input_thread_run(void* input_buffer_ptr)
 {
+    Buffer* input_buffer = input_buffer_ptr;
+
     while (threads_running_) {
+
         uint8_t byte = 0;
         int r = comm_f.recv(&byte);
         if (r == ERR_NO_DATA)
             continue;
-        if (debug_mode)
-            print_bytes(&byte, 1, 31);
         error_check(r);
 
-        if (input_buf_sz_ >= INPUTBUF_SZ)
-            error_check(ERR_BUF_OVERFLOW);
+        if (debug_mode)
+            print_bytes(&byte, 1, 31);
 
-        pthread_mutex_lock(&mutex_input_);
-        input_buf_[input_buf_sz_++] = byte;
-        pthread_mutex_unlock(&mutex_input_);
+        buffer_add_byte(input_buffer, byte);
     }
 
     return NULL;
 }
 
-static void* comm_output_thread_run()
+static void* comm_output_thread_run(void* output_buffer_ptr)
 {
+    Buffer* output_buffer = output_buffer_ptr;
+    uint8_t comm_output_array[BUFFER_SZ];
+
     while (threads_running_) {
 
-        uint8_t buffer[OUTPUTBUF_SZ];
-        size_t sz = 0;
+        ssize_t sz = buffer_move_data_to_array(output_buffer, comm_output_array, BUFFER_SZ);
 
-        pthread_mutex_lock(&mutex_output_);
-
-        pthread_cond_wait(&output_has_data_, &mutex_output_);
-
-        if (output_buf_sz_ > 0) {
-            memcpy(buffer, output_buf_, output_buf_sz_);
-            sz = output_buf_sz_;
-            output_buf_sz_ = 0;
-        }
-
-        pthread_mutex_unlock(&mutex_output_);
-
-        error_check(comm_f.send(buffer, sz));
+        error_check(comm_f.send(comm_output_array, sz));
         if (debug_mode)
-            print_bytes(buffer, sz, 32);
+            print_bytes(comm_output_array, sz, 32);
     }
 
     return NULL;
 }
 
-size_t comm_unload_input_queue(uint8_t* dest, size_t max_sz)
+int comm_run_input(Buffer* input_buffer)
 {
-    size_t sz = (input_buf_sz_ < max_sz) ? input_buf_sz_ : max_sz;
-
-    if (sz > 0) {
-        pthread_mutex_lock(&mutex_input_);
-        memcpy(dest, input_buf_, sz);
-        input_buf_sz_ = 0;
-        pthread_mutex_unlock(&mutex_input_);
-    }
-
-    return sz;
-}
-
-int comm_add_to_output_queue(uint8_t* data, uint8_t sz)
-{
-    if (sz == 0)
-        return 0;
-
-    if ((output_buf_sz_ + sz) > OUTPUTBUF_SZ)
-        error_check(ERR_BUF_OVERFLOW);
-
-    pthread_mutex_lock(&mutex_output_);
-    memcpy(&output_buf_[output_buf_sz_], data, sz);
-    output_buf_sz_ += sz;
-    pthread_cond_signal(&output_has_data_);
-    pthread_mutex_unlock(&mutex_output_);
+    threads_running_ = true;
+    pthread_mutex_init(&mutex_input_, NULL);
+    error_check(pthread_create(&thread_input_, NULL, comm_input_thread_run, input_buffer));
 
     return 0;
 }
 
-int comm_run()
+int comm_run_output(Buffer* output_buffer)
 {
     threads_running_ = true;
-    pthread_mutex_init(&mutex_input_, NULL);
     pthread_mutex_init(&mutex_output_, NULL);
     pthread_cond_init(&output_has_data_, NULL);
-    error_check(pthread_create(&thread_input_, NULL, comm_input_thread_run, NULL));
-    error_check(pthread_create(&thread_output_, NULL, comm_output_thread_run, NULL));
+    error_check(pthread_create(&thread_output_, NULL, comm_output_thread_run, output_buffer));
+
     return 0;
 }
 
