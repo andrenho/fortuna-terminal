@@ -41,8 +41,8 @@ int buffer_add_bytes(Buffer* buffer, uint8_t* bytes, size_t sz)
 
     if (i > 0) {
         pthread_mutex_lock(&buffer->mutex);
-        memcpy(buffer->data, bytes, i);
-        buffer->sz = i;
+        memcpy(&buffer->data[buffer->sz], bytes, i);
+        buffer->sz += i;
         pthread_cond_signal(&buffer->cond);
         pthread_mutex_unlock(&buffer->mutex);
     }
@@ -52,7 +52,7 @@ int buffer_add_bytes(Buffer* buffer, uint8_t* bytes, size_t sz)
 
 int buffer_add_str_nonull(Buffer* buffer, const char* str)
 {
-    unsigned long long n = strlen(str) - 1;
+    unsigned long long n = strlen(str);
     if (n > 0)
         buffer_add_bytes(buffer, (uint8_t *) str, n);
     return 0;
