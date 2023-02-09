@@ -2,17 +2,61 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "../error/error.h"
 
+#define ESCAPE_SEQ_SZ 24
+
+static bool ansi_parse_escape_sequence(char* buf, size_t idx)
+{
+    fprintf(stderr, "Invalid escape sequence: ^%.*s\n", (int) (idx - 1), &buf[1]);
+    return false;
+}
+
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
+    size_t bytes_consumed = 0;
+
+    bool    escape_sequence = false;
+    char    escape_seq_buf[ESCAPE_SEQ_SZ] = {0};
+    size_t  escape_seq_idx = 0;
+
     for (size_t i = 0; i < bufsz; ++i) {
         uint8_t c = buffer[i];
-        if (c >= 32 && c < 127)
-            text_add_char(&scene->text, c);
+        if (!escape_sequence) {
+            if (c == '\e')                              // escape sequence starts
+                escape_sequence = true;
+            else                                        // just a regular character
+                text_add_char(&scene->text, c);
+        }
+        if (escape_sequence) {
+            escape_seq_buf[escape_seq_idx++] = (char) c;
+            if (!isalpha(c) && c != '@') {           // escape sequence continues
+                if (escape_seq_idx >= ESCAPE_SEQ_SZ) {  // invalid escape sequence, rollback
+                    for (size_t j = 0; j < escape_seq_idx; ++j)
+                        text_add_char(&scene->text, escape_seq_buf[j]);
+                    escape_sequence = false;
+                    escape_seq_idx = 0;
+                }
+            } else {                                    // escape sequence ends
+                if (!ansi_parse_escape_sequence(escape_seq_buf, escape_seq_idx)) {
+                    for (size_t j = 0; j < escape_seq_idx; ++j)
+                        text_add_char(&scene->text, escape_seq_buf[j]);
+                }
+                escape_sequence = false;
+                escape_seq_idx = 0;
+            }
+        }
+        ++bytes_consumed;
     }
-    return (ssize_t) bufsz;
+
+    // check for an incomplete escape sequence
+    if (escape_sequence) {
+        bytes_consumed -= escape_seq_idx;
+    }
+
+    return (ssize_t) bytes_consumed;
 }
 
 ssize_t seq(uint8_t* buffer, const char* sequence)
@@ -80,3 +124,4 @@ ssize_t ansi_terminal_event(FP_Command* command, uint8_t* buffer, size_t max_buf
 
     return 0;
 }
+

@@ -34,12 +34,13 @@ int protocol_init(Options* options)
 void protocol_process_pending_data(Scene* scene)
 {
     // process pending inputs
-    input_buf_sz_ += comm_unload_input_queue(input_buf_, INPUTBUF_SZ);
-    if (input_buf_sz_ > 0) {
+    size_t sz = comm_unload_input_queue(input_buf_, INPUTBUF_SZ);
+    if (sz > 0) {
+        input_buf_sz_ += sz;
         ssize_t bytes_processed = protocol_f.process_pending_input(input_buf_, input_buf_sz_, scene);
         if (bytes_processed < 0)
             error_check(bytes_processed);
-        memmove(input_buf_, &input_buf_[bytes_processed], input_buf_sz_ - bytes_processed);
+        memmove(input_buf_, &input_buf_[bytes_processed], bytes_processed);
         input_buf_sz_ -= bytes_processed;
     }
 
