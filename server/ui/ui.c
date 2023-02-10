@@ -40,20 +40,20 @@ static void print_video_details()
     printf("\n");
 }
 
-int ui_init(Options* options)
+int ui_init()
 {
-    if (options->debug_mode)
+    if (options.debug_mode)
         print_video_details();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return ERR_SDL;
     initialized_ = true;
 
-    if (options->debug_mode)
+    if (options.debug_mode)
         printf("SDL_VIDEODRIVER selected: %s\n", SDL_GetCurrentVideoDriver());
 
     int win_w, win_h;
-    if (options->window_mode) {
+    if (options.window_mode) {
         win_w = GRAPHICS_W * WINDOWED_ZOOM;
         win_h = GRAPHICS_H * WINDOWED_ZOOM;
     } else {
@@ -75,7 +75,7 @@ int ui_init(Options* options)
         return ERR_SDL;
     SDL_ShowCursor(SDL_DISABLE);
 
-    if (options->debug_mode) {
+    if (options.debug_mode) {
         printf("SDL_RENDER_DRIVER available: ");
         for (int i = 0; i < SDL_GetNumRenderDrivers(); ++i) {
             SDL_RendererInfo info;
@@ -85,7 +85,7 @@ int ui_init(Options* options)
         printf("\n");
     }
 
-    return painter_init(window_, options);
+    return painter_init(window_);
 }
 
 bool ui_running()

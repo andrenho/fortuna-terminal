@@ -10,7 +10,7 @@
 
 static int master_fd = 0;
 
-int pty_init(PTYOptions* pty_options, size_t lines, size_t columns)
+int pty_init(size_t lines, size_t columns)
 {
     struct winsize winp = { lines, columns, 0 , 0 };
 
@@ -18,7 +18,7 @@ int pty_init(PTYOptions* pty_options, size_t lines, size_t columns)
     if (pid == 0) {
         setenv("TERM", "linux-basic", 1);
         // this is the child process that will execute the shell
-        execl(pty_options->shell, pty_options->shell, NULL);
+        execl(options.pty.shell, options.pty.shell, NULL);
     }
 
     // make read blocking

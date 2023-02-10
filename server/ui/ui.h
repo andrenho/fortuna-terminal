@@ -8,7 +8,7 @@
 #define GRAPHICS_W 256
 #define GRAPHICS_H 256
 
-int  ui_init(Options* options);
+int  ui_init();
 bool ui_running();
 int  ui_do_events();
 int  ui_draw(Scene* scene);

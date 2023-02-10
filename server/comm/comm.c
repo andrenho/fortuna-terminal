@@ -29,30 +29,26 @@ static pthread_mutex_t mutex_input_,
 static pthread_cond_t  output_has_data_;
 static bool            threads_running_ = false;
 
-static bool            debug_mode = false;
-
-int comm_init(Options* options, size_t lines, size_t columns)
+int comm_init(size_t lines, size_t columns)
 {
     (void) lines; (void) columns;
 
-    debug_mode = options->debug_mode;
-
-    switch (options->comm_mode) {
+    switch (options.comm_mode) {
         case CM_ECHO:
             comm_f = (CommFunctions) { echo_recv, echo_send, echo_finalize };
             return echo_init();
         case CM_TCPIP:
             comm_f = (CommFunctions) { tcpip_recv, tcpip_send, tcpip_finalize };
-            return tcpip_init(&options->tcpip);
+            return tcpip_init();
 #ifdef COMM_PTY
         case CM_PTY:
             comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
-            return pty_init(&options->pty, lines, columns);
+            return pty_init(lines, columns);
 #endif
 #ifdef COMM_UART
         case CM_UART:
             comm_f = (CommFunctions) { uart_recv, uart_send, uart_finalize };
-            return uart_init(&options->serial);
+            return uart_init();
 #endif
         default:
             return ERR_NOT_IMPLEMENTED;
@@ -91,8 +87,10 @@ static void* comm_input_thread_run(void* input_buffer_ptr)
             continue;
         error_check(r);
 
+        /*
         if (debug_mode)
             print_bytes(&byte, 1, 31);
+        */
 
         buffer_add_byte(input_buffer, byte);
     }
@@ -112,8 +110,10 @@ static void* comm_output_thread_run(void* output_buffer_ptr)
         ssize_t sz = buffer_move_data_to_array(output_buffer, comm_output_array, BUFFER_SZ);
 
         error_check(comm_f.send(comm_output_array, sz));
+        /*
         if (debug_mode)
             print_bytes(comm_output_array, sz, 32);
+        */
     }
 
     return NULL;

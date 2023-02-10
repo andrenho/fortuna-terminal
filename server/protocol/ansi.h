@@ -1,6 +1,7 @@
 #ifndef ANSI_H_
 #define ANSI_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
 

@@ -6,7 +6,7 @@
 
 #include "../options/options.h"
 
-int uart_init(SerialOptions* serial_options);
+int uart_init();
 int uart_recv(uint8_t* byte);
 int uart_send(const uint8_t* data, size_t sz);
 int uart_finalize();

@@ -27,7 +27,7 @@ static bool client_connected = false;
 #include <string.h>
 #include <stdio.h>
 
-int tcpip_init(const TCPIPOptions* tcpip_options)
+int tcpip_init()
 {
 #if _WIN32
     WSADATA wsaData;
@@ -46,7 +46,7 @@ int tcpip_init(const TCPIPOptions* tcpip_options)
     int rv;
     struct addrinfo* servinfo;
     char port[10];
-    sprintf(port, "%d", tcpip_options->port);
+    sprintf(port, "%d", options.tcpip.port);
     if ((rv = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
         sprintf(error_message, "Error getting addrinfo: %s", gai_strerror(rv));
         error_check(ERR_MESSAGE);

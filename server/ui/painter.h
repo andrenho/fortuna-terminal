@@ -6,7 +6,7 @@
 #include "scene/scene.h"
 #include "options/options.h"
 
-int painter_init(SDL_Window *window, Options *options);
+int painter_init(SDL_Window *window);
 int painter_draw(Scene* scene);
 int painter_destroy();
 

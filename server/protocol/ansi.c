@@ -1,4 +1,5 @@
 #include "ansi.h"
+#include "protocol_debug.h"
 
 #include <stdio.h>
 #include <ctype.h>
@@ -71,36 +72,6 @@ static uint8_t text_ansi_color(int number)
     }
 }
 
-static void debug_special_0(const char* str)
-{
-#if _WIN32
-    printf(" (%s)\n", str);
-#else
-    printf("\e[1;35m (%s)\e[0m\n", str);
-#endif
-    fflush(stdout);
-}
-
-static void debug_special_1(const char* str, int p1)
-{
-#if _WIN32
-    printf(" (%s %d)\n", str, p1);
-#else
-    printf("\e[1;35m (%s %d)\e[0m\n", str, p1);
-#endif
-    fflush(stdout);
-}
-
-static void debug_special_2(const char* str, int p1, int p2)
-{
-#if _WIN32
-    printf(" (%s %d %d)\n", str, p1, p2);
-#else
-    printf("\e[1;35m (%s %d %d)\e[0m\n", str, p1, p2);
-#endif
-    fflush(stdout);
-}
-
 static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 {
     int p1, p2;
@@ -129,6 +100,7 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         case 'H':
+        case 'f':
             debug_special_2("cursor_home", p1, p2);
             text_move_cursor_to(text, max(p1, 1), max(p2, 1));
             break;
@@ -246,6 +218,7 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
                 text_move_cursor_down_scroll(&scene->text);
             else                                        // just a regular character
                 text_add_char(&scene->text, c);
+            debug_char(c);
         }
         if (escape_sequence) {
             escape_seq_buf[escape_seq_idx++] = (char) c;

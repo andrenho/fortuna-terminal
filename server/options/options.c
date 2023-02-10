@@ -8,6 +8,8 @@
 
 #include "error/error.h"
 
+Options options;
+
 static void validate_options(Options* options)
 {
     if (options->comm_mode == CM_NOT_CHOSEN) {

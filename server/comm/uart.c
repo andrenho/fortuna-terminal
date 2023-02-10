@@ -14,9 +14,9 @@
 
 static int fd = 0;
 
-int uart_init(SerialOptions* serial_options)
+int uart_init()
 {
-    fd = open(serial_options->port, O_RDWR | O_NOCTTY | O_NDELAY);
+    fd = open(options.serial.port, O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd < 0)
         error_check(ERR_LIBC);
     printf("Serial port initialized.\n");
@@ -27,7 +27,7 @@ int uart_init(SerialOptions* serial_options)
     if (tcgetattr(fd, &opt) != 0)
         error_check(ERR_LIBC);
 
-    if (cfsetspeed(&opt, (speed_t) serial_options->baud) < 0)
+    if (cfsetspeed(&opt, (speed_t) options.serial.baud) < 0)
         error_check(ERR_LIBC);
 
     opt.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
@@ -35,17 +35,17 @@ int uart_init(SerialOptions* serial_options)
     opt.c_cflag &= ~CSIZE; /* Mask the character size bits */
     opt.c_cflag |= CS8; /* Select 8 data bits */
 
-    if (serial_options->parity == 'N') {
+    if (options.serial.parity == 'N') {
         opt.c_cflag &= ~PARENB;
-    } else if (serial_options->parity == 'O') {
+    } else if (options.serial.parity == 'O') {
         opt.c_cflag |= PARENB;
         opt.c_cflag |= PARODD;
-    } else if (serial_options->parity == 'E') {
+    } else if (options.serial.parity == 'E') {
         opt.c_cflag |= PARENB;
         opt.c_cflag &= ~PARODD;
     }
 
-    if (serial_options->stop_bits == 2)
+    if (options.serial.stop_bits == 2)
         opt.c_cflag |= CSTOPB;
     else
         opt.c_cflag &= ~CSTOPB;

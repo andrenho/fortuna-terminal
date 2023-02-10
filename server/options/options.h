@@ -43,4 +43,6 @@ typedef struct {
 
 int options_parse_cmdline(int argc, char *argv[], Options *options);
 
+extern Options options;
+
 #endif //OPTIONS_H_

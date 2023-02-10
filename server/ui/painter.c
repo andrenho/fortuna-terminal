@@ -28,7 +28,7 @@ static int painter_load_font()
     return 0;
 }
 
-int painter_init(SDL_Window *window, Options *options)
+int painter_init(SDL_Window *window)
 {
 
     renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -36,7 +36,7 @@ int painter_init(SDL_Window *window, Options *options)
         return ERR_SDL;
     SDL_RenderSetLogicalSize(renderer_, GRAPHICS_W, GRAPHICS_H);
 
-    if (options->debug_mode) {
+    if (options.debug_mode) {
         SDL_RendererInfo info;
         SDL_GetRendererInfo(renderer_, &info );
         printf("SDL_RENDER_DRIVER selected: %s\n", info.name);
