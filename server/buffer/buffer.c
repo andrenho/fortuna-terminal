@@ -72,3 +72,10 @@ ssize_t buffer_move_data_to_array(Buffer* buffer, uint8_t* dest, size_t max_sz)
 
     return sz;
 }
+
+void buffer_wait(Buffer* buffer)
+{
+    pthread_mutex_lock(&buffer->mutex);
+    pthread_cond_wait(&buffer->cond, &buffer->mutex);
+    pthread_mutex_unlock(&buffer->mutex);
+}

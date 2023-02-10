@@ -20,7 +20,7 @@ int echo_init()
 int echo_recv(uint8_t* byte)
 {
     if (buffer_sz_ == 0) {
-        usleep(1000);
+        usleep(10000);
         return ERR_NO_DATA;
     }
     pthread_mutex_lock(&mutex);

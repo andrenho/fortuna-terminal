@@ -104,6 +104,8 @@ static void* comm_output_thread_run(void* output_buffer_ptr)
 
     while (threads_running_) {
 
+        buffer_wait(output_buffer);    // wait until there's data available
+
         ssize_t sz = buffer_move_data_to_array(output_buffer, comm_output_array, BUFFER_SZ);
 
         error_check(comm_f.send(comm_output_array, sz));

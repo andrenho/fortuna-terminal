@@ -18,9 +18,9 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
 {
     size_t bytes_consumed = 0;
 
-    bool    escape_sequence = false;
-    char    escape_seq_buf[ESCAPE_SEQ_SZ] = {0};
-    size_t  escape_seq_idx = 0;
+    static bool    escape_sequence = false;
+    static char    escape_seq_buf[ESCAPE_SEQ_SZ] = {0};
+    static size_t  escape_seq_idx = 0;
 
     for (size_t i = 0; i < bufsz; ++i) {
         uint8_t c = buffer[i];
