@@ -255,7 +255,11 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
     switch (command->command) {
 
         case FP_EVENT_KEYSTROKE:
-            buffer_add_bytes(output_buffer, command->var.data, command->var.length);
+            if (command->key.mod.control && command->var.length == 1 && command->var.data[0] >= 'a' && command->var.data[0] <= 'z') {
+                buffer_add_byte(output_buffer, command->var.data[0] - 96);
+            } else {
+                buffer_add_bytes(output_buffer, command->var.data, command->var.length);
+            }
             return 0;
 
         case FP_EVENT_KEY_PRESS:
