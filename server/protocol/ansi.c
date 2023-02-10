@@ -185,9 +185,9 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
             else if (c == '\b')
                 text_move_cursor_relative(&scene->text, 0, -1);
             else if (c == '\r')
-                text_move_cursor_down_scroll(&scene->text);
-            else if (c == '\n')
                 text_move_cursor_bol(&scene->text);
+            else if (c == '\n')
+                text_move_cursor_down_scroll(&scene->text);
             else                                        // just a regular character
                 text_add_char(&scene->text, c);
         }
