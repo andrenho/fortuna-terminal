@@ -1,17 +1,27 @@
 #include "ansi.h"
 
 #include <stdio.h>
-#include <string.h>
 #include <ctype.h>
-
-#include "../error/error.h"
 
 #define ESCAPE_SEQ_SZ 24
 
-static bool ansi_parse_escape_sequence(char* buf, size_t idx)
+static char ansi_parse_escape_sequence(const char* seq, char* control, int* p1, int* p2)
 {
-    fprintf(stderr, "Invalid escape sequence: ^%.*s\n", (int) (idx - 1), &buf[1]);
-    return false;
+    return '\0';
+}
+
+static bool ansi_execute_escape_sequence(const char* seq)
+{
+    int p1, p2;
+    char control;
+    char cmd = ansi_parse_escape_sequence(seq, &control, &p1, &p2);
+    switch (cmd) {
+
+        default:
+            fprintf(stderr, "Invalid escape sequence: ^%s\n", &seq[1]);
+            return false;
+    }
+    return true;
 }
 
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
@@ -40,7 +50,8 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
                     escape_seq_idx = 0;
                 }
             } else {                                    // escape sequence ends
-                if (!ansi_parse_escape_sequence(escape_seq_buf, escape_seq_idx)) {
+                escape_seq_buf[escape_seq_idx + 1] = '\0';
+                if (!ansi_execute_escape_sequence(escape_seq_buf)) {
                     for (size_t j = 0; j < escape_seq_idx; ++j)
                         text_add_char(&scene->text, escape_seq_buf[j]);
                 }
