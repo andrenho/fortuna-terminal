@@ -1,3 +1,5 @@
+// see https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+
 #include "ansi.h"
 #include "protocol_debug.h"
 
@@ -255,15 +257,15 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
     switch (command->command) {
 
         case FP_EVENT_KEYSTROKE:
-            if (command->key.mod.control && command->var.length == 1 && command->var.data[0] >= 'a' && command->var.data[0] <= 'z') {
-                buffer_add_byte(output_buffer, command->var.data[0] - 96);
-            } else {
-                buffer_add_bytes(output_buffer, command->var.data, command->var.length);
-            }
+            buffer_add_bytes(output_buffer, command->var.data, command->var.length);
             return 0;
 
         case FP_EVENT_KEY_PRESS:
-            if (command->key.key < 32 || command->key.key >= 127) {
+            if (command->key.mod.control) {
+                if (command->key.key >= 'a' && command->key.key <= 'z')
+                    buffer_add_byte(output_buffer, command->key.key - 96);
+
+            } else if (command->key.key < 32 || command->key.key >= 127) {
                 switch (command->key.special_key) {
                     case SK_ESC:        return buffer_add_str_nonull(output_buffer, "\e");
                     case SK_ENTER:      return buffer_add_str_nonull(output_buffer, "\r");
