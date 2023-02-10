@@ -108,11 +108,13 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
                 { "uart-settings",      required_argument, NULL, 'U' },
                 // tcp/ip
                 { "tcpip-port",         required_argument, NULL, 'R' },
+                // shell
+                { "shell",              required_argument, NULL, 'S' },
                 // end
                 { NULL, 0, NULL, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:t:p:hdbwP:B:U:R:", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:t:p:hdbwP:B:U:R:S:", long_options, &option_index);
         if (c == -1)
             break;
 
