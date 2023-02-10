@@ -16,6 +16,7 @@ int pty_init(size_t lines, size_t columns)
 
     pid_t pid = forkpty(&master_fd, NULL, NULL, &winp);
     if (pid == 0) {
+        setenv("LANG", "C", 1);
         setenv("TERM", "linux-basic", 1);
         // this is the child process that will execute the shell
         execl(options.pty.shell, options.pty.shell, NULL);

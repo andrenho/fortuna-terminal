@@ -191,7 +191,7 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             if (p1 == 0 && p2 == 0) {
                 debug_special_0("reset_formatting");
                 text_reset_formatting(text);
-            } else if (p2 != 0) {
+            } else if (p1 <= 9) {
                 debug_special_2("set_color", p1, p2);
                 text_set_color(text, text_ansi_color(p2));
             }
@@ -221,7 +221,7 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
 
     for (size_t i = 0; i < bufsz; ++i) {
         uint8_t c = buffer[i];
-        debug_char(c);
+        debug_char(c == '\e' ? '^' : c);
         if (!escape_sequence) {
             if (c == '\e')                              // escape sequence starts
                 escape_sequence = true;
