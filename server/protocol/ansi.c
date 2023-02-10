@@ -101,6 +101,10 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             text_move_cursor_relative(text, 0, min(-p1, -1));
             break;
 
+        case 'G':
+            text_move_cursor_to(text, text->cursor.y, p1);
+            break;
+
         case 'H':
         case 'f':
             debug_special_2("cursor_home", p1, p2);
