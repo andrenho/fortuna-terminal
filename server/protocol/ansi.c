@@ -71,6 +71,15 @@ static uint8_t text_ansi_color(int number)
     }
 }
 
+static void debug_special(const char* str)
+{
+#if _WIN32
+    printf(" (%s)\n", str);
+#else
+    printf("\e[1;35m (%s)\e[0m\n", str);
+#endif
+}
+
 static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 {
     int p1, p2;
@@ -78,85 +87,107 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
     char cmd = ansi_parse_escape_sequence(seq, &control, &p1, &p2);
     switch (cmd) {
 
-        case 'A':   // cursor_up
+        case 'A':
+            debug_special("cursor_up");
             text_move_cursor_relative(text, min(-p1, -1), 0);
             break;
 
-        case 'B':   // cursor_down
+        case 'B':
+            debug_special("cursor_down");
             text_move_cursor_relative(text, max(p1, 1), 0);
             break;
 
-        case 'C':   // cursor right
+        case 'C':
+            debug_special("cursor_right");
             text_move_cursor_relative(text, 0, max(p1, 1));
             break;
 
-        case 'D':   // cursor left (alternative)
+        case 'D':
+            debug_special("cursor-left (alt)");
             text_move_cursor_relative(text, 0, min(-p1, -1));
             break;
 
-        case 'H':   // cursor home
+        case 'H':
+            debug_special("cursor_home");
             text_move_cursor_to(text, max(p1, 1), max(p2, 1));
             break;
 
-        case 'J':   // clear eos
-            if (p1 == 0)
+        case 'J':
+            if (p1 == 0) {
+                debug_special("clear_eos");
                 text_clear_to_end_of_screen(text);
-            else
+            } else {
                 return false;
+            }
             break;
 
         case 'K':
-            if (p1 == 0)       // clear_eol
+            if (p1 == 0) {
+                debug_special("clear_eol");
                 text_clear_to_end_of_line(text);
-            else if (p1 == 1)  // clear_bol
+            } else if (p1 == 1) {
+                debug_special("clear_bol");
                 text_clear_to_beginning_of_line(text);
-            else if (p1 == 2)  // delete_line (alternative)
+            } else if (p1 == 2) {
+                debug_special("delete_line (alt)");
                 text_clear_line(text);
-            else
+            } else {
                 return false;
+            }
             break;
 
-        case 'M':    // delete_line
-            if (p1 == 0)
+        case 'M':
+            if (p1 == 0) {
+                debug_special("delete_line");
                 text_clear_line(text);
-            else
+            } else {
                 return false;
+            }
             break;
 
         case 'P':
-            if (p1 == 0)   // delete character
+            if (p1 == 0) {
+                debug_special("delete_character");
                 text_delete_char_under_cursor(text);
-            else
+            } else {
                 return false;
+            }
             break;
 
         case 'h':
-            if (control == '?')
+            if (control == '?' && p1 == 2004)
                 break;
-            if (p1 == 4)  // enter_insert_mode
+            if (p1 == 4) {
+                debug_special("enter_insert_mode");
                 text_set_insertion_mode(text, true);
-            else
+            } else {
                 return false;
+            }
             break;
 
         case 'l':
-            if (control == '?')
+            if (control == '?' && p1 == 2004)
                 break;
-            if (p1 == 4)  // exit_insert_mode
+            if (p1 == 4) {
+                debug_special("exit_insert_mode");
                 text_set_insertion_mode(text, false);
-            else
+            } else {
                 return false;
+            }
             break;
 
         case 'm':
             if (p1 == 0 && p2 == 0) {
+                debug_special("reset_formatting");
                 text_reset_formatting(text);
             } else if (p2 != 0) {
+                debug_special("set_color");
                 text_set_color(text, text_ansi_color(p2));
             }
             break;
 
-        case 'r':   // change_scroll_region
+        case 'r':
+            debug_special("change_scroll_region");
             text_set_scroll_region(text, p1, p2);
             break;
 

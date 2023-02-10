@@ -69,10 +69,12 @@ static void print_bytes(const uint8_t* bytes, size_t sz, int color)
             printf("%c[%02X] ", color == 31 ? 'I' : 'O', bytes[i]);
 #else
         if (bytes[i] >= 32 && bytes[i] < 127)
-            printf("\e[0;%dm[%c]\e[0m ", color, bytes[i]);
+            printf("\e[0;%dm%c\e[0m", color, bytes[i]);
         else
-            printf("\e[0;%dm[%02X]\e[0m ", color, bytes[i]);
+            printf("\e[0;%dm[%02X]\e[0m", color, bytes[i]);
 #endif
+        if (bytes[i] == '\n')
+            printf("\n");
     }
     fflush(stdout);
 }
