@@ -79,7 +79,7 @@ static void painter_draw_text_cell(Text* text, unsigned int line, unsigned int c
         SDL_SetTextureColorMod(font_, bg->r, bg->g, bg->b);
 
     } else {
-        Color* fg = &text->palette.color[text->fg_color];
+        Color* fg = &text->palette.color[chr.color];
         SDL_SetTextureColorMod(font_, fg->r, fg->g, fg->b);
     }
 
