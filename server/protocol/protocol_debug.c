@@ -7,10 +7,17 @@
 void debug_char(uint8_t c)
 {
     if (options.debug_mode) {
+#if _WIN32
         if (c < 32 || c >= 128)
             printf("[%02X]", c);
         else
             printf("%c", c);
+#else
+        if (c < 32 || c >= 128)
+            printf("\e[0;36m[%02X]\e[0m", c);
+        else
+            printf("\e[0;36m%c\e[0m", c);
+#endif
         if (c == '\n')
             printf("\n");
         fflush(stdout);

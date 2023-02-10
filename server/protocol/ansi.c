@@ -189,7 +189,7 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         default:
-            fprintf(stderr, "Invalid escape sequence: ^%s\n", &seq[1]);
+            fprintf(stderr, "\e[1;31mInvalid escape sequence: ^%s\e[0m\n", &seq[1]);
             return false;
     }
     return true;
@@ -207,6 +207,7 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
 
     for (size_t i = 0; i < bufsz; ++i) {
         uint8_t c = buffer[i];
+        debug_char(c);
         if (!escape_sequence) {
             if (c == '\e')                              // escape sequence starts
                 escape_sequence = true;
@@ -218,7 +219,6 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
                 text_move_cursor_down_scroll(&scene->text);
             else                                        // just a regular character
                 text_add_char(&scene->text, c);
-            debug_char(c);
         }
         if (escape_sequence) {
             escape_seq_buf[escape_seq_idx++] = (char) c;
