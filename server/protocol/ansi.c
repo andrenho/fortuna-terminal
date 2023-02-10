@@ -127,6 +127,8 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         case 'h':
+            if (control == '?')
+                break;
             if (p1 == 4)  // enter_insert_mode
                 text_set_insertion_mode(text, true);
             else
@@ -134,6 +136,8 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         case 'l':
+            if (control == '?')
+                break;
             if (p1 == 4)  // exit_insert_mode
                 text_set_insertion_mode(text, false);
             else
