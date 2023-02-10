@@ -181,7 +181,7 @@ void text_clear_to_end_of_screen(Text* text)
 {
     for (size_t y = text->cursor.y; y < text->lines; ++y)
         for (size_t x = 0; x <= text->cursor.x; ++x)
-            text_set(text, text->cursor.y, x, ' ');
+            text_set(text, y, x, ' ');
 }
 
 void text_clear_line(Text* text)

@@ -31,7 +31,7 @@ static char ansi_parse_escape_sequence(const char* seq, char* control, int* p1, 
     }
 
     while (seq[i]) {
-        else if (isdigit(seq[i])) {
+        if (isdigit(seq[i])) {
             if (j >= PARAM_SZ) return '\0';
             param[current_param][j++] = seq[i];
         } else if (seq[i] == ';') {
