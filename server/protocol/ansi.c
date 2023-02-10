@@ -71,13 +71,34 @@ static uint8_t text_ansi_color(int number)
     }
 }
 
-static void debug_special(const char* str)
+static void debug_special_0(const char* str)
 {
 #if _WIN32
     printf(" (%s)\n", str);
 #else
     printf("\e[1;35m (%s)\e[0m\n", str);
 #endif
+    fflush(stdout);
+}
+
+static void debug_special_1(const char* str, int p1)
+{
+#if _WIN32
+    printf(" (%s %d)\n", str, p1);
+#else
+    printf("\e[1;35m (%s %d)\e[0m\n", str, p1);
+#endif
+    fflush(stdout);
+}
+
+static void debug_special_2(const char* str, int p1, int p2)
+{
+#if _WIN32
+    printf(" (%s %d %d)\n", str, p1, p2);
+#else
+    printf("\e[1;35m (%s %d %d)\e[0m\n", str, p1, p2);
+#endif
+    fflush(stdout);
 }
 
 static bool ansi_execute_escape_sequence(const char* seq, Text* text)
@@ -88,33 +109,33 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
     switch (cmd) {
 
         case 'A':
-            debug_special("cursor_up");
+            debug_special_1("cursor_up", p1);
             text_move_cursor_relative(text, min(-p1, -1), 0);
             break;
 
         case 'B':
-            debug_special("cursor_down");
+            debug_special_1("cursor_down", p1);
             text_move_cursor_relative(text, max(p1, 1), 0);
             break;
 
         case 'C':
-            debug_special("cursor_right");
+            debug_special_1("cursor_right", p1);
             text_move_cursor_relative(text, 0, max(p1, 1));
             break;
 
         case 'D':
-            debug_special("cursor-left (alt)");
+            debug_special_1("cursor-left (alt)", p1);
             text_move_cursor_relative(text, 0, min(-p1, -1));
             break;
 
         case 'H':
-            debug_special("cursor_home");
+            debug_special_2("cursor_home", p1, p2);
             text_move_cursor_to(text, max(p1, 1), max(p2, 1));
             break;
 
         case 'J':
             if (p1 == 0) {
-                debug_special("clear_eos");
+                debug_special_0("clear_eos");
                 text_clear_to_end_of_screen(text);
             } else {
                 return false;
@@ -123,13 +144,13 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'K':
             if (p1 == 0) {
-                debug_special("clear_eol");
+                debug_special_0("clear_eol");
                 text_clear_to_end_of_line(text);
             } else if (p1 == 1) {
-                debug_special("clear_bol");
+                debug_special_0("clear_bol");
                 text_clear_to_beginning_of_line(text);
             } else if (p1 == 2) {
-                debug_special("delete_line (alt)");
+                debug_special_0("delete_line (alt)");
                 text_clear_line(text);
             } else {
                 return false;
@@ -138,7 +159,7 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'M':
             if (p1 == 0) {
-                debug_special("delete_line");
+                debug_special_0("delete_line");
                 text_clear_line(text);
             } else {
                 return false;
@@ -147,7 +168,7 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'P':
             if (p1 == 0) {
-                debug_special("delete_character");
+                debug_special_0("delete_character");
                 text_delete_char_under_cursor(text);
             } else {
                 return false;
@@ -156,11 +177,11 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'h':
             if (control == '?' && p1 == 2004) {
-                debug_special("stop_paste");
+                debug_special_0("stop_paste");
                 break;
             }
             if (p1 == 4) {
-                debug_special("enter_insert_mode");
+                debug_special_0("enter_insert_mode");
                 text_set_insertion_mode(text, true);
             } else {
                 return false;
@@ -169,11 +190,11 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'l':
             if (control == '?' && p1 == 2004) {
-                debug_special("start_paste");
+                debug_special_0("start_paste");
                 break;
             }
             if (p1 == 4) {
-                debug_special("exit_insert_mode");
+                debug_special_0("exit_insert_mode");
                 text_set_insertion_mode(text, false);
             } else {
                 return false;
@@ -182,16 +203,16 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
 
         case 'm':
             if (p1 == 0 && p2 == 0) {
-                debug_special("reset_formatting");
+                debug_special_0("reset_formatting");
                 text_reset_formatting(text);
             } else if (p2 != 0) {
-                debug_special("set_color");
+                debug_special_2("set_color", p1, p2);
                 text_set_color(text, text_ansi_color(p2));
             }
             break;
 
         case 'r':
-            debug_special("change_scroll_region");
+            debug_special_2("change_scroll_region", p1, p2);
             text_set_scroll_region(text, p1, p2);
             break;
 
