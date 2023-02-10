@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <pthread.h>
+#include <sys/types.h>
 
 typedef struct {
     uint8_t*        data;
