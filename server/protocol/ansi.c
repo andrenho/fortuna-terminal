@@ -156,6 +156,11 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             }
             break;
 
+        case 'd':
+            debug_special_1("vertical_pos", p1);
+            text_move_cursor_to(text, p1, text->cursor.x);
+            break;
+
         case 'h':
             if (control == '?' && p1 == 2004) {
                 debug_special_0("stop_paste");
