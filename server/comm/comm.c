@@ -74,6 +74,7 @@ static void print_bytes(const uint8_t* bytes, size_t sz, int color)
             printf("\e[0;%dm[%02X]\e[0m ", color, bytes[i]);
 #endif
     }
+    fflush(stdout);
 }
 
 static void* comm_input_thread_run(void* input_buffer_ptr)
