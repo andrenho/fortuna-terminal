@@ -155,8 +155,10 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         case 'h':
-            if (control == '?' && p1 == 2004)
+            if (control == '?' && p1 == 2004) {
+                debug_special("stop_paste");
                 break;
+            }
             if (p1 == 4) {
                 debug_special("enter_insert_mode");
                 text_set_insertion_mode(text, true);
@@ -166,8 +168,10 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             break;
 
         case 'l':
-            if (control == '?' && p1 == 2004)
+            if (control == '?' && p1 == 2004) {
+                debug_special("start_paste");
                 break;
+            }
             if (p1 == 4) {
                 debug_special("exit_insert_mode");
                 text_set_insertion_mode(text, false);
