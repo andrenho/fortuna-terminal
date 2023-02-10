@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
 
     // clean up
     comm_finalize();
+    protocol_finalize();
     buffer_finalize(&input_buffer);
     buffer_finalize(&output_buffer);
     ui_destroy();

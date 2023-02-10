@@ -9,5 +9,6 @@
 int  protocol_init(Options* options, Buffer* output_buffer);
 void protocol_process_input(Buffer* input_buffer, Scene* scene);
 void protocol_terminal_event(FP_Command* command);
+int  protocol_finalize();
 
 #endif //PROTOCOL_H_

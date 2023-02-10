@@ -9,8 +9,9 @@
 typedef struct {
     ssize_t (* process_pending_input)(const uint8_t* buffer, size_t bufsz, Scene* scene);
     int     (* terminal_event)(FP_Command* command, Buffer* output_buffer_);
+    int     (* finalize)();
 } ProtocolFunctions;
-static ProtocolFunctions protocol_f = { NULL, NULL };
+static ProtocolFunctions protocol_f = { NULL, NULL, NULL };
 
 static Buffer* output_buffer_ = NULL;
 
@@ -22,7 +23,8 @@ int protocol_init(Options* options, Buffer* output_buffer)
 
     switch (options->protocol) {
         case PR_ANSI:
-            protocol_f = (ProtocolFunctions) { ansi_process_pending_input, ansi_terminal_event };
+            protocol_f = (ProtocolFunctions) { ansi_process_pending_input, ansi_terminal_event, ansi_finalize };
+            ansi_init();
             return 0;
         default:
             return ERR_NOT_IMPLEMENTED;
@@ -41,4 +43,9 @@ void protocol_process_input(Buffer* input_buffer, Scene* scene)
 void protocol_terminal_event(FP_Command* command)
 {
     error_check(protocol_f.terminal_event(command, output_buffer_));
+}
+
+int protocol_finalize()
+{
+    return protocol_f.finalize();
 }

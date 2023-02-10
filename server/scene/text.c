@@ -22,6 +22,12 @@ void text_copy(Text* text, unsigned int dest_y, unsigned int dest_x, unsigned in
     text->matrix[dest_y * text->columns + dest_x] = text->matrix[src_y * text->columns + src_x];
 }
 
+static void text_reset_blink(Text* text)
+{
+    text->cursor.blink_state = true;
+    text->cursor_last_blink = SDL_GetTicks64();
+}
+
 int text_init(Text* text)
 {
     text->columns = 40;
@@ -54,16 +60,7 @@ int text_init(Text* text)
 static void text_advance_line(Text* text)
 {
     text->cursor.x = 0;
-    ++text->cursor.y;
-    if (text->cursor.y >= text->lines) {
-        for (size_t y = (text->scroll_start - 1); y < (text->scroll_end - 1); ++y) {
-            for (size_t x = 0; x < text->columns; ++x)
-                text_copy(text, y, x, y + 1, x);
-        }
-        --text->cursor.y;
-        for (size_t x = 0; x < text->columns; ++x)
-            text_set(text, text->cursor.y, x, ' ');
-    }
+    text_move_cursor_down_scroll(text);
 }
 
 static void text_advance_cursor(Text* text)
@@ -71,12 +68,14 @@ static void text_advance_cursor(Text* text)
     ++text->cursor.x;
     if (text->cursor.x >= text->columns)
         text_advance_line(text);
+    text_reset_blink(text);
 }
 
 static void text_push_line_forward(Text* text)
 {
     for (int x = (int) text->columns - 2; x >= text->cursor.x; --x)
         text_copy(text, text->cursor.y, x + 1, text->cursor.y, x);
+    text_reset_blink(text);
 }
 
 static void text_tab(Text* text)
@@ -87,6 +86,7 @@ static void text_tab(Text* text)
         text_advance_line(text);
     }
     text->cursor.x = next_tab;
+    text_reset_blink(text);
 }
 
 static void text_backspace(Text* text)
@@ -96,28 +96,32 @@ static void text_backspace(Text* text)
         text_add_char(text, ' ');  // TODO - what about insertion mode?
         --text->cursor.x;
     }
+    text_reset_blink(text);
 }
 
 void text_add_char(Text* text, uint8_t c)
 {
     switch (c) {
+        /*
         case '\n':
             text_advance_line(text);
             break;
+        */
         case '\t':
             text_tab(text);
             break;
+        /*
         case '\b':
             text_backspace(text);
             break;
+        */
         default:
             if (text->insertion_mode)
                 text_push_line_forward(text);
             text_set(text, text->cursor.y, text->cursor.x, c);
             text_advance_cursor(text);
     }
-    text->cursor.blink_state = true;
-    text->cursor_last_blink = SDL_GetTicks64();
+    text_reset_blink(text);
 }
 
 void text_update_blink(Text* text)
@@ -131,13 +135,15 @@ void text_update_blink(Text* text)
 void text_move_cursor_relative(Text* text, int y, int x)
 {
     text->cursor.x = max(0, min((int) text->columns, text->cursor.x + x));
-    text->cursor.x = max(0, min((int) text->lines, text->cursor.y + y));
+    text->cursor.y = max(0, min((int) text->lines, text->cursor.y + y));
+    text_reset_blink(text);
 }
 
 void text_move_cursor_to(Text* text, unsigned int y, unsigned int x)
 {
     text->cursor.x = max(0U, min(text->columns, x - 1));
-    text->cursor.x = max(0U, min(text->lines, y - 1));
+    text->cursor.y = max(0U, min(text->lines, y - 1));
+    text_reset_blink(text);
 }
 
 void text_set_color(Text* text, uint8_t color)
@@ -149,6 +155,7 @@ void text_clear_screen(Text* text)
 {
     for (size_t i = 0; i < (text->columns * text->lines); ++i)
         text->matrix[i] = (Char) { ' ', text->fg_color };
+    text_reset_blink(text);
 }
 
 void text_reset_formatting(Text* text)
@@ -160,18 +167,28 @@ void text_clear_to_beginning_of_line(Text* text)
 {
     for (size_t x = 0; x <= text->cursor.x; ++x)
         text_set(text, text->cursor.y, x, ' ');
+    text_reset_blink(text);
 }
 
 void text_clear_to_end_of_line(Text* text)
 {
     for (size_t x = text->cursor.x; x < text->columns; ++x)
         text_set(text, text->cursor.y, x, ' ');
+    text_reset_blink(text);
+}
+
+void text_clear_to_end_of_screen(Text* text)
+{
+    for (size_t y = text->cursor.y; y < text->lines; ++y)
+        for (size_t x = 0; x <= text->cursor.x; ++x)
+            text_set(text, text->cursor.y, x, ' ');
 }
 
 void text_clear_line(Text* text)
 {
     for (size_t x = 0; x < text->columns; ++x)
         text_set(text, text->cursor.y, x, ' ');
+    text_reset_blink(text);
 }
 
 void text_set_insertion_mode(Text* text, bool active)
@@ -188,4 +205,24 @@ void text_set_scroll_region(Text* text, uint8_t start, uint8_t end)
 void text_delete_char_under_cursor(Text* text)
 {
     text_set(text, text->cursor.y, text->cursor.x, ' ');
+    text_reset_blink(text);
+}
+
+void text_move_cursor_down_scroll(Text* text)
+{
+    ++text->cursor.y;
+    if (text->cursor.y >= text->lines) {
+        for (size_t y = (text->scroll_start - 1); y < (text->scroll_end - 1); ++y) {
+            for (size_t x = 0; x < text->columns; ++x)
+                text_copy(text, y, x, y + 1, x);
+        }
+        --text->cursor.y;
+        for (size_t x = 0; x < text->columns; ++x)
+            text_set(text, text->cursor.y, x, ' ');
+    }
+    text_reset_blink(text);
+}
+
+void text_move_cursor_bol(Text* text)
+{
 }
