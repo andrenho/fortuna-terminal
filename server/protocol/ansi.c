@@ -32,7 +32,7 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
         }
         if (escape_sequence) {
             escape_seq_buf[escape_seq_idx++] = (char) c;
-            if (!isalpha(c) && c != '@') {           // escape sequence continues
+            if (!isalpha(c) && c != '@' && c != '~') {    // escape sequence continues
                 if (escape_seq_idx >= ESCAPE_SEQ_SZ) {  // invalid escape sequence, rollback
                     for (size_t j = 0; j < escape_seq_idx; ++j)
                         text_add_char(&scene->text, escape_seq_buf[j]);

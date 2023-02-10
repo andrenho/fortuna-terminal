@@ -35,9 +35,7 @@ void protocol_process_input(Buffer* input_buffer, Scene* scene)
 
     ssize_t sz = buffer_move_data_to_array(input_buffer, protocol_input_buffer, BUFFER_SZ);
 
-    ssize_t bytes_processed = protocol_f.process_pending_input(protocol_input_buffer, sz, scene);
-    if (bytes_processed < 0)
-        error_check(bytes_processed);
+    protocol_f.process_pending_input(protocol_input_buffer, sz, scene);
 }
 
 void protocol_terminal_event(FP_Command* command)
