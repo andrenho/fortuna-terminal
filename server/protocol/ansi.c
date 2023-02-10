@@ -115,6 +115,9 @@ static bool ansi_execute_escape_sequence(const char* seq, Text* text)
             if (p1 == 0) {
                 debug_special_0("clear_eos");
                 text_clear_to_end_of_screen(text);
+            } else if (p1 == 2) {
+                debug_special_0("clear_screen");
+                text_clear_screen(text);
             } else {
                 return false;
             }
