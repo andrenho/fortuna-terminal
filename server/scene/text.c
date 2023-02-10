@@ -225,4 +225,5 @@ void text_move_cursor_down_scroll(Text* text)
 
 void text_move_cursor_bol(Text* text)
 {
+    text->cursor.x = 0;
 }
