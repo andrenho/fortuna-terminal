@@ -9,6 +9,9 @@
 #include "comm/comm.h"
 #include "ui/ui.h"
 #include "scene/scene.h"
+#include "buffer/buffer.h"
+
+#define BUFFER_SZ (32 * 1024)
 
 int main(int argc, char* argv[])
 {
@@ -16,24 +19,30 @@ int main(int argc, char* argv[])
     Options options;
     error_check(options_parse_cmdline(argc, argv, &options));
 
+    // create buffers
+    Buffer input_buffer, output_buffer;
+    buffer_init(&input_buffer, BUFFER_SZ);
+    buffer_init(&output_buffer, BUFFER_SZ);
+
     // create scene
     Scene scene;
     scene_init(&scene);
 
     // intialization
-    protocol_init(&options);
+    protocol_init(&options, &output_buffer);
     error_check(comm_init(&options, scene.text.lines, scene.text.columns));
     error_check(ui_init(&options));
 
     // start communication thread(s)
-    comm_run();
+    comm_run_input(&input_buffer);
+    comm_run_output(&output_buffer);
 
     // main thread loop
     while (ui_running()) {
 
         Uint64 start_frame = SDL_GetTicks64();
 
-        protocol_process_pending_data(&scene);
+        protocol_process_input(&input_buffer, &scene);
 
         ui_do_events();
         ui_draw(&scene);
@@ -47,6 +56,8 @@ int main(int argc, char* argv[])
 
     // clean up
     comm_finalize();
+    buffer_finalize(&input_buffer);
+    buffer_finalize(&output_buffer);
     ui_destroy();
 
     return EXIT_SUCCESS;

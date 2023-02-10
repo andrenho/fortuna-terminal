@@ -2,6 +2,7 @@ OBJ=main.o \
 	comm/comm.o comm/echo.o comm/tcpip.o \
 	error/error.o \
 	options/options.o \
+	buffer/buffer.o \
 	protocol/protocol.o protocol/ansi.o \
 	scene/scene.o scene/text.o scene/palette.o \
 	ui/ui.o ui/painter.o

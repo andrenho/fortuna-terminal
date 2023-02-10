@@ -4,9 +4,10 @@
 #include "../options/options.h"
 #include "scene/scene.h"
 #include "fortuna-protocol.h"
+#include "buffer/buffer.h"
 
-int  protocol_init(Options* options);
-void protocol_process_pending_data(Scene* scene);
+int  protocol_init(Options* options, Buffer* output_buffer);
+void protocol_process_input(Buffer* input_buffer, Scene* scene);
 void protocol_terminal_event(FP_Command* command);
 
 #endif //PROTOCOL_H_
