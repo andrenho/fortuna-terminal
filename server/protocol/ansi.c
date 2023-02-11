@@ -20,8 +20,7 @@ static uint8_t translate_color(tmt_color_t fg, bool bold)
             case TMT_COLOR_BLUE: return COLOR_DARK_BLUE;
             case TMT_COLOR_MAGENTA: return COLOR_PURPLE;
             case TMT_COLOR_CYAN: return COLOR_TURQUOISE;
-            case TMT_COLOR_WHITE:
-            case TMT_COLOR_DEFAULT:
+            default:
                 return COLOR_LIGHT_GRAY;
         }
     } else {
@@ -33,8 +32,7 @@ static uint8_t translate_color(tmt_color_t fg, bool bold)
             case TMT_COLOR_BLUE: return COLOR_LIGHT_BLUE;
             case TMT_COLOR_MAGENTA: return COLOR_BLUE;
             case TMT_COLOR_CYAN: return COLOR_CYAN;
-            case TMT_COLOR_WHITE:
-            case TMT_COLOR_DEFAULT:
+            default:
                 return COLOR_WHITE;
         }
     }
@@ -43,6 +41,8 @@ static uint8_t translate_color(tmt_color_t fg, bool bold)
 
 static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
 {
+    (void) p;
+
     /* grab a pointer to the virtual screen */
     const TMTSCREEN *s = tmt_screen(vt);
     const TMTPOINT *c = tmt_cursor(vt);
@@ -59,7 +59,7 @@ static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
                 if (s->lines[r]->dirty) {
                     for (size_t x = 0; x < s->ncol; x++) {
                         TMTCHAR ch = s->lines[r]->chars[x];
-                        text_set_char(&scene_->text, r, x, ch.c, ch.a.fg, ch.a.bold);
+                        text_set_char(&scene_->text, r, x, ch.c, translate_color(ch.a.fg, ch.a.bold));
                     }
                 }
             }
@@ -90,6 +90,7 @@ int ansi_init(Scene* scene)
 
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
+    (void) scene;
     tmt_write(vt_, (const char *) buffer, bufsz);
     return (ssize_t) bufsz;
 }
