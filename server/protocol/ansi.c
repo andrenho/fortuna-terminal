@@ -104,6 +104,8 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
                     break;
             }
 
+        default:
+            break;
     }
 
     return 0;
