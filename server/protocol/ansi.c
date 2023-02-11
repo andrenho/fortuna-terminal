@@ -61,11 +61,20 @@ int ansi_init(Scene* scene)
 
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
-    return 0;
+    tmt_write(vt_, (const char *) buffer, bufsz);
+    return bufsz;
 }
 
 int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
 {
+    switch (command->command) {
+
+        case FP_EVENT_KEYSTROKE:
+            buffer_add_bytes(output_buffer, command->var.data, command->var.length);
+            return 0;
+
+    }
+
     return 0;
 }
 
