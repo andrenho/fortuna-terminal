@@ -124,7 +124,7 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
                     case SK_F6:         return buffer_add_str_nonull(output_buffer, "\e[17~");
                     case SK_F7:         return buffer_add_str_nonull(output_buffer, "\e[18~");
                     case SK_F8:         return buffer_add_str_nonull(output_buffer, "\e[19~");
-                    case SK_F9:         return buffer_add_str_nonull(output_buffer, "\e[0;67p");
+                    case SK_F9:         return buffer_add_str_nonull(output_buffer, "\e[25~");
                     case SK_F10:        return buffer_add_str_nonull(output_buffer, "\e[21~");
                     case SK_F11:        return buffer_add_str_nonull(output_buffer, "\e[23~");
                     case SK_F12:        return buffer_add_str_nonull(output_buffer, "\e[24~");
