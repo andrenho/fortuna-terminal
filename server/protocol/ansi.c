@@ -73,6 +73,37 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
             buffer_add_bytes(output_buffer, command->var.data, command->var.length);
             return 0;
 
+        case FP_EVENT_KEY_PRESS:
+            switch (command->key.special_key) {
+                case SK_ENTER:
+                    buffer_add_byte(output_buffer, '\r');
+                    break;
+                case SK_ESC: return buffer_add_str_nonull(output_buffer, TMT_KEY_ESCAPE);
+                case SK_F1: return buffer_add_str_nonull(output_buffer, TMT_KEY_F1);
+                case SK_F2: return buffer_add_str_nonull(output_buffer, TMT_KEY_F2);
+                case SK_F3: return buffer_add_str_nonull(output_buffer, TMT_KEY_F3);
+                case SK_F4: return buffer_add_str_nonull(output_buffer, TMT_KEY_F4);
+                case SK_F5: return buffer_add_str_nonull(output_buffer, TMT_KEY_F5);
+                case SK_F6: return buffer_add_str_nonull(output_buffer, TMT_KEY_F6);
+                case SK_F7: return buffer_add_str_nonull(output_buffer, TMT_KEY_F7);
+                case SK_F8: return buffer_add_str_nonull(output_buffer, TMT_KEY_F8);
+                case SK_F9: return buffer_add_str_nonull(output_buffer, TMT_KEY_F9);
+                case SK_F10: return buffer_add_str_nonull(output_buffer, TMT_KEY_F10);
+                case SK_TAB: return buffer_add_str_nonull(output_buffer, TMT_KEY_BACK_TAB);
+                case SK_INSERT: return buffer_add_str_nonull(output_buffer, TMT_KEY_INSERT);
+                case SK_HOME: return buffer_add_str_nonull(output_buffer, TMT_KEY_HOME);
+                case SK_END: return buffer_add_str_nonull(output_buffer, TMT_KEY_END);
+                case SK_PAGEUP: return buffer_add_str_nonull(output_buffer, TMT_KEY_PAGE_UP);
+                case SK_PAGEDOWN: return buffer_add_str_nonull(output_buffer, TMT_KEY_PAGE_DOWN);
+                case SK_UP: return buffer_add_str_nonull(output_buffer, TMT_KEY_UP);
+                case SK_DOWN: return buffer_add_str_nonull(output_buffer, TMT_KEY_DOWN);
+                case SK_LEFT: return buffer_add_str_nonull(output_buffer, TMT_KEY_LEFT);
+                case SK_RIGHT: return buffer_add_str_nonull(output_buffer, TMT_KEY_RIGHT);
+                case SK_BACKSPACE: return buffer_add_str_nonull(output_buffer, TMT_KEY_BACKSPACE);
+                default:
+                    break;
+            }
+
     }
 
     return 0;
