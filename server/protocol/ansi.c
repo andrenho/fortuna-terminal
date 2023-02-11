@@ -21,7 +21,7 @@ static uint8_t translate_color(tmt_color_t fg, bool bold)
             case TMT_COLOR_MAGENTA: return COLOR_PURPLE;
             case TMT_COLOR_CYAN: return COLOR_TURQUOISE;
             default:
-                return COLOR_LIGHT_GRAY;
+                return COLOR_WHITE;
         }
     } else {
         switch (fg) {
@@ -33,7 +33,7 @@ static uint8_t translate_color(tmt_color_t fg, bool bold)
             case TMT_COLOR_MAGENTA: return COLOR_BLUE;
             case TMT_COLOR_CYAN: return COLOR_CYAN;
             default:
-                return COLOR_WHITE;
+                return COLOR_LIGHT_GRAY;
         }
     }
     return COLOR_WHITE;  // TODO
