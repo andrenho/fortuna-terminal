@@ -9,8 +9,35 @@
 static TMT *vt_;
 static Scene* scene_;
 
-static uint8_t translate_color(tmt_color_t fg)
+static uint8_t translate_color(tmt_color_t fg, bool bold)
 {
+    if (!bold) {
+        switch (fg) {
+            case TMT_COLOR_BLACK: return COLOR_BLACK;
+            case TMT_COLOR_RED: return COLOR_RED;
+            case TMT_COLOR_GREEN: return COLOR_GREEN;
+            case TMT_COLOR_YELLOW: return COLOR_ORANGE;
+            case TMT_COLOR_BLUE: return COLOR_DARK_BLUE;
+            case TMT_COLOR_MAGENTA: return COLOR_PURPLE;
+            case TMT_COLOR_CYAN: return COLOR_TURQUOISE;
+            case TMT_COLOR_WHITE:
+            case TMT_COLOR_DEFAULT:
+                return COLOR_LIGHT_GRAY;
+        }
+    } else {
+        switch (fg) {
+            case TMT_COLOR_BLACK: return COLOR_GRAY;
+            case TMT_COLOR_RED: return COLOR_ORANGE;
+            case TMT_COLOR_GREEN: return COLOR_LIME;
+            case TMT_COLOR_YELLOW: return COLOR_YELLOW;
+            case TMT_COLOR_BLUE: return COLOR_LIGHT_BLUE;
+            case TMT_COLOR_MAGENTA: return COLOR_BLUE;
+            case TMT_COLOR_CYAN: return COLOR_CYAN;
+            case TMT_COLOR_WHITE:
+            case TMT_COLOR_DEFAULT:
+                return COLOR_WHITE;
+        }
+    }
     return COLOR_WHITE;  // TODO
 }
 
@@ -31,7 +58,8 @@ static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
             for (size_t r = 0; r < s->nline; r++) {
                 if (s->lines[r]->dirty) {
                     for (size_t x = 0; x < s->ncol; x++) {
-                        text_set_char(&scene_->text, r, x, s->lines[r]->chars[x].c, translate_color(s->lines[r]->chars[x].a.fg));
+                        TMTCHAR ch = s->lines[r]->chars[x];
+                        text_set_char(&scene_->text, r, x, ch.c, ch.a.fg, ch.a.bold);
                     }
                 }
             }
