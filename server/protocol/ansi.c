@@ -24,6 +24,7 @@ static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
 
         case TMT_MSG_MOVED:
             text_move_cursor_to(&scene_->text, c->r, c->c);
+            tmt_clean(vt);
             break;
 
         case TMT_MSG_UPDATE:
