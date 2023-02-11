@@ -134,9 +134,16 @@ typedef struct __attribute__((packed)) {
     };
 } FP_Command;
 
+//
+// Functions
+//
+
+uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
+
 typedef int (*FP_SendFunction)(uint8_t*, size_t);
 typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 
+#define FP_RESPONSE_MESSAGE_ERROR (-1)
 int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recv_function);
 
 #endif //FORTUNA_PROTOCOL_H_
