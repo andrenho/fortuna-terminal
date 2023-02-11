@@ -62,7 +62,7 @@ int ansi_init(Scene* scene)
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
     tmt_write(vt_, (const char *) buffer, bufsz);
-    return bufsz;
+    return (ssize_t) bufsz;
 }
 
 int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
