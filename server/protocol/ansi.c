@@ -104,35 +104,46 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
             return 0;
 
         case FP_EVENT_KEY_PRESS:
-            switch (command->key.special_key) {
-                case SK_ENTER:
-                    buffer_add_byte(output_buffer, '\r');
-                    break;
-                case SK_ESC: return buffer_add_str_nonull(output_buffer, TMT_KEY_ESCAPE);
-                case SK_F1: return buffer_add_str_nonull(output_buffer, TMT_KEY_F1);
-                case SK_F2: return buffer_add_str_nonull(output_buffer, TMT_KEY_F2);
-                case SK_F3: return buffer_add_str_nonull(output_buffer, TMT_KEY_F3);
-                case SK_F4: return buffer_add_str_nonull(output_buffer, TMT_KEY_F4);
-                case SK_F5: return buffer_add_str_nonull(output_buffer, TMT_KEY_F5);
-                case SK_F6: return buffer_add_str_nonull(output_buffer, TMT_KEY_F6);
-                case SK_F7: return buffer_add_str_nonull(output_buffer, TMT_KEY_F7);
-                case SK_F8: return buffer_add_str_nonull(output_buffer, TMT_KEY_F8);
-                case SK_F9: return buffer_add_str_nonull(output_buffer, TMT_KEY_F9);
-                case SK_F10: return buffer_add_str_nonull(output_buffer, TMT_KEY_F10);
-                case SK_TAB: return buffer_add_str_nonull(output_buffer, TMT_KEY_BACK_TAB);
-                case SK_INSERT: return buffer_add_str_nonull(output_buffer, TMT_KEY_INSERT);
-                case SK_HOME: return buffer_add_str_nonull(output_buffer, TMT_KEY_HOME);
-                case SK_END: return buffer_add_str_nonull(output_buffer, TMT_KEY_END);
-                case SK_PAGEUP: return buffer_add_str_nonull(output_buffer, TMT_KEY_PAGE_UP);
-                case SK_PAGEDOWN: return buffer_add_str_nonull(output_buffer, TMT_KEY_PAGE_DOWN);
-                case SK_UP: return buffer_add_str_nonull(output_buffer, TMT_KEY_UP);
-                case SK_DOWN: return buffer_add_str_nonull(output_buffer, TMT_KEY_DOWN);
-                case SK_LEFT: return buffer_add_str_nonull(output_buffer, TMT_KEY_LEFT);
-                case SK_RIGHT: return buffer_add_str_nonull(output_buffer, TMT_KEY_RIGHT);
-                case SK_BACKSPACE: return buffer_add_str_nonull(output_buffer, TMT_KEY_BACKSPACE);
-                default:
-                    break;
+            if (command->key.mod.control) {
+                if (command->key.key >= 'a' && command->key.key <= 'z')
+                    buffer_add_byte(output_buffer, command->key.key - 96);
+
+            } else if (command->key.key < 32 || command->key.key >= 127) {
+                switch (command->key.special_key) {
+                    case SK_ESC:        return buffer_add_str_nonull(output_buffer, "\e");
+                    case SK_ENTER:      return buffer_add_str_nonull(output_buffer, "\r");
+                    case SK_TAB:        return buffer_add_str_nonull(output_buffer, "\t");
+                    case SK_BACKSPACE:  return buffer_add_str_nonull(output_buffer, "\b");
+                    case SK_F1:         return buffer_add_str_nonull(output_buffer, "\e[[A");
+                    case SK_F2:         return buffer_add_str_nonull(output_buffer, "\e[[B");
+                    case SK_F3:         return buffer_add_str_nonull(output_buffer, "\e[[C");
+                    case SK_F4:         return buffer_add_str_nonull(output_buffer, "\e[[D");
+                    case SK_F5:         return buffer_add_str_nonull(output_buffer, "\e[[E");
+                    case SK_F6:         return buffer_add_str_nonull(output_buffer, "\e[17~");
+                    case SK_F7:         return buffer_add_str_nonull(output_buffer, "\e[18~");
+                    case SK_F8:         return buffer_add_str_nonull(output_buffer, "\e[19~");
+                    case SK_F9:         return buffer_add_str_nonull(output_buffer, "\e[20~");
+                    case SK_F10:        return buffer_add_str_nonull(output_buffer, "\e[21~");
+                    case SK_F11:        return buffer_add_str_nonull(output_buffer, "\e[23~");
+                    case SK_F12:        return buffer_add_str_nonull(output_buffer, "\e[24~");
+                    case SK_INSERT:     return buffer_add_str_nonull(output_buffer, "\e[2~");
+                    case SK_HOME:       return buffer_add_str_nonull(output_buffer, "\e[1~");
+                    case SK_END:        return buffer_add_str_nonull(output_buffer, "\e[4~");
+                    case SK_PAGEUP:     return buffer_add_str_nonull(output_buffer, "\e[5~");
+                    case SK_PAGEDOWN:   return buffer_add_str_nonull(output_buffer, "\e[6~");
+                    case SK_UP:         return buffer_add_str_nonull(output_buffer, "\e[A");
+                    case SK_DOWN:       return buffer_add_str_nonull(output_buffer, "\e[B");
+                    case SK_LEFT:       return buffer_add_str_nonull(output_buffer, "\e[D");
+                    case SK_RIGHT:      return buffer_add_str_nonull(output_buffer, "\e[C");
+                    case SK_DELETE:     return buffer_add_str_nonull(output_buffer, "\e[3~");
+                    case SK_PRINTSCREEN:
+                    case SK_PAUSEBREAK:
+                    case SK_CAPSLOCK:
+                    case SK_WIN:
+                        break;
+                }
             }
+            break;
 
         default:
             break;
