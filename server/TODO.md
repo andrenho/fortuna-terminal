@@ -12,7 +12,7 @@ Rewrite from C++
  - [x] Merge to master
    
 Protocols
- - [ ] ANSI (rewrite)
+ - [x] ANSI (rewrite)
  - [ ] Fortuna Protocol
 
 Additional signal wires
