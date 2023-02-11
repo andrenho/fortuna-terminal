@@ -67,6 +67,8 @@ typedef enum __attribute__((packed)) {
 
 } FP_CommandType;
 
+#define FP_MAX_BYTES 43
+
 typedef enum __attribute__((packed)) {
     SK_ESC = 128, SK_F1, SK_F2, SK_F3, SK_F4, SK_F5, SK_F6, SK_F7, SK_F8, SK_F9, SK_F10, SK_F11, SK_F12, SK_TAB, SK_CAPSLOCK, SK_WIN,
     SK_INSERT, SK_HOME, SK_END, SK_PAGEUP, SK_PAGEDOWN, SK_UP, SK_DOWN, SK_LEFT, SK_RIGHT, SK_ENTER, SK_BACKSPACE,
@@ -110,9 +112,7 @@ typedef struct __attribute__((packed)) {
             CharAttrib attrib;
         } set_char;
 
-        struct __attribute__((packed)) {
-            uint8_t* text;
-        } print_text;
+        uint8_t text[FP_MAX_BYTES];
 
         struct __attribute__((packed)) {
             uint8_t line;
@@ -140,10 +140,14 @@ typedef struct __attribute__((packed)) {
 
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
 
-typedef int (*FP_SendFunction)(uint8_t*, size_t);
+typedef int (*FP_SendFunction)(uint8_t const *, size_t);
 typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 
-#define FP_RESPONSE_MESSAGE_ERROR (-1)
+#define FP_RESPONSE_OK               0x1
+#define FP_RESPONSE_INVALID_CHECKSUM 0x2
+#define FP_RESPONSE_BROKEN           0x3
+#define FP_RESPONSE_ERROR            0x4
+
 int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recv_function);
 
 #endif //FORTUNA_PROTOCOL_H_

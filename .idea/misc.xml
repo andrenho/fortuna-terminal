@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CidrRootsConfiguration">
     <sourceRoots>
+      <file path="$PROJECT_DIR$/fortuna-protocol" />
       <file path="$PROJECT_DIR$/fortuna-terminal" />
       <file path="$PROJECT_DIR$/libfortuna-client" />
-      <file path="$PROJECT_DIR$/fortuna-protocol" />
     </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/fortuna-terminal/lib" />

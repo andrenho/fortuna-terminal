@@ -58,7 +58,7 @@ static int fp_msg_size(FP_Command* cmd)
     int sz;
     switch (cmd->command) {
         case FP_TEXT_PRINT_TEXT:
-            sz = (int) strlen((const char *) cmd->print_text.text) + 1;
+            sz = (int) strlen((const char *) cmd->text) + 2;
             break;
         case FP_EVENT_KEYSTROKE:
             sz = cmd->keystroke.length + 1;
@@ -74,11 +74,6 @@ static int fp_msg_size(FP_Command* cmd)
 #define FRAME_END   0x6e
 
 #define SEND_ATTEMPTS 8
-
-#define FP_RESPONSE_OK               0x1
-#define FP_RESPONSE_INVALID_CHECKSUM 0x2
-#define FP_RESPONSE_BROKEN           0x3
-#define FP_RESPONSE_ERROR            0x4
 
 typedef struct {
     size_t   length;
@@ -101,11 +96,13 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
 
     for (size_t i = 0; i < n_cmds; ++i) {
 
+        size_t msg_index = i;
+
         // calculate how many messages will fit in one frame
-        uint8_t bytes_left = FRAME_CMD_SZ;
+        int bytes_left = FRAME_CMD_SZ;
         uint8_t message_count = 0;
         while (i < n_cmds) {
-            size_t msg_size = fp_msg_size(&cmds[i]);
+            int msg_size = fp_msg_size(&cmds[i]);
             if (bytes_left - msg_size < 0)
                 break;
             bytes_left -= msg_size;
@@ -120,8 +117,8 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
         message[k++] = FRAME_START;
         message[k++] = FRAME_CMD_SZ - bytes_left;
         for (size_t j = 0; j < message_count; ++j) {
-            uint8_t msg_sz = fp_msg_size(&cmds[j + i]);
-            memcpy(&message[k], &cmds[j + i], msg_sz);
+            uint8_t msg_sz = fp_msg_size(&cmds[msg_index + j]);
+            memcpy(&message[k], &cmds[msg_index + j], msg_sz);
             k += msg_sz;
         }
         message[k++] = fp_calculate_checksum(&message[2], FRAME_CMD_SZ - bytes_left);
@@ -144,12 +141,14 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
                 if (rbuf[1] == rbuf[2])
                     response = rbuf[1];
                 else
-                    return FP_RESPONSE_MESSAGE_ERROR;
+                    return FP_RESPONSE_ERROR;
             }
 
             // parse response
             if (response == FP_RESPONSE_OK)
                 break;
+            else if (response != FP_RESPONSE_BROKEN && response != FP_RESPONSE_INVALID_CHECKSUM)
+                return FP_RESPONSE_ERROR;
         }
     }
 
