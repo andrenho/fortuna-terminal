@@ -1,267 +1,100 @@
-// see https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+// https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
 #include "ansi.h"
 #include "protocol_debug.h"
+#include "tmt.h"
 
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 
-#define ESCAPE_SEQ_SZ 24
-#define MAX_PARAMS 2
-#define PARAM_SZ 24
+static TMT *vt_;
+static Scene* scene_;
 
-#define max(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
-#define min(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a < _b ? _a : _b; })
-
-int ansi_init()
+static uint8_t translate_color(tmt_color_t fg, bool bold)
 {
-    return 0;
-}
-
-static char ansi_parse_escape_sequence(const char* seq, char* control, int* p1, int* p2)
-{
-    size_t i = 1;
-    char param[MAX_PARAMS][PARAM_SZ] = {0};
-    size_t current_param = 0;
-    size_t j = 0;
-
-    if (seq[i] == '[' || seq[i] == '?')
-        *control = seq[i++];
-    if (seq[2] == '?') {
-        *control = seq[2];
-        ++i;
-    }
-
-    while (seq[i]) {
-        if (isdigit(seq[i])) {
-            if (j >= PARAM_SZ) return '\0';
-            param[current_param][j++] = seq[i];
-        } else if (seq[i] == ';') {
-            ++current_param;
-            j = 0;
-        } else {
-            *p1 = (int) strtoul(param[0], NULL, 10);
-            *p2 = (int) strtoul(param[1], NULL, 10);
-            return seq[i];
+    if (!bold) {
+        switch (fg) {
+            case TMT_COLOR_BLACK: return COLOR_BLACK;
+            case TMT_COLOR_RED: return COLOR_RED;
+            case TMT_COLOR_GREEN: return COLOR_GREEN;
+            case TMT_COLOR_YELLOW: return COLOR_ORANGE;
+            case TMT_COLOR_BLUE: return COLOR_DARK_BLUE;
+            case TMT_COLOR_MAGENTA: return COLOR_PURPLE;
+            case TMT_COLOR_CYAN: return COLOR_TURQUOISE;
+            default:
+                return COLOR_WHITE;
         }
-        ++i;
+    } else {
+        switch (fg) {
+            case TMT_COLOR_BLACK: return COLOR_GRAY;
+            case TMT_COLOR_RED: return COLOR_ORANGE;
+            case TMT_COLOR_GREEN: return COLOR_LIME;
+            case TMT_COLOR_YELLOW: return COLOR_YELLOW;
+            case TMT_COLOR_BLUE: return COLOR_LIGHT_BLUE;
+            case TMT_COLOR_MAGENTA: return COLOR_BLUE;
+            case TMT_COLOR_CYAN: return COLOR_CYAN;
+            default:
+                return COLOR_LIGHT_GRAY;
+        }
     }
-
-    return '\0';
+    return COLOR_WHITE;  // TODO
 }
 
-static uint8_t text_ansi_color(int number)
+static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
 {
-    switch (number) {
-        case 30: return COLOR_BLACK;
-        case 31: return COLOR_RED;
-        case 32: return COLOR_GREEN;
-        case 33: return COLOR_ORANGE;
-        case 34: return COLOR_DARK_BLUE;
-        case 35: return COLOR_PURPLE;
-        case 36: return COLOR_TURQUOISE;
-        case 37: return COLOR_LIGHT_GRAY;
-        case 90: return COLOR_GRAY;
-        case 91: return COLOR_ORANGE;
-        case 92: return COLOR_LIME;
-        case 93: return COLOR_YELLOW;
-        case 94: return COLOR_LIGHT_BLUE;
-        case 95: return COLOR_BLUE;
-        case 96: return COLOR_CYAN;
-        case 97: return COLOR_WHITE;
-        default: return COLOR_WHITE;
+    (void) p;
+
+    /* grab a pointer to the virtual screen */
+    const TMTSCREEN *s = tmt_screen(vt);
+    const TMTPOINT *c = tmt_cursor(vt);
+
+    switch (m) {
+
+        case TMT_MSG_MOVED:
+            text_move_cursor_to(&scene_->text, c->r, c->c);
+            tmt_clean(vt);
+            break;
+
+        case TMT_MSG_UPDATE:
+            for (size_t r = 0; r < s->nline; r++) {
+                if (s->lines[r]->dirty) {
+                    for (size_t x = 0; x < s->ncol; x++) {
+                        TMTCHAR ch = s->lines[r]->chars[x];
+                        text_set_char(&scene_->text, r, x, ch.c, translate_color(ch.a.fg, ch.a.bold));
+                    }
+                }
+            }
+            tmt_clean(vt);
+            break;
+
+        case TMT_MSG_ANSWER:
+            printf("terminal answered %s\n", (const char *)a);  // ???
+            break;
+
+        case TMT_MSG_BELL:
+            break;
+
+        case TMT_MSG_CURSOR:
+            break;
     }
 }
 
-static bool ansi_execute_escape_sequence(const char* seq, Text* text)
+int ansi_init(Scene* scene)
 {
-    int p1, p2;
-    char control = '\0';
-    char cmd = ansi_parse_escape_sequence(seq, &control, &p1, &p2);
-    switch (cmd) {
+    scene_ = scene;
 
-        case 'A':
-            debug_special_1("cursor_up", p1);
-            text_move_cursor_relative(text, min(-p1, -1), 0);
-            break;
-
-        case 'B':
-            debug_special_1("cursor_down", p1);
-            text_move_cursor_relative(text, max(p1, 1), 0);
-            break;
-
-        case 'C':
-            debug_special_1("cursor_right", p1);
-            text_move_cursor_relative(text, 0, max(p1, 1));
-            break;
-
-        case 'D':
-            debug_special_1("cursor-left (alt)", p1);
-            text_move_cursor_relative(text, 0, min(-p1, -1));
-            break;
-
-        case 'G':
-            text_move_cursor_to(text, text->cursor.y, p1);
-            break;
-
-        case 'H':
-        case 'f':
-            debug_special_2("cursor_home", p1, p2);
-            text_move_cursor_to(text, max(p1, 1), max(p2, 1));
-            break;
-
-        case 'J':
-            if (p1 == 0) {
-                debug_special_0("clear_eos");
-                text_clear_to_end_of_screen(text);
-            } else if (p1 == 2) {
-                debug_special_0("clear_screen");
-                text_clear_screen(text);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'K':
-            if (p1 == 0) {
-                debug_special_0("clear_eol");
-                text_clear_to_end_of_line(text);
-            } else if (p1 == 1) {
-                debug_special_0("clear_bol");
-                text_clear_to_beginning_of_line(text);
-            } else if (p1 == 2) {
-                debug_special_0("delete_line (alt)");
-                text_clear_line(text);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'M':
-            if (p1 == 0) {
-                debug_special_0("delete_line");
-                text_clear_line(text);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'P':
-            if (p1 == 0) {
-                debug_special_0("delete_character");
-                text_delete_char_under_cursor(text);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'd':
-            debug_special_1("vertical_pos", p1);
-            text_move_cursor_to(text, p1, text->cursor.x);
-            break;
-
-        case 'h':
-            if (control == '?' && p1 == 2004) {
-                debug_special_0("stop_paste");
-                break;
-            }
-            if (p1 == 4) {
-                debug_special_0("enter_insert_mode");
-                text_set_insertion_mode(text, true);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'l':
-            if (control == '?' && p1 == 2004) {
-                debug_special_0("start_paste");
-                break;
-            }
-            if (p1 == 4) {
-                debug_special_0("exit_insert_mode");
-                text_set_insertion_mode(text, false);
-            } else {
-                return false;
-            }
-            break;
-
-        case 'm':
-            if (p1 == 0 && p2 == 0) {
-                debug_special_0("reset_formatting");
-                text_reset_formatting(text);
-            } else if (p1 <= 9) {
-                debug_special_2("set_color", p1, p2);
-                text_set_color(text, text_ansi_color(p2));
-            }
-            break;
-
-        case 'r':
-            debug_special_2("change_scroll_region", p1, p2);
-            text_set_scroll_region(text, p1, p2);
-            break;
-
-        default:
-            fprintf(stderr, "\e[1;31mInvalid escape sequence: ^%s\e[0m\n", &seq[1]);
-            return false;
-    }
-    return true;
+    vt_ = tmt_open(scene->text.lines, scene->text.columns, callback, NULL, NULL);
+    if (!vt_)
+        return perror("could not allocate terminal"), EXIT_FAILURE;
+    return 0;
 }
 
 ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
 {
-    // TODO - break this function
-
-    size_t bytes_consumed = 0;
-
-    static bool    escape_sequence = false;
-    static char    escape_seq_buf[ESCAPE_SEQ_SZ] = {0};
-    static size_t  escape_seq_idx = 0;
-
-    for (size_t i = 0; i < bufsz; ++i) {
-        uint8_t c = buffer[i];
-        debug_char(c == '\e' ? '^' : c);
-        if (!escape_sequence) {
-            if (c == '\e')                              // escape sequence starts
-                escape_sequence = true;
-            else if (c == '\b')
-                text_move_cursor_relative(&scene->text, 0, -1);
-            else if (c == '\r')
-                text_move_cursor_bol(&scene->text);
-            else if (c == '\n')
-                text_move_cursor_down_scroll(&scene->text);
-            else                                        // just a regular character
-                text_add_char(&scene->text, c);
-        }
-        if (escape_sequence) {
-            escape_seq_buf[escape_seq_idx++] = (char) c;
-            if (!isalpha(c) && c != '@' && c != '~') {    // escape sequence continues
-                if (escape_seq_idx >= ESCAPE_SEQ_SZ) {  // invalid escape sequence, rollback
-                    for (size_t j = 0; j < escape_seq_idx; ++j)
-                        text_add_char(&scene->text, escape_seq_buf[j]);
-                    escape_sequence = false;
-                    escape_seq_idx = 0;
-                }
-            } else {                                    // escape sequence ends
-                escape_seq_buf[escape_seq_idx + 1] = '\0';
-                if (!ansi_execute_escape_sequence(escape_seq_buf, &scene->text)) {
-                    for (size_t j = 0; j < escape_seq_idx; ++j)
-                        text_add_char(&scene->text, escape_seq_buf[j]);
-                }
-                escape_sequence = false;
-                escape_seq_idx = 0;
-            }
-        }
-        ++bytes_consumed;
-    }
-
-    // check for an incomplete escape sequence
-    if (escape_sequence) {
-        bytes_consumed -= escape_seq_idx;
-    }
-
-    return (ssize_t) bytes_consumed;
+    (void) scene;
+    tmt_write(vt_, (const char *) buffer, bufsz);
+    return (ssize_t) bufsz;
 }
 
 int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
@@ -283,11 +116,11 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
                     case SK_ENTER:      return buffer_add_str_nonull(output_buffer, "\r");
                     case SK_TAB:        return buffer_add_str_nonull(output_buffer, "\t");
                     case SK_BACKSPACE:  return buffer_add_str_nonull(output_buffer, "\b");
-                    case SK_F1:         return buffer_add_str_nonull(output_buffer, "\e[[A");
-                    case SK_F2:         return buffer_add_str_nonull(output_buffer, "\e[[B");
-                    case SK_F3:         return buffer_add_str_nonull(output_buffer, "\e[[C");
-                    case SK_F4:         return buffer_add_str_nonull(output_buffer, "\e[[D");
-                    case SK_F5:         return buffer_add_str_nonull(output_buffer, "\e[[E");
+                    case SK_F1:         return buffer_add_str_nonull(output_buffer, "\e[11~");
+                    case SK_F2:         return buffer_add_str_nonull(output_buffer, "\e[12~");
+                    case SK_F3:         return buffer_add_str_nonull(output_buffer, "\e[13~");
+                    case SK_F4:         return buffer_add_str_nonull(output_buffer, "\e[14~");
+                    case SK_F5:         return buffer_add_str_nonull(output_buffer, "\e[15~");
                     case SK_F6:         return buffer_add_str_nonull(output_buffer, "\e[17~");
                     case SK_F7:         return buffer_add_str_nonull(output_buffer, "\e[18~");
                     case SK_F8:         return buffer_add_str_nonull(output_buffer, "\e[19~");
@@ -323,5 +156,6 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
 
 int ansi_finalize()
 {
+    tmt_close(vt_);
     return 0;
 }

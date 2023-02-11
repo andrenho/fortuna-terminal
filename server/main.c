@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     scene_init(&scene);
 
     // intialization
-    protocol_init(&output_buffer);
+    protocol_init(&output_buffer, &scene);
     error_check(comm_init(scene.text.lines, scene.text.columns));
     error_check(ui_init());
 

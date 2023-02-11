@@ -52,6 +52,10 @@ Graphics
 Audio
  - [ ] Audio support
 
+Release
+ - [ ] Create release version
+ - [ ] Create fast-loading pi
+
 Other
  - [ ] Bluetooth support
  - [ ] Additional communication (ex. debug over serial)
