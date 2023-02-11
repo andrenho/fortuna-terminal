@@ -4,6 +4,7 @@
     <sourceRoots>
       <file path="$PROJECT_DIR$/fortuna-terminal" />
       <file path="$PROJECT_DIR$/libfortuna-client" />
+      <file path="$PROJECT_DIR$/fortuna-protocol" />
     </sourceRoots>
     <libraryRoots>
       <file path="$PROJECT_DIR$/fortuna-terminal/lib" />

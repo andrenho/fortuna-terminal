@@ -4,11 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/**************************
- *                        *
- *        INPUT           *
- *                        *
- **************************/
+#define PALETTE_SZ 16
 
 typedef enum __attribute__((packed)) {
 
@@ -48,10 +44,10 @@ typedef enum __attribute__((packed)) {
     FP_EVENT_KEY_PRESS              = 0x60, // a key was pressed on the keyboard
     FP_EVENT_KEY_RELEASE            = 0x61, // a key was released on the keyboard
     FP_EVENT_KEYSTROKE              = 0x62, // a keystroke was registered (can be repeated if the user keeps pressing the key)
-    FP_EVENT_JOYSTICK_PRESS         = 0x62, // a key was pressed on the joystick
-    FP_EVENT_JOYSTICK_RELEASE       = 0x63, // a key was released on the joystick
-    FP_EVENT_MOUSE_MOVE             = 0x64, // mouse was moved
-    FP_EVENT_MOUSE_CLICK            = 0x65, // mouse was clicked
+    FP_EVENT_JOYSTICK_PRESS         = 0x63, // a key was pressed on the joystick
+    FP_EVENT_JOYSTICK_RELEASE       = 0x64, // a key was released on the joystick
+    FP_EVENT_MOUSE_MOVE             = 0x65, // mouse was moved
+    FP_EVENT_MOUSE_CLICK            = 0x66, // mouse was clicked
 
     //
     // GRAPHICAL COMMANDS
@@ -125,9 +121,7 @@ typedef struct __attribute__((packed)) {
 
         CharAttrib char_attrib;
 
-        struct __attribute__((packed)) {
-            Color color[PALETTE_SZ];
-        } set_palette;
+        uint8_t colors[PALETTE_SZ * 3];
 
         CursorAttrib cursor_attrib;
 
@@ -139,5 +133,10 @@ typedef struct __attribute__((packed)) {
         FP_KeyEvent key;
     };
 } FP_Command;
+
+typedef int (*FP_SendFunction)(uint8_t*, size_t);
+typedef int (*FP_RecvFunction)(uint8_t*, size_t);
+
+int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recv_function);
 
 #endif //FORTUNA_PROTOCOL_H_

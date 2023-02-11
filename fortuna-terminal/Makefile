@@ -8,7 +8,9 @@ OBJ=main.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
 
-CPPFLAGS=-Wall -Wextra -I. -fstack-protector -fstack-protector-strong -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings -D_GNU_SOURCE -pthread
+CPPFLAGS=-Wall -Wextra -I. -I ../fortuna-protocol \
+		 -fstack-protector -fstack-protector-strong -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings\
+		 -D_GNU_SOURCE -pthread
 CFLAGS=-std=c11
 
 ifeq ($(OS),Windows_NT)

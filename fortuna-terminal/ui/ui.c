@@ -2,9 +2,9 @@
 #include "error/error.h"
 #include "painter.h"
 #include "protocol/protocol.h"
-#include "../../fortuna-protocol.h"
 
 #include <stdio.h>
+#include <fortuna-protocol.h>
 
 #include <SDL2/SDL.h>
 

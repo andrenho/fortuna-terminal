@@ -1,12 +1,13 @@
 #ifndef ANSI_H_
 #define ANSI_H_
 
+#include <fortuna-protocol.h>
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
 
 #include "../scene/scene.h"
-#include "../../fortuna-protocol.h"
 #include "buffer/buffer.h"
 
 int     ansi_init(Scene* scene);
