@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "palette.h"
+#include "protocol/fortuna-protocol.h"
 
 #define MAX_COLUMNS 80
 #define MAX_LINES   25
@@ -18,7 +19,7 @@ typedef struct {
 
 typedef struct {
     uint8_t c;
-    uint8_t color;
+    CharAttrib a;
 } Char;
 
 typedef struct {
@@ -39,8 +40,8 @@ int  text_init(Text* text);
 Char text_get(Text* text, unsigned int y, unsigned int x);
 void text_update_blink(Text* text);
 
-void text_add_char(Text* text, uint8_t c, uint8_t color);
-void text_set_char(Text* text, unsigned int y, unsigned int x, uint8_t c, uint8_t color);
+// void text_add_char(Text* text, uint8_t c, uint8_t color);
+void text_set_char(Text* text, unsigned int y, unsigned int x, uint8_t c, CharAttrib a);
 
 void text_move_cursor_to(Text* text, unsigned int y, unsigned int x);
 void text_move_cursor_down_scroll(Text* text);

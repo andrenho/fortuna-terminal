@@ -70,6 +70,8 @@ static void painter_draw_text_cell(Text* text, unsigned int line, unsigned int c
     unsigned int dest_x = (column * TEXT_CHAR_W) + offset_x;
     unsigned int dest_y = (line * TEXT_CHAR_H) + offset_y;
 
+    Color* fg = &text->palette.color[chr.a.color];
+
     if (text->cursor.x == column && text->cursor.y == line && text->cursor.visible && text->cursor.blink_state) {
         Color cg = text->palette.color[text->cursor.color];
         SDL_SetRenderDrawColor(renderer_, cg.r, cg.g, cg.b, SDL_ALPHA_OPAQUE);
@@ -78,8 +80,14 @@ static void painter_draw_text_cell(Text* text, unsigned int line, unsigned int c
 
         SDL_SetTextureColorMod(font_, bg->r, bg->g, bg->b);
 
+    } else if (chr.a.reverse) {
+        SDL_SetRenderDrawColor(renderer_, fg->r, fg->g, fg->b, SDL_ALPHA_OPAQUE);
+        SDL_Rect r = { (int) dest_x, (int) dest_y, TEXT_CHAR_W, TEXT_CHAR_H };
+        SDL_RenderFillRect(renderer_, &r);
+
+        SDL_SetTextureColorMod(font_, bg->r, bg->g, bg->b);
+
     } else {
-        Color* fg = &text->palette.color[chr.color];
         SDL_SetTextureColorMod(font_, fg->r, fg->g, fg->b);
     }
 

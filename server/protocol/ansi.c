@@ -11,34 +11,40 @@
 static TMT *vt_;
 static Scene* scene_;
 
-static uint8_t translate_color(tmt_color_t fg, bool bold)
+static CharAttrib translate_color(TMTATTRS a)
 {
-    if (!bold) {
-        switch (fg) {
-            case TMT_COLOR_BLACK: return COLOR_BLACK;
-            case TMT_COLOR_RED: return COLOR_RED;
-            case TMT_COLOR_GREEN: return COLOR_GREEN;
-            case TMT_COLOR_YELLOW: return COLOR_ORANGE;
-            case TMT_COLOR_BLUE: return COLOR_DARK_BLUE;
-            case TMT_COLOR_MAGENTA: return COLOR_PURPLE;
-            case TMT_COLOR_CYAN: return COLOR_TURQUOISE;
+    CharAttrib attr;
+
+    if (!a.bold) {
+        switch (a.fg) {
+            case TMT_COLOR_BLACK: attr.color = COLOR_BLACK; break;
+            case TMT_COLOR_RED: attr.color = COLOR_RED; break;
+            case TMT_COLOR_GREEN: attr.color = COLOR_GREEN; break;
+            case TMT_COLOR_YELLOW: attr.color = COLOR_ORANGE; break;
+            case TMT_COLOR_BLUE: attr.color = COLOR_DARK_BLUE; break;
+            case TMT_COLOR_MAGENTA: attr.color = COLOR_PURPLE; break;
+            case TMT_COLOR_CYAN: attr.color = COLOR_TURQUOISE; break;
             default:
-                return COLOR_WHITE;
+                attr.color = COLOR_WHITE;
+                break;
         }
     } else {
-        switch (fg) {
-            case TMT_COLOR_BLACK: return COLOR_GRAY;
-            case TMT_COLOR_RED: return COLOR_ORANGE;
-            case TMT_COLOR_GREEN: return COLOR_LIME;
-            case TMT_COLOR_YELLOW: return COLOR_YELLOW;
-            case TMT_COLOR_BLUE: return COLOR_LIGHT_BLUE;
-            case TMT_COLOR_MAGENTA: return COLOR_BLUE;
-            case TMT_COLOR_CYAN: return COLOR_CYAN;
+        switch (a.fg) {
+            case TMT_COLOR_BLACK: attr.color = COLOR_GRAY; break;
+            case TMT_COLOR_RED: attr.color = COLOR_ORANGE; break;
+            case TMT_COLOR_GREEN: attr.color = COLOR_LIME; break;
+            case TMT_COLOR_YELLOW: attr.color = COLOR_YELLOW; break;
+            case TMT_COLOR_BLUE: attr.color = COLOR_LIGHT_BLUE; break;
+            case TMT_COLOR_MAGENTA: attr.color = COLOR_BLUE; break;
+            case TMT_COLOR_CYAN: attr.color = COLOR_CYAN; break;
             default:
-                return COLOR_LIGHT_GRAY;
+                attr.color = COLOR_LIGHT_GRAY;
+                break;
         }
     }
-    return COLOR_WHITE;  // TODO
+
+    attr.reverse = a.reverse;
+    return attr;
 }
 
 static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
@@ -61,7 +67,7 @@ static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
                 if (s->lines[r]->dirty) {
                     for (size_t x = 0; x < s->ncol; x++) {
                         TMTCHAR ch = s->lines[r]->chars[x];
-                        text_set_char(&scene_->text, r, x, ch.c, translate_color(ch.a.fg, ch.a.bold));
+                        text_set_char(&scene_->text, r, x, ch.c, translate_color(ch.a));
                     }
                 }
             }

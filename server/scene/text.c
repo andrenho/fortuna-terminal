@@ -7,15 +7,17 @@
 #define max(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
 #define min(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a < _b ? _a : _b; })
 
+static CharAttrib default_attr = { .color = COLOR_WHITE, .reverse = false };
+
 static void text_reset_blink(Text* text)
 {
     text->cursor.blink_state = true;
     text->cursor_last_blink = SDL_GetTicks64();
 }
 
-void text_set_char(Text* text, unsigned int y, unsigned int x, uint8_t c, uint8_t color)
+void text_set_char(Text* text, unsigned int y, unsigned int x, uint8_t c, CharAttrib a)
 {
-    text->matrix[y * text->columns + x] = (Char) { c, color };
+    text->matrix[y * text->columns + x] = (Char) { c, a };
     text_reset_blink(text);
 }
 
@@ -48,7 +50,7 @@ int text_init(Text* text)
 
     for (size_t y = 0; y < text->lines; ++y)
         for (size_t x = 0; x < text->columns; ++x)
-            text_set_char(text, y, x, ' ', COLOR_WHITE);
+            text_set_char(text, y, x, ' ', default_attr);
             // text_set(text, y, x, y * text->columns + x);
 
     palette_init(&text->palette);
@@ -70,12 +72,14 @@ static void text_advance_cursor(Text* text)
     text_reset_blink(text);
 }
 
+/*
 void text_add_char(Text* text, uint8_t c, uint8_t color)
 {
     text_set_char(text, text->cursor.y, text->cursor.x, c, color);
     text_advance_cursor(text);
     text_reset_blink(text);
 }
+*/
 
 void text_update_blink(Text* text)
 {
@@ -102,7 +106,7 @@ void text_move_cursor_down_scroll(Text* text)
         }
         --text->cursor.y;
         for (size_t x = 0; x < text->columns; ++x)
-            text_set_char(text, text->cursor.y, x, ' ', COLOR_WHITE);
+            text_set_char(text, text->cursor.y, x, ' ', default_attr);
     }
     text_reset_blink(text);
 }
