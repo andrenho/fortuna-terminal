@@ -15,12 +15,19 @@ Protocols
  - [x] ANSI (rewrite)
  - [x] Add reverse text
  - [ ] Fortuna Protocol (for text)
+   - [ ] Print char
+   - [ ] Text & formatting
+   - [ ] 80 column mode
+   - [ ] Mouse support
+   - [ ] Joystick support
+   - [ ] Queries
  - [ ] Create client library (TCP/IP first)
 
 Additional signal wires
  - [ ] VSYNC
  - [ ] SUSPEND
  - [ ] RESET
+   - [ ] On start, and on command
  - [ ] CMD (?)
 
 Communication
