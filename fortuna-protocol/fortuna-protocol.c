@@ -103,8 +103,10 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
         uint8_t message_count = 0;
         while (i < n_cmds) {
             int msg_size = fp_msg_size(&cmds[i]);
-            if (bytes_left - msg_size < 0)
+            if (bytes_left - msg_size < 0) {
+                --i;
                 break;
+            }
             bytes_left -= msg_size;
             ++message_count;
             ++i;

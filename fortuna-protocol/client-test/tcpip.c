@@ -24,10 +24,10 @@ int main()
             .command = FP_TEXT_PRINT_CHAR,
             .chr = 'A',
         }, {
-            .command = FP_TEXT_PRINT_TEXT,
+            .command = FP_TEXT_PRINT_CHAR,
         }
     };
-    strcpy((char *) a[1].text, "Hello");
+    strcpy((char *) a[1].text, "01234567890123456789012345678901234567890");
     fp_send(a, 2, send, recv);
 
     return 0;
