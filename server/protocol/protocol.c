@@ -17,14 +17,14 @@ static Buffer* output_buffer_ = NULL;
 
 #define BUFFER_SZ (32 * 1024)
 
-int protocol_init(Buffer* output_buffer)
+int protocol_init(Buffer* output_buffer, Scene* scene)
 {
     output_buffer_ = output_buffer;
 
     switch (options.protocol) {
         case PR_ANSI:
             protocol_f = (ProtocolFunctions) { ansi_process_pending_input, ansi_terminal_event, ansi_finalize };
-            ansi_init();
+            ansi_init(scene);
             return 0;
         default:
             return ERR_NOT_IMPLEMENTED;

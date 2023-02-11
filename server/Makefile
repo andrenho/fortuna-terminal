@@ -3,7 +3,7 @@ OBJ=main.o \
 	error/error.o \
 	options/options.o \
 	buffer/buffer.o \
-	protocol/protocol.o protocol/ansi.o protocol/protocol_debug.o \
+	protocol/protocol.o protocol/ansi.o protocol/tmt.o protocol/protocol_debug.o \
 	scene/scene.o scene/text.o scene/palette.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal
@@ -22,6 +22,9 @@ else
 endif
 
 all: ${EXE}
+
+protocol/tmt.o: protocol/tmt.c
+	${CC} -c -o $@ $^ -O0 -ggdb
 
 ${EXE}: ${OBJ}
 	${CC} -o $@ $^ ${LDFLAGS}
