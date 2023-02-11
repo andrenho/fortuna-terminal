@@ -2,7 +2,7 @@
 #include "error/error.h"
 #include "painter.h"
 #include "protocol/protocol.h"
-#include "protocol/fortuna-protocol.h"
+#include "../../fortuna-protocol.h"
 
 #include <stdio.h>
 

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "palette.h"
-#include "protocol/fortuna-protocol.h"
+#include "../../fortuna-protocol.h"
 
 #define MAX_COLUMNS 80
 #define MAX_LINES   25

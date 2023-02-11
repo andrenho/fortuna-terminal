@@ -6,7 +6,7 @@
 #include <sys/types.h>
 
 #include "../scene/scene.h"
-#include "fortuna-protocol.h"
+#include "../../fortuna-protocol.h"
 #include "buffer/buffer.h"
 
 int     ansi_init(Scene* scene);
