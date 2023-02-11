@@ -13,7 +13,7 @@ Rewrite from C++
    
 Protocols
  - [x] ANSI (rewrite)
- - [ ] Add reverse text
+ - [x] Add reverse text
  - [ ] Fortuna Protocol (for text)
  - [ ] Create client library (TCP/IP first)
 
