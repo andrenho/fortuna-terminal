@@ -55,6 +55,7 @@ int comm_init(size_t lines, size_t columns)
     }
 }
 
+/*
 static void print_bytes(const uint8_t* bytes, size_t sz, int color)
 {
     for (size_t i = 0; i < sz; ++i) {
@@ -74,6 +75,7 @@ static void print_bytes(const uint8_t* bytes, size_t sz, int color)
     }
     fflush(stdout);
 }
+ */
 
 static void* comm_input_thread_run(void* input_buffer_ptr)
 {

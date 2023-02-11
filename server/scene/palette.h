@@ -24,7 +24,7 @@ typedef enum {
     COLOR_DARK_GRAY
 } ColorEnum;
 
-typedef struct {
+typedef struct __attribute__((packed)) {
     uint8_t r, g, b;
 } Color;
 

@@ -13,7 +13,9 @@ Rewrite from C++
    
 Protocols
  - [x] ANSI (rewrite)
- - [ ] Fortuna Protocol
+ - [ ] Add reverse text
+ - [ ] Fortuna Protocol (for text)
+ - [ ] Create client library (TCP/IP first)
 
 Additional signal wires
  - [ ] VSYNC
@@ -22,7 +24,6 @@ Additional signal wires
  - [ ] CMD (?)
 
 Communication
- - [ ] Create client library
  - UART 
     - [ ] Write UART/ANSI test code in microcontroller
     - [ ] UART in client library

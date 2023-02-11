@@ -102,7 +102,7 @@ int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
     switch (command->command) {
 
         case FP_EVENT_KEYSTROKE:
-            buffer_add_bytes(output_buffer, command->var.data, command->var.length);
+            buffer_add_bytes(output_buffer, command->keystroke.data, command->keystroke.length);
             return 0;
 
         case FP_EVENT_KEY_PRESS:

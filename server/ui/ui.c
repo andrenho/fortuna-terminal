@@ -162,7 +162,7 @@ int ui_do_events()
             case SDL_TEXTINPUT: {
                 protocol_terminal_event(&(FP_Command) {
                         .command = FP_EVENT_KEYSTROKE,
-                        .var = (FP_VariableLengthCommand) {
+                        .keystroke = (struct KeyStroke) {
                                 .length = strlen(ev.text.text),
                                 .data = (uint8_t *) ev.text.text,
                         },
