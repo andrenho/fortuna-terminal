@@ -1,14 +1,17 @@
 CPPFLAGS=-ggdb -O0 -Wall -Wextra -I..
-OBJ = tcpip.o ../fortuna-protocol.o
+OBJ =
 
-all: tcpip
+all: tcpip test
 
-tcpip: ${OBJ}
+tcpip: tcpip.o ../fortuna-protocol.o
 	$(CC) -o $@ $^
+
+test: test.o ../fortuna-protocol.o
+	$(CC) -o $@ -ggdb -O0 $^
 
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q /F $(subst /,\,${OBJ}) tcpip.exe
+	del /Q /F *.o ..\fortuna-protocol.o tcpip.exe
 else
 	rm -f ${OBJ} tcpip
 endif

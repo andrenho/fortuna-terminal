@@ -70,8 +70,6 @@ static int fp_msg_size(FP_Command* cmd)
 }
 
 #define FRAME_CMD_SZ 43
-#define FRAME_START 0x5e
-#define FRAME_END   0x6e
 
 #define SEND_ATTEMPTS 8
 
@@ -116,7 +114,7 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
         uint8_t frame_size = FRAME_CMD_SZ - bytes_left + 5;
         uint8_t message[frame_size];
         size_t k = 0;
-        message[k++] = FRAME_START;
+        message[k++] = FP_FRAME_START;
         message[k++] = FRAME_CMD_SZ - bytes_left;
         for (size_t j = 0; j < message_count; ++j) {
             uint8_t msg_sz = fp_msg_size(&cmds[msg_index + j]);
@@ -124,7 +122,7 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
             k += msg_sz;
         }
         message[k++] = fp_calculate_checksum(&message[2], FRAME_CMD_SZ - bytes_left);
-        message[k++] = FRAME_END;
+        message[k++] = FP_FRAME_END;
 
         for (size_t j = 0; j < SEND_ATTEMPTS; ++j) {
 

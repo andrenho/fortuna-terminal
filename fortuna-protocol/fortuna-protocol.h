@@ -134,6 +134,9 @@ typedef struct __attribute__((packed)) {
     };
 } FP_Command;
 
+#define FP_FRAME_START 0x5e
+#define FP_FRAME_END   0x6e
+
 //
 // Functions
 //
