@@ -1,10 +1,7 @@
 CPPFLAGS=-ggdb -O0 -Wall -Wextra -I..
 OBJ =
 
-all: tcpip test
-
-tcpip: tcpip.o ../fortuna-protocol.o
-	$(CC) -o $@ $^
+all: test
 
 test: test.o ../fortuna-protocol.o
 	$(CC) -o $@ -ggdb -O0 $^

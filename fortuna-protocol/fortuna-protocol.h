@@ -4,7 +4,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// Documentation: https://github.com/andrenho/fortuna-terminal/wiki/Fortuna-Protocol
+
+/********************
+ *                  *
+ *     MESSAGE      *
+ *                  *
+ ********************/
+
 #define PALETTE_SZ 16
+
+#define FP_MSG_CONTENTS_SZ 43
 
 typedef enum __attribute__((packed)) {
 
@@ -65,9 +75,7 @@ typedef enum __attribute__((packed)) {
 
     // TODO - commands to create and play/pause music, and to create and play special effects
 
-} FP_CommandType;
-
-#define FP_MAX_BYTES 43
+} FP_Command;
 
 typedef enum __attribute__((packed)) {
     SK_ESC = 128, SK_F1, SK_F2, SK_F3, SK_F4, SK_F5, SK_F6, SK_F7, SK_F8, SK_F9, SK_F10, SK_F11, SK_F12, SK_TAB, SK_CAPSLOCK, SK_WIN,
@@ -100,7 +108,7 @@ typedef struct __attribute__((packed)) {
 } CursorAttrib;
 
 typedef struct __attribute__((packed)) {
-    FP_CommandType command;
+    FP_Command command;
     union {
 
         uint8_t chr;
@@ -112,7 +120,7 @@ typedef struct __attribute__((packed)) {
             CharAttrib attrib;
         } set_char;
 
-        uint8_t text[FP_MAX_BYTES];
+        uint8_t text[FP_MSG_CONTENTS_SZ];
 
         struct __attribute__((packed)) {
             uint8_t line;
@@ -132,16 +140,28 @@ typedef struct __attribute__((packed)) {
 
         FP_KeyEvent key;
     };
-} FP_Command;
+} FP_Message;
+
+/*******************
+ *                 *
+ *  SERIALIZATION  *
+ *                 *
+ *******************/
+
+#define FP_MSG_SZ (FP_MSG_CONTENTS_SZ + 5)
 
 #define FP_FRAME_START 0x5e
 #define FP_FRAME_END   0x6e
 
-//
-// Functions
-//
-
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
+int     fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ]);
+int     fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
+
+/*******************
+ *                 *
+ *  COMMUNICATION  *
+ *                 *
+ *******************/
 
 typedef int (*FP_SendFunction)(uint8_t const *, size_t);
 typedef int (*FP_RecvFunction)(uint8_t*, size_t);
@@ -151,6 +171,7 @@ typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 #define FP_RESPONSE_BROKEN           0x3
 #define FP_RESPONSE_ERROR            0x4
 
-int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recv_function);
+int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf);
+int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf);
 
 #endif //FORTUNA_PROTOCOL_H_

@@ -41,7 +41,7 @@ int recv(uint8_t* buf, size_t len)
 
 static char* single_message()
 {
-    FP_Command a = { .command = FP_TEXT_PRINT_CHAR, .chr = 'A' };
+    FP_Message a = { .command = FP_TEXT_PRINT_CHAR, .chr = 'A' };
     int r = fp_send(&a, 1, send, recv);
 
     mu_assert(r == 0);
@@ -52,7 +52,7 @@ static char* single_message()
 
 static char *hello()
 {
-    FP_Command a = { .command = FP_TEXT_PRINT_TEXT };
+    FP_Message a = { .command = FP_TEXT_PRINT_TEXT };
     strcpy((char *) a.text, "Hello");
 
     int r = fp_send(&a, 1, send, recv);
@@ -64,7 +64,7 @@ static char *hello()
 
 static char* three_messages()
 {
-    FP_Command a[] = {
+    FP_Message a[] = {
             { .command = FP_TEXT_PRINT_CHAR, .chr = 'A' },
             { .command = FP_TEXT_PRINT_CHAR, .chr = 'B' },
             { .command = FP_TEXT_PRINT_CHAR, .chr = 'C' },
@@ -83,7 +83,7 @@ static char* three_messages()
 
 static char* short_and_long()
 {
-    FP_Command a[] = {
+    FP_Message a[] = {
             { .command = FP_TEXT_PRINT_CHAR, .chr = 'A' },
             { .command = FP_TEXT_PRINT_TEXT },
     };
@@ -110,7 +110,7 @@ static char* short_and_long()
 
 static char* long_and_short()
 {
-    FP_Command a[] = {
+    FP_Message a[] = {
             { .command = FP_TEXT_PRINT_TEXT },
             { .command = FP_TEXT_PRINT_CHAR, .chr = 'A' },
     };

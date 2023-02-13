@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include "fortuna-protocol.h"
 
@@ -8,9 +9,15 @@
 #define max(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a > _b ? _a : _b; })
 #define min(a,b) ({ __typeof__ (a) _a = (a); __typeof__ (b) _b = (b); _a < _b ? _a : _b; })
 
-static int fp_param_sz(FP_CommandType command_type)
+/*******************
+ *                 *
+ *  SERIALIZATION  *
+ *                 *
+ *******************/
+
+static int fp_param_sz(FP_Command command)
 {
-    switch (command_type) {
+    switch (command) {
 
         case FP_RESET:
         case FP_GRAPHICAL_MODE:
@@ -53,31 +60,23 @@ static int fp_param_sz(FP_CommandType command_type)
     return FP_P_INVALID_CMD;
 }
 
-static int fp_msg_size(FP_Command* cmd)
+static int fp_msg_size(const FP_Message* msg)
 {
     int sz;
-    switch (cmd->command) {
+    switch (msg->command) {
         case FP_TEXT_PRINT_TEXT:
-            sz = (int) strlen((const char *) cmd->text) + 2;
+            sz = (int) strlen((const char *) msg->text) + 2;
             break;
         case FP_EVENT_KEYSTROKE:
-            sz = cmd->keystroke.length + 1;
+            sz = msg->keystroke.length + 1;
             break;
         default:
-            sz = fp_param_sz(cmd->command) + 1;
+            sz = fp_param_sz(msg->command) + 1;
     }
     return sz;
 }
 
-#define FRAME_CMD_SZ 43
-
 #define SEND_ATTEMPTS 8
-
-typedef struct {
-    size_t   length;
-    uint32_t bytes[FRAME_CMD_SZ];
-    uint8_t  checksum;
-} FP_Frame;
 
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz)
 {
@@ -87,7 +86,92 @@ uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz)
     return checksum;
 }
 
-int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recvf)
+int fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ])
+{
+    size_t i = 0;
+    uint8_t msg_sz = fp_msg_size(inmsg);
+    if (msg_sz > FP_MSG_CONTENTS_SZ)
+        abort();
+
+    outbuf[i++] = FP_FRAME_START;
+    outbuf[i++] = msg_sz;
+    memcpy(&outbuf[i], inmsg, msg_sz);   // TODO - swap multi-byte fields to proper endianess
+    i += msg_sz;
+    outbuf[i++] = fp_calculate_checksum(&outbuf[2], msg_sz);
+    outbuf[i++] = FP_FRAME_END;
+
+    return (int) i;
+}
+
+int fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg)
+{
+    uint8_t msg_sz = inbuf[1];
+
+    if (inbuf[0] != FP_FRAME_START)
+        return FP_RESPONSE_BROKEN;
+    if (inbuf[msg_sz + 4] != FP_FRAME_END)
+        return FP_RESPONSE_BROKEN;
+
+    uint8_t checksum = fp_calculate_checksum(&inbuf[2], msg_sz);
+    if (inbuf[msg_sz + 3] != checksum)
+        return FP_RESPONSE_INVALID_CHECKSUM;
+
+    memcpy(outmsg, &inbuf[2], msg_sz);     // TODO - swap multi-byte fields to proper endianess
+
+    return 0;
+}
+
+/*******************
+ *                 *
+ *  COMMUNICATION  *
+ *                 *
+ *******************/
+
+int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf)
+{
+    uint8_t buffer[FP_MSG_SZ];
+
+    int r = fp_msg_serialize(msg, buffer);
+    if (r < 0)
+        return r;
+
+    for (size_t i = 0; i < SEND_ATTEMPTS; ++i) {
+
+        // send message
+        r = sendf(buffer, r);
+        if (r < 0)
+            return r;
+
+        // receive response
+        uint8_t rbuf[3];
+        r = recvf(rbuf, 3);
+        if (r < 0)
+            return r;
+        uint8_t response = rbuf[0];
+        if (rbuf[0] != rbuf[1] && rbuf[0] != rbuf[2]) {
+            if (rbuf[1] == rbuf[2])
+                response = rbuf[1];
+            else
+                return FP_RESPONSE_ERROR;
+        }
+
+        // parse response
+        if (response == FP_RESPONSE_OK)
+            break;
+        else if (response != FP_RESPONSE_BROKEN && response != FP_RESPONSE_INVALID_CHECKSUM)
+            return FP_RESPONSE_ERROR;
+    }
+
+    return 0;
+}
+
+int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf)
+{
+    return 0;
+}
+
+/*
+int fp_send(FP_Message cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recvf)
 {
     if (n_cmds == 0)
         return 0;
@@ -154,3 +238,4 @@ int fp_send(FP_Command cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunc
 
     return 0;
 }
+*/
