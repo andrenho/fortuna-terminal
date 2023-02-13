@@ -76,8 +76,6 @@ static int fp_msg_size(const FP_Message* msg)
     return sz;
 }
 
-#define SEND_ATTEMPTS 8
-
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz)
 {
     uint8_t checksum = 0;
@@ -135,7 +133,7 @@ int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction re
     if (r < 0)
         return r;
 
-    for (size_t i = 0; i < SEND_ATTEMPTS; ++i) {
+    for (size_t i = 0; i < FP_SEND_ATTEMPTS; ++i) {
 
         // send message
         r = sendf(buffer, r);
@@ -152,90 +150,58 @@ int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction re
             if (rbuf[1] == rbuf[2])
                 response = rbuf[1];
             else
-                return FP_RESPONSE_ERROR;
+                return -FP_RESPONSE_ERROR;
         }
 
         // parse response
         if (response == FP_RESPONSE_OK)
             break;
         else if (response != FP_RESPONSE_BROKEN && response != FP_RESPONSE_INVALID_CHECKSUM)
-            return FP_RESPONSE_ERROR;
+            return -FP_RESPONSE_ERROR;
     }
 
     return 0;
+}
+
+static int fp_send_response(FP_SendFunction sendf, uint8_t value)
+{
+    uint8_t buf[3] = { value, value, value };
+    int r = sendf(buf, 3);
+    if (r < 0)
+        return r;
+    return -value;
 }
 
 int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf)
 {
-    return 0;
-}
-
-/*
-int fp_send(FP_Message cmds[], size_t n_cmds, FP_SendFunction sendf, FP_RecvFunction recvf)
-{
-    if (n_cmds == 0)
-        return 0;
-
-    for (size_t i = 0; i < n_cmds; ++i) {
-
-        size_t msg_index = i;
-
-        // calculate how many messages will fit in one frame
-        int bytes_left = FRAME_CMD_SZ;
-        uint8_t message_count = 0;
-        while (i < n_cmds) {
-            int msg_size = fp_msg_size(&cmds[i]);
-            if (bytes_left - msg_size < 0) {
-                --i;
-                break;
-            }
-            bytes_left -= msg_size;
-            ++message_count;
-            ++i;
-        }
-
-        // create frame
-        uint8_t frame_size = FRAME_CMD_SZ - bytes_left + 5;
-        uint8_t message[frame_size];
-        size_t k = 0;
-        message[k++] = FP_FRAME_START;
-        message[k++] = FRAME_CMD_SZ - bytes_left;
-        for (size_t j = 0; j < message_count; ++j) {
-            uint8_t msg_sz = fp_msg_size(&cmds[msg_index + j]);
-            memcpy(&message[k], &cmds[msg_index + j], msg_sz);
-            k += msg_sz;
-        }
-        message[k++] = fp_calculate_checksum(&message[2], FRAME_CMD_SZ - bytes_left);
-        message[k++] = FP_FRAME_END;
-
-        for (size_t j = 0; j < SEND_ATTEMPTS; ++j) {
-
-            // send message
-            int r = sendf(message, k);
-            if (r < 0)
-                return r;
-
-            // receive output
-            uint8_t rbuf[3];
-            r = recvf(rbuf, 3);
-            if (r < 0)
-                return r;
-            uint8_t response = rbuf[0];
-            if (rbuf[0] != rbuf[1] && rbuf[0] != rbuf[2]) {
-                if (rbuf[1] == rbuf[2])
-                    response = rbuf[1];
-                else
-                    return FP_RESPONSE_ERROR;
-            }
-
-            // parse response
-            if (response == FP_RESPONSE_OK)
-                break;
-            else if (response != FP_RESPONSE_BROKEN && response != FP_RESPONSE_INVALID_CHECKSUM)
-                return FP_RESPONSE_ERROR;
-        }
+    for (size_t i = 0; i < FP_RECV_ATTEMPTS; ++i) {
+        uint8_t c;
+        int r = recvf(&c, 1);
+        if (r < 0)
+            return r;
+        if (c == FP_FRAME_START)
+            goto frame_start_found;
     }
+    return fp_send_response(sendf, FP_RESPONSE_ERROR);
 
+frame_start_found:;
+    uint8_t msg_sz;
+    int r = recvf(&msg_sz, 1);
+    if (r < 0)
+        return r;
+    if (msg_sz > FP_MSG_SZ)
+        return fp_send_response(sendf, FP_RESPONSE_ERROR);
+
+    uint8_t buf[FP_MSG_SZ] = { FP_FRAME_START, msg_sz };
+    r = recvf(&buf[2], msg_sz + 2);   // message size, checksum and frame stop
+    if (r < 0)
+        return r;
+
+    FP_Message message;
+    r = fp_msg_unserialize(buf, &message);
+    if (r != 0)
+        return fp_send_response(sendf, -r);
+
+    fp_send_response(sendf, FP_RESPONSE_OK);
     return 0;
 }
-*/

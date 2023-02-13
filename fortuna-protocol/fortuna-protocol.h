@@ -163,6 +163,9 @@ int     fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
  *                 *
  *******************/
 
+#define FP_SEND_ATTEMPTS 8    // number of times it'll try to send a message before giving up
+#define FP_RECV_ATTEMPTS 20   // number of times it'll try recv a byte until it received a frame start byte
+
 typedef int (*FP_SendFunction)(uint8_t const *, size_t);
 typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 
@@ -170,6 +173,8 @@ typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 #define FP_RESPONSE_INVALID_CHECKSUM 0x2
 #define FP_RESPONSE_BROKEN           0x3
 #define FP_RESPONSE_ERROR            0x4
+
+#define FP_FRAME_NOT_RECEIVED        (-1)
 
 int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf);
 int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf);
