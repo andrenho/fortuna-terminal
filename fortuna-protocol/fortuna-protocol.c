@@ -84,39 +84,41 @@ uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz)
     return checksum;
 }
 
-int fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ])
+FP_Result fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ], uint8_t* msg_sz)
 {
     size_t i = 0;
-    uint8_t msg_sz = fp_msg_size(inmsg);
-    if (msg_sz > FP_MSG_CONTENTS_SZ)
-        abort();
+    *msg_sz = fp_msg_size(inmsg);
+    if (*msg_sz > FP_MSG_CONTENTS_SZ)
+        return FP_ERR_MESSAGE_TOO_LARGE;
 
     outbuf[i++] = FP_FRAME_START;
-    outbuf[i++] = msg_sz;
-    memcpy(&outbuf[i], inmsg, msg_sz);   // TODO - swap multi-byte fields to proper endianess
-    i += msg_sz;
-    outbuf[i++] = fp_calculate_checksum(&outbuf[2], msg_sz);
+    outbuf[i++] = *msg_sz;
+    memcpy(&outbuf[i], inmsg, *msg_sz);   // TODO - swap multi-byte fields to proper endianess
+    i += *msg_sz;
+    outbuf[i++] = fp_calculate_checksum(&outbuf[2], *msg_sz);
     outbuf[i++] = FP_FRAME_END;
 
-    return (int) i;
+    *msg_sz += 4;
+
+    return FP_OK;
 }
 
-int fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg)
+FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg)
 {
     uint8_t msg_sz = inbuf[1];
 
     if (inbuf[0] != FP_FRAME_START)
-        return FP_RESPONSE_BROKEN;
-    if (inbuf[msg_sz + 4] != FP_FRAME_END)
-        return FP_RESPONSE_BROKEN;
+        return FP_ERR_INVALID_MESSAGE;
+    if (inbuf[msg_sz + 3] != FP_FRAME_END)
+        return FP_ERR_INVALID_MESSAGE;
 
     uint8_t checksum = fp_calculate_checksum(&inbuf[2], msg_sz);
-    if (inbuf[msg_sz + 3] != checksum)
-        return FP_RESPONSE_INVALID_CHECKSUM;
+    if (inbuf[msg_sz + 2] != checksum)
+        return FP_ERR_INCORRECT_CHECKSUM;
 
     memcpy(outmsg, &inbuf[2], msg_sz);     // TODO - swap multi-byte fields to proper endianess
 
-    return 0;
+    return FP_OK;
 }
 
 /*******************
@@ -125,83 +127,88 @@ int fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg)
  *                 *
  *******************/
 
-int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf)
+int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
 {
     uint8_t buffer[FP_MSG_SZ];
 
-    int r = fp_msg_serialize(msg, buffer);
-    if (r < 0)
-        return r;
+    uint8_t msg_sz;
+    FP_Result result = fp_msg_serialize(msg, buffer, &msg_sz);
+    if (result != FP_OK)
+        return result;
 
     for (size_t i = 0; i < FP_SEND_ATTEMPTS; ++i) {
 
         // send message
-        r = sendf(buffer, r);
-        if (r < 0)
-            return r;
+        *comm_error = sendf(buffer, msg_sz);
+        if (*comm_error < 0)
+            return FP_ERR_SEND_FAILED;
 
         // receive response
         uint8_t rbuf[3];
-        r = recvf(rbuf, 3);
-        if (r < 0)
-            return r;
+        *comm_error = recvf(rbuf, 3);
+        if (*comm_error < 0)
+            return FP_ERR_RECV_FAILED;
+
         uint8_t response = rbuf[0];
         if (rbuf[0] != rbuf[1] && rbuf[0] != rbuf[2]) {
             if (rbuf[1] == rbuf[2])
                 response = rbuf[1];
             else
-                return -FP_RESPONSE_ERROR;
+                return FP_ERR_UNEVEN_RESPONSE;
         }
 
         // parse response
         if (response == FP_RESPONSE_OK)
-            break;
+            return FP_OK;
         else if (response != FP_RESPONSE_BROKEN && response != FP_RESPONSE_INVALID_CHECKSUM)
-            return -FP_RESPONSE_ERROR;
+            return FP_ERR_INVALID_MESSAGE;
     }
 
-    return 0;
+    return FP_ERR_TOO_MANY_FAILED_ATTEMPTS;
 }
 
-static int fp_send_response(FP_SendFunction sendf, uint8_t value)
+static FP_Result fp_send_response(FP_SendFunction sendf, uint8_t value, FP_Result result, int* comm_error)
 {
     uint8_t buf[3] = { value, value, value };
-    int r = sendf(buf, 3);
-    if (r < 0)
-        return r;
-    return -value;
+    *comm_error = sendf(buf, 3);
+    if (*comm_error < 0)
+        return FP_ERR_SEND_FAILED;
+    return result;
 }
 
-int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf)
+int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
 {
     for (size_t i = 0; i < FP_RECV_ATTEMPTS; ++i) {
         uint8_t c;
-        int r = recvf(&c, 1);
-        if (r < 0)
-            return r;
+        *comm_error = recvf(&c, 1);
+        if (* comm_error < 0)
+            return FP_ERR_RECV_FAILED;
         if (c == FP_FRAME_START)
             goto frame_start_found;
     }
-    return fp_send_response(sendf, FP_RESPONSE_ERROR);
+
+    return fp_send_response(sendf, FP_RESPONSE_ERROR, FP_ERR_FRAME_START_NOT_RECEIVED, comm_error);
 
 frame_start_found:;
     uint8_t msg_sz;
-    int r = recvf(&msg_sz, 1);
-    if (r < 0)
-        return r;
-    if (msg_sz > FP_MSG_SZ)
-        return fp_send_response(sendf, FP_RESPONSE_ERROR);
+    *comm_error = recvf(&msg_sz, 1);
+    if (*comm_error < 0)
+        return FP_ERR_RECV_FAILED;
+    if (msg_sz > FP_MSG_SZ) {
+        return fp_send_response(sendf, FP_RESPONSE_ERROR, FP_ERR_MESSAGE_TOO_LARGE, comm_error);
+    }
 
     uint8_t buf[FP_MSG_SZ] = { FP_FRAME_START, msg_sz };
-    r = recvf(&buf[2], msg_sz + 2);   // message size, checksum and frame stop
-    if (r < 0)
-        return r;
+    *comm_error = recvf(&buf[2], msg_sz + 2);   // message size, checksum and frame stop
+    if (*comm_error < 0)
+        return FP_ERR_RECV_FAILED;
 
     FP_Message message;
-    r = fp_msg_unserialize(buf, &message);
-    if (r != 0)
-        return fp_send_response(sendf, -r);
-
-    fp_send_response(sendf, FP_RESPONSE_OK);
-    return 0;
+    FP_Result result = fp_msg_unserialize(buf, &message);
+    if (result == FP_ERR_INCORRECT_CHECKSUM)
+        return fp_send_response(sendf, FP_RESPONSE_INVALID_CHECKSUM, result, comm_error);
+    else if (result == FP_OK)
+        return fp_send_response(sendf, FP_RESPONSE_OK, result, comm_error);
+    else
+        return fp_send_response(sendf, FP_RESPONSE_BROKEN, result, comm_error);
 }

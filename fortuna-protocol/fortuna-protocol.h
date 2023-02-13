@@ -148,6 +148,18 @@ typedef struct __attribute__((packed)) {
  *                 *
  *******************/
 
+typedef enum {
+    FP_OK = 0,
+    FP_ERR_MESSAGE_TOO_LARGE        = -1,
+    FP_ERR_INVALID_MESSAGE          = -2,
+    FP_ERR_INCORRECT_CHECKSUM       = -3,
+    FP_ERR_SEND_FAILED              = -4,
+    FP_ERR_RECV_FAILED              = -5,
+    FP_ERR_UNEVEN_RESPONSE          = -6,
+    FP_ERR_TOO_MANY_FAILED_ATTEMPTS = -7,
+    FP_ERR_FRAME_START_NOT_RECEIVED = -8,
+} FP_Result;
+
 #define FP_MSG_SZ (FP_MSG_CONTENTS_SZ + 5)
 
 #define FP_FRAME_START 0x5e
@@ -155,8 +167,8 @@ typedef struct __attribute__((packed)) {
 
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
 
-int     fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ]);
-int     fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
+FP_Result fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ], uint8_t* msg_sz);
+FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
 
 /*******************
  *                 *
@@ -175,9 +187,7 @@ typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 #define FP_RESPONSE_BROKEN           0x3
 #define FP_RESPONSE_ERROR            0x4
 
-#define FP_FRAME_NOT_RECEIVED        (-1)
-
-int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf);
-int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf);
+int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
+int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
 
 #endif //FORTUNA_PROTOCOL_H_

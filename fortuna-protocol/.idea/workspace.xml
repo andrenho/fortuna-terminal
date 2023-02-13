@@ -19,8 +19,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
-      <change afterPath="$PROJECT_DIR$/ERRORHANDLING.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client-test/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/client-test/test.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fortuna-protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fortuna-protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +43,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="master" />
+        <entry key="$PROJECT_DIR$/.." value="error-handling" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -104,13 +105,13 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Makefile Application.all">
+  <component name="RunManager" selected="Makefile Application.test">
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="fortuna-protocol" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="test" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="fortuna-protocol" TARGET_NAME="test" CONFIG_NAME="test" version="1">
+    <configuration name="test" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="fortuna-protocol" TARGET_NAME="test" CONFIG_NAME="test" version="1" RUN_PATH="$PROJECT_DIR$/client-test/test.exe">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -134,6 +135,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Makefile Target.tcpip" />
+        <item itemvalue="Makefile Target.tcpip" />
       </list>
     </recent_temporary>
   </component>
@@ -147,7 +149,7 @@
       <updated>1676143643870</updated>
       <workItem from="1676143644998" duration="6180000" />
       <workItem from="1676212094584" duration="3539000" />
-      <workItem from="1676296724201" duration="3180000" />
+      <workItem from="1676296724201" duration="5999000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1676157316184</created>
@@ -186,5 +188,16 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="." />
     <option name="LAST_COMMIT_MESSAGE" value="." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/client-test/test.c</url>
+          <line>24</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
