@@ -154,6 +154,7 @@ typedef struct __attribute__((packed)) {
 #define FP_FRAME_END   0x6e
 
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
+
 int     fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ]);
 int     fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
 

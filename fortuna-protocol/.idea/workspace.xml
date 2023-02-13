@@ -19,8 +19,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
+      <change afterPath="$PROJECT_DIR$/ERRORHANDLING.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fortuna-protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +40,11 @@
     </projectState>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MakefileLocalSettings">
@@ -142,7 +147,7 @@
       <updated>1676143643870</updated>
       <workItem from="1676143644998" duration="6180000" />
       <workItem from="1676212094584" duration="3539000" />
-      <workItem from="1676296724201" duration="1496000" />
+      <workItem from="1676296724201" duration="3180000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1676157316184</created>
@@ -165,7 +170,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676293616691</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary=".">
+      <created>1676298230642</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1676298230642</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

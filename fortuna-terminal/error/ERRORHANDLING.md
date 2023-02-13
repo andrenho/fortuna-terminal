@@ -1,0 +1,11 @@
+- Excpetion like - should propagate
+  - Ideally any error can show on the UI
+    - The UI might not be initialized
+  - Can either be recoverable or not
+  - Can fail from any level (use signals / longjmp?)
+- How to manage errors inside threads?
+- Assertions to help execution
+  - What happens when an assetion fail
+- Write as little code as possible
+- Check for static_asset in C11 ?
+- Use atexit for resources (RAII) ?
