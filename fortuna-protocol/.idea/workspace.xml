@@ -20,9 +20,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client-test/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/client-test/test.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/error/ERRORHANDLING.md" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/error/ERRORHANDLING.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,11 +114,6 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="tcpip" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/client-test/Makefile" target="tcpip" workingDirectory="" arguments="">
         <envs />
@@ -149,7 +142,8 @@
       <updated>1676143643870</updated>
       <workItem from="1676143644998" duration="6180000" />
       <workItem from="1676212094584" duration="3539000" />
-      <workItem from="1676296724201" duration="5999000" />
+      <workItem from="1676296724201" duration="6634000" />
+      <workItem from="1676310864713" duration="644000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1676157316184</created>
@@ -179,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676298230642</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary=".">
+      <created>1676303589202</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1676303589202</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,16 +189,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="." />
     <option name="LAST_COMMIT_MESSAGE" value="." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/client-test/test.c</url>
-          <line>24</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
