@@ -15,7 +15,7 @@
 #define BUFFER_SZ (32 * 1024)
 
 static Scene scene;
-Buffer input_buffer, output_buffer;
+static Buffer input_buffer, output_buffer;
 
 static void initialize()
 {
