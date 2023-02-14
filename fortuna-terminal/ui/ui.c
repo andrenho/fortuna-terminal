@@ -187,13 +187,15 @@ void ui_do_events()
 void ui_wait_for_keypress()
 {
     SDL_Event ev;
-    while (SDL_PollEvent(&ev)) {
+    while (1) {
+        while (SDL_PollEvent(&ev)) {
 
-        if (ev.type == SDL_QUIT || (ev.type == SDL_KEYDOWN && (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER)))
-            return;
+            if (ev.type == SDL_QUIT || (ev.type == SDL_KEYDOWN && (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER)))
+                return;
 
-        SDL_Delay(32);
+            SDL_Delay(32);
 
+        }
     }
 }
 
