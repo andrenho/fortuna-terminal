@@ -11,14 +11,17 @@ typedef enum FT_Result {
     FT_ERR_SDL,
 } FT_Result;
 
+void error_set(const char* fmt, ...);
+void error_print(FT_Result result);
+
 // return error from function, doesn't do anything else
 // TODO - set str
 #define E_CHECK(result, ...) \
-    { if ((result) != FT_OK) return result; }
+    { if ((result) != FT_OK) { error_set("" __VA_ARGS__); return result; } }
 
 // report error to stderr and abort
 #define E_STDERR_ABORT(result, ...) \
-    { if ((result) != FT_OK) abort(); }
+    { if ((result) != FT_OK) { error_set("" __VA_ARGS__); error_print(result); abort(); } }
 
 // report error to UI and attempts to reset terminal
 #define E_UI(result, ...) \

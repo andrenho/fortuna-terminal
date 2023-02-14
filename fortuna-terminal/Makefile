@@ -1,6 +1,7 @@
 OBJ=main.o \
 	comm/comm.o comm/echo.o comm/tcpip.o \
 	error/error.o \
+	gpio/gpio.o \
 	options/options.o \
 	buffer/buffer.o \
 	protocol/protocol.o protocol/ansi.o protocol/tmt.o protocol/protocol_debug.o \

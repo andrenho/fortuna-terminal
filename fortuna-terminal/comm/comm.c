@@ -142,11 +142,6 @@ void comm_run_output(Buffer* output_buffer)
     pthread_create(&thread_output_, NULL, comm_output_thread_run, output_buffer);
 }
 
-void comm_notify_vsync()
-{
-    // TODO
-}
-
 void comm_finalize()
 {
     threads_running_ = false;

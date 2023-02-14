@@ -14,5 +14,4 @@ void      ui_do_events();
 void      ui_draw(Scene* scene);
 void      ui_destroy();
 
-
 #endif //UI_H_

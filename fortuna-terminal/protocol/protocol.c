@@ -27,7 +27,7 @@ FT_Result protocol_init(Buffer* output_buffer, Scene* scene)
             ansi_init(scene);
             return 0;
         default:
-            E_CHECK(false, FT_ERR_APP, "Protocol not implemented");
+            E_CHECK(FT_ERR_APP, "Protocol not implemented");
     }
 
     return FT_OK;
