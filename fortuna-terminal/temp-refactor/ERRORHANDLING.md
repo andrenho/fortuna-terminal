@@ -21,7 +21,7 @@
 - For treating errors, the following macros are provided:
   - Ignoring and handling errors don't need macros.
   - E_CHECK(..., str) will return on error, but won't do anything else
-  - E_STDOUT(..., str) will report erros to stdout and then abort
+  - E_STDOUT_ABORT(..., str) will report erros to stdout and then abort
   - E_UI(..., str) will report errors to the UI, and attempt to restart the terminal without changing the screen.
   - E_UI_ABORT(..., str) will report errors to the UI, wait for a keypress and then abort
 

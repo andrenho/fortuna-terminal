@@ -14,21 +14,21 @@
 
 static int fd = 0;
 
-int uart_init()
+FT_Result uart_init()
 {
     fd = open(options.serial.port, O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd < 0)
-        error_check(ERR_LIBC);
+        return FT_ERR_LIBC;
     printf("Serial port initialized.\n");
 
     fcntl(fd, F_SETFL, 0);
 
     struct termios opt;
     if (tcgetattr(fd, &opt) != 0)
-        error_check(ERR_LIBC);
+        return FT_ERR_LIBC;
 
     if (cfsetspeed(&opt, (speed_t) options.serial.baud) < 0)
-        error_check(ERR_LIBC);
+        return FT_ERR_LIBC;
 
     opt.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
 
@@ -57,29 +57,30 @@ int uart_init()
     opt.c_oflag &= ~OPOST;
 
     if (tcsetattr(fd, TCSANOW, &opt) != 0)
-        error_check(ERR_LIBC);
+        return FT_ERR_LIBC;
 
     printf("Serial port configured.\n");
-    return 0;
+    return FT_OK;
 }
 
-int uart_recv(uint8_t* byte)
+FT_Result uart_recv(uint8_t* byte, bool* data_received)
 {
-    if (read(fd, byte, 1) < 0)
-        error_check(ERR_LIBC);
-    return 0;
+    if (read(fd, byte, 1) < 0) {
+        return FT_ERR_LIBC;
+    }
+    *data_received = true;
+    return FT_OK;
 }
 
-int uart_send(const uint8_t* data, size_t sz)
+FT_Result uart_send(const uint8_t* data, size_t sz)
 {
     if (write(fd, data, sz) < 0)
-        error_check(ERR_LIBC);
-    return 0;
+        return FT_ERR_LIBC;
+    return FT_OK;
 }
 
-int uart_finalize()
+void uart_finalize()
 {
     if (fd != 0)
         close(fd);
-    return 0;
 }

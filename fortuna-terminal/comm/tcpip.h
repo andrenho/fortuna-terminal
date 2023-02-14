@@ -6,9 +6,9 @@
 
 #include "../options/options.h"
 
-int tcpip_init();
-int tcpip_recv(uint8_t* byte);
-int tcpip_send(const uint8_t* data, size_t sz);
-int tcpip_finalize();
+FT_Result tcpip_init();
+FT_Result tcpip_recv(uint8_t* byte, bool* data_received);
+FT_Result tcpip_send(const uint8_t* data, size_t sz);
+void      tcpip_finalize();
 
 #endif //TCPIP_H_

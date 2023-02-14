@@ -22,9 +22,9 @@ typedef enum __attribute__((packed)) {
     // GENERIC COMMANDS
     //
 
-    FP_RESET                        = 0x00, // pulls the RESET line down, effectively resetting the computer
-    FP_GRAPHICAL_MODE               = 0x01, // sets the mode to either text-only 80-columns (80) or 40 columns with graphics (40)
-    FP_ACTIVATE_MOUSE               = 0x02, // enable (1) or disable (0) mouse - will show pointer on the screen, and receive moves and clicks as events
+    FP_RESET                        = 0x01, // pulls the RESET line down, effectively resetting the computer
+    FP_GRAPHICAL_MODE               = 0x02, // sets the mode to either text-only 80-columns (80) or 40 columns with graphics (40)
+    FP_ACTIVATE_MOUSE               = 0x03, // enable (1) or disable (0) mouse - will show pointer on the screen, and receive moves and clicks as events
 
     //
     // TEXT COMMANDS

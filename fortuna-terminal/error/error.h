@@ -4,21 +4,35 @@
 #include <errno.h>
 #include <sys/types.h>
 
-typedef enum {
-    OK = 0,
-    ERR_NO_DATA = -1,  // not an error
-    ERR_SDL = -2,
-    ERR_FAIL = -3,
-    ERR_NOT_IMPLEMENTED = -4,
-    ERR_LIBC = -5,
-    ERR_BUF_OVERFLOW = -6,
-    ERR_COMMUNICATION_CLOSED = -7,
-    ERR_MESSAGE = -8,
-} Error;
+typedef enum FT_Result {
+    FT_OK,
+    FT_ERR_APP,
+    FT_ERR_LIBC,
+    FT_ERR_SDL,
+} FT_Result;
 
-#define ERR_MSG_SZ 512
-extern char error_message[ERR_MSG_SZ];
+void error_set(const char* fmt, ...);
+void error_print(FT_Result result);
 
-void error_check(ssize_t f);
+// return error from function, doesn't do anything else
+// TODO - set str
+#define E_CHECK(result, ...) \
+    { if ((result) != FT_OK) { error_set("" __VA_ARGS__); return result; } }
+
+// report error to stderr and abort
+#define E_STDERR_ABORT(result, ...) \
+    { if ((result) != FT_OK) { error_set("" __VA_ARGS__); error_print(result); abort(); } }
+
+// report error to UI and attempts to reset terminal
+#define E_UI(result, ...) \
+    { if ((result) != FT_OK) abort(); }
+
+// report error to UI, wait for a keypress and then abort
+#define E_UI_ABORT(result, ...) \
+    { if ((result) != FT_OK) abort(); }
+
+// abort with message
+#define ABORT(...) \
+    abort();
 
 #endif //ERROR_H_

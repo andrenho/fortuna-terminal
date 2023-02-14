@@ -6,9 +6,9 @@
 
 #include "../options/options.h"
 
-int pty_init(size_t lines, size_t columns);
-int pty_recv(uint8_t* byte);
-int pty_send(const uint8_t* data, size_t sz);
-int pty_finalize();
+FT_Result pty_init(size_t lines, size_t columns);
+FT_Result pty_recv(uint8_t* byte, bool* data_received);
+FT_Result pty_send(const uint8_t* data, size_t sz);
+void      pty_finalize();
 
 #endif //PTY_H_

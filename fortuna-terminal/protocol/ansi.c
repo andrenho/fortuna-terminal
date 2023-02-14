@@ -103,21 +103,21 @@ ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* s
     return (ssize_t) bufsz;
 }
 
-int ansi_terminal_event(FP_Command* command, Buffer* output_buffer)
+int ansi_terminal_event(FP_Message* message, Buffer* output_buffer)
 {
-    switch (command->command) {
+    switch (message->command) {
 
         case FP_EVENT_KEYSTROKE:
-            buffer_add_bytes(output_buffer, command->keystroke.data, command->keystroke.length);
+            buffer_add_bytes(output_buffer, message->keystroke.data, message->keystroke.length);
             return 0;
 
         case FP_EVENT_KEY_PRESS:
-            if (command->key.mod.control) {
-                if (command->key.key >= 'a' && command->key.key <= 'z')
-                    buffer_add_byte(output_buffer, command->key.key - 96);
+            if (message->key.mod.control) {
+                if (message->key.key >= 'a' && message->key.key <= 'z')
+                    buffer_add_byte(output_buffer, message->key.key - 96);
 
-            } else if (command->key.key < 32 || command->key.key >= 127) {
-                switch (command->key.special_key) {
+            } else if (message->key.key < 32 || message->key.key >= 127) {
+                switch (message->key.special_key) {
                     case SK_ESC:        return buffer_add_str_nonull(output_buffer, "\e");
                     case SK_ENTER:      return buffer_add_str_nonull(output_buffer, "\r");
                     case SK_TAB:        return buffer_add_str_nonull(output_buffer, "\t");

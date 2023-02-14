@@ -3,40 +3,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <SDL2/SDL.h>
 
-char error_message[ERR_MSG_SZ] = {0};
+static char current_error_[2048];
 
-void error_check(ssize_t f)
+void error_set(const char* fmt, ...)
 {
-    switch (f) {
-        case OK:
-        case ERR_NO_DATA:
-            return;
-        case ERR_SDL:
-            fprintf(stderr, "SDL error: %s\n", SDL_GetError());
-            break;
-        case ERR_FAIL:
-            break;
-        case ERR_NOT_IMPLEMENTED:
-            fprintf(stderr, "Function not implemented.\n");
-            break;
-        case ERR_LIBC:
-            fprintf(stderr, "Error reported by the glibc: %s", strerror(errno));
-            break;
-        case ERR_BUF_OVERFLOW:
-            fprintf(stderr, "Buffer overflow.\n");
-            break;
-        case ERR_COMMUNICATION_CLOSED:
-            fprintf(stderr, "Communication channel closed.\n");
-            break;
-        case ERR_MESSAGE:
-            fprintf(stderr, "%s\n", error_message);
-            break;
-        default:
-            fprintf(stderr, "An undefined error happenend.\n");
-    }
+    if (fmt[0] == '\0')
+        return;
 
-    exit(EXIT_FAILURE);
+    va_list args;
+
+    va_start(args, fmt);
+    vsnprintf(current_error_, sizeof(current_error_), fmt, args);
+    va_end(args);
+}
+
+static void error_to_str(FT_Result result, char* str, size_t sz)
+{
+    switch (result) {
+        case FT_OK:
+            abort();
+        case FT_ERR_APP:
+            strncpy(str, current_error_, sz);
+            break;
+        case FT_ERR_LIBC:
+            snprintf(str, sz, "%s: %s", current_error_, strerror(errno));
+            break;
+        case FT_ERR_SDL:
+            snprintf(str, sz, "%s: %s", current_error_, SDL_GetError());
+            break;
+    }
+}
+
+void error_print(FT_Result result)
+{
+    char buf[sizeof current_error_];
+    error_to_str(result, buf, sizeof buf);
+    fprintf(stderr, "\n\e[1;91m%s\e[0m\n", buf);
 }

@@ -16,9 +16,9 @@
 #define BUFFER_SZ (32 * 1024)
 
 typedef struct {
-    int (* recv)(uint8_t* byte);
-    int (* send)(const uint8_t* data, size_t sz);
-    int (* finalize)();
+    FT_Result (* recv)(uint8_t* byte, bool* data_received);
+    FT_Result (* send)(const uint8_t* data, size_t sz);
+    void      (* finalize)();
 } CommFunctions;
 static CommFunctions comm_f = { NULL, NULL, NULL };
 
@@ -29,30 +29,36 @@ static pthread_mutex_t mutex_input_,
 static pthread_cond_t  output_has_data_;
 static bool            threads_running_ = false;
 
-int comm_init(size_t lines, size_t columns)
+FT_Result comm_init(size_t lines, size_t columns)
 {
     (void) lines; (void) columns;
 
     switch (options.comm_mode) {
         case CM_ECHO:
             comm_f = (CommFunctions) { echo_recv, echo_send, echo_finalize };
-            return echo_init();
+            E_CHECK(echo_init())
+            break;
         case CM_TCPIP:
             comm_f = (CommFunctions) { tcpip_recv, tcpip_send, tcpip_finalize };
-            return tcpip_init();
+            E_CHECK(tcpip_init())
+            break;
 #ifdef COMM_PTY
         case CM_PTY:
             comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
-            return pty_init(lines, columns);
+            E_CHECK(pty_init(lines, columns))
+            break;
 #endif
 #ifdef COMM_UART
         case CM_UART:
             comm_f = (CommFunctions) { uart_recv, uart_send, uart_finalize };
-            return uart_init();
+            E_CHECK(uart_init())
+            break;
 #endif
         default:
-            return ERR_NOT_IMPLEMENTED;
+            ABORT("Communication module not implemented.");
     }
+
+    return FT_OK;
 }
 
 /*
@@ -84,10 +90,10 @@ static void* comm_input_thread_run(void* input_buffer_ptr)
     while (threads_running_) {
 
         uint8_t byte = 0;
-        int r = comm_f.recv(&byte);
-        if (r == ERR_NO_DATA)
+        bool data_received = false;
+        E_UI(comm_f.recv(&byte, &data_received), "Error receiving data through communication module")
+        if (!data_received)
             continue;
-        error_check(r);
 
         /*
         if (debug_mode)
@@ -111,7 +117,7 @@ static void* comm_output_thread_run(void* output_buffer_ptr)
 
         ssize_t sz = buffer_move_data_to_array(output_buffer, comm_output_array, BUFFER_SZ);
 
-        error_check(comm_f.send(comm_output_array, sz));
+        E_UI(comm_f.send(comm_output_array, sz), "Error sending data through communication module");
         /*
         if (debug_mode)
             print_bytes(comm_output_array, sz, 32);
@@ -121,32 +127,22 @@ static void* comm_output_thread_run(void* output_buffer_ptr)
     return NULL;
 }
 
-int comm_run_input(Buffer* input_buffer)
+void comm_run_input(Buffer* input_buffer)
 {
     threads_running_ = true;
     pthread_mutex_init(&mutex_input_, NULL);
-    error_check(pthread_create(&thread_input_, NULL, comm_input_thread_run, input_buffer));
-
-    return 0;
+    pthread_create(&thread_input_, NULL, comm_input_thread_run, input_buffer);
 }
 
-int comm_run_output(Buffer* output_buffer)
+void comm_run_output(Buffer* output_buffer)
 {
     threads_running_ = true;
     pthread_mutex_init(&mutex_output_, NULL);
     pthread_cond_init(&output_has_data_, NULL);
-    error_check(pthread_create(&thread_output_, NULL, comm_output_thread_run, output_buffer));
-
-    return 0;
+    pthread_create(&thread_output_, NULL, comm_output_thread_run, output_buffer);
 }
 
-int comm_notify_vsync()
-{
-    // TODO
-    return 0;
-}
-
-int comm_finalize()
+void comm_finalize()
 {
     threads_running_ = false;
     usleep(100000);
@@ -159,5 +155,5 @@ int comm_finalize()
     pthread_mutex_destroy(&mutex_input_);
     pthread_mutex_destroy(&mutex_output_);
 
-    return comm_f.finalize();
+    comm_f.finalize();
 }

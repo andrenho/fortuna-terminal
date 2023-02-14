@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "error/error.h"
 
 typedef enum {
     CM_NOT_CHOSEN, CM_ECHO, CM_UART, CM_I2C, CM_SPI, CM_TCPIP, CM_EMCC, CM_DEBUG, CM_PTY
@@ -41,7 +42,7 @@ typedef struct {
     PTYOptions        pty;
 } Options;
 
-int options_parse_cmdline(int argc, char *argv[], Options *options);
+FT_Result options_parse_cmdline(int argc, char *argv[], Options *options);
 
 extern Options options;
 
