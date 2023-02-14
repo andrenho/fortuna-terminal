@@ -11,7 +11,7 @@
 FT_Result ui_init();
 bool      ui_running();
 void      ui_do_events();
-void      ui_wait_for_keypress();
+void      ui_wait_for_enter();
 void      ui_draw(Scene* scene);
 void      ui_destroy();
 

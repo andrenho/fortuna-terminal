@@ -59,3 +59,9 @@ bool error_ui_requested(char* str, size_t sz)
         strncpy(str, current_error_, sz);
     return error_ui_requested_;
 }
+
+void error_clear()
+{
+    error_ui_requested_ = false;
+    current_error_[0] = '\0';
+}

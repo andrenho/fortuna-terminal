@@ -18,7 +18,17 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment="." />
+    <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/error/error.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/error/error.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/error/error.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/error/error.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/scene/text.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/scene/text.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/scene/text.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/scene/text.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/ui/ui.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/ui/ui.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/ui/ui.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/ui/ui.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

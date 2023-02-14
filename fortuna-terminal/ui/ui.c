@@ -184,7 +184,7 @@ void ui_do_events()
     }
 }
 
-void ui_wait_for_keypress()
+void ui_wait_for_enter()
 {
     SDL_Event ev;
     while (1) {

@@ -16,6 +16,7 @@ void error_set(const char* fmt, ...);
 void error_print(FT_Result result);
 void error_ui(FT_Result result);
 bool error_ui_requested(char* str, size_t sz);
+void error_clear();
 
 // return error from function, doesn't do anything else
 // TODO - set str

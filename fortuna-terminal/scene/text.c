@@ -81,8 +81,12 @@ static void text_advance_cursor(Text* text)
 
 void text_add_char(Text* text, uint8_t c)
 {
-    text_set_char(text, text->cursor.y, text->cursor.x, c, text->attrib);
-    text_advance_cursor(text);
+    if (c == '\n') {
+        text_advance_line(text);
+    } else {
+        text_set_char(text, text->cursor.y, text->cursor.x, c, text->attrib);
+        text_advance_cursor(text);
+    }
     text_reset_blink(text);
 }
 
@@ -127,3 +131,13 @@ void text_move_cursor_down_scroll(Text* text)
     text_reset_blink(text);
 }
 
+void text_add_error(Text* text, const char* message)
+{
+    text_add_char(text, '\n');
+    text_set_color(text, COLOR_RED);
+    text_print(text, message);
+    text_add_char(text, '\n');
+    text_print(text, "\nPress ENTER to reset.\n");
+    text_attrib_reset(text);
+    text->cursor.blink_state = false;
+}
