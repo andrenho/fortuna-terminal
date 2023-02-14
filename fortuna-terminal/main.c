@@ -33,11 +33,22 @@ static void initialize()
     comm_run_output(&output_buffer);
 }
 
-static void single_loop()
+static void single_loop(bool *reset)
 {
+    static char error_buf[2048];
+
+    *reset = false;
     Uint64 start_frame = SDL_GetTicks64();
 
     protocol_process_input(&input_buffer, &scene);
+
+    if (error_ui_requested(error_buf, sizeof error_buf)) {
+        text_add_error(&scene.text, error_buf);
+        error_clear();
+        *reset = true;
+        ui_draw(&scene);
+        ui_wait_for_enter();
+    }
 
     ui_do_events();
     ui_draw(&scene);
@@ -60,15 +71,22 @@ static void finalize()
 
 int main(int argc, char* argv[])
 {
+    bool reset = false;
+
     E_STDERR_ABORT(options_parse_cmdline(argc, argv, &options), "Command line option error");
     scene_init(&scene);
     E_STDERR_ABORT(ui_init(), "Error initializing the UI");
 
+start:
     initialize();
     gpio_reset();
 
     while (ui_running()) {
-        single_loop();
+        single_loop(&reset);
+        if (reset) {
+            finalize();
+            goto start;
+        }
     }
 
     finalize();
