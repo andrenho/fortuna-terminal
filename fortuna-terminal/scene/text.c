@@ -48,14 +48,21 @@ int text_init(Text* text)
     };
     text->cursor_last_blink = SDL_GetTicks();
 
+    text->attrib = default_attr;
+
     for (size_t y = 0; y < text->lines; ++y)
         for (size_t x = 0; x < text->columns; ++x)
-            text_set_char(text, y, x, ' ', default_attr);
+            text_set_char(text, y, x, ' ', text->attrib);
             // text_set(text, y, x, y * text->columns + x);
 
     palette_init(&text->palette);
 
     return 0;
+}
+
+void text_attrib_reset(Text* text)
+{
+    text->attrib = default_attr;
 }
 
 static void text_advance_line(Text* text)
@@ -72,14 +79,23 @@ static void text_advance_cursor(Text* text)
     text_reset_blink(text);
 }
 
-/*
-void text_add_char(Text* text, uint8_t c, uint8_t color)
+void text_add_char(Text* text, uint8_t c)
 {
-    text_set_char(text, text->cursor.y, text->cursor.x, c, color);
+    text_set_char(text, text->cursor.y, text->cursor.x, c, text->attrib);
     text_advance_cursor(text);
     text_reset_blink(text);
 }
-*/
+
+void text_set_color(Text* text, uint8_t color)
+{
+    text->attrib.color = color;
+}
+
+void text_print(Text* text, const char* str)
+{
+    for (const char* s = str; *s; ++s)
+        text_add_char(text, *s);
+}
 
 void text_update_blink(Text* text)
 {

@@ -34,6 +34,8 @@ typedef struct {
     unsigned int scroll_end;
     bool         insertion_mode;
 
+    CharAttrib   attrib;
+
     Palette      palette;
 } Text;
 
@@ -46,5 +48,10 @@ void text_set_char(Text* text, unsigned int y, unsigned int x, uint8_t c, CharAt
 
 void text_move_cursor_to(Text* text, unsigned int y, unsigned int x);
 void text_move_cursor_down_scroll(Text* text);
+
+void text_set_color(Text* text, uint8_t color);
+void text_print(Text* text, const char* str);
+
+void text_attrib_reset(Text* text);
 
 #endif //TEXT_H_

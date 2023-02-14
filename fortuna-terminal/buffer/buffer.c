@@ -24,8 +24,10 @@ void buffer_finalize(Buffer* buffer)
 
 int buffer_add_byte(Buffer* buffer, uint8_t byte)
 {
+    E_UI(FT_ERR_APP, "Buffer overflow");
+
     if (buffer->sz >= buffer->max_sz)
-        E_UI_ABORT("Buffer overflow");
+        E_UI(FT_ERR_APP, "Buffer overflow");
 
     pthread_mutex_lock(&buffer->mutex);
     buffer->data[buffer->sz++] = byte;

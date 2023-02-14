@@ -2,6 +2,7 @@
 #define ERROR_H_
 
 #include <errno.h>
+#include <stdbool.h>
 #include <sys/types.h>
 
 typedef enum FT_Result {
@@ -13,6 +14,8 @@ typedef enum FT_Result {
 
 void error_set(const char* fmt, ...);
 void error_print(FT_Result result);
+void error_ui(FT_Result result);
+bool error_ui_requested(char* str, size_t sz);
 
 // return error from function, doesn't do anything else
 // TODO - set str
@@ -25,11 +28,7 @@ void error_print(FT_Result result);
 
 // report error to UI and attempts to reset terminal
 #define E_UI(result, ...) \
-    { if ((result) != FT_OK) abort(); }
-
-// report error to UI, wait for a keypress and then abort
-#define E_UI_ABORT(result, ...) \
-    { if ((result) != FT_OK) abort(); }
+    { if ((result) != FT_OK) { error_set("" __VA_ARGS__); error_ui(result); } }
 
 // abort with message
 #define ABORT(...) \

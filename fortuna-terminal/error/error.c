@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 
 static char current_error_[2048];
+static bool error_ui_requested_ = false;
 
 void error_set(const char* fmt, ...)
 {
@@ -43,4 +44,18 @@ void error_print(FT_Result result)
     char buf[sizeof current_error_];
     error_to_str(result, buf, sizeof buf);
     fprintf(stderr, "\n\e[1;91m%s\e[0m\n", buf);
+}
+
+void error_ui(FT_Result result)
+{
+    char buf[sizeof current_error_];
+    error_to_str(result, buf, sizeof buf);
+    error_ui_requested_ = true;
+}
+
+bool error_ui_requested(char* str, size_t sz)
+{
+    if (error_ui_requested_)
+        strncpy(str, current_error_, sz);
+    return error_ui_requested_;
 }

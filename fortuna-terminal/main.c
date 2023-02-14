@@ -33,20 +33,40 @@ static void initialize()
     comm_run_output(&output_buffer);
 }
 
-static void single_loop()
+static void single_loop(bool* reset)
 {
-    Uint64 start_frame = SDL_GetTicks64();
+    static char error_buf[2048];
 
-    protocol_process_input(&input_buffer, &scene);
+    if (error_ui_requested(error_buf, sizeof error_buf)) {
 
-    ui_do_events();
-    ui_draw(&scene);
+        text_set_color(&scene.text, COLOR_RED);
+        text_print(&scene.text, "\r");
+        text_print(&scene.text, error_buf);
+        text_print(&scene.text, "\rPress ENTER to continue.\r");
+        text_attrib_reset(&scene.text);
 
-    Uint64 end_frame = SDL_GetTicks64();
-    if (end_frame < (start_frame + 16))
-        nanosleep(&(struct timespec) { .tv_sec = 0, .tv_nsec = (long) (end_frame - (start_frame + 16)) * 1000000 }, NULL);
+        ui_draw(&scene);
+        ui_wait_for_keypress();
 
-    gpio_notify_vsync();
+        *reset = true;
+
+    } else {
+
+        Uint64 start_frame = SDL_GetTicks64();
+
+        protocol_process_input(&input_buffer, &scene);
+
+        ui_do_events();
+        ui_draw(&scene);
+
+        Uint64 end_frame = SDL_GetTicks64();
+        if (end_frame < (start_frame + 16))
+            nanosleep(&(struct timespec) { .tv_sec = 0, .tv_nsec = (long) (end_frame - (start_frame + 16)) * 1000000 }, NULL);
+
+        gpio_notify_vsync();
+
+        *reset = false;
+    }
 }
 
 static void finalize()
@@ -60,15 +80,22 @@ static void finalize()
 
 int main(int argc, char* argv[])
 {
+    bool reset = false;
+
     E_STDERR_ABORT(options_parse_cmdline(argc, argv, &options), "Command line option error");
     scene_init(&scene);
     E_STDERR_ABORT(ui_init(), "Error initializing the UI");
 
+start:
     initialize();
     gpio_reset();
 
     while (ui_running()) {
-        single_loop();
+        single_loop(&reset);
+        if (reset) {
+            finalize();
+            goto start;
+        }
     }
 
     finalize();
