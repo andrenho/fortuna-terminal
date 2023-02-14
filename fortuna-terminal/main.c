@@ -16,7 +16,7 @@
 int main(int argc, char* argv[])
 {
     // parse options
-    error_check(options_parse_cmdline(argc, argv, &options));
+    E_STDERR_ABORT(options_parse_cmdline(argc, argv, &options), "Command line option error");
 
     // create buffers
     Buffer input_buffer, output_buffer;
@@ -28,9 +28,9 @@ int main(int argc, char* argv[])
     scene_init(&scene);
 
     // intialization
-    protocol_init(&output_buffer, &scene);
-    error_check(comm_init(scene.text.lines, scene.text.columns));
-    error_check(ui_init());
+    E_STDERR_ABORT(ui_init(), "Error initializing the UI");
+    E_UI(protocol_init(&output_buffer, &scene));
+    E_UI(comm_init(scene.text.lines, scene.text.columns), "Error initializing communication module");
 
     // start communication thread(s)
     comm_run_input(&input_buffer);

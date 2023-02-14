@@ -8,10 +8,11 @@
 #define GRAPHICS_W 256
 #define GRAPHICS_H 256
 
-int  ui_init();
-bool ui_running();
-int  ui_do_events();
-int  ui_draw(Scene* scene);
-int  ui_destroy();
+FT_Result ui_init();
+bool      ui_running();
+void      ui_do_events();
+void      ui_draw(Scene* scene);
+void      ui_destroy();
+
 
 #endif //UI_H_

@@ -73,7 +73,7 @@ static void parse_uart_settings(const char* opt, Options* options)
 }
 
 
-int options_parse_cmdline(int argc, char *argv[], Options *options)
+FT_Result options_parse_cmdline(int argc, char *argv[], Options *options)
 {
     int c;
 
@@ -183,7 +183,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
             case 'B':
                 options->serial.baud = strtol(optarg, NULL, 10);
                 if (errno == ERANGE || errno == EINVAL)
-                    return ERR_LIBC;
+                    return FT_ERR_LIBC;
                 break;
 
             case 'P':
@@ -197,7 +197,7 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
             case 'R':
                 options->tcpip.port = strtol(optarg, NULL, 10);
                 if (errno == ERANGE || errno == EINVAL)
-                    return ERR_LIBC;
+                    return FT_ERR_LIBC;
                 break;
 
             case 'S':
@@ -215,5 +215,5 @@ int options_parse_cmdline(int argc, char *argv[], Options *options)
 
     validate_options(options);
 
-    return OK;
+    return FT_OK;
 }

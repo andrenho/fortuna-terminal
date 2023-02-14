@@ -11,29 +11,29 @@
 static SDL_Renderer* renderer_ = NULL;
 static SDL_Texture* font_ = NULL;
 
-static int painter_load_font()
+static FT_Result painter_load_font()
 {
     SDL_RWops* io = SDL_RWFromConstMem(font_bmp, (int) font_bmp_len);
     SDL_Surface* sf = SDL_LoadBMP_RW(io, 1);
     if (!sf)
-        return ERR_SDL;
+        return FT_ERR_SDL;
 
     SDL_SetColorKey(sf, SDL_RLEACCEL, 0);
     font_ = SDL_CreateTextureFromSurface(renderer_, sf);
     if (!font_)
-        return ERR_SDL;
+        return FT_ERR_SDL;
 
     SDL_FreeSurface(sf);
 
     return 0;
 }
 
-int painter_init(SDL_Window *window)
+FT_Result painter_init(SDL_Window *window)
 {
 
     renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer_)
-        return ERR_SDL;
+        return FT_ERR_SDL;
     SDL_RenderSetLogicalSize(renderer_, GRAPHICS_W, GRAPHICS_H);
 
     if (options.debug_mode) {
@@ -42,7 +42,9 @@ int painter_init(SDL_Window *window)
         printf("SDL_RENDER_DRIVER selected: %s\n", info.name);
     }
 
-    return painter_load_font();
+    E_CHECK(painter_load_font(), "Error loading font");
+
+    return FT_OK;
 }
 
 static void painter_draw_deep_background()
@@ -105,7 +107,7 @@ static void painter_draw_text(Text* text, Color* bg)
             painter_draw_text_cell(text, line, column, bg);
 }
 
-int painter_draw(Scene* scene)
+void painter_draw(Scene* scene)
 {
     painter_draw_deep_background();
     painter_draw_background(scene);
@@ -114,16 +116,12 @@ int painter_draw(Scene* scene)
     painter_draw_text(&scene->text, bg);
 
     SDL_RenderPresent(renderer_);
-
-    return 0;
 }
 
-int painter_destroy()
+void painter_destroy()
 {
     if (font_)
         SDL_DestroyTexture(font_);
     if (renderer_)
         SDL_DestroyRenderer(renderer_);
-
-    return 0;
 }

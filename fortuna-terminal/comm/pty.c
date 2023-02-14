@@ -10,12 +10,14 @@
 
 static int master_fd = 0;
 
-int pty_init(size_t lines, size_t columns)
+FT_Result pty_init(size_t lines, size_t columns)
 {
     struct winsize winp = { lines, columns, 0 , 0 };
 
     pid_t pid = forkpty(&master_fd, NULL, NULL, &winp);
-    if (pid == 0) {
+    if (pid < 0) {
+        return FT_ERR_LIBC;
+    } else if (pid == 0) {
         setenv("LANG", "C", 1);
         setenv("TERM", "ansi", 1);
         // this is the child process that will execute the shell
@@ -38,29 +40,29 @@ static void pty_client_disconnected()
     exit(EXIT_SUCCESS);
 }
 
-int pty_recv(uint8_t* byte)
+FT_Result pty_recv(uint8_t* byte, bool* data_received)
 {
     int n = read(master_fd, byte, 1);
     if (n == 0)
         pty_client_disconnected();
     else if (n < 0)
-        error_check(ERR_LIBC);
-    return 0;
+        return FT_ERR_LIBC;
+    *data_received = true;
+    return FT_OK;
 }
 
-int pty_send(const uint8_t* data, size_t sz)
+FT_Result pty_send(const uint8_t* data, size_t sz)
 {
     int n = write(master_fd, data, sz);
     if (n == 0)
         pty_client_disconnected();
     else if (n < 0)
-        error_check(ERR_LIBC);
-    return 0;
+        return FT_ERR_LIBC;
+    return FT_OK;
 }
 
-int pty_finalize()
+void pty_finalize()
 {
     if (master_fd != 0)
         close(master_fd);
-    return 0;
 }

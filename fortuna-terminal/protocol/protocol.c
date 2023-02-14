@@ -8,7 +8,7 @@
 
 typedef struct {
     ssize_t (* process_pending_input)(const uint8_t* buffer, size_t bufsz, Scene* scene);
-    int     (* terminal_event)(FP_Command* command, Buffer* output_buffer_);
+    int     (* terminal_event)(FP_Message* command, Buffer* output_buffer_);
     int     (* finalize)();
 } ProtocolFunctions;
 static ProtocolFunctions protocol_f = { NULL, NULL, NULL };
@@ -17,7 +17,7 @@ static Buffer* output_buffer_ = NULL;
 
 #define BUFFER_SZ (32 * 1024)
 
-int protocol_init(Buffer* output_buffer, Scene* scene)
+FT_Result protocol_init(Buffer* output_buffer, Scene* scene)
 {
     output_buffer_ = output_buffer;
 
@@ -27,8 +27,10 @@ int protocol_init(Buffer* output_buffer, Scene* scene)
             ansi_init(scene);
             return 0;
         default:
-            return ERR_NOT_IMPLEMENTED;
+            E_CHECK(false, FT_ERR_APP, "Protocol not implemented");
     }
+
+    return FT_OK;
 }
 
 void protocol_process_input(Buffer* input_buffer, Scene* scene)
@@ -40,9 +42,9 @@ void protocol_process_input(Buffer* input_buffer, Scene* scene)
         protocol_f.process_pending_input(protocol_input_buffer, sz, scene);
 }
 
-void protocol_terminal_event(FP_Command* command)
+void protocol_terminal_event(FP_Message* message)
 {
-    error_check(protocol_f.terminal_event(command, output_buffer_));
+    E_UI(protocol_f.terminal_event(message, output_buffer_));
 }
 
 int protocol_finalize()
