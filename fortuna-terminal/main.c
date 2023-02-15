@@ -40,7 +40,13 @@ static void single_loop(bool *reset)
     *reset = false;
     Uint64 start_frame = SDL_GetTicks64();
 
-    protocol_process_input(&input_buffer, &scene);
+    // process inputs
+    //   (inputs might need to send responses before receiving more input, so make sure that conversation is over)
+    while (1) {
+        protocol_process_input(&input_buffer, &scene);
+        if (buffer_empty(&output_buffer))
+            break;
+    }
 
     if (error_ui_requested(error_buf, sizeof error_buf)) {
         text_add_error(&scene.text, error_buf);

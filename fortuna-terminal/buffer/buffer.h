@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <pthread.h>
 #include <sys/types.h>
+#include <stdbool.h>
 
 typedef struct {
     uint8_t*        data;
@@ -22,5 +23,6 @@ int     buffer_add_bytes(Buffer* buffer, uint8_t* bytes, size_t sz);
 int     buffer_add_str_nonull(Buffer* buffer, const char* str);
 ssize_t buffer_move_data_to_array(Buffer* buffer, uint8_t* dest, size_t max_sz);
 void    buffer_wait(Buffer* buffer);
+bool    buffer_empty(Buffer* buffer);
 
 #endif //BUFFER_H_

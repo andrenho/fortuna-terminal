@@ -79,3 +79,11 @@ void buffer_wait(Buffer* buffer)
     pthread_cond_wait(&buffer->cond, &buffer->mutex);
     pthread_mutex_unlock(&buffer->mutex);
 }
+
+bool buffer_empty(Buffer* buffer)
+{
+    pthread_mutex_lock(&buffer->mutex);
+    bool empty = buffer->sz == 0;
+    pthread_mutex_unlock(&buffer->mutex);
+    return empty;
+}

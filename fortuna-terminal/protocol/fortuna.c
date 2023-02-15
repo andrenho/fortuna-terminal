@@ -23,11 +23,14 @@ static void execute_input_message(FP_Message* msg, Scene* scene)
 
 FT_Result fortuna_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, Buffer* output_buffer, size_t* bytes_processed)
 {
-    uint8_t content_sz = 0;
-    uint8_t msg_sz = 0;
+    uint8_t content_sz;
+    uint8_t msg_sz;
 
-    if (bufsz <= 1) {
+    if (bufsz == 0) {
         *bytes_processed = 0;
+        return FT_OK;
+    } else if (bufsz > 0 && buffer[0] != FP_FRAME_START) {
+        *bytes_processed = 1;  // we're receiving garbage, ignore until we receive a frame start
         return FT_OK;
     } else if (bufsz > 1) {
         content_sz = buffer[1];
