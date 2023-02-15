@@ -24,8 +24,8 @@ static void initialize()
     buffer_init(&output_buffer, BUFFER_SZ);
 
     // intialization
-    E_UI(protocol_init(&output_buffer, &scene), "Error initializing protocol");
-    E_UI(comm_init(scene.text.lines, scene.text.columns), "Error initializing communication module");
+    E_STDERR_ABORT(protocol_init(&output_buffer, &scene), "Error initializing protocol");
+    E_STDERR_ABORT(comm_init(scene.text.lines, scene.text.columns), "Error initializing communication module");
     gpio_init();
 
     // start communication thread(s)

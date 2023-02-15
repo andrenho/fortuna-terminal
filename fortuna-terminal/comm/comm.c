@@ -12,6 +12,7 @@
 #include "pty.h"
 #include "uart.h"
 #include "tcpip.h"
+#include "debug.h"
 
 #define BUFFER_SZ (32 * 1024)
 
@@ -42,6 +43,10 @@ FT_Result comm_init(size_t lines, size_t columns)
             comm_f = (CommFunctions) { tcpip_recv, tcpip_send, tcpip_finalize };
             E_CHECK(tcpip_init())
             break;
+        case CM_DEBUG:
+            comm_f = (CommFunctions) { debug_recv, debug_send, debug_finalize };
+            E_CHECK(debug_init())
+            break;
 #ifdef COMM_PTY
         case CM_PTY:
             comm_f = (CommFunctions) { pty_recv, pty_send, pty_finalize };
@@ -55,7 +60,7 @@ FT_Result comm_init(size_t lines, size_t columns)
             break;
 #endif
         default:
-            ABORT("Communication module not implemented.");
+            ABORT(FT_ERR_APP, "Communication module not implemented.");
     }
 
     return FT_OK;

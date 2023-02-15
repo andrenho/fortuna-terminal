@@ -1,5 +1,5 @@
 OBJ=main.o \
-	comm/comm.o comm/echo.o comm/tcpip.o \
+	comm/comm.o comm/echo.o comm/tcpip.o comm/debug.o \
 	error/error.o \
 	gpio/gpio.o \
 	options/options.o \

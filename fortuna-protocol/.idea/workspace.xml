@@ -20,8 +20,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
+      <change afterPath="$PROJECT_DIR$/../fortuna-terminal/comm/debug.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fortuna-terminal/comm/debug.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client-test/tcpip.c" beforeDir="false" afterPath="$PROJECT_DIR$/client-test/tcpip.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/comm/comm.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/comm/comm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/error/error.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/error/error.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676433018996</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary=".">
+      <created>1676465645337</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1676465645337</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

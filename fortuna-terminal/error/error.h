@@ -32,7 +32,7 @@ void error_clear();
     { if ((result) != FT_OK) { error_set("" __VA_ARGS__); error_ui(result); } }
 
 // abort with message
-#define ABORT(...) \
-    abort();
+#define ABORT(result, ...) \
+    { error_set("" __VA_ARGS__); error_print(result); abort(); }
 
 #endif //ERROR_H_
