@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 // Documentation: https://github.com/andrenho/fortuna-terminal/wiki/Fortuna-Protocol
 

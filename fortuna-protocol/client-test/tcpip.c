@@ -1,16 +1,19 @@
 #if _WIN32
 #  include <winsock2.h>
 #  include <wspiapi.h>
-#  define SOCKET int
 #else
 #  include <sys/socket.h>
 #  include <sys/types.h>
 #  include <sys/socket.h>
+#  include <netinet/in.h>
+#  include <arpa/inet.h>
 #  include <netdb.h>
 #  include <unistd.h>
+#  define SOCKET int
 #  define INVALID_SOCKET -1
 #endif
 
+#include <stdio.h>
 #include "../fortuna-protocol.h"
 
 SOCKET fd = 0;
