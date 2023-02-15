@@ -95,9 +95,9 @@ FT_Result ansi_init(Scene* scene)
     return FT_OK;
 }
 
-FT_Result ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, size_t* bytes_processed)
+FT_Result ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, Buffer* output_buffer, size_t* bytes_processed)
 {
-    (void) scene;
+    (void) scene; (void) output_buffer;
     tmt_write(vt_, (const char *) buffer, bufsz);
     *bytes_processed = bufsz;
     return FT_OK;

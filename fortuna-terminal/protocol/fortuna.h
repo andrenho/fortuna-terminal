@@ -12,7 +12,7 @@
 #include "error/error.h"
 
 FT_Result fortuna_init(Scene* scene);
-FT_Result fortuna_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, size_t* bytes_processed);
+FT_Result fortuna_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, Buffer* output_buffer, size_t* bytes_processed);
 FT_Result fortuna_terminal_event(FP_Message* message, Buffer* output_buffer);
 void      fortuna_finalize();
 

@@ -21,9 +21,10 @@
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

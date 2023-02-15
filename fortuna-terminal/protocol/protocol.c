@@ -6,7 +6,7 @@
 #include "fortuna.h"
 
 typedef struct {
-    FT_Result (* process_pending_input)(const uint8_t* buffer, size_t bufsz, Scene* scene, size_t* bytes_processed);
+    FT_Result (* process_pending_input)(const uint8_t* buffer, size_t bufsz, Scene* scene, Buffer* output_buffer, size_t* bytes_processed);
     FT_Result (* terminal_event)(FP_Message* command, Buffer* output_buffer_);
     void      (* finalize)();
 } ProtocolFunctions;
@@ -41,7 +41,7 @@ void protocol_process_input(Buffer* input_buffer, Scene* scene)
     ssize_t sz = buffer_move_data_to_array(input_buffer, protocol_input_buffer, BUFFER_SZ);
     size_t bytes_processed;
     if (sz > 0) {
-        protocol_f.process_pending_input(protocol_input_buffer, sz, scene, &bytes_processed);
+        protocol_f.process_pending_input(protocol_input_buffer, sz, scene, output_buffer_, &bytes_processed);
 
         // re-add bytes there were not processed back into the input buffer
         ssize_t bytes_not_processed = sz - (ssize_t) bytes_processed;
