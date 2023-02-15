@@ -20,21 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
-      <change afterPath="$PROJECT_DIR$/client-test/tcpip.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client-test/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/client-test/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fortuna-protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/fortuna-protocol.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/ansi.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/linux-basic.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol_debug.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/protocol_debug.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client-test/tcpip.c" beforeDir="false" afterPath="$PROJECT_DIR$/client-test/tcpip.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676303589202</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary=".">
+      <created>1676432239800</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1676432239800</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,16 +216,6 @@
           <url>file://$PROJECT_DIR$/fortuna-protocol.c</url>
           <line>140</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/client-test/tcpip.c</url>
-          <line>42</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/client-test/tcpip.c</url>
-          <line>35</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

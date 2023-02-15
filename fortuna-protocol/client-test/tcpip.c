@@ -43,7 +43,7 @@ int main()
     server.sin_family = AF_INET;
     server.sin_port = htons(8076);
 
-    if (connect(fd, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    if (connect(fd, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR) {
         perror("Connect failed. Error");
         return 1;
     }
