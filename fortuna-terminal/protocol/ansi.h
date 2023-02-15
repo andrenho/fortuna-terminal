@@ -9,10 +9,11 @@
 
 #include "../scene/scene.h"
 #include "buffer/buffer.h"
+#include "error/error.h"
 
-int     ansi_init(Scene* scene);
-ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene);
-int     ansi_terminal_event(FP_Message* message, Buffer* output_buffer);
-int     ansi_finalize();
+FT_Result ansi_init(Scene* scene);
+FT_Result ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, size_t* bytes_processed);
+FT_Result ansi_terminal_event(FP_Message* message, Buffer* output_buffer);
+void      ansi_finalize();
 
 #endif //ANSI_H_

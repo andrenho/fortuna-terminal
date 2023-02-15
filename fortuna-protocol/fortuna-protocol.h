@@ -158,6 +158,7 @@ typedef enum {
     FP_ERR_UNEVEN_RESPONSE          = -6,
     FP_ERR_TOO_MANY_FAILED_ATTEMPTS = -7,
     FP_ERR_FRAME_START_NOT_RECEIVED = -8,
+    FP_ERR_MESSAGE_TOO_SHORT        = -9,
 } FP_Result;
 
 #define FP_MSG_SZ (FP_MSG_CONTENTS_SZ + 5)
@@ -168,7 +169,7 @@ typedef enum {
 uint8_t fp_calculate_checksum(const uint8_t* buffer, size_t sz);
 
 FP_Result fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ], uint8_t* msg_sz);
-FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg);
+FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], size_t buf_sz, FP_Message* outmsg);
 
 /*******************
  *                 *

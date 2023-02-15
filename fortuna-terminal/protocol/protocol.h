@@ -10,6 +10,6 @@
 FT_Result protocol_init(Buffer* output_buffer, Scene* scene);
 void      protocol_process_input(Buffer* input_buffer, Scene* scene);
 void      protocol_terminal_event(FP_Message* message);
-int       protocol_finalize();
+void      protocol_finalize();
 
 #endif //PROTOCOL_H_

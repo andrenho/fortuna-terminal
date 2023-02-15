@@ -103,9 +103,15 @@ FP_Result fp_msg_serialize(const FP_Message* inmsg, uint8_t outbuf[FP_MSG_SZ], u
     return FP_OK;
 }
 
-FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], FP_Message* outmsg)
+FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], size_t bufsz, FP_Message* outmsg)
 {
+    if (bufsz < 1)
+        return FP_ERR_MESSAGE_TOO_SHORT;
+
     uint8_t msg_sz = inbuf[1];
+
+    if (bufsz < msg_sz)
+        return FP_ERR_MESSAGE_TOO_SHORT;
 
     if (inbuf[0] != FP_FRAME_START)
         return FP_ERR_INVALID_MESSAGE;
@@ -203,8 +209,7 @@ frame_start_found:;
     if (*comm_error < 0)
         return FP_ERR_RECV_FAILED;
 
-    FP_Message message;
-    FP_Result result = fp_msg_unserialize(buf, &message);
+    FP_Result result = fp_msg_unserialize(buf, sizeof buf, cmd);
     if (result == FP_ERR_INCORRECT_CHECKSUM)
         return fp_send_response(sendf, FP_RESPONSE_INVALID_CHECKSUM, result, comm_error);
     else if (result == FP_OK)

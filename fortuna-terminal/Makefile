@@ -4,7 +4,8 @@ OBJ=main.o \
 	gpio/gpio.o \
 	options/options.o \
 	buffer/buffer.o \
-	protocol/protocol.o protocol/ansi.o protocol/tmt.o protocol/protocol_debug.o \
+	protocol/protocol.o protocol/ansi.o protocol/tmt.o protocol/fortuna.o \
+	../fortuna-protocol/fortuna-protocol.o \
 	scene/scene.o scene/text.o scene/palette.o \
 	ui/ui.o ui/painter.o
 EXE=fortuna-terminal

@@ -1,7 +1,6 @@
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
 #include "ansi.h"
-#include "protocol_debug.h"
 #include "tmt.h"
 
 #include <stdio.h>
@@ -86,24 +85,25 @@ static void callback(tmt_msg_t m, TMT *vt, const void *a, void *p)
     }
 }
 
-int ansi_init(Scene* scene)
+FT_Result ansi_init(Scene* scene)
 {
     scene_ = scene;
 
     vt_ = tmt_open(scene->text.lines, scene->text.columns, callback, NULL, NULL);
     if (!vt_)
         return perror("could not allocate terminal"), EXIT_FAILURE;
-    return 0;
+    return FT_OK;
 }
 
-ssize_t ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene)
+FT_Result ansi_process_pending_input(const uint8_t* buffer, size_t bufsz, Scene* scene, size_t* bytes_processed)
 {
     (void) scene;
     tmt_write(vt_, (const char *) buffer, bufsz);
-    return (ssize_t) bufsz;
+    *bytes_processed = bufsz;
+    return FT_OK;
 }
 
-int ansi_terminal_event(FP_Message* message, Buffer* output_buffer)
+FT_Result ansi_terminal_event(FP_Message* message, Buffer* output_buffer)
 {
     switch (message->command) {
 
@@ -157,11 +157,10 @@ int ansi_terminal_event(FP_Message* message, Buffer* output_buffer)
             break;
     }
 
-    return 0;
+    return FT_OK;
 }
 
-int ansi_finalize()
+void ansi_finalize()
 {
     tmt_close(vt_);
-    return 0;
 }
