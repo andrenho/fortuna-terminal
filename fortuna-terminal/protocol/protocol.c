@@ -40,8 +40,14 @@ void protocol_process_input(Buffer* input_buffer, Scene* scene)
 
     ssize_t sz = buffer_move_data_to_array(input_buffer, protocol_input_buffer, BUFFER_SZ);
     size_t bytes_processed;
-    if (sz > 0)
+    if (sz > 0) {
         protocol_f.process_pending_input(protocol_input_buffer, sz, scene, &bytes_processed);
+
+        // re-add bytes there were not processed back into the input buffer
+        ssize_t bytes_not_processed = sz - (ssize_t) bytes_processed;
+        if (bytes_not_processed > 0)
+            buffer_add_bytes(input_buffer, &protocol_input_buffer[bytes_processed], bytes_not_processed);
+    }
 }
 
 void protocol_terminal_event(FP_Message* message)

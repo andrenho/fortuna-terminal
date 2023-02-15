@@ -189,7 +189,7 @@ typedef int (*FP_RecvFunction)(uint8_t*, size_t);
 #define FP_RESPONSE_BROKEN           0x3
 #define FP_RESPONSE_ERROR            0x4
 
-int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
-int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
+FP_Result fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
+FP_Result fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error);
 
 #endif //FORTUNA_PROTOCOL_H_

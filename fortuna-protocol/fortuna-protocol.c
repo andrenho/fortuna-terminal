@@ -133,7 +133,7 @@ FP_Result fp_msg_unserialize(const uint8_t inbuf[FP_MSG_SZ], size_t bufsz, FP_Me
  *                 *
  *******************/
 
-int fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
+FP_Result fp_msg_send(const FP_Message* msg, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
 {
     uint8_t buffer[FP_MSG_SZ];
 
@@ -182,7 +182,7 @@ static FP_Result fp_send_response(FP_SendFunction sendf, uint8_t value, FP_Resul
     return result;
 }
 
-int fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
+FP_Result fp_msg_recv(FP_Message* cmd, FP_SendFunction sendf, FP_RecvFunction recvf, int* comm_error)
 {
     for (size_t i = 0; i < FP_RECV_ATTEMPTS; ++i) {
         uint8_t c;
