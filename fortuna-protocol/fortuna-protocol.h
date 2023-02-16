@@ -108,10 +108,10 @@ typedef struct __attribute__((packed)) {
     bool    visible : 1;
 } CursorAttrib;
 
-struct __attribute__((packed)) KeyStroke {
+typedef struct __attribute__((packed)) {
     uint8_t* data;
     uint8_t  length;
-} keystroke;
+} KeyStroke;
 
 typedef struct __attribute__((packed)) {
     FP_Command command;

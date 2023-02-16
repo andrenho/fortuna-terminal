@@ -7,7 +7,7 @@ int main() {
     Terminal terminal;
     unsigned int scene_n = terminal.add_scene();
 
-    FP_Message msg { FP_TEXT_PRINT_CHAR };
+    FP_Message msg { FP_TEXT_PRINT_CHAR, {} };
     msg.chr = 'A';
 
     terminal.update_scene(scene_n, std::move(msg));
