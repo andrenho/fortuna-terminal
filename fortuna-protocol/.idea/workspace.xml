@@ -21,10 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
