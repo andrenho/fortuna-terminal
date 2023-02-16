@@ -1,5 +1,4 @@
 #include "terminal/terminal.hh"
-#include "../fortuna-protocol/fortuna-protocol.h"
 
 int main() {
     SyncQueue<FP_Message> event_queue;

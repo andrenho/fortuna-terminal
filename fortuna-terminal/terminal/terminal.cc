@@ -1,4 +1,3 @@
-
 #include "terminal.hh"
 
 unsigned int Terminal::add_scene()
@@ -22,3 +21,12 @@ void Terminal::draw() const
 
 }
 
+Terminal::Terminal()
+{
+
+}
+
+Terminal::~Terminal()
+{
+
+}

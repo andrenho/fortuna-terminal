@@ -2,8 +2,9 @@
 #define PROTOCOL_HH_
 
 #include "../../common/syncqueue.hh"
+#include "../../common/noncopyable.hh"
 
-class Protocol {
+class Protocol : NonCopyable {
 protected:
     Protocol(SyncQueue<struct FP_Message>& scene_queue) : scene_queue_(scene_queue) {}
 

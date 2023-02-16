@@ -2,7 +2,7 @@
 #define SYNCQUEUE_HH_
 
 template <typename T>
-class SyncQueue {
+class SyncQueue : NonCopyable {
 
 };
 

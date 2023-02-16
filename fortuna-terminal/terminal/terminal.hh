@@ -6,9 +6,13 @@
 #include "scene/scene.hh"
 #include "../common/syncqueue.hh"
 #include "../../fortuna-protocol/fortuna-protocol.h"
+#include "common/noncopyable.hh"
 
-class Terminal {
+class Terminal : NonCopyable {
 public:
+    Terminal();
+    ~Terminal();
+
     unsigned int add_scene();
 
     void update_scene(unsigned int scene_n, FP_Message&& message);

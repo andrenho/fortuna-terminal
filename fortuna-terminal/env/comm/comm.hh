@@ -4,7 +4,9 @@
 #include <cstdint>
 #include <vector>
 
-class CommunicationModule {
+#include "../../common/noncopyable.hh"
+
+class CommunicationModule : NonCopyable {
 public:
     virtual std::vector<uint8_t> read_block(size_t n) const = 0;
     virtual std::vector<uint8_t> read_for(long nanoseconds) const = 0;

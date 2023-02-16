@@ -3,8 +3,9 @@
 
 #include "../options.hh"
 #include "../common/syncqueue.hh"
+#include "../common/noncopyable.hh"
 
-class Env {
+class Env : NonCopyable {
 public:
     Env(ProtocolType protocol_type, CommType comm_type, SyncQueue<struct FP_Message>& scene_queue);
 

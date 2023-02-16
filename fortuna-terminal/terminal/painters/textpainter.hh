@@ -1,7 +1,9 @@
 #ifndef TEXTPAINTER_HH_
 #define TEXTPAINTER_HH_
 
-class TextPainter {
+#include "../../common/noncopyable.hh"
+
+class TextPainter : NonCopyable {
 
 };
 

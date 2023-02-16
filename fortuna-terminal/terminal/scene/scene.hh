@@ -2,8 +2,9 @@
 #define SCENE_HH_
 
 #include "layers/text.hh"
+#include "../../common/noncopyable.hh"
 
-struct Scene {
+struct Scene : NonCopyable {
     Text text;
 };
 
