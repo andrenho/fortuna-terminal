@@ -42,9 +42,11 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
 Terminal::~Terminal()
 {
+    /*
     renderer_.reset();
     window_.reset();
     SDL_Quit();
+     */
 }
 
 unsigned int Terminal::add_scene()

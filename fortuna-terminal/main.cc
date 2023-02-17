@@ -20,4 +20,6 @@ int main(int argc, char* argv[])
         terminal.update_scene(scene_queue);
         terminal.draw();
     }
+
+    return 0;
 }
