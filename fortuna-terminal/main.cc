@@ -1,5 +1,5 @@
 #include "terminal/terminal.hh"
-#include "terminal/sceneevent.hh"
+#include "terminal/scene/sceneevent.hh"
 
 int main(int argc, char* argv[])
 {

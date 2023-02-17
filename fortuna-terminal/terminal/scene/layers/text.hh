@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <algorithm>
+#include <memory>
 
 #include "layer.hh"
 #include "fortuna-protocol.h"
@@ -24,6 +25,8 @@ struct Char {
 
 class Text : public Layer {
 public:
+    Text() : Layer() {}
+
     void        set_scene_mode(SceneMode scene_mode);
 
     Char const& get(size_t column, size_t line) const;
@@ -45,14 +48,11 @@ public:
     static constexpr size_t Lines_40Columns   = 25;
 
 private:
-    static constexpr size_t MaxColumns = std::max(Columns_80Columns, Columns_40Columns);
-    static constexpr size_t MaxLines   = std::max(Lines_80Columns, Lines_40Columns);
-
-    Char matrix_[MaxColumns * MaxLines] = {};
+    std::unique_ptr<Char[]> matrix_;
     Cursor cursor_;
 
-    size_t columns_;
-    size_t lines_;
+    size_t columns_ = 0;
+    size_t lines_ = 0;
 
     CharAttrib current_attrib_ = { COLOR_WHITE, false };
 };

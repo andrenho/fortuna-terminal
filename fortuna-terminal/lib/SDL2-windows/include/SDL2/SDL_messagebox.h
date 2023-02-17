@@ -81,7 +81,7 @@ typedef enum
 } SDL_MessageBoxColorType;
 
 /**
- * A set of colors to use for message box dialogs
+ * A set of palette to use for message box dialogs
  */
 typedef struct
 {

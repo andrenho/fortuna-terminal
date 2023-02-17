@@ -1655,7 +1655,7 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
  * \param texture (optional) The SDL texture to use.
  * \param xy Vertex positions
  * \param xy_stride Byte size to move from one element to the next element
- * \param color Vertex colors (as SDL_Color)
+ * \param color Vertex palette (as SDL_Color)
  * \param color_stride Byte size to move from one element to the next element
  * \param uv Vertex normalized texture coordinates
  * \param uv_stride Byte size to move from one element to the next element

@@ -11,7 +11,7 @@
 #include "../common/syncqueue.hh"
 #include "../../fortuna-protocol/fortuna-protocol.h"
 #include "common/noncopyable.hh"
-#include "sceneevent.hh"
+#include "terminal/scene/sceneevent.hh"
 #include "options.hh"
 #include "painters/textpainter.hh"
 

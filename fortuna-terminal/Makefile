@@ -2,6 +2,7 @@ OBJ =   main.o \
         terminal/terminal.o \
         terminal/scene/scene.o \
 		terminal/scene/layers/text.o \
+		terminal/palette/palette.o \
         terminal/painters/textpainter.o
 
 EXE = fortuna-terminal

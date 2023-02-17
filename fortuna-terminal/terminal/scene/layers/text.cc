@@ -13,7 +13,11 @@ void Text::set_scene_mode(SceneMode scene_mode)
             lines_ = Lines_40Columns;
             break;
     }
+
+    matrix_ = std::make_unique<Char[]>(columns_ * lines_);
+
     reset_attributes();
+
     for (size_t i = 0; i < (columns_ * lines_); ++i)
         matrix_[i] = { (uint8_t) i, current_attrib_ };
 }
