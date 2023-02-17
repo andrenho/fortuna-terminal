@@ -1,7 +1,7 @@
 #include "terminal/terminal.hh"
 #include "terminal/sceneevent.hh"
 
-int main()
+int main(int argc, char* argv[])
 {
     SyncQueue<SceneEvent> scene_queue;
     SyncQueue<FP_Message> event_queue;

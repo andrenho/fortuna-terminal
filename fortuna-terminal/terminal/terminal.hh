@@ -1,8 +1,11 @@
 #ifndef TERMINAL_HH_
 #define TERMINAL_HH_
 
-#include <vector>
+#include <functional>
 #include <thread>
+#include <vector>
+
+#include <SDL2/SDL.h>
 
 #include "scene/scene.hh"
 #include "../common/syncqueue.hh"
@@ -24,6 +27,8 @@ public:
 
 private:
     std::vector<Scene> scenes_;
+    std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
+    std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
 };
 
 #endif //TERMINAL_HH_
