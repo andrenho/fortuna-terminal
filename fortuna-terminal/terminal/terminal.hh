@@ -25,7 +25,7 @@ public:
 
     void update_scene(SyncQueue<SceneEvent>& events);
 
-    void do_events(SyncQueue<FP_Message>& event, bool* quit);
+    void do_events(SyncQueue<FP_Message>& event_queue, bool* quit);
     void draw() const;
 
     void show_error(std::exception const& e, bool* quit);
@@ -49,6 +49,8 @@ private:
     Scene&       current_scene() { return scenes_.at(current_scene_); }
 
     void beep();
+
+    void add_keyboard_event(SyncQueue<FP_Message> &event_queue, bool is_down, SDL_KeyboardEvent key);
 };
 
 #endif //TERMINAL_HH_

@@ -65,12 +65,26 @@ void Terminal::set_scene(unsigned int n)
     resize_window();
 }
 
-void Terminal::do_events(SyncQueue<FP_Message> &event, bool *quit)
+void Terminal::do_events(SyncQueue<FP_Message> &event_queue, bool *quit)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL))
             *quit = true;
+
+        else if (e.type == SDL_TEXTINPUT) {
+            FP_Message msg = { FP_EVENT_KEYSTROKE, {} };
+            strcpy(msg.keystroke, e.text.text);
+            event_queue.emplace(std::move(msg));
+        }
+
+        else if (e.type == SDL_KEYDOWN) {
+            add_keyboard_event(event_queue, false, e.key);
+        }
+
+        else if (e.type == SDL_KEYDOWN) {
+            add_keyboard_event(event_queue, true, e.key);
+        }
     }
 
     for (auto& scene : scenes_)
@@ -163,7 +177,6 @@ void Terminal::resize_window()
     SDL_RenderSetLogicalSize(renderer_.get(), terminal_size.w, terminal_size.h);
 }
 
-#include <iostream>
 void Terminal::show_error(std::exception const &ex, bool* quit)
 {
     for (Scene& scene: scenes_) {
@@ -189,4 +202,56 @@ void Terminal::show_error(std::exception const &ex, bool* quit)
 void Terminal::beep()
 {
     // TODO
+}
+
+void Terminal::add_keyboard_event(SyncQueue<FP_Message> &event_queue, bool is_down, SDL_KeyboardEvent key)
+{
+    FP_Message fp_message;
+    fp_message.command = is_down ? FP_EVENT_KEY_PRESS : FP_EVENT_KEY_RELEASE;
+
+    if (key.keysym.sym >= 32 && key.keysym.sym < 127) {
+        fp_message.key.key = key.keysym.sym;
+    } else {
+        switch (key.keysym.sym) {
+            case SDLK_ESCAPE: fp_message.key.special_key = SK_ESC; break;
+            case SDLK_F1: fp_message.key.special_key = SK_F1; break;
+            case SDLK_F2: fp_message.key.special_key = SK_F2; break;
+            case SDLK_F3: fp_message.key.special_key = SK_F3; break;
+            case SDLK_F4: fp_message.key.special_key = SK_F4; break;
+            case SDLK_F5: fp_message.key.special_key = SK_F5; break;
+            case SDLK_F6: fp_message.key.special_key = SK_F6; break;
+            case SDLK_F7: fp_message.key.special_key = SK_F7; break;
+            case SDLK_F8: fp_message.key.special_key = SK_F8; break;
+            case SDLK_F9: fp_message.key.special_key = SK_F9; break;
+            case SDLK_F10: fp_message.key.special_key = SK_F10; break;
+            case SDLK_F11: fp_message.key.special_key = SK_F11; break;
+            case SDLK_F12: fp_message.key.special_key = SK_F12; break;
+            case SDLK_TAB: fp_message.key.special_key = SK_TAB; break;
+            case SDLK_CAPSLOCK: fp_message.key.special_key = SK_CAPSLOCK; break;
+            case SDLK_APPLICATION: fp_message.key.special_key = SK_WIN; break;
+            case SDLK_INSERT: fp_message.key.special_key = SK_INSERT; break;
+            case SDLK_HOME: fp_message.key.special_key = SK_HOME; break;
+            case SDLK_END: fp_message.key.special_key = SK_END; break;
+            case SDLK_PAGEUP: fp_message.key.special_key = SK_PAGEUP; break;
+            case SDLK_PAGEDOWN: fp_message.key.special_key = SK_PAGEDOWN; break;
+            case SDLK_UP: fp_message.key.special_key = SK_UP; break;
+            case SDLK_DOWN: fp_message.key.special_key = SK_DOWN; break;
+            case SDLK_LEFT: fp_message.key.special_key = SK_LEFT; break;
+            case SDLK_RIGHT: fp_message.key.special_key = SK_RIGHT; break;
+            case SDLK_RETURN: case SDLK_KP_ENTER: fp_message.key.special_key = SK_ENTER; break;
+            case SDLK_BACKSPACE: fp_message.key.special_key = SK_BACKSPACE; break;
+            case SDLK_DELETE: fp_message.key.special_key = SK_DELETE; break;
+            case SDLK_PRINTSCREEN: fp_message.key.special_key = SK_PRINTSCREEN; break;
+            case SDLK_PAUSE: fp_message.key.special_key = SK_PAUSEBREAK; break;
+            default: return;
+        }
+    }
+
+    KeyMod key_modifiers;
+    key_modifiers.shift = (key.keysym.mod & KMOD_SHIFT) != 0;
+    key_modifiers.control = (key.keysym.mod & KMOD_CTRL) != 0;
+    key_modifiers.alt = (key.keysym.mod & KMOD_ALT) != 0;
+    fp_message.key.mod = key_modifiers;
+
+    event_queue.emplace(std::move(fp_message));
 }

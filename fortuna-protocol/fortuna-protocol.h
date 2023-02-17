@@ -107,11 +107,6 @@ typedef struct __attribute__((packed)) {
 } CursorAttrib;
 
 typedef struct __attribute__((packed)) {
-    uint8_t* data;
-    uint8_t  length;
-} KeyStroke;
-
-typedef struct __attribute__((packed)) {
     FP_Command command;
     union {
 
@@ -138,6 +133,8 @@ typedef struct __attribute__((packed)) {
         uint8_t colors[PALETTE_SZ * 3];
 
         CursorAttrib cursor_attrib;
+
+        char keystroke[FP_MSG_CONTENTS_SZ];
 
         FP_KeyEvent key;
     };
