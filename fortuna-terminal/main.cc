@@ -1,7 +1,8 @@
 #include "terminal/terminal.hh"
 #include "terminal/sceneevent.hh"
 
-int main() {
+int main()
+{
     SyncQueue<SceneEvent> scene_queue;
     SyncQueue<FP_Message> event_queue;
 
@@ -11,7 +12,7 @@ int main() {
     FP_Message msg { FP_TEXT_PRINT_CHAR, {} };
     msg.chr = 'A';
 
-    scene_queue.enqueue(std::move(msg));
+    scene_queue.emplace({scene_n, msg});
 
     bool quit = false;
     while (!quit) {

@@ -1,5 +1,5 @@
-OBJ = main.o \
-      terminal/terminal.o
+OBJ =   main.o \
+        terminal/terminal.o
 
 EXE = fortuna-terminal
 
