@@ -65,3 +65,41 @@ void Text::update_blink()
         cursor_.last_blink = Time::now();
     }
 }
+
+void Text::write(uint8_t c)
+{
+    if (c == '\n') {
+        advance_line();
+    } else {
+        set(cursor_.y, cursor_.x, c);
+        advance_cursor();
+    }
+    reset_blink();
+}
+
+void Text::advance_cursor()
+{
+    ++cursor_.x;
+    if (cursor_.x > columns_)
+        advance_line();
+    reset_blink();
+}
+
+void Text::advance_line()
+{
+    cursor_.x = 0;
+    move_cursor_one_line_down();
+}
+
+void Text::move_cursor_one_line_down()
+{
+    ++cursor_.y;
+    if (cursor_.y > lines_) {
+        for (size_t y = 0; y < (lines_ - 1); ++y)
+            std::copy(&get(y + 1, 0), &get(y + 1, columns_ - 1), &get(y, 0));
+        --cursor_.y;
+        std::fill(&get(cursor_.y, 0), &get(cursor_.y, columns_ - 1), Char { ' ', current_attrib_ });
+    }
+    reset_blink();
+}
+

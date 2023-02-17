@@ -21,6 +21,8 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
 
 int main(int argc, char* argv[])
 {
+    (void) argc; (void) argv;
+
     auto terminal = initialize_terminal({ true });
 
 restart:
