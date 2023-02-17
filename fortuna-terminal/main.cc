@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
     SyncQueue<SceneEvent> scene_queue;
     SyncQueue<FP_Message> event_queue;
 
-    Terminal terminal;
+    Terminal terminal({ true });
     unsigned int scene_n = terminal.add_scene();
 
     FP_Message msg { FP_TEXT_PRINT_CHAR, {} };

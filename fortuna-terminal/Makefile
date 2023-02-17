@@ -1,5 +1,6 @@
 OBJ =   main.o \
-        terminal/terminal.o
+        terminal/terminal.o \
+        terminal/painters/textpainter.o
 
 EXE = fortuna-terminal
 

@@ -12,13 +12,16 @@
 #include "../../fortuna-protocol/fortuna-protocol.h"
 #include "common/noncopyable.hh"
 #include "sceneevent.hh"
+#include "options.hh"
+#include "painters/textpainter.hh"
 
 class Terminal : NonCopyable {
 public:
-    Terminal();
+    explicit Terminal(TerminalOptions terminal_options);
     ~Terminal();
 
     unsigned int add_scene();
+    void         set_scene(unsigned int n);
 
     void update_scene(SyncQueue<SceneEvent>& events);
 
@@ -29,6 +32,11 @@ private:
     std::vector<Scene> scenes_;
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
+
+    std::unique_ptr<TextPainter> text_painter_;
+    Color backgound_color_ = { 0x1a, 0x1c, 0x2c };
+
+    int current_scene_ = -1;
 };
 
 #endif //TERMINAL_HH_

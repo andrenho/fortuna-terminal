@@ -6,6 +6,10 @@
 enum class ProtocolType { Ansi, Fortuna };
 enum class CommType { Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, Debug };
 
+struct TerminalOptions {
+    bool window_mode = false;
+};
+
 struct UartOptions {
     std::string  port = "/dev/serial0";
     unsigned int speed = 1000000;
