@@ -25,7 +25,7 @@ public:
 
     void update_scene(SyncQueue<SceneEvent>& events);
 
-    void do_events(SyncQueue<FP_Message>& event, bool* quit) const;
+    void do_events(SyncQueue<FP_Message>& event, bool* quit);
     void draw() const;
 
 private:

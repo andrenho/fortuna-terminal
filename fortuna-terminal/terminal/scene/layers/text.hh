@@ -3,19 +3,23 @@
 
 #include <cstdint>
 #include <algorithm>
+#include <chrono>
 #include <memory>
 
 #include "layer.hh"
 #include "fortuna-protocol.h"
 #include "terminal/scene/scene_mode.hh"
 
+using TimePoint = std::chrono::high_resolution_clock::time_point;
+using Time = std::chrono::high_resolution_clock;
+
 struct Cursor {
-    size_t   x = 0;
-    size_t   y = 0;
-    uint8_t  color = 0;
-    bool     visible = true;
-    bool     blink_state = true;
-    uint64_t last_blink = 0;
+    size_t    x = 0;
+    size_t    y = 0;
+    uint8_t   color = COLOR_ORANGE;
+    bool      visible = true;
+    bool      blink_state = true;
+    TimePoint last_blink = Time::now();
 };
 
 struct Char {
@@ -27,14 +31,17 @@ class Text : public Layer {
 public:
     Text() : Layer() {}
 
-    void        set_scene_mode(SceneMode scene_mode);
+    void          set_scene_mode(SceneMode scene_mode);
 
-    Char const& get(size_t column, size_t line) const;
-    Char&       get(size_t column, size_t line);
-    void        set(size_t column, size_t line, uint8_t c);
-    void        set(size_t column, size_t line, Char c);
+    Char const&   get(size_t line, size_t column) const;
+    Char&         get(size_t line, size_t column);
+    void          set(size_t line, size_t column, uint8_t c);
+    void          set(size_t line, size_t column, Char c);
 
-    void        reset_attributes();
+    void          reset_blink();
+    void          reset_attributes();
+
+    void          update_blink();
 
     size_t        columns() const { return columns_; }
     size_t        lines() const   { return lines_; }

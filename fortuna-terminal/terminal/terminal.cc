@@ -62,13 +62,16 @@ void Terminal::set_scene(unsigned int n)
     resize_window();
 }
 
-void Terminal::do_events(SyncQueue<FP_Message> &event, bool *quit) const
+void Terminal::do_events(SyncQueue<FP_Message> &event, bool *quit)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12))
             *quit = true;
     }
+
+    for (auto& scene : scenes_)
+        scene.text.update_blink();
 }
 
 void Terminal::draw() const
