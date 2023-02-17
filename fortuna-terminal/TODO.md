@@ -1,0 +1,5 @@
+- Terminal
+  - [ ] Add char, other text methods
+  - [ ] Add error (and error management)
+  - [ ] Events
+- Comm / Protocol
