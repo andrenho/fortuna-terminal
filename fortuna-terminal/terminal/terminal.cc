@@ -2,6 +2,8 @@
 
 #include "../exceptions/sdlexception.hh"
 
+using namespace std::string_literals;
+
 Terminal::Terminal(TerminalOptions terminal_options)
     : window_mode_(terminal_options.window_mode)
 {
@@ -66,7 +68,7 @@ void Terminal::do_events(SyncQueue<FP_Message> &event, bool *quit)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12))
+        if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL))
             *quit = true;
     }
 
@@ -114,9 +116,24 @@ void Terminal::resize_window()
 }
 
 #include <iostream>
-void Terminal::show_error(std::exception const &e)
+void Terminal::show_error(std::exception const &ex, bool* quit)
 {
-    // TODO
-    std::cerr << "\e[1;31m" << e.what() << "\e[0m\n";
-    exit(EXIT_FAILURE);
+    for (Scene& scene: scenes_) {
+        scene.text.set_color(COLOR_RED);
+        scene.text.write("\n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n");
+        scene.text.reset_attributes();
+        draw();
+
+        while (true) {
+            SDL_Event e;
+            while (SDL_PollEvent(&e)) {
+                if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL)) {
+                    *quit = true;
+                    return;
+                } else if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)) {
+                    return;
+                }
+            }
+        }
+    }
 }

@@ -28,7 +28,7 @@ public:
     void do_events(SyncQueue<FP_Message>& event, bool* quit);
     void draw() const;
 
-    void show_error(std::exception const& e);
+    void show_error(std::exception const& e, bool* quit);
 
     [[nodiscard]] unsigned int current_scene_id() const { return current_scene_; }
 

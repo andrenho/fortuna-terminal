@@ -4,7 +4,7 @@ void palette_init(Palette& palette)
 {
     palette[COLOR_BLACK] =      (Color) { 0x1a, 0x1c, 0x2c };
     palette[COLOR_PURPLE] =     (Color) { 0x5d, 0x27, 0x5d };
-    palette[COLOR_RED] =        (Color) { 0xb1, 0x3e, 0x53 };
+    palette[COLOR_RED] =        (Color) { 0xc1, 0x4e, 0x63 };
     palette[COLOR_ORANGE] =     (Color) { 0xef, 0x7d, 0x57 };
     palette[COLOR_YELLOW] =     (Color) { 0xff, 0xcd, 0x75 };
     palette[COLOR_LIME] =       (Color) { 0xa7, 0xf0, 0x70 };

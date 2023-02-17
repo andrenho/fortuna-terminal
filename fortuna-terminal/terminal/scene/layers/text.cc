@@ -94,7 +94,7 @@ void Text::advance_line()
 void Text::move_cursor_one_line_down()
 {
     ++cursor_.y;
-    if (cursor_.y > lines_) {
+    if (cursor_.y >= lines_) {
         for (size_t y = 0; y < (lines_ - 1); ++y)
             std::copy(&get(y + 1, 0), &get(y + 1, columns_ - 1), &get(y, 0));
         --cursor_.y;

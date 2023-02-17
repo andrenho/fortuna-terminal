@@ -3,6 +3,7 @@
 
 #include "terminal/terminal.hh"
 #include "terminal/scene/sceneevent.hh"
+#include "exceptions/fortunaexception.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
 {
@@ -30,6 +31,8 @@ restart:
         SyncQueue<SceneEvent> scene_queue;
         SyncQueue<FP_Message> event_queue;
 
+        throw FortunaException("This is an error");
+
         bool quit = false;
         while (!quit) {
             terminal->do_events(event_queue, &quit);
@@ -38,8 +41,10 @@ restart:
         }
 
     } catch (std::exception& e) {
-        terminal->show_error(e);
-        goto restart;
+        bool quit = false;
+        terminal->show_error(e, &quit);
+        if (!quit)
+            goto restart;
     }
 
     return 0;

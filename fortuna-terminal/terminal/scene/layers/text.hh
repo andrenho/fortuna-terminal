@@ -36,7 +36,6 @@ public:
 
     void          set_scene_mode(SceneMode scene_mode);
 
-    Char const&   get(size_t line, size_t column) const;
     void          set(size_t line, size_t column, uint8_t c);
     void          set(size_t line, size_t column, Char c);
 
@@ -44,10 +43,6 @@ public:
     void          reset_attributes();
 
     void          update_blink();
-
-    size_t        columns() const { return columns_; }
-    size_t        lines() const   { return lines_; }
-    Cursor const& cursor() const  { return cursor_; }
 
     void          write(uint8_t c);
     void          write(std::string const& str)              { for (uint8_t c: str) write(c); }
@@ -58,6 +53,11 @@ public:
     void          set_color(uint8_t color)                   { current_attrib_.color = color; }
 
     uint8_t       bg_color = COLOR_BLACK;
+
+    [[nodiscard]] Char const&   get(size_t line, size_t column) const;
+    [[nodiscard]] size_t        columns() const { return columns_; }
+    [[nodiscard]] size_t        lines() const   { return lines_; }
+    [[nodiscard]] Cursor const& cursor() const  { return cursor_; }
 
     static constexpr size_t Columns_80Columns = 80;
     static constexpr size_t Lines_80Columns   = 30;
