@@ -36,7 +36,14 @@ private:
     std::unique_ptr<TextPainter> text_painter_;
     Color backgound_color_ = { 0x1a, 0x1c, 0x2c };
 
+    int win_w_ = 800, win_h_ = 600;
+
     int current_scene_ = -1;
+    bool window_mode_;
+
+    void         resize_window();
+    Scene const& scene() const { return scenes_.at(current_scene_); }
+    Scene&       scene() { return scenes_.at(current_scene_); }
 };
 
 #endif //TERMINAL_HH_

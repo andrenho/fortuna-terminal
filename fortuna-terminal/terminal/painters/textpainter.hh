@@ -12,6 +12,10 @@ public:
 
     void draw(Text const& text) const;
 
+    static constexpr size_t TextChar_W = 6;
+    static constexpr size_t TextChar_H = 9;
+    static constexpr size_t TextBorder = 12;
+
 private:
     SDL_Renderer* renderer_;
 };

@@ -1,11 +1,12 @@
 OBJ =   main.o \
         terminal/terminal.o \
+        terminal/scene/scene.o \
         terminal/painters/textpainter.o
 
 EXE = fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -I. -I ../fortuna-protocol \
-		 -Wwrite-strings -Wpedantic -Wshadow \
+		 -Wwrite-strings -Wshadow \
 		 -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
 
