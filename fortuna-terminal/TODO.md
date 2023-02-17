@@ -1,5 +1,5 @@
 - Terminal
-  - [ ] Add char, other text methods
+  - [ ] Add char, other text methods (receive updates from scene)
   - [ ] Add error (and error management)
   - [ ] Events
 - Comm / Protocol

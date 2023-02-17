@@ -28,6 +28,10 @@ public:
     void do_events(SyncQueue<FP_Message>& event, bool* quit);
     void draw() const;
 
+    void show_error(std::exception const& e);
+
+    [[nodiscard]] unsigned int current_scene_id() const { return current_scene_; }
+
 private:
     std::vector<Scene> scenes_;
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;

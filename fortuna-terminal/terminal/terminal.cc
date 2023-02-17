@@ -112,3 +112,11 @@ void Terminal::resize_window()
 
     SDL_RenderSetLogicalSize(renderer_.get(), terminal_size.w, terminal_size.h);
 }
+
+#include <iostream>
+void Terminal::show_error(std::exception const &e)
+{
+    // TODO
+    std::cerr << "\e[1;31m" << e.what() << "\e[0m\n";
+    exit(EXIT_FAILURE);
+}
