@@ -1716,7 +1716,7 @@ extern DECLSPEC int SDLCALL SDL_RenderReadPixels(SDL_Renderer * renderer,
  * SDL's rendering functions operate on a backbuffer; that is, calling a
  * rendering function such as SDL_RenderDrawLine() does not directly put a
  * line on the screen, but rather updates the backbuffer. As such, you compose
- * your entire scene and *present* the composed backbuffer to the screen as a
+ * your entire current_scene and *present* the composed backbuffer to the screen as a
  * complete picture.
  *
  * Therefore, when using SDL's rendering API, one does all drawing intended

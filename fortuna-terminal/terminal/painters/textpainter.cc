@@ -68,3 +68,15 @@ void TextPainter::draw_cell(Text const &text, size_t line, size_t column) const
     }
 }
 
+void TextPainter::draw_background(Text const &text) const
+{
+    Color bg = text.palette[text.bg_color];
+    SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
+    SDL_Rect r = {
+            0, 0,
+            (int) ((text.columns() * TextChar_W) + (2 * TextBorder)),
+            (int) ((text.lines() * TextChar_H) + (2 * TextBorder)),
+    };
+    SDL_RenderFillRect(renderer_, &r);
+}
+

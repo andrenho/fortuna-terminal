@@ -34,7 +34,6 @@ private:
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
 
     std::unique_ptr<TextPainter> text_painter_;
-    Color backgound_color_ = { 0x1a, 0x1c, 0x2c };
 
     int win_w_ = 800, win_h_ = 600;
 
@@ -42,8 +41,8 @@ private:
     bool window_mode_;
 
     void         resize_window();
-    Scene const& scene() const { return scenes_.at(current_scene_); }
-    Scene&       scene() { return scenes_.at(current_scene_); }
+    Scene const& current_scene() const { return scenes_.at(current_scene_); }
+    Scene&       current_scene() { return scenes_.at(current_scene_); }
 };
 
 #endif //TERMINAL_HH_

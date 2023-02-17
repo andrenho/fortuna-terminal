@@ -8,12 +8,14 @@
 #include "../scene/layers/text.hh"
 
 #include "../../common/noncopyable.hh"
+#include "common/geometry.hh"
 
 class TextPainter : NonCopyable {
 public:
     explicit TextPainter(SDL_Renderer* renderer);
 
     void draw(Text const& text) const;
+    void draw_background(Text const& text) const;
 
     static constexpr size_t TextChar_W = 6;
     static constexpr size_t TextChar_H = 9;

@@ -73,13 +73,11 @@ void Terminal::do_events(SyncQueue<FP_Message> &event, bool *quit) const
 
 void Terminal::draw() const
 {
-    Size terminal_size = scene().terminal_size();
+    SDL_SetRenderDrawColor(renderer_.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer_.get());
 
-    SDL_SetRenderDrawColor(renderer_.get(), backgound_color_.r, backgound_color_.g, backgound_color_.b, SDL_ALPHA_OPAQUE);
-    SDL_Rect r { 0, 0, (int) terminal_size.w, (int) terminal_size.h };
-    SDL_RenderFillRect(renderer_.get(), &r);
-
-    text_painter_->draw(scene().text);
+    text_painter_->draw_background(current_scene().text);
+    text_painter_->draw(current_scene().text);
 
     SDL_RenderPresent(renderer_.get());
 }
@@ -91,7 +89,7 @@ void Terminal::update_scene(SyncQueue<SceneEvent> &events)
 
 void Terminal::resize_window()
 {
-    Size terminal_size = scene().terminal_size();
+    Size terminal_size = current_scene().terminal_size();
 
     if (window_mode_) {
         SDL_DisplayMode mode;
