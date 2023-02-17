@@ -22,6 +22,8 @@ public:
 private:
     SDL_Renderer* renderer_;
     std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture *)>> font_;
+
+    void draw_cell(Text const &text, size_t line, size_t column) const;
 };
 
 #endif //TEXTPAINTER_HH_
