@@ -11,18 +11,16 @@
 
 #include "layer.hh"
 #include "fortuna-protocol.h"
-#include "terminal/scene/scene_mode.hh"
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
 using Time = std::chrono::high_resolution_clock;
 
 struct Cursor {
-    size_t    x = 0;
-    size_t    y = 0;
-    uint8_t   color = COLOR_ORANGE;
-    bool      visible = true;
-    bool      blink_state = true;
-    TimePoint last_blink = Time::now();
+    size_t       x = 0;
+    size_t       y = 0;
+    CursorAttrib attrib = { COLOR_ORANGE, true };
+    bool         blink_state = true;
+    TimePoint    last_blink = Time::now();
 };
 
 struct Char {
@@ -34,7 +32,7 @@ class Text : public Layer {
 public:
     Text() : Layer() {}
 
-    void          set_scene_mode(SceneMode scene_mode);
+    void          set_graphical_mode(GraphicalMode graphical_mode);
 
     void          set(size_t line, size_t column, uint8_t c);
     void          set(size_t line, size_t column, Char c);
@@ -50,7 +48,12 @@ public:
 
     void          move_cursor_to(size_t line, size_t column) { cursor_.y = line; cursor_.x = column; reset_blink(); }
 
+    void          set_attributes(CharAttrib const& attrib)   { current_attrib_ = attrib; }
     void          set_color(uint8_t color)                   { current_attrib_.color = color; }
+    void          set_cursor_attributes(CursorAttrib attrib) { cursor_.attrib = attrib; }
+
+    void          clear_screen();
+
 
     uint8_t       bg_color = COLOR_BLACK;
 
@@ -63,6 +66,7 @@ public:
     static constexpr size_t Lines_80Columns   = 30;
     static constexpr size_t Columns_40Columns = 40;
     static constexpr size_t Lines_40Columns   = 25;
+
 
 private:
     std::unique_ptr<Char[]> matrix_;

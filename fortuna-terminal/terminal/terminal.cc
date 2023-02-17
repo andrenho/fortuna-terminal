@@ -1,6 +1,7 @@
 #include "terminal.hh"
 
 #include "../exceptions/sdlexception.hh"
+#include "exceptions/fortunaexception.hh"
 
 using namespace std::string_literals;
 
@@ -89,7 +90,54 @@ void Terminal::draw() const
 
 void Terminal::update_scene(SyncQueue<SceneEvent> &events)
 {
+    events.for_each([this](SceneEvent&& scene_event) {
+        FP_Message const& msg = scene_event.message;
+        switch (scene_event.message.command) {
+            case FP_GRAPHICAL_MODE:
+                current_scene().set_graphical_mode(msg.graphical_mode);
+                break;
+            case FP_TEXT_PRINT_CHAR:
+                current_scene().text.write(msg.chr);
+                break;
+            case FP_TEXT_SET_CHAR:
+                current_scene().text.set(msg.set_char.line, msg.set_char.column, Char { msg.set_char.c, msg.set_char.attrib });
+                break;
+            case FP_TEXT_PRINT_TEXT:
+                current_scene().text.write((const char *) msg.text);
+                break;
+            case FP_TEXT_SET_POS:
+                current_scene().text.move_cursor_to(msg.set_pos.line, msg.set_pos.column);
+                break;
+            case FP_TEXT_SET_CHAR_ATTRIB:
+                current_scene().text.set_attributes(msg.char_attrib);
+                break;
+            case FP_TEXT_SET_PALETTE:
+                break;
+            case FP_TEXT_CLEAR_SCREEN:
+                current_scene().text.clear_screen();
+                break;
+            case FP_TEXT_SET_CURSOR_ATTRIB:
+                current_scene().text.set_cursor_attributes(msg.cursor_attrib);
+                break;
+            case FP_TEXT_BEEP:
+                beep();
+                break;
 
+            case FP_EVENT_KEY_PRESS:
+            case FP_EVENT_KEY_RELEASE:
+            case FP_EVENT_KEYSTROKE:
+            case FP_EVENT_JOYSTICK_PRESS:
+            case FP_EVENT_JOYSTICK_RELEASE:
+            case FP_EVENT_MOUSE_MOVE:
+            case FP_EVENT_MOUSE_CLICK:
+                throw FortunaException("Received EVENT from computer");
+
+            case FP_ACTIVATE_MOUSE:
+            case FP_RESET:
+                throw FortunaException("Message "s + std::to_string(scene_event.message.command) + " not implemented");
+                break;
+        }
+    });
 }
 
 void Terminal::resize_window()
@@ -136,4 +184,9 @@ void Terminal::show_error(std::exception const &ex, bool* quit)
             }
         }
     }
+}
+
+void Terminal::beep()
+{
+    // TODO
 }

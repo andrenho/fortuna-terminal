@@ -31,8 +31,6 @@ restart:
         SyncQueue<SceneEvent> scene_queue;
         SyncQueue<FP_Message> event_queue;
 
-        throw FortunaException("This is an error");
-
         bool quit = false;
         while (!quit) {
             terminal->do_events(event_queue, &quit);

@@ -47,6 +47,8 @@ private:
     void         resize_window();
     Scene const& current_scene() const { return scenes_.at(current_scene_); }
     Scene&       current_scene() { return scenes_.at(current_scene_); }
+
+    void beep();
 };
 
 #endif //TERMINAL_HH_

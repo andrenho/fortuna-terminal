@@ -42,8 +42,8 @@ void TextPainter::draw_cell(Text const &text, size_t line, size_t column) const
     Color fg = text.palette[chr.attrib.color];
     Color bg = text.palette[text.bg_color];
 
-    if (text.cursor().x == column && text.cursor().y == line && text.cursor().visible && text.cursor().blink_state) {
-        Color cg = text.palette[text.cursor().color];
+    if (text.cursor().x == column && text.cursor().y == line && text.cursor().attrib.visible && text.cursor().blink_state) {
+        Color cg = text.palette[text.cursor().attrib.color];
         SDL_SetRenderDrawColor(renderer_, cg.r, cg.g, cg.b, SDL_ALPHA_OPAQUE);
         SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
         SDL_RenderFillRect(renderer_, &r);

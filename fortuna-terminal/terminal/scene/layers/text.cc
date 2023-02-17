@@ -5,14 +5,14 @@
 
 using namespace std::chrono_literals;
 
-void Text::set_scene_mode(SceneMode scene_mode)
+void Text::set_graphical_mode(GraphicalMode graphical_mode)
 {
-    switch (scene_mode) {
-        case SceneMode::Text80Columns:
+    switch (graphical_mode) {
+        case TEXT_80_COLUMNS:
             columns_ = Columns_80Columns;
             lines_ = Lines_80Columns;
             break;
-        case SceneMode::TextAndGraphics:
+        case TEXT_AND_GRAPHICS:
             columns_ = Columns_40Columns;
             lines_ = Lines_40Columns;
             break;
@@ -103,3 +103,8 @@ void Text::move_cursor_one_line_down()
     reset_blink();
 }
 
+void Text::clear_screen()
+{
+    for (size_t i = 0; i < (columns_ * lines_); ++i)
+        matrix_[i] = { ' ', current_attrib_ };
+}

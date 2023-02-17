@@ -36,6 +36,14 @@ public:
         }
     }
 
+    template <typename F>
+    void for_each(F f) {
+        while (!empty()) {
+            T obj = pop_block();
+            f(std::move(obj));
+        }
+    }
+
     bool empty() {
         std::unique_lock<std::mutex> lock(mutex_);
         return queue_.empty();
