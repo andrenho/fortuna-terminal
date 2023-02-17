@@ -42,6 +42,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
 Terminal::~Terminal()
 {
+    text_painter_.reset();
     renderer_.reset();
     window_.reset();
     SDL_Quit();

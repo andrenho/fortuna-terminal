@@ -1,6 +1,9 @@
 #ifndef TEXTPAINTER_HH_
 #define TEXTPAINTER_HH_
 
+#include <functional>
+#include <memory>
+
 #include <SDL2/SDL.h>
 #include "../scene/layers/text.hh"
 
@@ -8,7 +11,7 @@
 
 class TextPainter : NonCopyable {
 public:
-    explicit TextPainter(SDL_Renderer* renderer) : renderer_(renderer) {}
+    explicit TextPainter(SDL_Renderer* renderer);
 
     void draw(Text const& text) const;
 
@@ -18,6 +21,7 @@ public:
 
 private:
     SDL_Renderer* renderer_;
+    std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture *)>> font_;
 };
 
 #endif //TEXTPAINTER_HH_

@@ -4,17 +4,17 @@
 #include "layers/text.hh"
 #include "../../common/noncopyable.hh"
 #include "common/geometry.hh"
-
-enum class SceneMode {
-    Text80Columns, TextAndGraphics,
-};
+#include "scene_mode.hh"
 
 struct Scene : NonCopyable {
+    Scene();
+
     Text text;
 
-    SceneMode mode = SceneMode::Text80Columns;
+    [[nodiscard]] Size terminal_size() const;
 
-    Size terminal_size() const;
+private:
+    SceneMode mode = SceneMode::Text80Columns;
 };
 
 #endif //SCENE_HH_
