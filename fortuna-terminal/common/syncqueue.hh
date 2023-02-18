@@ -16,6 +16,12 @@ public:
         cond_.notify_one();
     }
 
+    void push(T item) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        queue_.push(item);
+        cond_.notify_one();
+    }
+
     T pop_block() {
         std::unique_lock<std::mutex> lock(mutex_);
         cond_.wait(lock, [this]() { return !queue_.empty(); });

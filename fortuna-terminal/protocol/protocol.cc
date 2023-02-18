@@ -5,7 +5,7 @@
 std::unique_ptr<Protocol>
 Protocol::create_unique(ProtocolType protocol_type, std::unique_ptr<CommunicationModule> comm,
                         SyncQueue<SceneEvent> &scene_queue,
-                        int scene_n, Size initial_size)
+                        unsigned int scene_n, Size initial_size)
 {
     switch (protocol_type) {
         case ProtocolType::Ansi:
@@ -17,7 +17,7 @@ Protocol::create_unique(ProtocolType protocol_type, std::unique_ptr<Communicatio
     throw FortunaException("Invalid protocol.");
 }
 
-Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, int scene_n)
+Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n)
     : comm_(std::move(comm)), scene_queue_(scene_queue), scene_n_(scene_n)
 {
 }

@@ -20,14 +20,14 @@ public:
     static std::unique_ptr<Protocol>
     create_unique(ProtocolType protocol_type, std::unique_ptr<CommunicationModule> comm,
                   SyncQueue<SceneEvent> &scene_queue,
-                  int scene_n, Size size);
+                  unsigned int scene_n, Size size);
 
 protected:
-    Protocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, int scene_n);
+    Protocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n);
 
     std::unique_ptr<CommunicationModule> comm_;
     SyncQueue<SceneEvent>& scene_queue_;
-    int scene_n_;
+    unsigned int scene_n_;
 };
 
 #endif //PROTOCOL_HH_
