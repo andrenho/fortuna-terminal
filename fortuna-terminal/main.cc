@@ -4,6 +4,8 @@
 #include "terminal/terminal.hh"
 #include "terminal/scene/sceneevent.hh"
 #include "exceptions/fortunaexception.hh"
+#include "protocol/protocol.hh"
+#include "comm/echo.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
 {
@@ -20,20 +22,36 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
     return terminal;
 }
 
+static std::vector<std::unique_ptr<Protocol>> initialize_protocols(SyncQueue<SceneEvent> &scene_queue, Size size)
+{
+    std::vector<std::unique_ptr<Protocol>> protocols;
+    auto echo = std::make_unique<Echo>();
+    protocols.push_back(Protocol::create_unique(ProtocolType::Ansi, std::move(echo), scene_queue, 0, size));
+    return protocols;
+}
+
 int main(int argc, char* argv[])
 {
     (void) argc; (void) argv;
 
+    SyncQueue<SceneEvent> scene_queue;
+    SyncQueue<FP_Message> event_queue;
+
     auto terminal = initialize_terminal({ true });
+    auto const* cterminal = terminal.get();
+    auto protocols = initialize_protocols(scene_queue, cterminal->current_scene().terminal_size());
 
 restart:
     try {
-        SyncQueue<SceneEvent> scene_queue;
-        SyncQueue<FP_Message> event_queue;
+        size_t current_protocol = 0;
+
+        for (auto& protocol: protocols)
+            protocol->run();
 
         bool quit = false;
         while (!quit) {
-            terminal->do_events(event_queue, &quit);
+            terminal->get_events(event_queue, &quit);
+            protocols.at(current_protocol)->do_events(event_queue);
             terminal->update_scene(scene_queue);
             terminal->draw();
         }

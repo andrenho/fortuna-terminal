@@ -25,11 +25,12 @@ public:
 
     void update_scene(SyncQueue<SceneEvent>& events);
 
-    void do_events(SyncQueue<FP_Message>& event_queue, bool* quit);
+    void get_events(SyncQueue<FP_Message>& event_queue, bool* quit);
     void draw() const;
 
     void show_error(std::exception const& e, bool* quit);
 
+    [[nodiscard]] Scene const& current_scene() const { return scenes_.at(current_scene_); }
     [[nodiscard]] unsigned int current_scene_id() const { return current_scene_; }
 
 private:
@@ -45,7 +46,6 @@ private:
     bool window_mode_;
 
     void         resize_window();
-    Scene const& current_scene() const { return scenes_.at(current_scene_); }
     Scene&       current_scene() { return scenes_.at(current_scene_); }
 
     void beep();

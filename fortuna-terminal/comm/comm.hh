@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "../../common/noncopyable.hh"
+#include "../common/noncopyable.hh"
 
 class CommunicationModule : NonCopyable {
 public:

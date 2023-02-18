@@ -5,6 +5,7 @@
 #include <mutex>
 #include <optional>
 #include <queue>
+#include "noncopyable.hh"
 
 template <typename T>
 class SyncQueue : NonCopyable {

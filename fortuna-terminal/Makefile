@@ -1,9 +1,13 @@
 OBJ =   main.o \
+		comm/echo.o \
+		protocol/protocol.o \
+		protocol/ansiprotocol.o \
         terminal/terminal.o \
         terminal/scene/scene.o \
 		terminal/scene/layers/text.o \
 		terminal/palette/palette.o \
-        terminal/painters/textpainter.o
+        terminal/painters/textpainter.o \
+        lib/tmt/tmt.o
 
 EXE = fortuna-terminal
 
@@ -24,8 +28,8 @@ endif
 
 all: ${EXE}
 
-#protocol/tmt.o: protocol/tmt.c
-# 	${CC} -c -o $@ $^ -O0 -ggdb
+lib/tmt/tmt.o: lib/tmt/tmt.c
+	${CC} -c -o $@ $^ -O0 -ggdb
 
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}

@@ -65,7 +65,7 @@ void Terminal::set_scene(unsigned int n)
     resize_window();
 }
 
-void Terminal::do_events(SyncQueue<FP_Message> &event_queue, bool *quit)
+void Terminal::get_events(SyncQueue<FP_Message> &event_queue, bool *quit)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
@@ -114,7 +114,7 @@ void Terminal::update_scene(SyncQueue<SceneEvent> &events)
                 current_scene().text.write(msg.chr);
                 break;
             case FP_TEXT_SET_CHAR:
-                current_scene().text.set(msg.set_char.line, msg.set_char.column, Char { msg.set_char.c, msg.set_char.attrib });
+                current_scene().text.set(msg.set_char.line, msg.set_char.column, Char {msg.set_char.c, msg.set_char.attrib });
                 break;
             case FP_TEXT_PRINT_TEXT:
                 current_scene().text.write((const char *) msg.text);
