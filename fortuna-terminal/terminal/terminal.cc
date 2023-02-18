@@ -104,8 +104,14 @@ void Terminal::draw() const
 
 void Terminal::update_scene(SyncQueue<SceneEvent> &events)
 {
-    events.for_each([this](SceneEvent&& scene_event) {
+    while (true) {
+        auto omsg = events.pop_nonblock();
+        if (!omsg.has_value())
+            break;
+
+        SceneEvent const& scene_event = omsg.value();
         FP_Message const& msg = scene_event.message;
+
         switch (scene_event.message.command) {
             case FP_GRAPHICAL_MODE:
                 current_scene().set_graphical_mode(msg.graphical_mode);
@@ -151,7 +157,7 @@ void Terminal::update_scene(SyncQueue<SceneEvent> &events)
                 throw FortunaException("Message "s + std::to_string(scene_event.message.command) + " not implemented");
                 break;
         }
-    });
+    };
 }
 
 void Terminal::resize_window()
