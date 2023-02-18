@@ -125,6 +125,7 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
                             TMTCHAR ch = s->lines[r]->chars[x];
                             FP_Message msg = { FP_TEXT_SET_CHAR, {} };
                             msg.set_char = { (uint8_t) ch.c, (uint8_t) r, (uint8_t) x, translate_attrib(ch.a) };
+                            this_->scene_queue_.emplace({ this_->scene_n_, msg });
                         }
                     }
                 }
