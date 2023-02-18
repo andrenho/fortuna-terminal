@@ -11,17 +11,17 @@
 
 class CommunicationModule : NonCopyable {
 public:
-    virtual std::vector<uint8_t> read_blocking(size_t n) const = 0;
-    virtual std::vector<uint8_t> read_for(std::chrono::duration<double> duration) const = 0;
+    virtual std::vector<uint8_t> read_blocking(size_t n) = 0;
+    virtual std::vector<uint8_t> read_for(std::chrono::duration<double> duration) = 0;
 
-    virtual void                 write(std::vector<uint8_t> const& data) const = 0;
+    virtual void                 write(std::vector<uint8_t> const& data) = 0;
 
-    void write(std::string const& str) const {
+    void write(std::string const& str) {
         std::vector<uint8_t> vec(str.begin(), str.end());
         write(vec);
     }
 
-    void write(uint8_t byte) const {
+    void write(uint8_t byte) {
         std::vector<uint8_t> vec = { byte };
         write(vec);
     }

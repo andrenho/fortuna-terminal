@@ -32,8 +32,28 @@ public:
         return item;
     }
 
+    template <typename U>
+    void pop_all_into(U& collection) {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        while (!queue_.empty()) {
+            collection.push_back(queue_.front());
+            queue_.pop();
+        }
+    }
+
+    template <typename U>
+    void push_all(U const& collection) {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        for (T const& t : collection)
+            queue_.push(t);
+        cond_.notify_one();
+    }
+
     std::optional<T> pop_nonblock() {
         std::unique_lock<std::mutex> lock(mutex_);
+
         if (queue_.empty()) {
             return {};
         } else {
