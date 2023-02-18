@@ -34,6 +34,8 @@ int main(int argc, char* argv[])
 {
     (void) argc; (void) argv;
 
+    int exit_status = EXIT_SUCCESS;
+
     SyncQueue<SceneEvent> scene_queue;
     SyncQueue<FP_Message> event_queue;
 
@@ -61,7 +63,11 @@ restart:
         terminal->show_error(e, &quit);
         if (!quit)
             goto restart;
+        exit_status = EXIT_FAILURE;
     }
 
-    return 0;
+    for (auto& protocol: protocols)
+        protocol->finalize_threads();
+
+    return exit_status;
 }

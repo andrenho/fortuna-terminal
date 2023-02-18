@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include <chrono>
+#include <string>
 #include <vector>
 
 #include "../common/noncopyable.hh"

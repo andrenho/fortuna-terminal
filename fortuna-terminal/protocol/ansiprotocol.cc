@@ -19,29 +19,21 @@ AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<
         throw FortunaException("Could not allocate terminal");
 }
 
-AnsiProtocol::~AnsiProtocol()
-{
-    threads_active_ = false;
-    read_thread_->join();
-    input_thread_->join();
-}
-
 void AnsiProtocol::run()
 {
-    SyncQueue<std::vector<uint8_t>> input_queue;
-
-    read_thread_ = std::make_unique<std::thread>([this, &input_queue]() {
+    read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
             auto received_bytes = comm_->read_for(4ms);
             if (!received_bytes.empty())
-                input_queue.push(received_bytes);
+                input_queue_.emplace(std::move(received_bytes));
         }
     });
 
-    input_thread_ = std::make_unique<std::thread>([this, &input_queue]() {
+    input_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
-            std::vector<uint8_t> received_bytes = input_queue.pop_block();
-            tmt_write(vt_.get(), (const char *) received_bytes.data(), received_bytes.size());
+            std::vector<uint8_t> received_bytes = input_queue_.pop_block();
+            if (!received_bytes.empty())
+                tmt_write(vt_.get(), (const char *) received_bytes.data(), received_bytes.size());
         }
     });
 }
@@ -187,5 +179,13 @@ CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
 
     attr.reverse = a.reverse;
     return attr;
+}
+
+void AnsiProtocol::finalize_threads()
+{
+    threads_active_ = false;
+    read_thread_->join();
+    input_queue_.push({});  // release the lock
+    input_thread_->join();
 }
 

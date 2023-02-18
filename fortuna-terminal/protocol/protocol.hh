@@ -22,6 +22,8 @@ public:
                   SyncQueue<SceneEvent> &scene_queue,
                   unsigned int scene_n, Size size);
 
+    virtual void finalize_threads() = 0;
+
 protected:
     Protocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n);
 
