@@ -79,5 +79,7 @@ restart:
     for (auto& protocol: protocols)
         protocol->finalize_threads();
 
+    std::cout << "Total scene events processed: " << terminal->total_scene_events() << std::endl;
+
     return exit_status;
 }

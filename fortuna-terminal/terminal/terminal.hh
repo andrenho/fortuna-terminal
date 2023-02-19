@@ -33,6 +33,8 @@ public:
     [[nodiscard]] Scene const& current_scene() const { return scenes_.at(current_scene_); }
     [[nodiscard]] unsigned int current_scene_id() const { return current_scene_; }
 
+    [[nodiscard]] size_t total_scene_events() const { return total_scene_events_; }
+
 private:
     std::vector<Scene> scenes_;
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
@@ -51,6 +53,8 @@ private:
     void beep();
 
     void add_keyboard_event(SyncQueue<FP_Message> &event_queue, bool is_down, SDL_KeyboardEvent key);
+
+    size_t total_scene_events_ = 0;
 };
 
 #endif //TERMINAL_HH_

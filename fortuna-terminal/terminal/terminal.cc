@@ -111,6 +111,8 @@ void Terminal::update_scene(SyncQueue<SceneEvent> &events)
         if (!omsg.has_value())
             break;
 
+        total_scene_events_++;
+
         SceneEvent const& scene_event = omsg.value();
         FP_Message const& msg = scene_event.message;
 
