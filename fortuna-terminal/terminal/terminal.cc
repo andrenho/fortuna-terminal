@@ -3,6 +3,8 @@
 #include "../exceptions/sdlexception.hh"
 #include "exceptions/fortunaexception.hh"
 
+#include <iostream>
+
 using namespace std::string_literals;
 
 Terminal::Terminal(TerminalOptions terminal_options)
@@ -185,6 +187,8 @@ void Terminal::resize_window()
 
 void Terminal::show_error(std::exception const &ex, bool* quit)
 {
+    std::cerr << "\e[1;31m" << ex.what() << "\e[0m" << std::endl;
+
     for (Scene& scene: scenes_) {
         scene.text.set_color(COLOR_RED);
         scene.text.write("\n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n");

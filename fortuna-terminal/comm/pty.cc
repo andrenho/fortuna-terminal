@@ -20,7 +20,8 @@ PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
         setenv("LANG", "C", 1);
         setenv("TERM", "ansi", 1);
         // this is the child process that will execute the shell
-        execl(pty_options.shell.c_str(), pty_options.shell.c_str(), NULL);
+        if (execl(pty_options.shell.c_str(), pty_options.shell.c_str(), NULL) == -1)
+            throw LibcException("Could not initialize shell.");
     }
 
     // make read blocking
