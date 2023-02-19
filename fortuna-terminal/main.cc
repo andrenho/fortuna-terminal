@@ -28,7 +28,8 @@ static std::vector<std::unique_ptr<Protocol>> initialize_protocols(Terminal* ter
     Text const& text = ((const Terminal *) terminal)->current_scene().text;
     try {
         std::vector<std::unique_ptr<Protocol>> protocols;
-        auto echo = std::make_unique<PTY>(PTYOptions {}, Size { text.lines(), text.columns() });
+        auto echo = std::make_unique<Echo>();
+        // auto pty = std::make_unique<PTY>(PTYOptions {}, Size { text.lines(), text.columns() });
         protocols.push_back(Protocol::create_unique(
                 ProtocolType::Ansi, std::move(echo), scene_queue, 0, { text.lines(), text.columns() }));
         return protocols;

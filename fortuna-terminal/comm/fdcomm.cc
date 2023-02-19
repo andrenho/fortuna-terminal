@@ -4,25 +4,17 @@
 
 #include <unistd.h>
 
-static void duration_to_timeval(std::chrono::duration<double> duration, timeval& tv)
-{
-    double durationSeconds = duration.count();
-
-    time_t seconds = static_cast<time_t>(durationSeconds);
-    long microseconds = static_cast<long>((durationSeconds - seconds) * 1000000);
-
-    tv.tv_sec = seconds;
-    tv.tv_usec = microseconds;
-}
-
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
 {
-    return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> FDComm::read_for(std::chrono::duration<double> duration)
-{
-    return std::vector<uint8_t>();
+    std::vector<uint8_t> data(n);
+    int r = read(fd_, data.data(), n);
+    if (r < 0)
+        throw LibcException("Error reading from file descriptor");
+    else if (r == 0)
+        action_on_rw_zero();
+    else if (r < n)
+        data.resize(n);
+    return data;
 }
 
 void FDComm::write(std::vector<uint8_t> const &data)
@@ -33,3 +25,4 @@ void FDComm::write(std::vector<uint8_t> const &data)
     else if (n < 0)
         throw LibcException("Error writing to file descriptor");
 }
+

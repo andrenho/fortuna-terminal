@@ -7,8 +7,9 @@
 class Echo : public CommunicationModule {
 public:
     [[nodiscard]] std::vector<uint8_t> read_blocking(size_t n) override;
-    [[nodiscard]] std::vector<uint8_t> read_for(std::chrono::duration<double> duration) override;
     void                               write(std::vector<uint8_t> const &data) override;
+
+    void release_locks() override;
 
 private:
     SyncQueue<uint8_t> buffer_;

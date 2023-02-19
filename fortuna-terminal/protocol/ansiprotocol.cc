@@ -23,15 +23,15 @@ void AnsiProtocol::run()
 {
     read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
-            auto received_bytes = comm_->read_for(4ms);
-            if (!received_bytes.empty())
-                input_queue_.emplace(std::move(received_bytes));
+            uint8_t byte = comm_->read_blocking();
+            input_queue_.push(byte);
         }
     });
 
     input_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
-            std::vector<uint8_t> received_bytes = input_queue_.pop_block();
+            std::vector<uint8_t> received_bytes;
+            input_queue_.pop_all_into(received_bytes);
             if (!received_bytes.empty())
                 tmt_write(vt_.get(), (const char *) received_bytes.data(), received_bytes.size());
         }
@@ -185,6 +185,7 @@ CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
 void AnsiProtocol::finalize_threads()
 {
     threads_active_ = false;
+    comm_->release_locks();
     read_thread_->join();
     input_queue_.push({});  // release the lock
     input_thread_->join();

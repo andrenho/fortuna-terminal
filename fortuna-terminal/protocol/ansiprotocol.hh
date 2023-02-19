@@ -30,7 +30,7 @@ private:
 
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
 
-    SyncQueue<std::vector<uint8_t>> input_queue_;
+    SyncQueue<uint8_t> input_queue_;
 
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
 };

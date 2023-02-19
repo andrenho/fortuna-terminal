@@ -8,15 +8,6 @@ std::vector<uint8_t> Echo::read_blocking(size_t n)
     return v;
 }
 
-std::vector<uint8_t> Echo::read_for(std::chrono::duration<double> duration)
-{
-    std::this_thread::sleep_for(duration);
-
-    std::vector<uint8_t> v;
-    buffer_.pop_all_into(v);
-    return v;
-}
-
 void Echo::write(std::vector<uint8_t> const &data)
 {
     std::vector<uint8_t> new_data;
@@ -27,3 +18,9 @@ void Echo::write(std::vector<uint8_t> const &data)
     }
     buffer_.push_all(new_data);
 }
+
+void Echo::release_locks()
+{
+    buffer_.push(0x0);
+}
+
