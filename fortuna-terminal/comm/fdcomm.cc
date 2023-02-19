@@ -12,6 +12,9 @@ FDComm::~FDComm()
 
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
 {
+    if (fd_ == 0)
+        return {};
+
     last_wait_ = n;
 
     std::vector<uint8_t> data(n);
@@ -27,6 +30,9 @@ std::vector<uint8_t> FDComm::read_blocking(size_t n)
 
 void FDComm::write(std::vector<uint8_t> const &data)
 {
+    if (fd_ == 0)
+        return;
+
     int n = ::write(fd_, data.data(), data.size());
     if (n == 0)
         action_on_rw_zero();

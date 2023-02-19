@@ -50,3 +50,13 @@ void PTY::action_on_rw_zero()
 {
     client_disconnected();
 }
+
+std::vector<uint8_t> PTY::read_blocking(size_t n)
+{
+    try {
+        return FDComm::read_blocking(n);
+    } catch (LibcException& e) {
+        std::cout << e.what() << std::endl;
+        return {};
+    }
+}

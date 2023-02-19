@@ -10,6 +10,8 @@ public:
     explicit PTY(PTYOptions const& pty_options, Size terminal_size);
     ~PTY() override;
 
+    std::vector<uint8_t> read_blocking(size_t n) override;
+
     void action_on_rw_zero() override;
 
 private:
