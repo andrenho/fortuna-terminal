@@ -33,10 +33,3 @@ void FDComm::write(std::vector<uint8_t> const &data)
     else if (n < 0)
         throw LibcException("Error writing to file descriptor");
 }
-
-void FDComm::release_locks()
-{
-    char buf[last_wait_] = {0};
-    ::write(fd_, buf, last_wait_);
-}
-

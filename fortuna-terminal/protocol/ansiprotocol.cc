@@ -185,8 +185,11 @@ CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
 void AnsiProtocol::finalize_threads()
 {
     threads_active_ = false;
-    comm_->release_locks();
-    read_thread_->join();
+    if (comm_->release_locks()) {
+        read_thread_->join();
+    } else {
+        pthread_kill(read_thread_->native_handle(), 9);
+    }
     input_queue_.push({});  // release the lock
     input_thread_->join();
 }

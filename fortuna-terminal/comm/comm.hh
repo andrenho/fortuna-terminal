@@ -17,7 +17,7 @@ public:
 
     virtual void                 write(std::vector<uint8_t> const& data) = 0;
 
-    virtual void                 release_locks() = 0;
+    virtual bool                 release_locks() { return false; }
 
     void write(std::string const& str) {
         std::vector<uint8_t> vec(str.begin(), str.end());
