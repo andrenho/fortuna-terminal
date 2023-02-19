@@ -35,25 +35,6 @@ PTY::~PTY()
         close(fd_);
 }
 
-std::vector<uint8_t> PTY::read_blocking(size_t n)
-{
-    return std::vector<uint8_t>();
-}
-
-std::vector<uint8_t> PTY::read_for(std::chrono::duration<double> duration)
-{
-    return std::vector<uint8_t>();
-}
-
-void PTY::write(std::vector<uint8_t> const &data)
-{
-    int n = ::write(fd_, data.data(), data.size());
-    if (n == 0)
-        client_disconnected();
-    else if (n < 0)
-        throw LibcException("Error writing to PTY");
-}
-
 void
 PTY::client_disconnected()
 {
@@ -61,4 +42,9 @@ PTY::client_disconnected()
     fd_ = 0;
     std::cout << "PTY client disconnected.\n";
     exit(EXIT_SUCCESS);
+}
+
+void PTY::action_on_rw_zero()
+{
+    client_disconnected();
 }
