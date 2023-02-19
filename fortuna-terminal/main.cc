@@ -6,6 +6,7 @@
 #include "exceptions/fortunaexception.hh"
 #include "protocol/protocol.hh"
 #include "comm/echo.hh"
+#include "comm/pty.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
 {
@@ -27,7 +28,7 @@ static std::vector<std::unique_ptr<Protocol>> initialize_protocols(Terminal* ter
     Text const& text = ((const Terminal *) terminal)->current_scene().text;
     try {
         std::vector<std::unique_ptr<Protocol>> protocols;
-        auto echo = std::make_unique<Echo>();
+        auto echo = std::make_unique<PTY>();
         protocols.push_back(Protocol::create_unique(
                 ProtocolType::Ansi, std::move(echo), scene_queue, 0, { text.lines(), text.columns() }));
         return protocols;
