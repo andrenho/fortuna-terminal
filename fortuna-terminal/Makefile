@@ -12,14 +12,14 @@ OBJ =   main.o \
 EXE = fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -I. -I ../fortuna-protocol \
-		 -Wwrite-strings -Wshadow \
+		 -Wwrite-strings -Wshadow -fno-inline-functions \
 		 -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
 
 ifeq ($(OS),Windows_NT)
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include -O0 -ggdb
-	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2 -lpthread -Wl,--no-as-needed
+	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2 -lpthread
 else
 	OBJ := ${OBJ} comm/pty.o comm/uart.o
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -O0 -ggdb -DCOMM_UART -DCOMM_PTY

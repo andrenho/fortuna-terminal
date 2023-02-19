@@ -40,8 +40,8 @@ int main(int argc, char* argv[])
     SyncQueue<FP_Message> event_queue;
 
     auto terminal = initialize_terminal({ true });
-    auto const* cterminal = terminal.get();
-    auto protocols = initialize_protocols(scene_queue, cterminal->current_scene().terminal_size());
+    Text const& text = ((const Terminal *) terminal.get())->current_scene().text;
+    auto protocols = initialize_protocols(scene_queue, { text.lines(), text.columns() });
 
 restart:
     try {
