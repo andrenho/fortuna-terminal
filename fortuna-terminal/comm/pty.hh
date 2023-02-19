@@ -8,7 +8,6 @@
 class PTY : public FDComm {
 public:
     explicit PTY(PTYOptions const& pty_options, Size terminal_size);
-    ~PTY() override;
 
     std::vector<uint8_t> read_blocking(size_t n) override;
 

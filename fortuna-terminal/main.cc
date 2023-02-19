@@ -7,6 +7,7 @@
 #include "protocol/protocol.hh"
 #include "comm/echo.hh"
 #include "comm/pty.hh"
+#include "comm/tcpip.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
 {
@@ -29,9 +30,10 @@ static std::vector<std::unique_ptr<Protocol>> initialize_protocols(Terminal* ter
     try {
         std::vector<std::unique_ptr<Protocol>> protocols;
         // auto echo = std::make_unique<Echo>();
-        auto pty = std::make_unique<PTY>(PTYOptions {}, Size { text.columns(), text.lines() });
+        // auto pty = std::make_unique<PTY>(PTYOptions {}, Size { text.columns(), text.lines() });
+        auto tcpip = std::make_unique<TCPIP>(TcpIpOptions {});
         protocols.push_back(Protocol::create_unique(
-                ProtocolType::Ansi, std::move(pty), scene_queue, 0, { text.columns(), text.lines() }));
+                ProtocolType::Ansi, std::move(tcpip), scene_queue, 0, { text.columns(), text.lines() }));
         return protocols;
     } catch (std::exception& e) {
         terminal->show_error(e, nullptr);

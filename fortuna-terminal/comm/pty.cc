@@ -31,12 +31,6 @@ PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
         throw LibcException("Could not set file descriptor as blocking.");
 }
 
-PTY::~PTY()
-{
-    if (fd_ != 0)
-        close(fd_);
-}
-
 void
 PTY::client_disconnected()
 {
