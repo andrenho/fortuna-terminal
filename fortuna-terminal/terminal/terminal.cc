@@ -79,11 +79,11 @@ void Terminal::get_events(SyncQueue<FP_Message> &event_queue, bool *quit)
         }
 
         else if (e.type == SDL_KEYDOWN) {
-            add_keyboard_event(event_queue, false, e.key);
+            add_keyboard_event(event_queue, true, e.key);
         }
 
         else if (e.type == SDL_KEYDOWN) {
-            add_keyboard_event(event_queue, true, e.key);
+            add_keyboard_event(event_queue, false, e.key);
         }
     }
 
