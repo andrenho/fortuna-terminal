@@ -10,6 +10,8 @@
 
 class CommunicationModule : NonCopyable {
 public:
+    virtual ~CommunicationModule() = default;
+
     virtual std::vector<uint8_t> read_blocking(size_t n) = 0;
     virtual uint8_t              read_blocking() { return read_blocking(1).at(0); }
 

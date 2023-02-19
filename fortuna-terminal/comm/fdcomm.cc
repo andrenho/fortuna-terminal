@@ -4,8 +4,16 @@
 
 #include <unistd.h>
 
+FDComm::~FDComm()
+{
+    if (fd_ != 0)
+        close(fd_);
+}
+
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
 {
+    last_wait_ = n;
+
     std::vector<uint8_t> data(n);
     int r = read(fd_, data.data(), n);
     if (r < 0)
@@ -24,5 +32,11 @@ void FDComm::write(std::vector<uint8_t> const &data)
         action_on_rw_zero();
     else if (n < 0)
         throw LibcException("Error writing to file descriptor");
+}
+
+void FDComm::release_locks()
+{
+    char buf[last_wait_] = {0};
+    ::write(fd_, buf, last_wait_);
 }
 
