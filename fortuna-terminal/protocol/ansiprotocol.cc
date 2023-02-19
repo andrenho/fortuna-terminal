@@ -11,7 +11,7 @@ AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<
                            Size initial_size)
         : Protocol(std::move(comm), scene_queue, scene_n),
           vt_(decltype(vt_)(
-                  tmt_open(initial_size.w, initial_size.h, AnsiProtocol::tmt_callback, this, nullptr),
+                  tmt_open(initial_size.h, initial_size.w, AnsiProtocol::tmt_callback, this, nullptr),
                   [](TMT* vt) { tmt_close(vt); }
           ))
 {
