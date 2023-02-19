@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <thread>
+#include <signal.h>
 
 using namespace std::chrono_literals;
 
