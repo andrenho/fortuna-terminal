@@ -26,7 +26,8 @@ PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
     // make read blocking
     int flags = fcntl(fd_, F_GETFL);
     flags &= ~O_NONBLOCK;
-    fcntl(fd_, F_SETFL, flags);
+    if (fcntl(fd_, F_SETFL, flags) == -1)
+        throw LibcException("Could not set file descriptor as blocking.");
 }
 
 PTY::~PTY()
