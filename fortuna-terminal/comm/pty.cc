@@ -1,5 +1,4 @@
 #include "pty.hh"
-#include "../common/geometry.hh"
 #include "../exceptions/libcexception.hh"
 
 #include <fcntl.h>
@@ -10,9 +9,9 @@
 #include <cstdlib>
 #include <iostream>
 
-PTY::PTY(PTYOptions const &pty_options, Size terminal_size)
+PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
 {
-    struct winsize winp = { terminal_size.h, terminal_size.w, 0 , 0 };
+    struct winsize winp = { (int) terminal_size.h, (int) terminal_size.w, 0 , 0 };
 
     pid_t pid = forkpty(&fd_, NULL, NULL, &winp);
     if (pid < 0) {
@@ -48,9 +47,9 @@ std::vector<uint8_t> PTY::read_for(std::chrono::duration<double> duration)
 
 void PTY::write(std::vector<uint8_t> const &data)
 {
-    int n = write(fd_, data.data(), data.size());
+    int n = ::write(fd_, data.data(), data.size());
     if (n == 0)
-        pty_client_disconnected();
+        client_disconnected();
     else if (n < 0)
         throw LibcException("Error writing to PTY");
 }

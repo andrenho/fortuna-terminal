@@ -3,6 +3,7 @@
 
 #include "comm.hh"
 #include "../options.hh"
+#include "../common/geometry.hh"
 
 class PTY : public CommunicationModule {
 public:
