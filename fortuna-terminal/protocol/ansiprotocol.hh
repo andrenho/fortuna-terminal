@@ -29,11 +29,14 @@ private:
     std::unique_ptr<std::thread> input_thread_ = nullptr;
     bool                         threads_active_ = true;
 
+    SyncQueue<uint8_t> input_queue_;
+    std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> cache_;
+
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
 
-    SyncQueue<uint8_t> input_queue_;
-
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
+
+    static std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> initialize_cache(Size size);
 };
 
 #endif //ANSIPROTOCOL_HH_

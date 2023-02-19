@@ -2,15 +2,17 @@
 #include "exceptions/fortunaexception.hh"
 #include "common/color.hh"
 
+#include <cstring>
+#include <csignal>
 #include <iostream>
 #include <thread>
-#include <signal.h>
 
 using namespace std::chrono_literals;
 
 AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n,
                            Size initial_size)
         : Protocol(std::move(comm), scene_queue, scene_n),
+          cache_(AnsiProtocol::initialize_cache(initial_size)),
           vt_(decltype(vt_)(
                   tmt_open(initial_size.h, initial_size.w, AnsiProtocol::tmt_callback, this, nullptr),
                   [](TMT* vt) { tmt_close(vt); }
@@ -125,9 +127,13 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
                     if (s->lines[r]->dirty) {
                         for (size_t x = 0; x < s->ncol; x++) {
                             TMTCHAR ch = s->lines[r]->chars[x];
-                            FP_Message msg = { FP_TEXT_SET_CHAR, {} };
-                            msg.set_char = { (uint8_t) ch.c, (uint8_t) r, (uint8_t) x, translate_attrib(ch.a) };
-                            this_->scene_queue_.emplace({ this_->scene_n_, msg });
+                            TMTCHAR cached_ch = this_->cache_.at(r).at(x);
+                            if (memcmp(&ch, &cached_ch, sizeof(TMTCHAR)) != 0) {
+                                FP_Message msg = { FP_TEXT_SET_CHAR, {} };
+                                msg.set_char = { (uint8_t) ch.c, (uint8_t) r, (uint8_t) x, translate_attrib(ch.a) };
+                                this_->scene_queue_.emplace({ this_->scene_n_, msg });
+                                this_->cache_.at(r).at(x) = ch;
+                            }
                         }
                     }
                 }
@@ -195,5 +201,17 @@ void AnsiProtocol::finalize_threads()
     }
     input_queue_.push({});  // release the lock
     input_thread_->join();
+}
+
+std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> AnsiProtocol::initialize_cache(Size initial_size)
+{
+    std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> k;
+    for (size_t y = 0; y < initial_size.h; ++y) {
+        k[y] = {};
+        for (size_t x = 0; x < initial_size.w; ++x) {
+            k[y][x] = TMTCHAR { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } };
+        }
+    }
+    return k;
 }
 
