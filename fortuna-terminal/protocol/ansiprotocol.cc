@@ -23,8 +23,9 @@ void AnsiProtocol::run()
 {
     read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
-            uint8_t byte = comm_->read_blocking();
-            input_queue_.push(byte);
+            auto byte = comm_->read_blocking();
+            if (byte.has_value())
+                input_queue_.push(byte.value());
         }
     });
 
@@ -189,6 +190,7 @@ void AnsiProtocol::finalize_threads()
         read_thread_->join();
     } else {
         pthread_kill(read_thread_->native_handle(), 9);
+        read_thread_->detach();
     }
     input_queue_.push({});  // release the lock
     input_thread_->join();

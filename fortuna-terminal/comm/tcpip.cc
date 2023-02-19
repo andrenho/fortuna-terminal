@@ -14,6 +14,8 @@
 #  define INVALID_SOCKET -1
 #endif
 
+#include <iostream>
+
 #define BACKLOG 1
 
 using namespace std::string_literals;
@@ -69,7 +71,41 @@ TCPIP::TCPIP(TcpIpOptions const &options)
         throw LibcException("Error on listening");
 }
 
-void TCPIP::action_on_rw_zero()
+std::vector<uint8_t> TCPIP::read_blocking(size_t n)
 {
-    // TODO
+    if (fd_ == 0) {   // client disconnected
+        struct sockaddr_storage client_addr;
+        socklen_t sin_size = sizeof client_addr;
+        SOCKET fd = accept(sock_fd, (struct sockaddr *) &client_addr, &sin_size);
+        if (fd == INVALID_SOCKET)
+            on_read_error("Error on accept");
+        fd_ = fd;
+
+        std::cout << "Client connected.\n";
+
+        return {};
+
+    } else {
+        std::vector<uint8_t> data(n);
+        int r = recv(fd_, (char *) data.data(), (int) n, 0);
+        if (r < 0)
+            on_read_error(strerror(errno));
+        else if (r == 0)
+            on_read_zero();
+        else if (r < (int) n)
+            data.resize(n);
+        return data;
+    }
+}
+
+void TCPIP::write(std::vector<uint8_t> const &data)
+{
+    if (fd_ == 0)
+        return;
+
+    int n = send(fd_, (const char *) data.data(), (int) data.size(), 0);
+    if (n == 0)
+        on_write_error(strerror(errno));
+    else if (n < 0)
+        on_write_zero();
 }

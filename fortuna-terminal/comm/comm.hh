@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -12,8 +13,8 @@ class CommunicationModule : NonCopyable {
 public:
     virtual ~CommunicationModule() = default;
 
-    virtual std::vector<uint8_t> read_blocking(size_t n) = 0;
-    virtual uint8_t              read_blocking() { return read_blocking(1).at(0); }
+    virtual std::vector<uint8_t>   read_blocking(size_t n) = 0;
+    virtual std::optional<uint8_t> read_blocking();
 
     virtual void                 write(std::vector<uint8_t> const& data) = 0;
 

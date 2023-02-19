@@ -11,10 +11,8 @@ public:
 
     std::vector<uint8_t> read_blocking(size_t n) override;
 
-    void action_on_rw_zero() override;
+    void client_disconnected() override;
 
-private:
-    void client_disconnected();
 };
 
 #endif //PTY_HH_

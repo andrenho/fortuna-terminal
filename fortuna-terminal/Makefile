@@ -1,5 +1,5 @@
 OBJ =   main.o \
-		comm/fdcomm.o comm/echo.o comm/tcpip.o \
+		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o \
 		protocol/protocol.o \
 		protocol/ansiprotocol.o \
         terminal/terminal.o \

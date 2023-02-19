@@ -14,7 +14,9 @@ class TCPIP : public FDComm {
 public:
     explicit TCPIP(TcpIpOptions const& options);
 
-    void action_on_rw_zero() override;
+    std::vector<uint8_t> read_blocking(size_t n) override;
+
+    void write(std::vector<uint8_t> const &data) override;
 
 private:
     SOCKET sock_fd = 0;
