@@ -195,7 +195,8 @@ void Terminal::show_error(std::exception const &ex, bool* quit)
             SDL_Event e;
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL)) {
-                    *quit = true;
+                    if (quit)
+                        *quit = true;
                     return;
                 } else if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)) {
                     return;

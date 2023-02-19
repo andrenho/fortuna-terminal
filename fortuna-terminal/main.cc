@@ -22,12 +22,19 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
     return terminal;
 }
 
-static std::vector<std::unique_ptr<Protocol>> initialize_protocols(SyncQueue<SceneEvent> &scene_queue, Size size)
+static std::vector<std::unique_ptr<Protocol>> initialize_protocols(Terminal* terminal, SyncQueue<SceneEvent> &scene_queue)
 {
-    std::vector<std::unique_ptr<Protocol>> protocols;
-    auto echo = std::make_unique<Echo>();
-    protocols.push_back(Protocol::create_unique(ProtocolType::Ansi, std::move(echo), scene_queue, 0, size));
-    return protocols;
+    Text const& text = ((const Terminal *) terminal)->current_scene().text;
+    try {
+        std::vector<std::unique_ptr<Protocol>> protocols;
+        auto echo = std::make_unique<Echo>();
+        protocols.push_back(Protocol::create_unique(
+                ProtocolType::Ansi, std::move(echo), scene_queue, 0, { text.lines(), text.columns() }));
+        return protocols;
+    } catch (std::exception& e) {
+        terminal->show_error(e, nullptr);
+        exit(EXIT_FAILURE);
+    }
 }
 
 int main(int argc, char* argv[])
@@ -40,8 +47,7 @@ int main(int argc, char* argv[])
     SyncQueue<FP_Message> event_queue;
 
     auto terminal = initialize_terminal({ true });
-    Text const& text = ((const Terminal *) terminal.get())->current_scene().text;
-    auto protocols = initialize_protocols(scene_queue, { text.lines(), text.columns() });
+    auto protocols = initialize_protocols(terminal.get(), scene_queue);
 
 restart:
     try {
