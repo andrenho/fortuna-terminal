@@ -11,7 +11,7 @@
 
 PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
 {
-    struct winsize winp = { (int) terminal_size.h, (int) terminal_size.w, 0 , 0 };
+    struct winsize winp = { (short unsigned int) terminal_size.h, (short unsigned int) terminal_size.w, 0 , 0 };
 
     pid_t pid = forkpty(&fd_, NULL, NULL, &winp);
     if (pid < 0) {

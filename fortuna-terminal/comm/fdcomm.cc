@@ -20,7 +20,7 @@ std::vector<uint8_t> FDComm::read_blocking(size_t n)
         throw LibcException("Error reading from file descriptor");
     else if (r == 0)
         action_on_rw_zero();
-    else if (r < n)
+    else if (r < (int) n)
         data.resize(n);
     return data;
 }
