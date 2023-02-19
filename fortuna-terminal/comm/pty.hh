@@ -8,13 +8,11 @@
 class PTY : public FDComm {
 public:
     explicit PTY(PTYOptions const& pty_options, Size terminal_size);
-    ~PTY();
+    ~PTY() override;
 
     void action_on_rw_zero() override;
 
 private:
-    int fd_ = -1;
-
     void client_disconnected();
 };
 
