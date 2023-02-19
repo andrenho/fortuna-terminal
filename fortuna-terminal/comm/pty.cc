@@ -56,7 +56,7 @@ std::vector<uint8_t> PTY::read_blocking(size_t n)
     try {
         return FDComm::read_blocking(n);
     } catch (LibcException& e) {
-        std::cout << e.what() << std::endl;
+        client_disconnected();
         return { 0, };
     }
 }
