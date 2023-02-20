@@ -508,7 +508,7 @@ extern DECLSPEC int SDLCALL SDL_GetNumDisplayModes(int displayIndex);
  *
  * - width -> largest to smallest
  * - height -> largest to smallest
- * - bits per pixel -> more colors to fewer colors
+ * - bits per pixel -> more palette to fewer palette
  * - packed pixel layout -> largest to smallest
  * - refresh rate -> highest to lowest
  *

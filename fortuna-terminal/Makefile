@@ -1,19 +1,19 @@
-OBJ=main.o \
-	comm/comm.o comm/echo.o comm/tcpip.o comm/debug.o \
-	error/error.o \
-	gpio/gpio.o \
-	options/options.o \
-	buffer/buffer.o \
-	protocol/protocol.o protocol/ansi.o protocol/tmt.o protocol/fortuna.o \
-	../fortuna-protocol/fortuna-protocol.o \
-	scene/scene.o scene/text.o scene/palette.o \
-	ui/ui.o ui/painter.o
-EXE=fortuna-terminal
+OBJ =   main.o options.o \
+		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o \
+		protocol/ansiprotocol.o \
+        terminal/terminal.o \
+        terminal/scene/scene.o \
+		terminal/scene/layers/text.o \
+		terminal/palette/palette.o \
+        terminal/painters/textpainter.o \
+        lib/tmt/tmt.o
+
+EXE = fortuna-terminal
 
 CPPFLAGS=-Wall -Wextra -I. -I ../fortuna-protocol \
-		 -fstack-protector -fstack-protector-strong -Wformat=2 -Wpointer-arith -Wunreachable-code -Wwrite-strings\
+		 -Wwrite-strings -Wshadow \
 		 -D_GNU_SOURCE -pthread
-CFLAGS=-std=c11
+CXXFLAGS=-std=c++20
 
 ifeq ($(OS),Windows_NT)
 	EXE := ${EXE}.exe
@@ -27,11 +27,11 @@ endif
 
 all: ${EXE}
 
-protocol/tmt.o: protocol/tmt.c
+lib/tmt/tmt.o: lib/tmt/tmt.c
 	${CC} -c -o $@ $^ -O0 -ggdb
 
 ${EXE}: ${OBJ}
-	${CC} -o $@ $^ ${LDFLAGS}
+	${CXX} -o $@ $^ ${LDFLAGS}
 
 .PHONY: clean
 clean:

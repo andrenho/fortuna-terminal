@@ -1655,7 +1655,7 @@ extern DECLSPEC int SDLCALL SDL_RenderGeometry(SDL_Renderer *renderer,
  * \param texture (optional) The SDL texture to use.
  * \param xy Vertex positions
  * \param xy_stride Byte size to move from one element to the next element
- * \param color Vertex colors (as SDL_Color)
+ * \param color Vertex palette (as SDL_Color)
  * \param color_stride Byte size to move from one element to the next element
  * \param uv Vertex normalized texture coordinates
  * \param uv_stride Byte size to move from one element to the next element
@@ -1716,7 +1716,7 @@ extern DECLSPEC int SDLCALL SDL_RenderReadPixels(SDL_Renderer * renderer,
  * SDL's rendering functions operate on a backbuffer; that is, calling a
  * rendering function such as SDL_RenderDrawLine() does not directly put a
  * line on the screen, but rather updates the backbuffer. As such, you compose
- * your entire scene and *present* the composed backbuffer to the screen as a
+ * your entire current_scene and *present* the composed backbuffer to the screen as a
  * complete picture.
  *
  * Therefore, when using SDL's rendering API, one does all drawing intended

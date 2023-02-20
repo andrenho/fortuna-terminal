@@ -21,10 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f6a0609a-35e5-4831-9eca-1daa6f046aaa" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/buffer/buffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" beforeDir="false" afterPath="$PROJECT_DIR$/../fortuna-terminal/protocol/fortuna.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,11 +104,6 @@
   }
 }</component>
   <component name="RunManager" selected="Makefile Application.tcpip">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="fortuna-protocol" TARGET_NAME="all" CONFIG_NAME="all" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -159,6 +150,8 @@
       <workItem from="1676212094584" duration="3539000" />
       <workItem from="1676296724201" duration="6634000" />
       <workItem from="1676310864713" duration="1832000" />
+      <workItem from="1676575468468" duration="374000" />
+      <workItem from="1676576220100" duration="35000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1676157316184</created>
