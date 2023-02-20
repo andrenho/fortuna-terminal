@@ -15,9 +15,9 @@ extern "C" {
 #include "lib/tmt/tmt.h"
 }
 
-class AnsiProtocol : public NonCopyable {
+class AnsiProtocol /* : public NonCopyable */ {
 public:
-    AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n, Size const& size);
+    AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent>& scene_queue, unsigned int scene_n, Size const& size);
 
     void run();
     void do_events(SyncQueue<FP_Message> &event_queue);
@@ -35,7 +35,7 @@ private:
     std::unique_ptr<std::thread> input_thread_ = nullptr;
     bool                         threads_active_ = true;
 
-    SyncQueue<uint8_t> input_queue_;
+    std::unique_ptr<SyncQueue<uint8_t>> input_queue_ = std::make_unique<SyncQueue<uint8_t>>();
     std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> cache_;
 
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;

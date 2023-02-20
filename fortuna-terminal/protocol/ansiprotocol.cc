@@ -10,7 +10,7 @@
 
 using namespace std::chrono_literals;
 
-AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue,
+AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent>& scene_queue,
                            unsigned int scene_n, Size const& initial_size)
         : comm_(std::move(comm)),
           scene_queue_(scene_queue),
@@ -31,14 +31,14 @@ void AnsiProtocol::run()
         while (threads_active_) {
             auto byte = comm_->read_blocking();
             if (byte.has_value())
-                input_queue_.push(byte.value());
+                input_queue_->push(byte.value());
         }
     });
 
     input_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
             std::vector<uint8_t> received_bytes;
-            input_queue_.pop_all_into(received_bytes);
+            input_queue_->pop_all_into(received_bytes);
             if (!received_bytes.empty())
                 tmt_write(vt_.get(), (const char *) received_bytes.data(), received_bytes.size());
         }
@@ -202,7 +202,7 @@ void AnsiProtocol::finalize_threads()
         pthread_kill(read_thread_->native_handle(), 9);
         read_thread_->detach();
     }
-    input_queue_.push({});  // release the lock
+    input_queue_->push({});  // release the lock
     input_thread_->join();
 }
 

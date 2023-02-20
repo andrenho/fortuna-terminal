@@ -24,15 +24,17 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
     return terminal;
 }
 
-static std::vector<std::unique_ptr<AnsiProtocol>> initialize_protocols(Terminal* terminal, SyncQueue<SceneEvent> &scene_queue, Options const* options)
+static std::vector<AnsiProtocol> initialize_protocols(Terminal* terminal, SyncQueue<SceneEvent> &scene_queue, Options const* options)
 {
     Text const& text = ((const Terminal *) terminal)->current_scene().text;
 
+    std::vector<AnsiProtocol> protocols;
     try {
+
         Size size = { text.columns(), text.lines() };
         auto comm = CommunicationModule::create_unique(options, size);
-        auto protocol = std::make_unique<AnsiProtocol>(std::move(comm), scene_queue, 0, size);
-        return { std::move(protocol) };
+        protocols.emplace_back(std::move(comm), scene_queue, 0, size);
+        return protocols;
 
     } catch (std::exception& e) {
         terminal->show_error(e, nullptr);
