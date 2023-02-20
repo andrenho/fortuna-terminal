@@ -6,8 +6,6 @@
 class Pipes : public FDComm {
 public:
     Pipes();
-
-
 };
 
 #endif //PIPES_HH_

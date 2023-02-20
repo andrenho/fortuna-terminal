@@ -1,4 +1,5 @@
 - [ ] Create stdin/stdout protocol
+- [ ] Merge FortunaTerminal.h
 - [ ] Create test circuit
 
 New protocol:

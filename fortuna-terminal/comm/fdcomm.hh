@@ -21,8 +21,8 @@ public:
 protected:
     FDComm() = default;
 
-    int fd_ = 0;
-    int write_fd_ = 0;
+    int fd_ = -1;
+    int write_fd_ = -1;
 };
 
 #endif //FDCOMM_HH_

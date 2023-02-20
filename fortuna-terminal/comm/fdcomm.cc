@@ -9,15 +9,15 @@
 
 FDComm::~FDComm()
 {
-    if (fd_ != 0)
+    if (fd_ != -1)
         close(fd_);
-    if (write_fd_ != 0)
+    if (write_fd_ != -1)
         close(write_fd_);
 }
 
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
 {
-    if (fd_ == 0)
+    if (fd_ == -1)
         return {};
 
     std::vector<uint8_t> data(n);
@@ -52,10 +52,10 @@ void FDComm::on_rw_zero()
 void FDComm::client_disconnected()
 {
     close(fd_);
-    fd_ = 0;
-    if (write_fd_ != 0) {
+    fd_ = -1;
+    if (write_fd_ != -1) {
         close(write_fd_);
-        write_fd_ = 0;
+        write_fd_ = -1;
     }
     std::cout << "Client disconnected." << std::endl;
 }
