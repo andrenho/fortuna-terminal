@@ -36,11 +36,10 @@ Fortuna Terminal is a terminal for the [Fortuna computer series](https://fortuna
 
 ### Protocols
 
-Communication can happen over the following protocols:
+The communication protocol is an extension of the terminal ANSI protocol, allowing for text, graphics and audio.
 
- - Fortuna: uses the [Fortuna Communication Protocol](https://github.com/andrenho/fortuna-terminal/wiki/Fortuna-Protocol). It provides error detection, flow control and retransmission in case of errors. With this protocol, all functionality in Fortuna Terminal is supported.
- - Ansi: support to the [Linux Ansi terminal protocol](https://espterm.github.io/docs/VT100%20escape%20codes.html), used by default by many Unix distributions. In this case, only text mode is supported.
- - Fortuna+Ansi: same as Ansi, but an additional wire allows special commands (such as graphics) to be sent via the same line.
+- Fortuna Terminal uses [libtmt](https://github.com/deadpixi/libtmt) for supporting the ANSI protocol for text. Here's a [list of escape codes supported](https://github.com/deadpixi/libtmt#supported-input-and-escape-sequences).
+- Fortuna Terminal protocol extension supports graphics and audio, also also reports mouse and joystick events back to the application. 
  
 ### Additional techincal information
  
