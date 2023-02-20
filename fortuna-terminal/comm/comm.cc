@@ -32,7 +32,7 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options 
             throw FortunaException("Communication mode not yet implemented");
 #ifndef _WIN32
         case CommType::Uart:
-            return std::make_unique<UART>()
+            return std::make_unique<UART>(options->uart_options);
         case CommType::PTY:
             return std::make_unique<PTY>(options->pty_options, size);
             break;
