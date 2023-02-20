@@ -6,24 +6,30 @@
 #include <thread>
 #include <vector>
 
-#include "protocol.hh"
+#include "comm/comm.hh"
+#include "terminal/scene/sceneevent.hh"
+#include "common/syncqueue.hh"
 #include "common/geometry.hh"
 
 extern "C" {
 #include "lib/tmt/tmt.h"
 }
 
-class AnsiProtocol : public Protocol {
+class AnsiProtocol {
 public:
     AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n, Size size);
 
-    void run() override;
-    void do_events(SyncQueue<FP_Message> &event_queue) override;
+    void run();
+    void do_events(SyncQueue<FP_Message> &event_queue);
 
-    void finalize_threads() override;
+    void finalize_threads();
 
 private:
     static void tmt_callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
+
+    std::unique_ptr<CommunicationModule> comm_;
+    SyncQueue<SceneEvent>& scene_queue_;
+    unsigned int scene_n_;
 
     std::unique_ptr<std::thread> read_thread_ = nullptr;
     std::unique_ptr<std::thread> input_thread_ = nullptr;

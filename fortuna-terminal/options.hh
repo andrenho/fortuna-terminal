@@ -3,8 +3,7 @@
 
 #include <string>
 
-enum class ProtocolType { Ansi, Fortuna };
-enum class CommType { Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, Debug };
+enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, Debug };
 
 struct TerminalOptions {
     bool window_mode = false;
@@ -25,8 +24,20 @@ struct PTYOptions {
     std::string shell = "/bin/bash";
 };
 
-class Options {
+struct Options {
+public:
+    Options(int argc, char* argv[]);
 
+    CommType        comm_type   = CommType::NotChosen;
+    bool            window_mode = false;
+    TerminalOptions terminal_options;
+    UartOptions     uart_options;
+    TcpIpOptions    tcpip_options;
+    PTYOptions      pty_options;
+
+private:
+    void print_help(int exit_status);
+    void parse_uart_settings(std::string const& opt);
 };
 
 #endif //OPTIONS_HH_

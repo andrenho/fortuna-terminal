@@ -3,11 +3,14 @@
 
 #include <cstdint>
 
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
 
 #include "../common/noncopyable.hh"
+#include "../options.hh"
+#include "../common/geometry.hh"
 
 class CommunicationModule : NonCopyable {
 public:
@@ -29,6 +32,8 @@ public:
         std::vector<uint8_t> vec = { byte };
         write(vec);
     }
+
+    static std::unique_ptr<CommunicationModule> create_unique(Options const *options, Size const &size);
 
 protected:
     CommunicationModule() = default;

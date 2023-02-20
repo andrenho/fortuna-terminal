@@ -1,17 +1,20 @@
 #include "ansiprotocol.hh"
-#include "exceptions/fortunaexception.hh"
-#include "common/color.hh"
 
 #include <cstring>
 #include <csignal>
 #include <iostream>
 #include <thread>
 
+#include "exceptions/fortunaexception.hh"
+#include "common/color.hh"
+
 using namespace std::chrono_literals;
 
-AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n,
-                           Size initial_size)
-        : Protocol(std::move(comm), scene_queue, scene_n),
+AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue,
+                           unsigned int scene_n, Size initial_size)
+        : comm_(std::move(comm)),
+          scene_queue_(scene_queue),
+          scene_n_(scene_n),
           cache_(AnsiProtocol::initialize_cache(initial_size)),
           vt_(decltype(vt_)(
                   tmt_open(initial_size.h, initial_size.w, AnsiProtocol::tmt_callback, this, nullptr),
