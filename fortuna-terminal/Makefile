@@ -1,5 +1,5 @@
 OBJ =   main.o options.o \
-		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o \
+		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
 		protocol/ansiprotocol.o \
         terminal/terminal.o \
         terminal/scene/scene.o \

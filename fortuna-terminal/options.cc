@@ -59,6 +59,8 @@ Options::Options(int argc, char* argv[])
                     comm_type = CommType::PTY;
                 else if (strcmp(optarg, "debug") == 0)
                     comm_type = CommType::Debug;
+                else if (strcmp(optarg, "pipes") == 0)
+                    comm_type = CommType::Pipes;
                 else
                     throw FortunaException("Unsupported communication mode");
                 break;

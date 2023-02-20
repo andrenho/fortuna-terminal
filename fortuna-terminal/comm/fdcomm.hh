@@ -22,6 +22,7 @@ protected:
     FDComm() = default;
 
     int fd_ = 0;
+    int write_fd_ = 0;
 };
 
 #endif //FDCOMM_HH_

@@ -3,6 +3,8 @@
 #include "exceptions/fortunaexception.hh"
 #include "echo.hh"
 #include "tcpip.hh"
+#include "pipes.hh"
+
 #ifndef _WIN32
 #  include "pty.hh"
 #  include "uart.hh"
@@ -26,7 +28,6 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options 
             throw FortunaException("Invalid communication mode");
         case CommType::I2C:
         case CommType::SPI:
-        case CommType::Pipes:
         case CommType::Debug:
             throw FortunaException("Communication mode not yet implemented");
 #ifndef _WIN32
@@ -44,6 +45,8 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options 
             return std::make_unique<TCPIP>(options->tcpip_options);
         case CommType::Echo:
             return std::make_unique<Echo>();
+        case CommType::Pipes:
+            return std::make_unique<Pipes>();
     }
     return nullptr;
 }

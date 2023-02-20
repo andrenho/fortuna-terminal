@@ -1,5 +1,18 @@
-- Terminal
-  - [x] Add char, other text methods (receive updates from scene)
-  - [x] Add error (and error management)
-  - [x] Events
-- Comm / Protocol
+- [ ] Create stdin/stdout protocol
+- [ ] Create test circuit
+
+New protocol:
+  - [ ] Activate graphics mode
+  - [ ] Mouse support
+  - [ ] Joystick support
+  - [ ] Graphics setup
+  - [ ] Graphics draw
+  - [ ] Graphics collision support
+
+Audio:
+  - [ ] Design audio
+  - [ ] Implement audio
+
+New communication modes:
+  - [ ] SPI
+  - [ ] I²C
