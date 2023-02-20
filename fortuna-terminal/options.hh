@@ -11,8 +11,10 @@ struct TerminalOptions {
 };
 
 struct UartOptions {
-    std::string  port = "/dev/serial0";
-    unsigned int speed = 1000000;
+    std::string  port      = "/dev/serial0";
+    size_t       baud      = 1000000;
+    char         parity    = 'N';
+    uint8_t      stop_bits = 1;
 };
 
 struct TcpIpOptions {

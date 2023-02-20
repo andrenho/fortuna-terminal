@@ -1,7 +1,6 @@
 #include "protocol.hh"
 #include "ansiprotocol.hh"
 #include "exceptions/fortunaexception.hh"
-#include "fortuna.hh"
 
 std::unique_ptr<Protocol>
 Protocol::create_unique(ProtocolType protocol_type, std::unique_ptr<CommunicationModule> comm,
@@ -12,7 +11,7 @@ Protocol::create_unique(ProtocolType protocol_type, std::unique_ptr<Communicatio
         case ProtocolType::Ansi:
             return std::make_unique<AnsiProtocol>(std::move(comm), scene_queue, scene_n, initial_size);
         case ProtocolType::Fortuna:
-            return std::make_unique<Fortuna>(std::move(comm), scene_queue, scene_n, initial_size);
+            throw FortunaException("Protocol not implemented.");
     }
 
     throw FortunaException("Invalid protocol.");
