@@ -8,6 +8,7 @@
 #include "comm/echo.hh"
 #include "comm/pty.hh"
 #include "comm/tcpip.hh"
+#include "comm/uart.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
 {
@@ -29,7 +30,8 @@ static std::vector<std::unique_ptr<Protocol>> initialize_protocols(Terminal* ter
     Text const& text = ((const Terminal *) terminal)->current_scene().text;
     try {
         std::vector<std::unique_ptr<Protocol>> protocols;
-        auto comm = std::make_unique<Echo>();
+        // auto comm = std::make_unique<Echo>();
+        auto comm = std::make_unique<UART>(UartOptions {});
         // auto comm = std::make_unique<PTY>(PTYOptions {}, Size { text.columns(), text.lines() });
         // auto comm = std::make_unique<TCPIP>(TcpIpOptions {});
         protocols.push_back(Protocol::create_unique(
