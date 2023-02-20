@@ -3,10 +3,10 @@
 
 struct NonCopyable {
     NonCopyable() = default;
-    NonCopyable(NonCopyable&&) = default;
-    NonCopyable & operator=(NonCopyable&) = default;
-    NonCopyable & operator=(const NonCopyable&&) = delete;
+    NonCopyable & operator=(NonCopyable const&) = delete;
     NonCopyable(const NonCopyable&) = delete;
+    NonCopyable(NonCopyable&&) = default;
+    NonCopyable & operator=(NonCopyable&&) = default;
 };
 
 #endif //NONCOPYABLE_HH_

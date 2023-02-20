@@ -15,9 +15,9 @@ extern "C" {
 #include "lib/tmt/tmt.h"
 }
 
-class AnsiProtocol {
+class AnsiProtocol : public NonCopyable {
 public:
-    AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n, Size size);
+    AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue, unsigned int scene_n, Size const& size);
 
     void run();
     void do_events(SyncQueue<FP_Message> &event_queue);

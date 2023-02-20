@@ -11,7 +11,7 @@
 using namespace std::chrono_literals;
 
 AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent> &scene_queue,
-                           unsigned int scene_n, Size initial_size)
+                           unsigned int scene_n, Size const& initial_size)
         : comm_(std::move(comm)),
           scene_queue_(scene_queue),
           scene_n_(scene_n),

@@ -19,6 +19,8 @@ std::optional<uint8_t> CommunicationModule::read_blocking()
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options const *options, Size const &size)
 {
+    (void) size;
+
     switch (options->comm_type) {
         case CommType::NotChosen:
             throw FortunaException("Invalid communication mode");
