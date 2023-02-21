@@ -1,12 +1,10 @@
 #include "ansiprotocol.hh"
 
 #include <cstring>
-#include <csignal>
 #include <iostream>
 #include <thread>
 
 #include "exceptions/fortunaexception.hh"
-#include "common/color.hh"
 
 using namespace std::chrono_literals;
 
@@ -27,8 +25,10 @@ void AnsiProtocol::run()
     read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
             auto byte = comm_->read_blocking();
-            if (byte.has_value())
+            if (byte.has_value()) {
                 input_queue_->push(byte.value());
+                debug_byte(true, byte.value());
+            }
         }
     });
 
@@ -46,6 +46,7 @@ void AnsiProtocol::run()
             std::vector<uint8_t> bytes_to_output;
             output_queue_->pop_all_into(bytes_to_output);
             comm_->write(bytes_to_output);
+            std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [](uint8_t byte) { debug_byte(false, byte); });
         }
     });
 }
@@ -220,5 +221,10 @@ void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
                 break;
         }
     }
+}
+
+void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
+{
+
 }
 

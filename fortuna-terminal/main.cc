@@ -46,10 +46,12 @@ int main(int argc, char* argv[])
 
     int exit_status = EXIT_SUCCESS;
 
-    auto terminal = initialize_terminal({ options->window_mode });
+    auto terminal = initialize_terminal(options->terminal_options);
     auto protocols = initialize_protocols(*terminal, options.get());
 
     AnsiProtocol& protocol = protocols.at(0);
+    if (options->debug_comm)
+        protocol.set_debug_comm(true);
 
     terminal->resize_window(protocol.scene());
 

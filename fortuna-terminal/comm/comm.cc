@@ -26,7 +26,6 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options 
             throw FortunaException("Invalid communication mode");
         case CommType::I2C:
         case CommType::SPI:
-        case CommType::Debug:
             throw FortunaException("Communication mode not yet implemented");
 #ifndef _WIN32
         case CommType::Uart:

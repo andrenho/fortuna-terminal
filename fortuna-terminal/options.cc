@@ -16,6 +16,7 @@ Options::Options(int argc, char* argv[])
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "window",             no_argument,       nullptr, 'w' },
+                { "debug-comm",         no_argument,       nullptr, 'd' },
                 // serial
                 { "serial-port",        required_argument, nullptr, 'P' },
                 { "baud",               required_argument, nullptr, 'B' },
@@ -28,7 +29,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:d", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -57,8 +58,6 @@ Options::Options(int argc, char* argv[])
                     comm_type = CommType::TcpIp;
                 else if (strcmp(optarg, "pty") == 0)
                     comm_type = CommType::PTY;
-                else if (strcmp(optarg, "debug") == 0)
-                    comm_type = CommType::Debug;
                 else if (strcmp(optarg, "pipes") == 0)
                     comm_type = CommType::Pipes;
                 else
@@ -67,7 +66,11 @@ Options::Options(int argc, char* argv[])
             }
 
             case 'w':
-                window_mode = true;
+                terminal_options.window_mode = true;
+                break;
+
+            case 'd':
+                debug_comm = true;
                 break;
 
             case 'B':
@@ -107,6 +110,7 @@ void Options::print_help(int exit_status)
 {
     std::cout << "    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n";
     std::cout << "    -w, --window                    Window mode (as opposed to the default, which is full screen)\n";
+    std::cout << "    -d, --debug-comm                Print all bytes that entered or exited the terminal\n";
     std::cout << "Options valid for `uart`:\n";
     std::cout << "    -P, --serial-port               Serial port (default: /dev/serial0)\n";
     std::cout << "    -B, --baud                      Baud speed for UART (default: 57600)\n";

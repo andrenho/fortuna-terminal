@@ -40,7 +40,9 @@ public:
     void event_key(SpecialKey key, bool is_down, KeyMod mod);
 
     Scene const& scene() const { return scene_; }
-    Scene& scene() { return scene_; }
+    Scene&       scene() { return scene_; }
+
+    void set_debug_comm(bool debug_comm) { debug_comm_ = debug_comm; }
 
 private:
     static void tmt_callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
@@ -62,6 +64,10 @@ private:
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
 
     static std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> initialize_cache(Size size);
+
+    bool debug_comm_ = false;
+
+    void debug_byte(bool is_input, uint8_t byte);
 };
 
 #endif //ANSIPROTOCOL_HH_
