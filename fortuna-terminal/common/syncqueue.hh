@@ -35,6 +35,7 @@ public:
     template <typename U>
     void pop_all_into(U& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
+        cond_.wait(lock, [this]() { return !queue_.empty(); });
 
         while (!queue_.empty()) {
             collection.push_back(queue_.front());

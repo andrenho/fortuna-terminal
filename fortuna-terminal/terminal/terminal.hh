@@ -14,6 +14,7 @@
 #include "terminal/scene/sceneevent.hh"
 #include "options.hh"
 #include "painters/textpainter.hh"
+#include "protocol/ansiprotocol.hh"
 
 class Terminal : NonCopyable {
 public:
@@ -25,7 +26,7 @@ public:
 
     void update_scene(SyncQueue<SceneEvent>& events);
 
-    void get_events(SyncQueue<FP_Message>& event_queue, bool* quit);
+    void do_events(AnsiProtocol& protocol, bool* quit);
     void draw() const;
 
     void show_error(std::exception const& e, bool* quit);
@@ -52,7 +53,7 @@ private:
 
     void beep();
 
-    void add_keyboard_event(SyncQueue<FP_Message> &event_queue, bool is_down, SDL_KeyboardEvent key);
+    void add_keyboard_event(AnsiProtocol& protocol, bool is_down, SDL_KeyboardEvent key);
 
     size_t total_scene_events_ = 0;
 };

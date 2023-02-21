@@ -55,7 +55,6 @@ int main(int argc, char* argv[])
     int exit_status = EXIT_SUCCESS;
 
     SyncQueue<SceneEvent> scene_queue;
-    SyncQueue<FP_Message> event_queue;
 
     auto terminal = initialize_terminal({ options->window_mode });
     auto protocols = initialize_protocols(terminal.get(), scene_queue, options.get());
@@ -69,8 +68,7 @@ restart:
 
         bool quit = false;
         while (!quit) {
-            terminal->get_events(event_queue, &quit);
-            protocols.at(current_protocol).do_events(event_queue);
+            terminal->do_events(protocols.at(current_protocol), &quit);
             terminal->update_scene(scene_queue);
             terminal->draw();
         }

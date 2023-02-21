@@ -89,20 +89,20 @@ typedef enum __attribute__((packed)) {
     SK_ESC = 128, SK_F1, SK_F2, SK_F3, SK_F4, SK_F5, SK_F6, SK_F7, SK_F8, SK_F9, SK_F10, SK_F11, SK_F12, SK_TAB, SK_CAPSLOCK, SK_WIN,
     SK_INSERT, SK_HOME, SK_END, SK_PAGEUP, SK_PAGEDOWN, SK_UP, SK_DOWN, SK_LEFT, SK_RIGHT, SK_ENTER, SK_BACKSPACE,
     SK_DELETE, SK_PRINTSCREEN, SK_PAUSEBREAK,
-} SpecialKey;
+} SpecialKeyx;
 
 typedef struct __attribute__((packed)) {
     bool shift   : 1;
     bool control : 1;
     bool alt     : 1;
-} KeyMod;
+} KeyModx;
 
 typedef struct __attribute__((packed)) {
     union {
         uint8_t    key;
-        SpecialKey special_key;
+        SpecialKeyx special_key;
     };
-    KeyMod mod;
+    KeyModx mod;
 } FP_KeyEvent;
 
 typedef struct __attribute__((packed)) {

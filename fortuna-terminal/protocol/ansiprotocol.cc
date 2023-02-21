@@ -43,8 +43,17 @@ void AnsiProtocol::run()
                 tmt_write(vt_.get(), (const char *) received_bytes.data(), received_bytes.size());
         }
     });
+
+    output_thread_ = std::make_unique<std::thread>([this]() {
+        while (threads_active_) {
+            std::vector<uint8_t> bytes_to_output;
+            output_queue_->pop_all_into(bytes_to_output);
+            comm_->write(bytes_to_output);
+        }
+    });
 }
 
+/*
 void AnsiProtocol::do_events(SyncQueue<FP_Message> &event_queue)
 {
     while (true) {
@@ -66,36 +75,36 @@ void AnsiProtocol::do_events(SyncQueue<FP_Message> &event_queue)
 
                 } else if (message.key.key < 32 || message.key.key >= 127) {
                     switch (message.key.special_key) {
-                        case SK_ESC:        comm_->write("\e"); break;
-                        case SK_ENTER:      comm_->write("\r"); break;
-                        case SK_TAB:        comm_->write("\t"); break;
-                        case SK_BACKSPACE:  comm_->write("\b"); break;
-                        case SK_F1:         comm_->write("\e[11~"); break;
-                        case SK_F2:         comm_->write("\e[12~"); break;
-                        case SK_F3:         comm_->write("\e[13~"); break;
-                        case SK_F4:         comm_->write("\e[14~"); break;
-                        case SK_F5:         comm_->write("\e[15~"); break;
-                        case SK_F6:         comm_->write("\e[17~"); break;
-                        case SK_F7:         comm_->write("\e[18~"); break;
-                        case SK_F8:         comm_->write("\e[19~"); break;
-                        case SK_F9:         comm_->write("\e[20~"); break;
-                        case SK_F10:        comm_->write("\e[21~"); break;
-                        case SK_F11:        comm_->write("\e[23~"); break;
-                        case SK_F12:        comm_->write("\e[24~"); break;
-                        case SK_INSERT:     comm_->write("\e[2~"); break;
-                        case SK_HOME:       comm_->write("\e[1~"); break;
-                        case SK_END:        comm_->write("\e[4~"); break;
-                        case SK_PAGEUP:     comm_->write("\e[5~"); break;
-                        case SK_PAGEDOWN:   comm_->write("\e[6~"); break;
-                        case SK_UP:         comm_->write("\e[A"); break;
-                        case SK_DOWN:       comm_->write("\e[B"); break;
-                        case SK_LEFT:       comm_->write("\e[D"); break;
-                        case SK_RIGHT:      comm_->write("\e[C"); break;
-                        case SK_DELETE:     comm_->write("\e[3~"); break;
-                        case SK_PRINTSCREEN:
-                        case SK_PAUSEBREAK:
-                        case SK_CAPSLOCK:
-                        case SK_WIN:
+                        case SpecialKey::ESC:        comm_->write("\e"); break;
+                        case SpecialKey::ENTER:      comm_->write("\r"); break;
+                        case SpecialKey::TAB:        comm_->write("\t"); break;
+                        case SpecialKey::BACKSPACE:  comm_->write("\b"); break;
+                        case SpecialKey::F1:         comm_->write("\e[11~"); break;
+                        case SpecialKey::F2:         comm_->write("\e[12~"); break;
+                        case SpecialKey::F3:         comm_->write("\e[13~"); break;
+                        case SpecialKey::F4:         comm_->write("\e[14~"); break;
+                        case SpecialKey::F5:         comm_->write("\e[15~"); break;
+                        case SpecialKey::F6:         comm_->write("\e[17~"); break;
+                        case SpecialKey::F7:         comm_->write("\e[18~"); break;
+                        case SpecialKey::F8:         comm_->write("\e[19~"); break;
+                        case SpecialKey::F9:         comm_->write("\e[20~"); break;
+                        case SpecialKey::F10:        comm_->write("\e[21~"); break;
+                        case SpecialKey::F11:        comm_->write("\e[23~"); break;
+                        case SpecialKey::F12:        comm_->write("\e[24~"); break;
+                        case SpecialKey::INSERT:     comm_->write("\e[2~"); break;
+                        case SpecialKey::HOME:       comm_->write("\e[1~"); break;
+                        case SpecialKey::END:        comm_->write("\e[4~"); break;
+                        case SpecialKey::PAGEUP:     comm_->write("\e[5~"); break;
+                        case SpecialKey::PAGEDOWN:   comm_->write("\e[6~"); break;
+                        case SpecialKey::UP:         comm_->write("\e[A"); break;
+                        case SpecialKey::DOWN:       comm_->write("\e[B"); break;
+                        case SpecialKey::LEFT:       comm_->write("\e[D"); break;
+                        case SpecialKey::RIGHT:      comm_->write("\e[C"); break;
+                        case SpecialKey::DELETE:     comm_->write("\e[3~"); break;
+                        case SpecialKey::PRINTSCREEN:
+                        case SpecialKey::PAUSEBREAK:
+                        case SpecialKey::CAPSLOCK:
+                        case SpecialKey::WIN:
                             break;
                     }
                 }
@@ -106,6 +115,7 @@ void AnsiProtocol::do_events(SyncQueue<FP_Message> &event_queue)
         }
     }
 }
+ */
 
 void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
 {
@@ -216,5 +226,65 @@ std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> AnsiProtocol::
         }
     }
     return k;
+}
+
+void AnsiProtocol::event_text_input(std::string const &text)
+{
+    std::vector<uint8_t> v(text.begin(), text.end());
+    output_queue_->push_all(v);
+}
+
+void AnsiProtocol::event_key(uint8_t key, bool is_down, KeyMod mod)
+{
+    if (is_down) {
+        if (mod.control) {
+            if (key >= 'a' && key <= 'z')
+                output_queue_->push(key - 96);
+        }
+    }
+}
+
+void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
+{
+    auto push_str = [this](std::string const& str) {
+        std::vector<uint8_t> v(str.begin(), str.end());
+        output_queue_->push_all(v);
+    };
+
+    if (is_down) {
+        switch (key) {
+            case SpecialKey::ESC:        push_str("\e"); break;
+            case SpecialKey::ENTER:      push_str("\r"); break;
+            case SpecialKey::TAB:        push_str("\t"); break;
+            case SpecialKey::BACKSPACE:  push_str("\b"); break;
+            case SpecialKey::F1:         push_str("\e[11~"); break;
+            case SpecialKey::F2:         push_str("\e[12~"); break;
+            case SpecialKey::F3:         push_str("\e[13~"); break;
+            case SpecialKey::F4:         push_str("\e[14~"); break;
+            case SpecialKey::F5:         push_str("\e[15~"); break;
+            case SpecialKey::F6:         push_str("\e[17~"); break;
+            case SpecialKey::F7:         push_str("\e[18~"); break;
+            case SpecialKey::F8:         push_str("\e[19~"); break;
+            case SpecialKey::F9:         push_str("\e[20~"); break;
+            case SpecialKey::F10:        push_str("\e[21~"); break;
+            case SpecialKey::F11:        push_str("\e[23~"); break;
+            case SpecialKey::F12:        push_str("\e[24~"); break;
+            case SpecialKey::INSERT:     push_str("\e[2~"); break;
+            case SpecialKey::HOME:       push_str("\e[1~"); break;
+            case SpecialKey::END:        push_str("\e[4~"); break;
+            case SpecialKey::PAGEUP:     push_str("\e[5~"); break;
+            case SpecialKey::PAGEDOWN:   push_str("\e[6~"); break;
+            case SpecialKey::UP:         push_str("\e[A"); break;
+            case SpecialKey::DOWN:       push_str("\e[B"); break;
+            case SpecialKey::LEFT:       push_str("\e[D"); break;
+            case SpecialKey::RIGHT:      push_str("\e[C"); break;
+            case SpecialKey::DELETE:     push_str("\e[3~"); break;
+            case SpecialKey::PRINTSCREEN:
+            case SpecialKey::PAUSEBREAK:
+            case SpecialKey::CAPSLOCK:
+            case SpecialKey::WIN:
+                break;
+        }
+    }
 }
 
