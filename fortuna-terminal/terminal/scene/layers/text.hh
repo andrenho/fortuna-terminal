@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "layer.hh"
-#include "fortuna-protocol.h"
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
 using Time = std::chrono::high_resolution_clock;
@@ -43,7 +42,7 @@ class Text : public Layer {
 public:
     Text() : Layer() {}
 
-    void          set_graphical_mode(GraphicalMode graphical_mode);
+    void          set_80_columns(bool value);
 
     void          set(size_t line, size_t column, Char c);
     void          move_cursor_to(size_t line, size_t column);

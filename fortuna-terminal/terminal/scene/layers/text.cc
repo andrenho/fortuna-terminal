@@ -6,17 +6,14 @@
 
 using namespace std::chrono_literals;
 
-void Text::set_graphical_mode(GraphicalMode graphical_mode)
+void Text::set_80_columns(bool value)
 {
-    switch (graphical_mode) {
-        case TEXT_80_COLUMNS:
-            columns_ = Columns_80Columns;
-            lines_ = Lines_80Columns;
-            break;
-        case TEXT_AND_GRAPHICS:
-            columns_ = Columns_40Columns;
-            lines_ = Lines_40Columns;
-            break;
+    if (value) {
+        columns_ = Columns_80Columns;
+        lines_ = Lines_80Columns;
+    } else {
+        columns_ = Columns_40Columns;
+        lines_ = Lines_40Columns;
     }
 
     matrix_ = std::make_unique<Char[]>(columns_ * lines_);

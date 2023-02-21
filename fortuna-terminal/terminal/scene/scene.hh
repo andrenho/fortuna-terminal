@@ -8,14 +8,14 @@
 struct Scene {
     Scene();
 
-    void set_graphical_mode(GraphicalMode graphical_mode);
+    void set_graphical_mode(bool value);
 
     Text text;
 
     [[nodiscard]] Size terminal_size() const;
 
 private:
-    GraphicalMode graphical_mode_ = TEXT_80_COLUMNS;
+    bool graphical_mode_ = false;
 };
 
 #endif //SCENE_HH_

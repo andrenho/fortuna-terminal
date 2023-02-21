@@ -50,6 +50,21 @@ void AnsiProtocol::run()
     });
 }
 
+void AnsiProtocol::finalize_threads()
+{
+    threads_active_ = false;
+    if (comm_->release_locks()) {
+        read_thread_->join();
+    } else {
+        pthread_kill(read_thread_->native_handle(), 9);
+        read_thread_->detach();
+    }
+    input_queue_->push({});  // release the lock
+    input_thread_->join();
+    output_queue_->push({});  // release the lock
+    output_thread_->join();
+}
+
 
 void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
 {
@@ -62,8 +77,6 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
     switch (m) {
 
         case TMT_MSG_MOVED: {
-                FP_Message msg = { FP_TEXT_SET_POS, {} };
-                msg.set_pos = { (uint8_t) c->r, (uint8_t) c->c };
                 this_->scene_.text.move_cursor_to(c->r, c->c);
                 tmt_clean(vt);
             }
@@ -133,19 +146,6 @@ CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
 
     attr.reverse = a.reverse;
     return attr;
-}
-
-void AnsiProtocol::finalize_threads()
-{
-    threads_active_ = false;
-    if (comm_->release_locks()) {
-        read_thread_->join();
-    } else {
-        pthread_kill(read_thread_->native_handle(), 9);
-        read_thread_->detach();
-    }
-    input_queue_->push({});  // release the lock
-    input_thread_->join();
 }
 
 std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> AnsiProtocol::initialize_cache(Size initial_size)
