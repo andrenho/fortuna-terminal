@@ -239,6 +239,6 @@ void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
         std::cout << "[" << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int) byte << "]";
     if (byte == 10)
         std::cout << "\n";
-    std::cout << "\e[0m";
+    std::cout << "\e[0m" << std::flush;
 }
 
