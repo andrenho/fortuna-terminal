@@ -31,8 +31,6 @@ PTY::PTY(PTYOptions const& pty_options)
     flags &= ~O_NONBLOCK;
     if (fcntl(fd_, F_SETFL, flags) == -1)
         throw LibcException("Could not set file descriptor as blocking.");
-
-    write_fd_ = fd_;
 }
 
 std::vector<uint8_t> PTY::read_blocking(size_t n)
