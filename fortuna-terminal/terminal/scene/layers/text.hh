@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "layer.hh"
+#include "common/geometry.hh"
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
 using Time = std::chrono::high_resolution_clock;

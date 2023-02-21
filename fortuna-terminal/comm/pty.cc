@@ -1,5 +1,4 @@
 #include "pty.hh"
-#include "../exceptions/libcexception.hh"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -9,9 +8,12 @@
 #include <cstdlib>
 #include <iostream>
 
-PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
+#include "../exceptions/libcexception.hh"
+#include "../terminal/scene/layers/text.hh"
+
+PTY::PTY(PTYOptions const& pty_options)
 {
-    struct winsize winp = { (short unsigned int) terminal_size.h, (short unsigned int) terminal_size.w, 0 , 0 };
+    struct winsize winp = { (short unsigned int) Text::Lines_80Columns, (short unsigned int) Text::Columns_80Columns, 0 , 0 };
 
     pid_t pid = forkpty(&fd_, NULL, NULL, &winp);
     if (pid < 0) {
