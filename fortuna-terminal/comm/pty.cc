@@ -15,7 +15,8 @@ PTY::PTY(PTYOptions const& pty_options)
 {
     struct winsize winp = { (short unsigned int) Text::Lines_80Columns, (short unsigned int) Text::Columns_80Columns, 0 , 0 };
 
-    pid_t pid = forkpty(&fd_, NULL, NULL, &winp);
+    char name[256];
+    pid_t pid = forkpty(&fd_, name, NULL, &winp);
     if (pid < 0) {
         throw LibcException("Error initializing PTY");
     } else if (pid == 0) {
@@ -25,6 +26,8 @@ PTY::PTY(PTYOptions const& pty_options)
         if (execl(pty_options.shell.c_str(), pty_options.shell.c_str(), NULL) == -1)
             throw LibcException("Could not initialize shell.");
     }
+
+    std::cout << "Initializing terminal " << name << "." << std::endl;
 
     // make read blocking
     int flags = fcntl(fd_, F_GETFL);
