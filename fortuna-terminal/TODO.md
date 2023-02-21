@@ -1,5 +1,6 @@
-- [ ] Create stdin/stdout protocol
-- [ ] Merge FortunaTerminal.h
+- [x] Create stdin/stdout protocol
+- [ ] Merge FortunaTerminal.h / remove SceneEvent queue?
+- [ ] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit
 
 New protocol:
