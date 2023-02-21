@@ -1,5 +1,6 @@
 #include "ansiprotocol.hh"
 
+#include <csignal>
 #include <cstring>
 #include <iostream>
 #include <thread>
