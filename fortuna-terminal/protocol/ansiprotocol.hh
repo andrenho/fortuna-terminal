@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "comm/comm.hh"
-#include "terminal/scene/sceneevent.hh"
+#include "terminal/scene/scene.hh"
 #include "common/syncqueue.hh"
 #include "common/geometry.hh"
 
@@ -29,7 +29,7 @@ struct KeyMod {
 
 class AnsiProtocol /* : public NonCopyable */ {
 public:
-    AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent>& scene_queue, unsigned int scene_n, Size const& size);
+    explicit AnsiProtocol(std::unique_ptr<CommunicationModule> comm);
 
     void run();
 
@@ -39,12 +39,14 @@ public:
     void event_key(uint8_t key, bool is_down, KeyMod mod);
     void event_key(SpecialKey key, bool is_down, KeyMod mod);
 
+    Scene const& scene() const { return scene_; }
+    Scene& scene() { return scene_; }
+
 private:
     static void tmt_callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
 
     std::unique_ptr<CommunicationModule> comm_;
-    SyncQueue<SceneEvent>& scene_queue_;
-    unsigned int scene_n_;
+    Scene scene_;
 
     std::unique_ptr<std::thread> read_thread_ = nullptr;
     std::unique_ptr<std::thread> input_thread_ = nullptr;

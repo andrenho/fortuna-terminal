@@ -2,6 +2,7 @@
 #include "terminal/scene/scene.hh"
 
 #include <SDL2/SDL.h>
+#include <mutex>
 
 using namespace std::chrono_literals;
 
@@ -20,10 +21,8 @@ void Text::set_graphical_mode(GraphicalMode graphical_mode)
 
     matrix_ = std::make_unique<Char[]>(columns_ * lines_);
 
-    reset_attributes();
-
     for (size_t i = 0; i < (columns_ * lines_); ++i)
-        matrix_[i] = { ' ', current_attrib_ };
+        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
         // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
 }
 
@@ -32,24 +31,19 @@ Char const &Text::get(size_t line, size_t column) const
     return matrix_[line * columns_ + column];
 }
 
-Char &Text::get(size_t line, size_t column)
-{
-    return matrix_[line * columns_ + column];
-}
-
-void Text::set(size_t line, size_t column, uint8_t c)
-{
-    get(line, column) = { c, current_attrib_ };
-}
-
 void Text::set(size_t line, size_t column, Char c)
 {
-    get(line, column) = c;
+    std::unique_lock<std::mutex> lock(*mutex_);
+    matrix_[line * columns_ + column] = c;
+    reset_blink();
 }
 
-void Text::reset_attributes()
+void Text::move_cursor_to(size_t line, size_t column)
 {
-    current_attrib_ = { COLOR_WHITE, false };
+    std::unique_lock<std::mutex> lock(*mutex_);
+    cursor_.y = line;
+    cursor_.x = column;
+    reset_blink();
 }
 
 void Text::reset_blink()
@@ -64,47 +58,4 @@ void Text::update_blink()
         cursor_.blink_state = !cursor_.blink_state;
         cursor_.last_blink = Time::now();
     }
-}
-
-void Text::write(uint8_t c)
-{
-    if (c == '\n') {
-        advance_line();
-    } else {
-        set(cursor_.y, cursor_.x, c);
-        advance_cursor();
-    }
-    reset_blink();
-}
-
-void Text::advance_cursor()
-{
-    ++cursor_.x;
-    if (cursor_.x > columns_)
-        advance_line();
-    reset_blink();
-}
-
-void Text::advance_line()
-{
-    cursor_.x = 0;
-    move_cursor_one_line_down();
-}
-
-void Text::move_cursor_one_line_down()
-{
-    ++cursor_.y;
-    if (cursor_.y >= lines_) {
-        for (size_t y = 0; y < (lines_ - 1); ++y)
-            std::copy(&get(y + 1, 0), &get(y + 1, columns_ - 1), &get(y, 0));
-        --cursor_.y;
-        std::fill(&get(cursor_.y, 0), &get(cursor_.y, columns_ - 1), Char { ' ', current_attrib_ });
-    }
-    reset_blink();
-}
-
-void Text::clear_screen()
-{
-    for (size_t i = 0; i < (columns_ * lines_); ++i)
-        matrix_[i] = { ' ', current_attrib_ };
 }

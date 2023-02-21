@@ -53,20 +53,6 @@ Terminal::~Terminal()
     SDL_Quit();
 }
 
-unsigned int Terminal::add_scene()
-{
-    size_t n = scenes_.size();
-    scenes_.emplace_back();
-    set_scene(n);
-    return n;
-}
-
-void Terminal::set_scene(unsigned int n)
-{
-    current_scene_ = (int) n;
-    resize_window();
-}
-
 void Terminal::do_events(AnsiProtocol& protocol, bool *quit)
 {
     SDL_Event e;
@@ -87,84 +73,22 @@ void Terminal::do_events(AnsiProtocol& protocol, bool *quit)
         }
     }
 
-    for (auto& scene : scenes_)
-        scene.text.update_blink();
 }
 
-void Terminal::draw() const
+void Terminal::draw(Scene const& scene) const
 {
     SDL_SetRenderDrawColor(renderer_.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer_.get());
 
-    text_painter_->draw_background(current_scene().text);
-    text_painter_->draw(current_scene().text);
+    text_painter_->draw_background(scene.text);
+    text_painter_->draw(scene.text);
 
     SDL_RenderPresent(renderer_.get());
 }
 
-void Terminal::update_scene(SyncQueue<SceneEvent> &events)
+void Terminal::resize_window(Scene const& scene)
 {
-    while (true) {
-        auto omsg = events.pop_nonblock();
-        if (!omsg.has_value())
-            break;
-
-        total_scene_events_++;
-
-        SceneEvent const& scene_event = omsg.value();
-        FP_Message const& msg = scene_event.message;
-
-        switch (scene_event.message.command) {
-            case FP_GRAPHICAL_MODE:
-                current_scene().set_graphical_mode(msg.graphical_mode);
-                break;
-            case FP_TEXT_PRINT_CHAR:
-                current_scene().text.write(msg.chr);
-                break;
-            case FP_TEXT_SET_CHAR:
-                current_scene().text.set(msg.set_char.line, msg.set_char.column, Char {msg.set_char.c, msg.set_char.attrib });
-                break;
-            case FP_TEXT_PRINT_TEXT:
-                current_scene().text.write((const char *) msg.text);
-                break;
-            case FP_TEXT_SET_POS:
-                current_scene().text.move_cursor_to(msg.set_pos.line, msg.set_pos.column);
-                break;
-            case FP_TEXT_SET_CHAR_ATTRIB:
-                current_scene().text.set_attributes(msg.char_attrib);
-                break;
-            case FP_TEXT_SET_PALETTE:
-                break;
-            case FP_TEXT_CLEAR_SCREEN:
-                current_scene().text.clear_screen();
-                break;
-            case FP_TEXT_SET_CURSOR_ATTRIB:
-                current_scene().text.set_cursor_attributes(msg.cursor_attrib);
-                break;
-            case FP_TEXT_BEEP:
-                beep();
-                break;
-
-            case FP_EVENT_KEY_PRESS:
-            case FP_EVENT_KEY_RELEASE:
-            case FP_EVENT_KEYSTROKE:
-            case FP_EVENT_JOYSTICK_PRESS:
-            case FP_EVENT_JOYSTICK_RELEASE:
-            case FP_EVENT_MOUSE_MOVE:
-            case FP_EVENT_MOUSE_CLICK:
-                throw FortunaException("Received EVENT from computer");
-
-            case FP_ACTIVATE_MOUSE:
-            case FP_RESET:
-                throw FortunaException("Message "s + std::to_string(scene_event.message.command) + " not implemented");
-                break;
-        }
-    };
-}
-
-void Terminal::resize_window()
-{
-    Size terminal_size = current_scene().terminal_size();
+    Size terminal_size = scene.terminal_size();
 
     if (window_mode_) {
         SDL_DisplayMode mode;
@@ -189,10 +113,9 @@ void Terminal::show_error(std::exception const &ex, bool* quit)
 {
     std::cerr << "\e[1;31m" << ex.what() << "\e[0m" << std::endl;
 
+    /*
     for (Scene& scene: scenes_) {
-        scene.text.set_color(COLOR_RED);
-        scene.text.write("\n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n");
-        scene.text.reset_attributes();
+        scene.text.write("\e[1;31m]n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n\e[0m");
         draw();
 
         while (true) {
@@ -208,6 +131,7 @@ void Terminal::show_error(std::exception const &ex, bool* quit)
             }
         }
     }
+     */
 }
 
 void Terminal::beep()

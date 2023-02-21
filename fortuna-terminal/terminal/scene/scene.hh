@@ -5,7 +5,7 @@
 #include "../../common/noncopyable.hh"
 #include "common/geometry.hh"
 
-struct Scene : NonCopyable {
+struct Scene {
     Scene();
 
     void set_graphical_mode(GraphicalMode graphical_mode);

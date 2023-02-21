@@ -11,7 +11,6 @@
 #include "../common/syncqueue.hh"
 #include "../../fortuna-protocol/fortuna-protocol.h"
 #include "common/noncopyable.hh"
-#include "terminal/scene/sceneevent.hh"
 #include "options.hh"
 #include "painters/textpainter.hh"
 #include "protocol/ansiprotocol.hh"
@@ -21,23 +20,14 @@ public:
     explicit Terminal(TerminalOptions terminal_options);
     ~Terminal();
 
-    unsigned int add_scene();
-    void         set_scene(unsigned int n);
-
-    void update_scene(SyncQueue<SceneEvent>& events);
-
     void do_events(AnsiProtocol& protocol, bool* quit);
-    void draw() const;
+    void draw(Scene const& scene) const;
+
+    void resize_window(Scene const& scene);
 
     void show_error(std::exception const& e, bool* quit);
 
-    [[nodiscard]] Scene const& current_scene() const { return scenes_.at(current_scene_); }
-    [[nodiscard]] unsigned int current_scene_id() const { return current_scene_; }
-
-    [[nodiscard]] size_t total_scene_events() const { return total_scene_events_; }
-
 private:
-    std::vector<Scene> scenes_;
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
 
@@ -45,11 +35,7 @@ private:
 
     int win_w_ = 800, win_h_ = 600;
 
-    int current_scene_ = -1;
     bool window_mode_;
-
-    void         resize_window();
-    Scene&       current_scene() { return scenes_.at(current_scene_); }
 
     void beep();
 

@@ -108,12 +108,12 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
     uint8_t color   : 4;
     bool    reverse : 1;
-} CharAttrib;
+} CharAttribx;
 
 typedef struct __attribute__((packed)) {
     uint8_t color   : 4;
     bool    visible : 1;
-} CursorAttrib;
+} CursorAttribx;
 
 typedef struct __attribute__((packed)) {
     FP_Command command;
@@ -127,7 +127,7 @@ typedef struct __attribute__((packed)) {
             uint8_t    c;
             uint8_t    line;
             uint8_t    column;
-            CharAttrib attrib;
+            CharAttribx attrib;
         } set_char;
 
         uint8_t text[FP_MSG_CONTENTS_SZ];
@@ -137,11 +137,11 @@ typedef struct __attribute__((packed)) {
             uint8_t column;
         } set_pos;
 
-        CharAttrib char_attrib;
+        CharAttribx char_attrib;
 
         uint8_t colors[PALETTE_SZ * 3];
 
-        CursorAttrib cursor_attrib;
+        CursorAttribx cursor_attrib;
 
         char keystroke[FP_MSG_CONTENTS_SZ];
 

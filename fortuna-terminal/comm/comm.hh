@@ -33,7 +33,7 @@ public:
         write(vec);
     }
 
-    static std::unique_ptr<CommunicationModule> create_unique(Options const *options, Size const &size);
+    static std::unique_ptr<CommunicationModule> create_unique(Options const *options);
 
 protected:
     CommunicationModule() = default;

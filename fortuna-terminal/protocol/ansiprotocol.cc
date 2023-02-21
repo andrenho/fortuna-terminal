@@ -10,14 +10,11 @@
 
 using namespace std::chrono_literals;
 
-AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm, SyncQueue<SceneEvent>& scene_queue,
-                           unsigned int scene_n, Size const& initial_size)
+AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm)
         : comm_(std::move(comm)),
-          scene_queue_(scene_queue),
-          scene_n_(scene_n),
-          cache_(AnsiProtocol::initialize_cache(initial_size)),
+          cache_(AnsiProtocol::initialize_cache({ Text::Columns_80Columns, Text::Lines_80Columns })),
           vt_(decltype(vt_)(
-                  tmt_open(initial_size.h, initial_size.w, AnsiProtocol::tmt_callback, this, nullptr),
+                  tmt_open(Text::Lines_80Columns, Text::Columns_80Columns, AnsiProtocol::tmt_callback, this, nullptr),
                   [](TMT* vt) { tmt_close(vt); }
           ))
 {
@@ -53,69 +50,6 @@ void AnsiProtocol::run()
     });
 }
 
-/*
-void AnsiProtocol::do_events(SyncQueue<FP_Message> &event_queue)
-{
-    while (true) {
-        auto omsg = event_queue.pop_nonblock();
-        if (!omsg.has_value())
-            break;
-        auto message = *omsg;
-
-        switch (message.command) {
-
-            case FP_EVENT_KEYSTROKE:
-                comm_->write(message.keystroke);
-                break;
-
-            case FP_EVENT_KEY_PRESS:
-                if (message.key.mod.control) {
-                    if (message.key.key >= 'a' && message.key.key <= 'z')
-                        comm_->write(message.key.key - 96);
-
-                } else if (message.key.key < 32 || message.key.key >= 127) {
-                    switch (message.key.special_key) {
-                        case SpecialKey::ESC:        comm_->write("\e"); break;
-                        case SpecialKey::ENTER:      comm_->write("\r"); break;
-                        case SpecialKey::TAB:        comm_->write("\t"); break;
-                        case SpecialKey::BACKSPACE:  comm_->write("\b"); break;
-                        case SpecialKey::F1:         comm_->write("\e[11~"); break;
-                        case SpecialKey::F2:         comm_->write("\e[12~"); break;
-                        case SpecialKey::F3:         comm_->write("\e[13~"); break;
-                        case SpecialKey::F4:         comm_->write("\e[14~"); break;
-                        case SpecialKey::F5:         comm_->write("\e[15~"); break;
-                        case SpecialKey::F6:         comm_->write("\e[17~"); break;
-                        case SpecialKey::F7:         comm_->write("\e[18~"); break;
-                        case SpecialKey::F8:         comm_->write("\e[19~"); break;
-                        case SpecialKey::F9:         comm_->write("\e[20~"); break;
-                        case SpecialKey::F10:        comm_->write("\e[21~"); break;
-                        case SpecialKey::F11:        comm_->write("\e[23~"); break;
-                        case SpecialKey::F12:        comm_->write("\e[24~"); break;
-                        case SpecialKey::INSERT:     comm_->write("\e[2~"); break;
-                        case SpecialKey::HOME:       comm_->write("\e[1~"); break;
-                        case SpecialKey::END:        comm_->write("\e[4~"); break;
-                        case SpecialKey::PAGEUP:     comm_->write("\e[5~"); break;
-                        case SpecialKey::PAGEDOWN:   comm_->write("\e[6~"); break;
-                        case SpecialKey::UP:         comm_->write("\e[A"); break;
-                        case SpecialKey::DOWN:       comm_->write("\e[B"); break;
-                        case SpecialKey::LEFT:       comm_->write("\e[D"); break;
-                        case SpecialKey::RIGHT:      comm_->write("\e[C"); break;
-                        case SpecialKey::DELETE:     comm_->write("\e[3~"); break;
-                        case SpecialKey::PRINTSCREEN:
-                        case SpecialKey::PAUSEBREAK:
-                        case SpecialKey::CAPSLOCK:
-                        case SpecialKey::WIN:
-                            break;
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-}
- */
 
 void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
 {
@@ -130,7 +64,7 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
         case TMT_MSG_MOVED: {
                 FP_Message msg = { FP_TEXT_SET_POS, {} };
                 msg.set_pos = { (uint8_t) c->r, (uint8_t) c->c };
-                this_->scene_queue_.emplace({ this_->scene_n_, msg });
+                this_->scene_.text.move_cursor_to(c->r, c->c);
                 tmt_clean(vt);
             }
             break;
@@ -142,9 +76,7 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
                             TMTCHAR ch = s->lines[r]->chars[x];
                             TMTCHAR cached_ch = this_->cache_.at(r).at(x);
                             if (memcmp(&ch, &cached_ch, sizeof(TMTCHAR)) != 0) {
-                                FP_Message msg = { FP_TEXT_SET_CHAR, {} };
-                                msg.set_char = { (uint8_t) ch.c, (uint8_t) r, (uint8_t) x, translate_attrib(ch.a) };
-                                this_->scene_queue_.emplace({ this_->scene_n_, msg });
+                                this_->scene_.text.set(r, x, { (uint8_t) ch.c, translate_attrib(ch.a) });
                                 this_->cache_.at(r).at(x) = ch;
                             }
                         }
@@ -246,6 +178,8 @@ void AnsiProtocol::event_key(uint8_t key, bool is_down, KeyMod mod)
 
 void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
 {
+    (void) mod;
+
     auto push_str = [this](std::string const& str) {
         std::vector<uint8_t> v(str.begin(), str.end());
         output_queue_->push_all(v);

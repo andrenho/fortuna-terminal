@@ -1,5 +1,9 @@
 - [x] Create stdin/stdout protocol
 - [ ] Merge FortunaTerminal.h / remove SceneEvent queue?
+  - Remove fortuna-terminal.h
+  - Properly terminate
+  - Retest PTY
+  - Show error
 - [ ] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit
 

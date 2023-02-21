@@ -2,11 +2,7 @@
 #include <memory>
 
 #include "terminal/terminal.hh"
-#include "terminal/scene/sceneevent.hh"
 #include "exceptions/fortunaexception.hh"
-#include "comm/echo.hh"
-#include "comm/pty.hh"
-#include "comm/tcpip.hh"
 #include "protocol/ansiprotocol.hh"
 
 static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_options)
@@ -15,7 +11,6 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
 
     try {
         terminal = std::make_unique<Terminal>(terminal_options);
-        terminal->add_scene();
     } catch (std::exception& e) {
         std::cerr << "\e[1;31m" << e.what() << "\e[0m\n";
         exit(EXIT_FAILURE);
@@ -24,20 +19,17 @@ static std::unique_ptr<Terminal> initialize_terminal(TerminalOptions terminal_op
     return terminal;
 }
 
-static std::vector<AnsiProtocol> initialize_protocols(Terminal* terminal, SyncQueue<SceneEvent> &scene_queue, Options const* options)
+static std::vector<AnsiProtocol> initialize_protocols(Terminal& terminal, Options const* options)
 {
-    Text const& text = ((const Terminal *) terminal)->current_scene().text;
-
     std::vector<AnsiProtocol> protocols;
     try {
 
-        Size size = { text.columns(), text.lines() };
-        auto comm = CommunicationModule::create_unique(options, size);
-        protocols.emplace_back(std::move(comm), scene_queue, 0, size);
+        auto comm = CommunicationModule::create_unique(options);
+        protocols.emplace_back(std::move(comm));
         return protocols;
 
     } catch (std::exception& e) {
-        terminal->show_error(e, nullptr);
+        terminal.show_error(e, nullptr);
         exit(EXIT_FAILURE);
     }
 }
@@ -54,23 +46,24 @@ int main(int argc, char* argv[])
 
     int exit_status = EXIT_SUCCESS;
 
-    SyncQueue<SceneEvent> scene_queue;
-
     auto terminal = initialize_terminal({ options->window_mode });
-    auto protocols = initialize_protocols(terminal.get(), scene_queue, options.get());
+    auto protocols = initialize_protocols(*terminal, options.get());
+
+    AnsiProtocol& protocol = protocols.at(0);
+
+    terminal->resize_window(protocol.scene());
 
 restart:
     try {
-        size_t current_protocol = 0;
-
-        for (auto& protocol: protocols)
-            protocol.run();
+        for (auto& p: protocols)
+            p.run();
 
         bool quit = false;
         while (!quit) {
-            terminal->do_events(protocols.at(current_protocol), &quit);
-            terminal->update_scene(scene_queue);
-            terminal->draw();
+            for (auto& p: protocols)
+                p.scene().text.update_blink();
+            terminal->do_events(protocol, &quit);
+            terminal->draw(protocol.scene());
         }
 
     } catch (std::exception& e) {
@@ -81,10 +74,8 @@ restart:
         exit_status = EXIT_FAILURE;
     }
 
-    for (auto& protocol: protocols)
-        protocol.finalize_threads();
-
-    std::cout << "Total scene events processed: " << terminal->total_scene_events() << std::endl;
+    for (auto& p: protocols)
+        p.finalize_threads();
 
     return exit_status;
 }
