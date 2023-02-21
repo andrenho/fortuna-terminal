@@ -3,6 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <thread>
+#include <iomanip>
 
 #include "exceptions/fortunaexception.hh"
 
@@ -46,7 +47,7 @@ void AnsiProtocol::run()
             std::vector<uint8_t> bytes_to_output;
             output_queue_->pop_all_into(bytes_to_output);
             comm_->write(bytes_to_output);
-            std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [](uint8_t byte) { debug_byte(false, byte); });
+            std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
         }
     });
 }
@@ -225,6 +226,18 @@ void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
 
 void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
 {
-
+    if (is_input)
+        std::cout << "\e[1;33m";
+    else
+        std::cout << "\e[1;34m";
+    if (byte >= 32 && byte < 127)
+        std::cout << byte;
+    else if (byte == '\e')
+        std::cout << "[ESC]";
+    else
+        std::cout << "[" << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int) byte << "]";
+    if (byte == 10)
+        std::cout << "\n";
+    std::cout << "\e[0m";
 }
 
