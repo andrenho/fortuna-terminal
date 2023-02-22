@@ -19,22 +19,19 @@ std::optional<uint8_t> CommunicationModule::read_blocking()
         return v.at(0);
 }
 
-std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options const *options, Size const &size)
+std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options const *options)
 {
-    (void) size;
-
     switch (options->comm_type) {
         case CommType::NotChosen:
             throw FortunaException("Invalid communication mode");
         case CommType::I2C:
         case CommType::SPI:
-        case CommType::Debug:
             throw FortunaException("Communication mode not yet implemented");
 #ifndef _WIN32
         case CommType::Uart:
             return std::make_unique<UART>(options->uart_options);
         case CommType::PTY:
-            return std::make_unique<PTY>(options->pty_options, size);
+            return std::make_unique<PTY>(options->pty_options);
             break;
 #else
         case CommType::Uart:

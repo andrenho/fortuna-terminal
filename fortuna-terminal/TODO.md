@@ -1,5 +1,11 @@
 - [x] Create stdin/stdout protocol
 - [ ] Merge FortunaTerminal.h / remove SceneEvent queue?
+  - [x] Remove fortuna-terminal.h
+  - [x] Properly terminate
+  - [x] Retest PTY
+  - [x] Show error
+  - [x] Add recommended flags
+  - [x] Rename Protocol (?)
 - [ ] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit
 

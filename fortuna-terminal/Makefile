@@ -1,6 +1,6 @@
 OBJ =   main.o options.o \
 		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
-		protocol/ansiprotocol.o \
+		protocol/protocol.o protocol/ansi.o \
         terminal/terminal.o \
         terminal/scene/scene.o \
 		terminal/scene/layers/text.o \
@@ -10,9 +10,7 @@ OBJ =   main.o options.o \
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-Wall -Wextra -I. -I ../fortuna-protocol \
-		 -Wwrite-strings -Wshadow \
-		 -D_GNU_SOURCE -pthread
+CPPFLAGS=-Wall -Wextra -Wshadow -Winit-self -Wuninitialized -Wpointer-arith  -Wformat-security -I. -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
 
 ifeq ($(OS),Windows_NT)

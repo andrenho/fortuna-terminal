@@ -1,5 +1,4 @@
 #include "pty.hh"
-#include "../exceptions/libcexception.hh"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -9,11 +8,15 @@
 #include <cstdlib>
 #include <iostream>
 
-PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
-{
-    struct winsize winp = { (short unsigned int) terminal_size.h, (short unsigned int) terminal_size.w, 0 , 0 };
+#include "../exceptions/libcexception.hh"
+#include "../terminal/scene/layers/text.hh"
 
-    pid_t pid = forkpty(&fd_, NULL, NULL, &winp);
+PTY::PTY(PTYOptions const& pty_options)
+{
+    struct winsize winp = { (short unsigned int) Text::Lines_80Columns, (short unsigned int) Text::Columns_80Columns, 0 , 0 };
+
+    char name[256];
+    pid_t pid = forkpty(&fd_, name, nullptr, &winp);
     if (pid < 0) {
         throw LibcException("Error initializing PTY");
     } else if (pid == 0) {
@@ -24,6 +27,8 @@ PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
             throw LibcException("Could not initialize shell.");
     }
 
+    std::cout << "Initializing terminal " << name << "." << std::endl;
+
     // make read blocking
     int flags = fcntl(fd_, F_GETFL);
     flags &= ~O_NONBLOCK;
@@ -33,16 +38,27 @@ PTY::PTY(PTYOptions const& pty_options, Size terminal_size)
 
 std::vector<uint8_t> PTY::read_blocking(size_t n)
 {
-    try {
-        return FDComm::read_blocking(n);
-    } catch (LibcException& e) {
+    if (fd_ == INVALID_FD)
+        return {};
+
+    std::vector<uint8_t> data(n);
+    int r = read(fd_, data.data(), n);
+    if (r <= 0)
         client_disconnected();
-        return { 0, };
-    }
+    else if (r < (int) n)
+        data.resize(n);
+    return data;
 }
 
 void PTY::client_disconnected()
 {
     FDComm::client_disconnected();
     exit(EXIT_SUCCESS);
+}
+
+void PTY::write(std::vector<uint8_t> const &data)
+{
+    int n = ::write(fd_, data.data(), data.size());
+    if (n <= 0)
+        client_disconnected();
 }

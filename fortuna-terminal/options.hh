@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, Debug };
+enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo };
 
 struct TerminalOptions {
     bool window_mode = false;
@@ -29,7 +29,8 @@ public:
     Options(int argc, char* argv[]);
 
     CommType        comm_type   = CommType::NotChosen;
-    bool            window_mode = false;
+    bool            debug_comm = false;
+
     TerminalOptions terminal_options;
     UartOptions     uart_options;
     TcpIpOptions    tcpip_options;
