@@ -24,7 +24,7 @@ public:
 
     void resize_window(Scene const& scene);
 
-    void show_error(std::exception const& e, bool* quit);
+    void wait_for_enter(bool* quit);
 
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;

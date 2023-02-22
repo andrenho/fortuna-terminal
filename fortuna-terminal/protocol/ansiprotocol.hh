@@ -44,6 +44,8 @@ public:
 
     void set_debug_comm(bool debug_comm) { debug_comm_ = debug_comm; }
 
+    void show_error(std::exception const& e);
+
 private:
     static void tmt_callback(tmt_msg_t m, TMT *vt, const void *a, void *p);
 

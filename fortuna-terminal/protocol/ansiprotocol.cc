@@ -247,3 +247,8 @@ void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
     }
 }
 
+void AnsiProtocol::show_error(std::exception const &e)
+{
+
+}
+

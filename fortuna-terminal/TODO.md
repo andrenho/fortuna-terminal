@@ -2,8 +2,8 @@
 - [ ] Merge FortunaTerminal.h / remove SceneEvent queue?
   - [x] Remove fortuna-terminal.h
   - [x] Properly terminate
-  - [ ] Retest PTY
-  - [ ] Show error
+  - [x] Retest PTY
+  - [x] Show error
   - [ ] Add recommended flags
   - [ ] Rename AnsiProtocol (?)
 - [ ] Update documentation (create reset, separate sprite from sprite image)

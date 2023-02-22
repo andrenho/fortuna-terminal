@@ -109,29 +109,23 @@ void Terminal::resize_window(Scene const& scene)
     SDL_RenderSetLogicalSize(renderer_.get(), terminal_size.w, terminal_size.h);
 }
 
-void Terminal::show_error(std::exception const &ex, bool* quit)
+void Terminal::wait_for_enter(bool* quit)
 {
-    std::cerr << "\e[1;31m" << ex.what() << "\e[0m" << std::endl;
+    // scene.text.write("\e[1;31m]n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n\e[0m");
+    // std::cerr << "\e[1;31m" << e.what() << "\e[0m" << std::endl;
 
-    /*
-    for (Scene& scene: scenes_) {
-        scene.text.write("\e[1;31m]n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n\e[0m");
-        draw();
-
-        while (true) {
-            SDL_Event e;
-            while (SDL_PollEvent(&e)) {
-                if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL)) {
-                    if (quit)
-                        *quit = true;
-                    return;
-                } else if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)) {
-                    return;
-                }
+    while (true) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL)) {
+                if (quit)
+                    *quit = true;
+                return;
+            } else if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)) {
+                return;
             }
         }
     }
-     */
 }
 
 void Terminal::beep()
