@@ -1,5 +1,4 @@
 #include "fdcomm.hh"
-#include "../exceptions/libcexception.hh"
 #include "../exceptions/fortunaexception.hh"
 
 #include <unistd.h>
@@ -9,15 +8,15 @@
 
 FDComm::~FDComm()
 {
-    if (fd_ != -1)
+    if (fd_ != INVALID_FD)
         close(fd_);
-    if (write_fd_ != -1)
+    if (write_fd_ != INVALID_FD)
         close(write_fd_);
 }
 
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
 {
-    if (fd_ == -1)
+    if (fd_ == INVALID_FD)
         return {};
 
     std::vector<uint8_t> data(n);
@@ -33,8 +32,10 @@ std::vector<uint8_t> FDComm::read_blocking(size_t n)
 
 void FDComm::write(std::vector<uint8_t> const &data)
 {
-    int fd = write_fd_ || fd_;
-    if (fd == 0)
+    int fd = write_fd_;
+    if (write_fd_ == INVALID_FD)
+        fd = write_fd_;
+    if (fd == -1)
         return;
 
     int n = ::write(fd, data.data(), data.size());
@@ -52,10 +53,10 @@ void FDComm::on_rw_zero()
 void FDComm::client_disconnected()
 {
     close(fd_);
-    fd_ = -1;
-    if (write_fd_ != -1) {
+    fd_ = INVALID_FD;
+    if (write_fd_ != INVALID_FD) {
         close(write_fd_);
-        write_fd_ = -1;
+        write_fd_ = INVALID_FD;
     }
     std::cout << "Client disconnected." << std::endl;
 }

@@ -16,12 +16,10 @@ PTY::PTY(PTYOptions const& pty_options)
     struct winsize winp = { (short unsigned int) Text::Lines_80Columns, (short unsigned int) Text::Columns_80Columns, 0 , 0 };
 
     char name[256];
-    int fd;
-    pid_t pid = forkpty(&fd, name, NULL, &winp);
+    pid_t pid = forkpty(&fd_, name, nullptr, &winp);
     if (pid < 0) {
         throw LibcException("Error initializing PTY");
     } else if (pid == 0) {
-        fd_ = fd;
         setenv("LANG", "C", 1);
         setenv("TERM", "ansi", 1);
         // this is the child process that will execute the shell
@@ -29,7 +27,6 @@ PTY::PTY(PTYOptions const& pty_options)
             throw LibcException("Could not initialize shell.");
     }
 
-    fd_ = fd;
     std::cout << "Initializing terminal " << name << "." << std::endl;
 
     // make read blocking

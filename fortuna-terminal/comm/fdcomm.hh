@@ -21,8 +21,10 @@ public:
 protected:
     FDComm() = default;
 
-    int fd_ = -1;
-    int write_fd_ = -1;
+    static constexpr int INVALID_FD = -1;
+
+    int fd_ = INVALID_FD;
+    int write_fd_ = INVALID_FD;
 };
 
 #endif //FDCOMM_HH_
