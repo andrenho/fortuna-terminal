@@ -1,5 +1,7 @@
 #include "pipes.hh"
 
+#include <cstdio>
+
 Pipes::Pipes()
 {
     fd_ = STDIN_FILENO;
