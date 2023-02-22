@@ -5,7 +5,7 @@
   - [x] Retest PTY
   - [x] Show error
   - [x] Add recommended flags
-  - [ ] Rename Protocol (?)
+  - [x] Rename Protocol (?)
 - [ ] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit
 
