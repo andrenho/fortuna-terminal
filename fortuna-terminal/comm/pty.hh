@@ -11,6 +11,8 @@ public:
 
     std::vector<uint8_t> read_blocking(size_t n) override;
 
+    void write(std::vector<uint8_t> const &data) override;
+
     void client_disconnected() override;
 
 };

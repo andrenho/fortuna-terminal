@@ -38,16 +38,27 @@ PTY::PTY(PTYOptions const& pty_options)
 
 std::vector<uint8_t> PTY::read_blocking(size_t n)
 {
-    try {
-        return FDComm::read_blocking(n);
-    } catch (LibcException& e) {
+    if (fd_ == INVALID_FD)
+        return {};
+
+    std::vector<uint8_t> data(n);
+    int r = read(fd_, data.data(), n);
+    if (r <= 0)
         client_disconnected();
-        return { 0, };
-    }
+    else if (r < (int) n)
+        data.resize(n);
+    return data;
 }
 
 void PTY::client_disconnected()
 {
     FDComm::client_disconnected();
     exit(EXIT_SUCCESS);
+}
+
+void PTY::write(std::vector<uint8_t> const &data)
+{
+    int n = ::write(fd_, data.data(), data.size());
+    if (n <= 0)
+        client_disconnected();
 }

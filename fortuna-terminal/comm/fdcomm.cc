@@ -35,7 +35,7 @@ void FDComm::write(std::vector<uint8_t> const &data)
     int fd = write_fd_;
     if (write_fd_ == INVALID_FD)
         fd = write_fd_;
-    if (fd == -1)
+    if (fd == INVALID_FD)
         return;
 
     int n = ::write(fd, data.data(), data.size());
