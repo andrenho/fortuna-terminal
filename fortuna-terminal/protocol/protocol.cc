@@ -1,4 +1,4 @@
-#include "ansiprotocol.hh"
+#include "protocol.hh"
 
 #include <csignal>
 #include <cstring>
@@ -12,11 +12,11 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm)
+Protocol::Protocol(std::unique_ptr<CommunicationModule> comm)
         : comm_(std::move(comm)),
-          cache_(AnsiProtocol::initialize_cache({ Text::Columns_80Columns, Text::Lines_80Columns })),
+          cache_(Protocol::initialize_cache({Text::Columns_80Columns, Text::Lines_80Columns })),
           vt_(decltype(vt_)(
-                  tmt_open(Text::Lines_80Columns, Text::Columns_80Columns, AnsiProtocol::tmt_callback, this, nullptr),
+                  tmt_open(Text::Lines_80Columns, Text::Columns_80Columns, Protocol::tmt_callback, this, nullptr),
                   [](TMT* vt) { tmt_close(vt); }
           ))
 {
@@ -24,7 +24,7 @@ AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm)
         throw FortunaException("Could not allocate terminal");
 }
 
-void AnsiProtocol::run()
+void Protocol::run()
 {
     read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
@@ -56,7 +56,7 @@ void AnsiProtocol::run()
     });
 }
 
-void AnsiProtocol::finalize_threads()
+void Protocol::finalize_threads()
 {
     threads_active_ = false;
     if (comm_->release_locks()) {
@@ -72,9 +72,9 @@ void AnsiProtocol::finalize_threads()
 }
 
 
-void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
+void Protocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
 {
-    auto this_ = reinterpret_cast<AnsiProtocol*>(p);
+    auto this_ = reinterpret_cast<Protocol*>(p);
 
     /* grab a pointer to the virtual screen */
     const TMTSCREEN *s = tmt_screen(vt);
@@ -120,7 +120,7 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
     }
 }
 
-CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
+CharAttrib Protocol::translate_attrib(TMTATTRS a)
 {
     CharAttrib attr;
 
@@ -156,7 +156,7 @@ CharAttrib AnsiProtocol::translate_attrib(TMTATTRS a)
     return attr;
 }
 
-std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> AnsiProtocol::initialize_cache(Size initial_size)
+std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> Protocol::initialize_cache(Size initial_size)
 {
     std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> k;
     for (size_t y = 0; y < initial_size.h; ++y) {
@@ -168,13 +168,13 @@ std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> AnsiProtocol::
     return k;
 }
 
-void AnsiProtocol::event_text_input(std::string const &text)
+void Protocol::event_text_input(std::string const &text)
 {
     std::vector<uint8_t> v(text.begin(), text.end());
     output_queue_->push_all(v);
 }
 
-void AnsiProtocol::event_key(uint8_t key, bool is_down, KeyMod mod)
+void Protocol::event_key(uint8_t key, bool is_down, KeyMod mod)
 {
     if (is_down) {
         if (mod.control) {
@@ -184,7 +184,7 @@ void AnsiProtocol::event_key(uint8_t key, bool is_down, KeyMod mod)
     }
 }
 
-void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
+void Protocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
 {
     (void) mod;
 
@@ -230,7 +230,7 @@ void AnsiProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
     }
 }
 
-void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
+void Protocol::debug_byte(bool is_input, uint8_t byte)
 {
     if (debug_comm_) {
         if (is_input)
@@ -249,7 +249,7 @@ void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
     }
 }
 
-void AnsiProtocol::show_error(std::exception const &e)
+void Protocol::show_error(std::exception const &e)
 {
     std::string message = "\e[0;31m"s + e.what() + "\r-- Press ENTER to continue or Ctrl+F12 to quit --\r\e[0m";
     std::vector<uint8_t> v(message.begin(), message.end());

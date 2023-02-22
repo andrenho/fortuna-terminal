@@ -53,7 +53,7 @@ Terminal::~Terminal()
     SDL_Quit();
 }
 
-void Terminal::do_events(AnsiProtocol& protocol, bool *quit)
+void Terminal::do_events(Protocol& protocol, bool *quit)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
@@ -130,7 +130,7 @@ void Terminal::beep()
     // TODO
 }
 
-void Terminal::add_keyboard_event(AnsiProtocol& protocol, bool is_down, SDL_KeyboardEvent key)
+void Terminal::add_keyboard_event(Protocol& protocol, bool is_down, SDL_KeyboardEvent key)
 {
     KeyMod key_modifiers {
         (key.keysym.mod & KMOD_SHIFT) != 0,

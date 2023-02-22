@@ -1,5 +1,5 @@
-#ifndef ANSIPROTOCOL_HH_
-#define ANSIPROTOCOL_HH_
+#ifndef PROTOCOL_HH_
+#define PROTOCOL_HH_
 
 #include <functional>
 #include <memory>
@@ -27,9 +27,9 @@ struct KeyMod {
     bool alt;
 };
 
-class AnsiProtocol /* : public NonCopyable */ {
+class Protocol : public NonCopyable {
 public:
-    explicit AnsiProtocol(std::unique_ptr<CommunicationModule> comm);
+    explicit Protocol(std::unique_ptr<CommunicationModule> comm);
 
     void run();
 
@@ -72,4 +72,4 @@ private:
     void debug_byte(bool is_input, uint8_t byte);
 };
 
-#endif //ANSIPROTOCOL_HH_
+#endif //PROTOCOL_HH_

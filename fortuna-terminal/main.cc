@@ -3,11 +3,11 @@
 
 #include "terminal/terminal.hh"
 #include "exceptions/fortunaexception.hh"
-#include "protocol/ansiprotocol.hh"
+#include "protocol/protocol.hh"
 
-#define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](AnsiProtocol& p) { __VA_ARGS__; }); }
+#define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
-static void on_error(Terminal* terminal, std::vector<AnsiProtocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
+static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
     std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
     if (terminal) {
@@ -25,10 +25,10 @@ int main(int argc, char* argv[])
     std::unique_ptr<Terminal> terminal;
     std::unique_ptr<CommunicationModule> comm;
 
-    std::vector<AnsiProtocol> protocols;
+    std::vector<Protocol> protocols;
     size_t current_protocol = 0;
 
-    AnsiProtocol* protocol;
+    Protocol* protocol;
 
     try {
         options = std::make_unique<const Options>(argc, argv);
@@ -57,8 +57,6 @@ restart:
             ALL_PROTOCOLS(p.scene().text.update_blink())
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
-
-            throw std::runtime_error("This is an error");
         }
 
     } catch (std::exception& e) {

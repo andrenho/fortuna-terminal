@@ -12,14 +12,14 @@
 #include "common/noncopyable.hh"
 #include "options.hh"
 #include "painters/textpainter.hh"
-#include "protocol/ansiprotocol.hh"
+#include "protocol/protocol.hh"
 
 class Terminal : NonCopyable {
 public:
     explicit Terminal(TerminalOptions terminal_options);
     ~Terminal();
 
-    void do_events(AnsiProtocol& protocol, bool* quit);
+    void do_events(Protocol& protocol, bool* quit);
     void draw(Scene const& scene) const;
 
     void resize_window(Scene const& scene);
@@ -38,7 +38,7 @@ private:
 
     void beep();
 
-    void add_keyboard_event(AnsiProtocol& protocol, bool is_down, SDL_KeyboardEvent key);
+    void add_keyboard_event(Protocol& protocol, bool is_down, SDL_KeyboardEvent key);
 
     size_t total_scene_events_ = 0;
 };
