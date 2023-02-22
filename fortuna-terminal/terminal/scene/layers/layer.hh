@@ -1,6 +1,7 @@
 #ifndef LAYER_HH_
 #define LAYER_HH_
 
+#include <mutex>
 #include <thread>
 
 #include "terminal/palette/palette.hh"
