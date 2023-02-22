@@ -6,7 +6,7 @@
   - [x] Show error
   - [x] Add recommended flags
   - [x] Rename Protocol (?)
-- [ ] Update documentation (create reset, separate sprite from sprite image)
+- [x] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit
 
 New protocol:
