@@ -39,6 +39,14 @@ struct Char {
     CharAttrib attrib = { COLOR_WHITE, false, false };
 };
 
+struct Cell {
+    Char   chr;
+    size_t line;
+    size_t column;
+
+    Cell(Char const &chr, size_t line, size_t column) : chr(chr), line(line), column(column) {}
+};
+
 class Text : public Layer {
 public:
     Text() : Layer() {}
@@ -46,6 +54,7 @@ public:
     void          set_80_columns(bool value);
 
     void          set(size_t line, size_t column, Char c);
+    void          set(std::vector<Cell> const& cells);
     void          move_cursor_to(size_t line, size_t column);
 
     uint8_t       bg_color = COLOR_BLACK;

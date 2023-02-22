@@ -35,6 +35,14 @@ void Text::set(size_t line, size_t column, Char c)
     reset_blink();
 }
 
+void Text::set(std::vector<Cell> const &cells)
+{
+    std::unique_lock<std::mutex> lock(*mutex_);
+    for (Cell const& cell: cells)
+        matrix_[cell.line * columns_ + cell.column] = cell.chr;
+    reset_blink();
+}
+
 void Text::move_cursor_to(size_t line, size_t column)
 {
     std::unique_lock<std::mutex> lock(*mutex_);
@@ -56,3 +64,4 @@ void Text::update_blink()
         cursor_.last_blink = Time::now();
     }
 }
+

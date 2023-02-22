@@ -48,7 +48,8 @@ void AnsiProtocol::run()
             std::vector<uint8_t> bytes_to_output;
             output_queue_->pop_all_into(bytes_to_output);
             comm_->write(bytes_to_output);
-            std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
+            if (debug_comm_)
+                std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
         }
     });
 }
@@ -86,18 +87,20 @@ void AnsiProtocol::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
             break;
 
         case TMT_MSG_UPDATE: {
-            for (size_t r = 0; r < s->nline; r++) {
+                static std::vector<Cell> cells;
+                for (size_t r = 0; r < s->nline; r++) {
                     if (s->lines[r]->dirty) {
                         for (size_t x = 0; x < s->ncol; x++) {
                             TMTCHAR ch = s->lines[r]->chars[x];
                             TMTCHAR cached_ch = this_->cache_.at(r).at(x);
                             if (memcmp(&ch, &cached_ch, sizeof(TMTCHAR)) != 0) {
-                                this_->scene_.text.set(r, x, { (uint8_t) ch.c, translate_attrib(ch.a) });
+                                cells.emplace_back(Char { (uint8_t) ch.c, translate_attrib(ch.a) }, r, x);
                                 this_->cache_.at(r).at(x) = ch;
                             }
                         }
                     }
                 }
+                this_->scene_.text.set(cells);
             }
             tmt_clean(vt);
             break;
