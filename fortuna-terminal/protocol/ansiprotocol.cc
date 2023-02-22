@@ -2,6 +2,7 @@
 
 #include <csignal>
 #include <cstring>
+
 #include <iostream>
 #include <thread>
 #include <iomanip>
@@ -9,6 +10,7 @@
 #include "exceptions/fortunaexception.hh"
 
 using namespace std::chrono_literals;
+using namespace std::string_literals;
 
 AnsiProtocol::AnsiProtocol(std::unique_ptr<CommunicationModule> comm)
         : comm_(std::move(comm)),
@@ -249,6 +251,9 @@ void AnsiProtocol::debug_byte(bool is_input, uint8_t byte)
 
 void AnsiProtocol::show_error(std::exception const &e)
 {
-
+    std::string message = "\e[0;31m"s + e.what() + "\r-- Press ENTER to continue or Ctrl+F12 to quit --\r\e[0m";
+    std::vector<uint8_t> v(message.begin(), message.end());
+    output_queue_->push_all(v);
+    std::this_thread::sleep_for(10ms);
 }
 

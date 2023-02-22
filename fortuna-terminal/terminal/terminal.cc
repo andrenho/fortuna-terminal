@@ -111,9 +111,6 @@ void Terminal::resize_window(Scene const& scene)
 
 void Terminal::wait_for_enter(bool* quit)
 {
-    // scene.text.write("\e[1;31m]n"s + ex.what() + "\n-- Press ENTER to continue or Ctrl+F12 to quit --\n\e[0m");
-    // std::cerr << "\e[1;31m" << e.what() << "\e[0m" << std::endl;
-
     while (true) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {

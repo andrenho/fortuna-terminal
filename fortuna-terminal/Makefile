@@ -10,7 +10,7 @@ OBJ =   main.o options.o \
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-Wall -Wextra -I. -D_GNU_SOURCE -pthread
+CPPFLAGS=-Wall -Wextra -Wshadow -Winit-self -Wuninitialized -Wpointer-arith  -Wformat-security -I. -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
 
 ifeq ($(OS),Windows_NT)

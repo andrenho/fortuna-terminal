@@ -7,11 +7,12 @@
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](AnsiProtocol& p) { __VA_ARGS__; }); }
 
-static void on_error(Terminal* terminal, std::vector<AnsiProtocol>& protocols, std::exception& e, bool* quit)
+static void on_error(Terminal* terminal, std::vector<AnsiProtocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
     std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
     if (terminal) {
         ALL_PROTOCOLS(p.show_error(e))
+        terminal->draw(protocols.at(current_protocol).scene());
         terminal->wait_for_enter(quit);
     } else {
         exit(EXIT_FAILURE);
@@ -27,8 +28,6 @@ int main(int argc, char* argv[])
     std::vector<AnsiProtocol> protocols;
     size_t current_protocol = 0;
 
-    int exit_status = EXIT_SUCCESS;
-
     AnsiProtocol* protocol;
 
     try {
@@ -43,32 +42,33 @@ int main(int argc, char* argv[])
             ALL_PROTOCOLS(p.set_debug_comm(true));
         }
 
+        terminal->resize_window(protocol->scene());
+
     } catch (std::exception& e) {
-        on_error(terminal.get(), protocols, e, nullptr);
+        on_error(terminal.get(), protocols, current_protocol, e, nullptr);
     }
+
+    ALL_PROTOCOLS(p.run())
 
 restart:
     try {
-        terminal->resize_window(protocol->scene());
-
-        ALL_PROTOCOLS(p.run())
-
         bool quit = false;
         while (!quit) {
             ALL_PROTOCOLS(p.scene().text.update_blink())
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
+
+            throw std::runtime_error("This is an error");
         }
 
     } catch (std::exception& e) {
         bool quit = false;
-        on_error(terminal.get(), protocols, e, &quit);
+        on_error(terminal.get(), protocols, current_protocol, e, &quit);
         if (!quit)
             goto restart;
-        exit_status = EXIT_FAILURE;
     }
 
     ALL_PROTOCOLS(p.finalize_threads())
 
-    return exit_status;
+    return EXIT_SUCCESS;
 }

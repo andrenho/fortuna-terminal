@@ -4,7 +4,7 @@
   - [x] Properly terminate
   - [x] Retest PTY
   - [x] Show error
-  - [ ] Add recommended flags
+  - [x] Add recommended flags
   - [ ] Rename AnsiProtocol (?)
 - [ ] Update documentation (create reset, separate sprite from sprite image)
 - [ ] Create test circuit

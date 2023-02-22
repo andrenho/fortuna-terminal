@@ -44,7 +44,7 @@ struct Cell {
     size_t line;
     size_t column;
 
-    Cell(Char const &chr, size_t line, size_t column) : chr(chr), line(line), column(column) {}
+    Cell(Char const &chr_, size_t line_, size_t column_) : chr(chr_), line(line_), column(column_) {}
 };
 
 class Text : public Layer {
