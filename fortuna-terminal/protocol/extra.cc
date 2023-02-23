@@ -35,7 +35,7 @@ void Extra::escape_sequence_complete()
 
 char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
 {
-    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 4));
+    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 3));
     std::string item;
     while (std::getline(ss, item, ';')) {
         size_t value = std::stoull(item);

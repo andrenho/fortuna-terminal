@@ -149,10 +149,10 @@ void Protocol::process_input_thread()
                     extra_.send_bytes(received_bytes.substr(current_pos));
                     break;
                 } else {
-                    size_t offset = it_next_alpha - received_bytes.begin();
+                    size_t offset = it_next_alpha - received_bytes.begin() + 1;
                     extra_active = false;
-                    extra_.send_bytes(received_bytes.substr(current_pos, offset));
-                    current_pos += offset;
+                    extra_.send_bytes(received_bytes.substr(current_pos, offset - current_pos));
+                    current_pos = offset;
                 }
             }
         }
