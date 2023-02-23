@@ -106,7 +106,7 @@ Options::Options(int argc, char* argv[])
     }
 }
 
-void Options::print_help(int exit_status)
+[[ noreturn ]] void Options::print_help(int exit_status)
 {
     std::cout << "    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n";
     std::cout << "    -w, --window                    Window mode (as opposed to the default, which is full screen)\n";
@@ -128,6 +128,6 @@ void Options::parse_uart_settings(std::string const &opt)
         throw FortunaException("Invalid UART settings");
     if (opt[0] != '8')
         throw FortunaException("Invalid UART settings: only 8-bit communication is supported.");
-    uart_options.stop_bits = opt[1] - '0';
+    uart_options.stop_bits = (uint8_t) (opt[1] - '0');
     uart_options.parity = opt[2];
 }

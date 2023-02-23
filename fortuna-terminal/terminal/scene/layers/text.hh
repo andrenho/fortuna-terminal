@@ -76,8 +76,8 @@ public:
     void reset();
 
 private:
-    std::unique_ptr<Char[]> matrix_;
-    Cursor                  cursor_;
+    std::unique_ptr<Char[]> matrix_ {};
+    Cursor                  cursor_ {};
 
     size_t                  columns_ = 0;
     size_t                  lines_ = 0;

@@ -79,7 +79,7 @@ std::vector<uint8_t> TCPIP::read_blocking(size_t n)
         SOCKET fd = accept(sock_fd, (struct sockaddr *) &client_addr, &sin_size);
         if (fd == INVALID_SOCKET)
             on_read_error("Error on accept");
-        fd_ = fd;
+        fd_ = (int) fd;
 
         std::cout << "Client connected.\n";
 

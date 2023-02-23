@@ -28,9 +28,9 @@ void ANSI::send_bytes(std::vector<uint8_t> const &bytes)
     tmt_write(vt_.get(), (const char *) bytes.data(), bytes.size());
 }
 
-std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> ANSI::initialize_cache(Size initial_size)
+ANSI::Cache ANSI::initialize_cache(Size initial_size)
 {
-    std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> k;
+    ANSI::Cache k {};
     for (size_t y = 0; y < initial_size.h; ++y) {
         k[y] = {};
         for (size_t x = 0; x < initial_size.w; ++x) {

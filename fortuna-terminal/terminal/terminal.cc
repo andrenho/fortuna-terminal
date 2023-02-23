@@ -95,18 +95,18 @@ void Terminal::resize_window(Scene const& scene)
         SDL_GetDesktopDisplayMode(0, &mode);
 
         // find adequate zoom
-        unsigned int zoom_w = mode.w / terminal_size.w;
-        unsigned int zoom_h = mode.h / terminal_size.h;
+        unsigned int zoom_w = mode.w / (int) terminal_size.w;
+        unsigned int zoom_h = mode.h / (int) terminal_size.h;
         unsigned int zoom = std::min(zoom_w, zoom_h);
 
-        win_w_ = terminal_size.w * zoom;
-        win_h_ = terminal_size.h * zoom;
+        win_w_ = (int) terminal_size.w * zoom;
+        win_h_ = (int) terminal_size.h * zoom;
 
         SDL_SetWindowSize(window_.get(), win_w_, win_h_);
         SDL_SetWindowPosition(window_.get(), (mode.w - win_w_) / 2, (mode.h - win_h_) / 2);
     }
 
-    SDL_RenderSetLogicalSize(renderer_.get(), terminal_size.w, terminal_size.h);
+    SDL_RenderSetLogicalSize(renderer_.get(), (int) terminal_size.w, (int) terminal_size.h);
 }
 
 void Terminal::wait_for_enter(bool* quit)
@@ -139,7 +139,7 @@ void Terminal::add_keyboard_event(Protocol& protocol, bool is_down, SDL_Keyboard
     };
 
     if (key.keysym.sym >= 32 && key.keysym.sym < 127) {
-        protocol.event_key(key.keysym.sym & 0xff, is_down, key_modifiers);
+        protocol.event_key((uint8_t) key.keysym.sym, is_down, key_modifiers);
     } else {
         SpecialKey special_key;
 

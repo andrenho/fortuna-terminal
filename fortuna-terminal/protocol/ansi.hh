@@ -16,6 +16,8 @@ extern "C" {
 }
 
 class ANSI : public NonCopyable {
+    using Cache = std::unordered_map<size_t, std::unordered_map<size_t, TMTCHAR>>;
+
 public:
     explicit ANSI(Scene& scene);
 
@@ -26,12 +28,12 @@ public:
 
 private:
     Scene& scene_;
-    std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> cache_;
+    Cache cache_ {};
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
 
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
     static void tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
-    static std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> initialize_cache(Size initial_size);
+    static Cache initialize_cache(Size initial_size);
 };
 
 #endif //ANSI_HH_

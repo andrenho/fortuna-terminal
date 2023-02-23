@@ -17,6 +17,9 @@ New protocol:
   - [ ] Graphics draw
   - [ ] Graphics collision support
 
+Emulator support
+  - [ ] Emulator
+
 Audio:
   - [ ] Design audio
   - [ ] Implement audio

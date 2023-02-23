@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-struct __attribute__((__packed__)) Color {
+struct Color {
     uint8_t r, g, b;
 };
 

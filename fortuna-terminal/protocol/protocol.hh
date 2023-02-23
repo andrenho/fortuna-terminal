@@ -37,8 +37,8 @@ public:
     void reset();
 
 private:
-    std::unique_ptr<CommunicationModule> comm_;
-    Scene scene_;
+    std::unique_ptr<CommunicationModule> comm_ {};
+    Scene scene_ {};
     ANSI  ansi_;
     Extra extra_;
 

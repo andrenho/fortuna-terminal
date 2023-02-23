@@ -20,7 +20,7 @@ std::vector<uint8_t> FDComm::read_blocking(size_t n)
         return {};
 
     std::vector<uint8_t> data(n);
-    int r = read(fd_, data.data(), n);
+    int r = read(fd_, data.data(), (int) n);
     if (r < 0)
         on_read_error(strerror(errno));
     else if (r == 0)
@@ -38,7 +38,7 @@ void FDComm::write(std::vector<uint8_t> const &data)
     if (fd == INVALID_FD)
         return;
 
-    int n = ::write(fd, data.data(), data.size());
+    int n = ::write(fd, data.data(), (int) data.size());
     if (n == 0)
         on_write_error(strerror(errno));
     else if (n < 0)

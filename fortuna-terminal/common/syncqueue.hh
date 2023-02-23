@@ -81,9 +81,9 @@ public:
     }
 
 private:
-    std::queue<T>           queue_;
-    std::mutex              mutex_;
-    std::condition_variable cond_;
+    std::queue<T>           queue_ {};
+    std::mutex              mutex_ {};
+    std::condition_variable cond_ {};
 };
 
 #endif //SYNCQUEUE_HH_

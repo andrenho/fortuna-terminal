@@ -31,13 +31,13 @@ public:
     CommType        comm_type   = CommType::NotChosen;
     bool            debug_comm = false;
 
-    TerminalOptions terminal_options;
-    UartOptions     uart_options;
-    TcpIpOptions    tcpip_options;
-    PTYOptions      pty_options;
+    TerminalOptions terminal_options {};
+    UartOptions     uart_options {};
+    TcpIpOptions    tcpip_options {};
+    PTYOptions      pty_options {};
 
 private:
-    void print_help(int exit_status);
+    [[ noreturn ]] void print_help(int exit_status);
     void parse_uart_settings(std::string const& opt);
 };
 
