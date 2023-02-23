@@ -36,6 +36,8 @@ public:
 
     void reset();
 
+    void execute_inputs();
+
 private:
     std::unique_ptr<CommunicationModule> comm_ {};
     Scene scene_ {};
@@ -43,7 +45,6 @@ private:
     Extra extra_;
 
     std::unique_ptr<std::thread> read_thread_ = nullptr;
-    std::unique_ptr<std::thread> input_thread_ = nullptr;
     std::unique_ptr<std::thread> output_thread_ = nullptr;
     bool                         threads_active_ = true;
 
@@ -53,8 +54,6 @@ private:
     bool debug_comm_ = false;
 
     void debug_byte(bool is_input, uint8_t byte);
-
-    void process_input_thread();
 };
 
 #endif //PROTOCOL_HH_

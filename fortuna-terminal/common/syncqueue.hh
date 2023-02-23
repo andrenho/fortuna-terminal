@@ -44,6 +44,20 @@ public:
     }
 
     template <typename U>
+    void optionally_pop_all_into(U& collection) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (queue_.empty())
+            return;
+
+        cond_.wait(lock, [this]() { return !queue_.empty(); });
+
+        while (!queue_.empty()) {
+            collection.push_back(queue_.front());
+            queue_.pop();
+        }
+    }
+
+    template <typename U>
     void push_all(U const& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
 

@@ -40,8 +40,6 @@ void Protocol::run()
                 std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
         }
     });
-
-    input_thread_ = std::make_unique<std::thread>(&Protocol::process_input_thread, this);
 }
 
 void Protocol::finalize_threads()
@@ -54,7 +52,6 @@ void Protocol::finalize_threads()
         read_thread_->detach();
     }
     input_queue_->push({});  // release the lock
-    input_thread_->join();
     output_queue_->push({});  // release the lock
     output_thread_->join();
 }
@@ -121,46 +118,44 @@ void Protocol::reset()
     scene_.reset();
 }
 
-void Protocol::process_input_thread()
+void Protocol::execute_inputs()
 {
-    std::string received_bytes;
+    static std::string received_bytes;
     bool extra_active = false;
 
-    while (threads_active_) {
-        input_queue_->pop_all_into(received_bytes);
+    input_queue_->optionally_pop_all_into(received_bytes);
+    if (received_bytes.empty())
+        return;
 
-        size_t current_pos = 0;
-        while (true) {
-            if (!extra_active) {
-                // we're not in extra escape sequence, so let's look for a "ESC *" that starts that sequence
-                // if we don't find it, we can send the whole thing to ANSI
-                size_t next_esc_star = received_bytes.find("\e*", current_pos);
-                if (next_esc_star == std::string::npos) {
-                    ansi_.send_bytes(received_bytes.substr(current_pos));
-                    break;
-                } else {
-                    extra_active = true;
-                    ansi_.send_bytes(received_bytes.substr(current_pos, next_esc_star - current_pos));
-                    current_pos = next_esc_star;
-                }
+    size_t current_pos = 0;
+    while (true) {
+        if (!extra_active) {
+            // we're not in extra escape sequence, so let's look for a "ESC *" that starts that sequence
+            // if we don't find it, we can send the whole thing to ANSI
+            size_t next_esc_star = received_bytes.find("\e*", current_pos);
+            if (next_esc_star == std::string::npos) {
+                ansi_.send_bytes(received_bytes.substr(current_pos));
+                break;
             } else {
-                auto it_next_alpha = std::find_if(received_bytes.begin() + current_pos, received_bytes.end(), [](char c) { return std::isalpha(c); });
-                if (it_next_alpha == received_bytes.end()) {
-                    extra_.send_bytes(received_bytes.substr(current_pos));
-                    break;
-                } else {
-                    size_t offset = it_next_alpha - received_bytes.begin() + 1;
-                    extra_active = false;
-                    extra_.send_bytes(received_bytes.substr(current_pos, offset - current_pos));
-                    current_pos = offset;
-                }
+                extra_active = true;
+                ansi_.send_bytes(received_bytes.substr(current_pos, next_esc_star - current_pos));
+                current_pos = next_esc_star;
+            }
+        } else {
+            auto it_next_alpha = std::find_if(received_bytes.begin() + current_pos, received_bytes.end(), [](char c) { return std::isalpha(c); });
+            if (it_next_alpha == received_bytes.end()) {
+                extra_.send_bytes(received_bytes.substr(current_pos));
+                break;
+            } else {
+                size_t offset = it_next_alpha - received_bytes.begin() + 1;
+                extra_active = false;
+                extra_.send_bytes(received_bytes.substr(current_pos, offset - current_pos));
+                current_pos = offset;
             }
         }
-
-        received_bytes.clear();
-
-        std::this_thread::yield();
     }
+
+    received_bytes.clear();
 
 }
 

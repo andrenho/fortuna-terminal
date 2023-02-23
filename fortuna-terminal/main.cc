@@ -73,6 +73,7 @@ restart:
             }
 
             ALL_PROTOCOLS(p.scene().text.update_blink())
+            protocol->execute_inputs();
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
             gpio->vsync();
