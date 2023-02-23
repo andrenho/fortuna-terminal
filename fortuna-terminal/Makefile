@@ -1,6 +1,6 @@
 OBJ =   main.o options.o \
 		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
-		protocol/protocol.o protocol/ansi.o \
+		protocol/protocol.o protocol/ansi.o protocol/extra.o \
         terminal/terminal.o \
         terminal/scene/scene.o \
 		terminal/scene/layers/text.o \

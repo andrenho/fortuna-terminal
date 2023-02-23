@@ -12,10 +12,12 @@
 #include "common/geometry.hh"
 #include "ansi.hh"
 #include "keys.hh"
+#include "gpio/gpio.hh"
+#include "extra.hh"
 
 class Protocol : public NonCopyable {
 public:
-    explicit Protocol(std::unique_ptr<CommunicationModule> comm);
+    explicit Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
 
     void run();
 
@@ -35,7 +37,8 @@ public:
 private:
     std::unique_ptr<CommunicationModule> comm_;
     Scene scene_;
-    ANSI ansi_;
+    ANSI  ansi_;
+    Extra extra_;
 
     std::unique_ptr<std::thread> read_thread_ = nullptr;
     std::unique_ptr<std::thread> input_thread_ = nullptr;

@@ -4,6 +4,7 @@
 #include "terminal/terminal.hh"
 #include "exceptions/fortunaexception.hh"
 #include "protocol/protocol.hh"
+#include "gpio/gpio.hh"
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
@@ -24,6 +25,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<const Options> options;
     std::unique_ptr<Terminal> terminal;
     std::unique_ptr<CommunicationModule> comm;
+    std::unique_ptr<GPIO> gpio;
 
     std::vector<Protocol> protocols;
     size_t current_protocol = 0;
@@ -34,7 +36,7 @@ int main(int argc, char* argv[])
         options = std::make_unique<const Options>(argc, argv);
         terminal = std::make_unique<Terminal>(options->terminal_options);
         comm = CommunicationModule::create_unique(options.get());
-        protocols.emplace_back(std::move(comm));
+        protocols.emplace_back(std::move(comm), *gpio);
 
         protocol = &protocols.at(current_protocol);
 
@@ -52,11 +54,14 @@ int main(int argc, char* argv[])
 
 restart:
     try {
+        gpio->reset();
+
         bool quit = false;
         while (!quit) {
             ALL_PROTOCOLS(p.scene().text.update_blink())
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
+            gpio->vsync();
         }
 
     } catch (std::exception& e) {

@@ -11,9 +11,10 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-Protocol::Protocol(std::unique_ptr<CommunicationModule> comm)
+Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
         : comm_(std::move(comm)),
-          ansi_(scene_)
+          ansi_(scene_),
+          extra_(scene_, gpio)
 {
 }
 
@@ -33,8 +34,9 @@ void Protocol::run()
         while (threads_active_) {
             std::vector<uint8_t> received_bytes;
             input_queue_->pop_all_into(received_bytes);
-            if (!received_bytes.empty())
+            if (!received_bytes.empty()) {
                 ansi_.send_bytes(received_bytes);
+                extra_.send_bytes(received_bytes);
         }
     });
 
