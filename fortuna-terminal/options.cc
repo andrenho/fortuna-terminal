@@ -16,6 +16,7 @@ Options::Options(int argc, char* argv[])
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "window",             no_argument,       nullptr, 'w' },
+                { "graphics",           no_argument,       nullptr, 'g' },
                 { "debug-comm",         no_argument,       nullptr, 'd' },
                 // serial
                 { "serial-port",        required_argument, nullptr, 'P' },
@@ -29,7 +30,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:d", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:dg", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -73,6 +74,10 @@ Options::Options(int argc, char* argv[])
                 debug_comm = true;
                 break;
 
+            case 'g':
+                graphics_mode = true;
+                break;
+
             case 'B':
                 uart_options.baud = strtol(optarg, nullptr, 10);
                 if (errno == ERANGE || errno == EINVAL)
@@ -110,6 +115,7 @@ Options::Options(int argc, char* argv[])
 {
     std::cout << "    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n";
     std::cout << "    -w, --window                    Window mode (as opposed to the default, which is full screen)\n";
+    std::cout << "    -g, --graphics                  Start in graphics mode (40 columns)\n";
     std::cout << "    -d, --debug-comm                Print all bytes that entered or exited the terminal\n";
     std::cout << "Options valid for `uart`:\n";
     std::cout << "    -P, --serial-port               Serial port (default: /dev/serial0)\n";

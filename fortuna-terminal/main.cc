@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
         options = std::make_unique<const Options>(argc, argv);
         terminal = std::make_unique<Terminal>(options->terminal_options);
         comm = CommunicationModule::create_unique(options.get());
-        protocols.emplace_back(Mode::Text, std::move(comm), *gpio);
+        protocols.emplace_back(options->graphics_mode ? Mode::Graphics : Mode::Text, std::move(comm), *gpio);
 
         protocol = &protocols.at(current_protocol);
 
