@@ -11,6 +11,8 @@
 
 SyncQueue<ControlCommand> control_commands;
 
+std::vector<Protocol> &execute_control(Terminal *terminal, std::vector<Protocol> const &protocols, Protocol *protocol);
+
 static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
     std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
@@ -20,6 +22,29 @@ static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_
         terminal->wait_for_enter(quit);
     } else {
         exit(EXIT_FAILURE);
+    }
+}
+
+static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& protocols, Protocol *protocol)
+{
+    std::optional<ControlCommand> occ;
+    while ((occ = control_commands.pop_nonblock()).has_value()) {
+        switch (occ.value()) {
+            case ControlCommand::Reset:
+                ALL_PROTOCOLS(p.reset());
+                break;
+            case ControlCommand::ResetProtocol:
+                protocol->reset();
+                break;
+            case ControlCommand::SetTextMode:
+                protocol->set_mode(Mode::Text);
+                terminal->resize_window(protocol->scene());
+                break;
+            case ControlCommand::SetGraphicsMode:
+                protocol->set_mode(Mode::Graphics);
+                terminal->resize_window(protocol->scene());
+                break;
+        }
     }
 }
 
@@ -39,7 +64,7 @@ int main(int argc, char* argv[])
         options = std::make_unique<const Options>(argc, argv);
         terminal = std::make_unique<Terminal>(options->terminal_options);
         comm = CommunicationModule::create_unique(options.get());
-        protocols.emplace_back(std::move(comm), *gpio);
+        protocols.emplace_back(Mode::Text, std::move(comm), *gpio);
 
         protocol = &protocols.at(current_protocol);
 
@@ -62,15 +87,7 @@ restart:
 
         bool quit = false;
         while (!quit) {
-            std::optional<ControlCommand> occ;
-            while ((occ = control_commands.pop_nonblock()).has_value()) {
-                switch (occ.value()) {
-                    case ControlCommand::Reset:           ALL_PROTOCOLS(p.reset()); break;
-                    case ControlCommand::ResetProtocol:   protocol->reset(); break;
-                    case ControlCommand::SetTextMode:     break;
-                    case ControlCommand::SetGraphicsMode: break;
-                }
-            }
+            execute_control_commands(terminal.get(), protocols, protocol);
 
             ALL_PROTOCOLS(p.scene().text.update_blink())
             protocol->execute_inputs();
@@ -92,3 +109,4 @@ restart:
 
     return EXIT_SUCCESS;
 }
+

@@ -4,11 +4,10 @@
 #include "layers/text.hh"
 #include "../../common/noncopyable.hh"
 #include "common/geometry.hh"
+#include "protocol/mode.hh"
 
 struct Scene {
-    Scene();
-
-    void set_graphical_mode(bool value);
+    explicit Scene(Mode mode);
 
     Text text;
 
@@ -16,8 +15,12 @@ struct Scene {
 
     void reset();
 
+    void set_mode(Mode mode);
+
+    [[nodiscard]] Mode mode() const { return mode_; }
+
 private:
-    bool graphical_mode_ = false;
+    Mode mode_;
 };
 
 #endif //SCENE_HH_

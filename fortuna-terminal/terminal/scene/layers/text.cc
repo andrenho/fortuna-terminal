@@ -5,21 +5,9 @@
 
 using namespace std::chrono_literals;
 
-void Text::set_80_columns(bool value)
+Text::Text(Mode mode)
 {
-    if (value) {
-        columns_ = Columns_80Columns;
-        lines_ = Lines_80Columns;
-    } else {
-        columns_ = Columns_40Columns;
-        lines_ = Lines_40Columns;
-    }
-
-    matrix_ = std::make_unique<Char[]>(columns_ * lines_);
-
-    for (size_t i = 0; i < (columns_ * lines_); ++i)
-        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
-        // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
+    set_mode(mode);
 }
 
 Char const &Text::get(size_t line, size_t column) const
@@ -67,3 +55,19 @@ void Text::reset()
         matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
 }
 
+void Text::set_mode(Mode mode)
+{
+    if (mode == Mode::Text) {
+        columns_ = Columns_80Columns;
+        lines_ = Lines_80Columns;
+    } else {
+        columns_ = Columns_40Columns;
+        lines_ = Lines_40Columns;
+    }
+
+    matrix_ = std::make_unique<Char[]>(columns_ * lines_);
+
+    for (size_t i = 0; i < (columns_ * lines_); ++i)
+        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
+    // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
+}

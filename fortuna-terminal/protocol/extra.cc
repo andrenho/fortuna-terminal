@@ -44,8 +44,3 @@ char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
 
     return escape_sequence_.back();
 }
-
-bool Extra::escape_sequence_active() const
-{
-    return !escape_sequence_.empty();
-}

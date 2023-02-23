@@ -11,6 +11,7 @@
 
 #include "layer.hh"
 #include "common/geometry.hh"
+#include "protocol/mode.hh"
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
 using Time = std::chrono::high_resolution_clock;
@@ -49,13 +50,13 @@ struct Cell {
 
 class Text : public Layer {
 public:
-    Text() : Layer() {}
-
-    void          set_80_columns(bool value);
+    explicit Text(Mode mode);
 
     void          set(size_t line, size_t column, Char c);
     void          set(std::vector<Cell> const& cells);
     void          move_cursor_to(size_t line, size_t column);
+
+    void          set_mode(Mode mode);
 
     uint8_t       bg_color = COLOR_BLACK;
 

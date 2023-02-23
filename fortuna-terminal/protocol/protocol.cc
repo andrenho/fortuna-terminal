@@ -12,10 +12,12 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
+Protocol::Protocol(Mode mode, std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
         : comm_(std::move(comm)),
-          ansi_(scene_),
-          extra_(scene_, gpio)
+          scene_(mode),
+          ansi_(mode, scene_),
+          extra_(mode, scene_, gpio),
+          mode_(mode)
 {
 }
 
@@ -157,5 +159,13 @@ void Protocol::execute_inputs()
 
     received_bytes.clear();
 
+}
+
+void Protocol::set_mode(Mode mode)
+{
+    mode = mode_;
+    scene_.set_mode(mode);
+    ansi_.set_mode(mode);
+    extra_.set_mode(mode);
 }
 

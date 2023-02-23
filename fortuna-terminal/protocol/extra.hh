@@ -9,13 +9,14 @@
 
 class Extra {
 public:
-    explicit Extra(Scene& scene, GPIO& gpio) : scene_(scene), gpio_(gpio) {}
+    explicit Extra(Mode mode, Scene& scene, GPIO& gpio) : mode_(mode), scene_(scene), gpio_(gpio) {}
 
     void send_bytes(std::string const &bytes);
 
-    bool escape_sequence_active() const;
+    void set_mode(Mode mode) { mode_ = mode; }
 
 private:
+    Mode mode_;
     Scene& scene_;
     GPIO&  gpio_;
 

@@ -5,11 +5,14 @@
 
 #include "exceptions/fortunaexception.hh"
 
-ANSI::ANSI(Scene &scene)
+ANSI::ANSI(Mode mode, Scene &scene)
     : scene_(scene),
-      cache_(initialize_cache({Text::Columns_80Columns, Text::Lines_80Columns })),
+      cache_(initialize_cache({Text::Columns_80Columns, std::max(Text::Lines_40Columns, Text::Lines_80Columns) })),
         vt_(decltype(vt_)(
-                tmt_open(Text::Lines_80Columns, Text::Columns_80Columns, ANSI::tmt_callback, this, nullptr),
+                tmt_open(
+                        mode == Mode::Text ? Text::Lines_80Columns : Text::Lines_40Columns,
+                        mode == Mode::Text ? Text::Columns_80Columns : Text::Columns_40Columns,
+                        ANSI::tmt_callback, this, nullptr),
                 [](TMT* vt) { tmt_close(vt); }
         ))
 {
@@ -171,5 +174,12 @@ bool ANSI::tmtchar_equals(TMTCHAR const& c1, TMTCHAR const& c2)
         c1.a.underline == c2.a.underline &&
         c1.a.fg == c2.a.fg &&
         c1.a.bg == c2.a.bg;
+}
+
+void ANSI::set_mode(Mode mode)
+{
+    tmt_resize(vt_.get(),
+           mode == Mode::Text ? Text::Lines_80Columns : Text::Lines_40Columns,
+           mode == Mode::Text ? Text::Columns_80Columns : Text::Columns_40Columns);
 }
 

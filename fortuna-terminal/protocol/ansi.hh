@@ -19,12 +19,14 @@ class ANSI : public NonCopyable {
     using Cache = std::vector<TMTCHAR>;
 
 public:
-    explicit ANSI(Scene& scene);
+    explicit ANSI(Mode mode, Scene& scene);
 
     void                       send_bytes(std::string const& bytes);
     std::optional<std::string> translate_special_key(SpecialKey special_key, KeyMod mod);
 
     void reset();
+
+    void set_mode(Mode mode);
 
 private:
     Scene& scene_;

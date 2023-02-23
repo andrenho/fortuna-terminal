@@ -14,12 +14,17 @@
 #include "keys.hh"
 #include "gpio/gpio.hh"
 #include "extra.hh"
+#include "mode.hh"
 
 class Protocol : public NonCopyable {
 public:
-    explicit Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
+    explicit Protocol(Mode mode, std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
 
     void run();
+    void execute_inputs();
+    void reset();
+
+    void show_error(std::exception const& e);
 
     void finalize_threads();
 
@@ -31,16 +36,11 @@ public:
     Scene&       scene() { return scene_; }
 
     void set_debug_comm(bool debug_comm) { debug_comm_ = debug_comm; }
-
-    void show_error(std::exception const& e);
-
-    void reset();
-
-    void execute_inputs();
+    void set_mode(Mode mode);
 
 private:
     std::unique_ptr<CommunicationModule> comm_ {};
-    Scene scene_ {};
+    Scene scene_;
     ANSI  ansi_;
     Extra extra_;
 
@@ -52,6 +52,7 @@ private:
     std::unique_ptr<SyncQueue<uint8_t>> output_queue_ = std::make_unique<SyncQueue<uint8_t>>();
 
     bool debug_comm_ = false;
+    Mode mode_;
 
     void debug_byte(bool is_input, uint8_t byte);
 };
