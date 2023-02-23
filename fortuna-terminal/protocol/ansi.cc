@@ -30,13 +30,9 @@ void ANSI::send_bytes(std::string const &bytes)
 
 ANSI::Cache ANSI::initialize_cache(Size initial_size)
 {
-    ANSI::Cache k {};
-    for (size_t y = 0; y < initial_size.h; ++y) {
-        k[y] = {};
-        for (size_t x = 0; x < initial_size.w; ++x) {
-            k[y][x] = TMTCHAR { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } };
-        }
-    }
+    Cache k;
+    for (size_t i = 0; i < (initial_size.w * initial_size.h); ++i)
+        k.push_back(TMTCHAR { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } });
     return k;
 }
 
@@ -62,17 +58,17 @@ void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
                 if (s->lines[r]->dirty) {
                     for (size_t x = 0; x < s->ncol; x++) {
                         TMTCHAR ch = s->lines[r]->chars[x];
-                        TMTCHAR cached_ch = this_->cache_.at(r).at(x);
-                        if (memcmp(&ch, &cached_ch, sizeof(TMTCHAR)) != 0) {
+                        TMTCHAR cached_ch = this_->cache_.at(r * s->ncol + x);
+                        if (!tmtchar_equals(ch, cached_ch)) {
                             cells.emplace_back(Char { (uint8_t) ch.c, translate_attrib(ch.a) }, r, x);
-                            this_->cache_.at(r).at(x) = ch;
+                            this_->cache_[r * s->ncol + x] = ch;
                         }
                     }
                 }
             }
             this_->scene_.text.set(cells);
-        }
             tmt_clean(vt);
+        }
             break;
 
         case TMT_MSG_ANSWER:
@@ -162,5 +158,18 @@ std::optional<std::string> ANSI::translate_special_key(SpecialKey special_key, K
             break;
     }
     return {};
+}
+
+bool ANSI::tmtchar_equals(TMTCHAR const& c1, TMTCHAR const& c2)
+{
+    return (uint8_t) c1.c == (uint8_t) c2.c &&
+        c1.a.reverse == c2.a.reverse &&
+        c1.a.bold == c2.a.bold &&
+        c1.a.blink == c2.a.blink &&
+        c1.a.dim == c2.a.dim &&
+        c1.a.invisible == c2.a.invisible &&
+        c1.a.underline == c2.a.underline &&
+        c1.a.fg == c2.a.fg &&
+        c1.a.bg == c2.a.bg;
 }
 

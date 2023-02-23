@@ -26,8 +26,6 @@ TextPainter::TextPainter(SDL_Renderer *renderer)
 
 void TextPainter::draw(Text const &text) const
 {
-    std::unique_lock<std::mutex> lock(*text.mutex_);
-
     for (size_t y = 0; y < text.lines(); ++y)
         for (size_t x = 0; x < text.columns(); ++x)
             draw_cell(text, y, x);

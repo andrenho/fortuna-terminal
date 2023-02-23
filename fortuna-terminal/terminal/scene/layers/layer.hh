@@ -9,7 +9,6 @@
 class Layer {
 public:
     Palette palette = {};
-    mutable std::unique_ptr<std::mutex> mutex_ = std::make_unique<std::mutex>();
 
 protected:
     Layer() { palette_init(palette); }

@@ -2,7 +2,6 @@
 #include "terminal/scene/scene.hh"
 
 #include <SDL2/SDL.h>
-#include <mutex>
 
 using namespace std::chrono_literals;
 
@@ -30,14 +29,12 @@ Char const &Text::get(size_t line, size_t column) const
 
 void Text::set(size_t line, size_t column, Char c)
 {
-    std::unique_lock<std::mutex> lock(*mutex_);
     matrix_[line * columns_ + column] = c;
     reset_blink();
 }
 
 void Text::set(std::vector<Cell> const &cells)
 {
-    std::unique_lock<std::mutex> lock(*mutex_);
     for (Cell const& cell: cells)
         matrix_[cell.line * columns_ + cell.column] = cell.chr;
     reset_blink();
@@ -45,7 +42,6 @@ void Text::set(std::vector<Cell> const &cells)
 
 void Text::move_cursor_to(size_t line, size_t column)
 {
-    std::unique_lock<std::mutex> lock(*mutex_);
     cursor_.y = line;
     cursor_.x = column;
     reset_blink();
