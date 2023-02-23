@@ -1,5 +1,7 @@
 #include "extra.hh"
 
+#include <sstream>
+
 void Extra::send_bytes(std::vector<uint8_t> const &bytes)
 {
     for (char c : bytes) {
@@ -36,5 +38,12 @@ void Extra::escape_sequence_complete()
 
 char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
 {
-    return 0;
+    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 3));
+    std::string item;
+    while (std::getline(ss, item, ';')) {
+        size_t value = std::stoull(item);
+        parameters.push_back(value);
+    }
+
+    return escape_sequence_.back();
 }

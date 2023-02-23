@@ -1,6 +1,8 @@
 #ifndef EXTRA_HH_
 #define EXTRA_HH_
 
+#include <vector>
+
 #include "../terminal/scene/scene.hh"
 #include "../gpio/gpio.hh"
 
