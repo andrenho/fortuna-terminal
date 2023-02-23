@@ -17,7 +17,7 @@
 
 class Protocol : public NonCopyable {
 public:
-    explicit Protocol(class Terminal& terminal, std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
+    explicit Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
 
     void run();
 

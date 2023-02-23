@@ -41,6 +41,9 @@ private:
     void add_keyboard_event(Protocol& protocol, bool is_down, SDL_KeyboardEvent key);
 
     size_t total_scene_events_ = 0;
+
+    bool mouse_active_ = false;
+    bool mouse_register_move_ = false;
 };
 
 #endif //TERMINAL_HH_

@@ -1,7 +1,10 @@
 #ifndef CONTROL_HH_
 #define CONTROL_HH_
 
-void set_reset_on_next_loop(bool value);
-bool reset_on_next_loop();
+#include "common/syncqueue.hh"
+
+enum class ControlCommand { Reset, ResetProtocol, SetTextMode, SetGraphicsMode };
+
+extern SyncQueue<ControlCommand> control_commands;
 
 #endif //CONTROL_HH_

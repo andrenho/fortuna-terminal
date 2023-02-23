@@ -12,9 +12,12 @@ void Echo::write(std::vector<uint8_t> const &data)
 {
     std::vector<uint8_t> new_data;
     for (uint8_t byte: data) {
-        if (byte == 13)
+        if (byte == 13) {
+            new_data.push_back(13);
             new_data.push_back(10);
-        new_data.push_back(byte);
+        } else {
+            new_data.push_back(byte);
+        }
     }
     buffer_.push_all(new_data);
 }

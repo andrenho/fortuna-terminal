@@ -9,6 +9,8 @@
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
+SyncQueue<ControlCommand> control_commands;
+
 static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
     std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
@@ -37,7 +39,7 @@ int main(int argc, char* argv[])
         options = std::make_unique<const Options>(argc, argv);
         terminal = std::make_unique<Terminal>(options->terminal_options);
         comm = CommunicationModule::create_unique(options.get());
-        protocols.emplace_back(*terminal, std::move(comm), *gpio);
+        protocols.emplace_back(std::move(comm), *gpio);
 
         protocol = &protocols.at(current_protocol);
 
@@ -60,9 +62,14 @@ restart:
 
         bool quit = false;
         while (!quit) {
-            if (reset_on_next_loop()) {
-                set_reset_on_next_loop(false);
-                ALL_PROTOCOLS(p.reset())
+            std::optional<ControlCommand> occ;
+            while ((occ = control_commands.pop_nonblock()).has_value()) {
+                switch (occ.value()) {
+                    case ControlCommand::Reset:           ALL_PROTOCOLS(p.reset()); break;
+                    case ControlCommand::ResetProtocol:   protocol->reset(); break;
+                    case ControlCommand::SetTextMode:     break;
+                    case ControlCommand::SetGraphicsMode: break;
+                }
             }
 
             ALL_PROTOCOLS(p.scene().text.update_blink())
@@ -75,7 +82,7 @@ restart:
         bool quit = false;
         on_error(terminal.get(), protocols, current_protocol, e, &quit);
         if (!quit) {
-            set_reset_on_next_loop(true);
+            control_commands.push(ControlCommand::Reset);
             goto restart;
         }
     }

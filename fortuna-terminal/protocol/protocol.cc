@@ -11,10 +11,10 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-Protocol::Protocol(class Terminal& terminal, std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
+Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
         : comm_(std::move(comm)),
           ansi_(scene_),
-          extra_(terminal, scene_, gpio)
+          extra_(scene_, gpio)
 {
 }
 

@@ -1,8 +1,9 @@
 #include "extra.hh"
-#include "control.hh"
 
 #include <iostream>
 #include <sstream>
+
+#include "control.hh"
 
 void Extra::send_bytes(std::vector<uint8_t> const &bytes)
 {
@@ -20,10 +21,8 @@ void Extra::escape_sequence_complete()
     std::vector<size_t> parameters;
     char command = parse_escape_sequence(parameters);
     switch (command) {
-        case 'r': {
-                std::cout << "Terminal reset." << std::endl;
-                set_reset_on_next_loop(true);
-            }
+        case 'r':
+            control_commands.push(ControlCommand::ResetProtocol);
             break;
         case 'x':
             std::cout << "Computer reset." << std::endl;
