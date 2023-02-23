@@ -20,6 +20,8 @@ public:
     void                       send_bytes(std::vector<uint8_t> const& bytes);
     std::optional<std::string> translate_special_key(SpecialKey special_key, KeyMod mod);
 
+    void reset();
+
 private:
     Scene& scene_;
     std::unordered_map<uint8_t, std::unordered_map<uint8_t, TMTCHAR>> cache_;

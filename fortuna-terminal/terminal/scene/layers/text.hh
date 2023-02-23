@@ -73,6 +73,8 @@ public:
     static constexpr size_t Columns_40Columns = 40;
     static constexpr size_t Lines_40Columns   = 25;
 
+    void reset();
+
 private:
     std::unique_ptr<Char[]> matrix_;
     Cursor                  cursor_;

@@ -5,6 +5,7 @@
 #include "exceptions/fortunaexception.hh"
 #include "protocol/protocol.hh"
 #include "gpio/gpio.hh"
+#include "control.hh"
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
@@ -36,7 +37,7 @@ int main(int argc, char* argv[])
         options = std::make_unique<const Options>(argc, argv);
         terminal = std::make_unique<Terminal>(options->terminal_options);
         comm = CommunicationModule::create_unique(options.get());
-        protocols.emplace_back(std::move(comm), *gpio);
+        protocols.emplace_back(*terminal, std::move(comm), *gpio);
 
         protocol = &protocols.at(current_protocol);
 
@@ -46,6 +47,8 @@ int main(int argc, char* argv[])
 
         terminal->resize_window(protocol->scene());
 
+        gpio->reset();
+
     } catch (std::exception& e) {
         on_error(terminal.get(), protocols, current_protocol, e, nullptr);
     }
@@ -54,10 +57,14 @@ int main(int argc, char* argv[])
 
 restart:
     try {
-        gpio->reset();
 
         bool quit = false;
         while (!quit) {
+            if (reset_on_next_loop()) {
+                set_reset_on_next_loop(false);
+                ALL_PROTOCOLS(p.reset())
+            }
+
             ALL_PROTOCOLS(p.scene().text.update_blink())
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
@@ -67,8 +74,10 @@ restart:
     } catch (std::exception& e) {
         bool quit = false;
         on_error(terminal.get(), protocols, current_protocol, e, &quit);
-        if (!quit)
+        if (!quit) {
+            set_reset_on_next_loop(true);
             goto restart;
+        }
     }
 
     ALL_PROTOCOLS(p.finalize_threads())

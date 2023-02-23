@@ -14,6 +14,8 @@ struct Scene {
 
     [[nodiscard]] Size terminal_size() const;
 
+    void reset();
+
 private:
     bool graphical_mode_ = false;
 };

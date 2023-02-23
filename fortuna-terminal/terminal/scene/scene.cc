@@ -27,3 +27,8 @@ void Scene::set_graphical_mode(bool value)
     text.set_80_columns(!value);
 }
 
+void Scene::reset()
+{
+    text.reset();
+}
+

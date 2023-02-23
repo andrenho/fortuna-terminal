@@ -11,10 +11,10 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-Protocol::Protocol(std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
+Protocol::Protocol(class Terminal& terminal, std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
         : comm_(std::move(comm)),
           ansi_(scene_),
-          extra_(scene_, gpio)
+          extra_(terminal, scene_, gpio)
 {
 }
 
@@ -31,12 +31,27 @@ void Protocol::run()
     });
 
     input_thread_ = std::make_unique<std::thread>([this]() {
+        bool previous_was_esc = false;
+
         while (threads_active_) {
             std::vector<uint8_t> received_bytes;
             input_queue_->pop_all_into(received_bytes);
-            if (!received_bytes.empty()) {
-                ansi_.send_bytes(received_bytes);
-                extra_.send_bytes(received_bytes);
+            for (uint8_t c : received_bytes) {
+                if (c == '\e') {
+                    previous_was_esc = true;
+                } else {
+                    if (previous_was_esc) {
+                        if (c == '*')
+                            extra_.send_bytes({ '\e', c });
+                        else
+                            ansi_.send_bytes({ '\e', c });
+                        previous_was_esc = false;
+                    } else if (extra_.escape_sequence_active()) {
+                        extra_.send_bytes({ '\e', c });
+                    } else {
+                        ansi_.send_bytes(received_bytes);
+                    }
+                }
             }
         }
     });
@@ -119,5 +134,13 @@ void Protocol::show_error(std::exception const &e)
     std::vector<uint8_t> v(message.begin(), message.end());
     output_queue_->push_all(v);
     std::this_thread::sleep_for(10ms);
+}
+
+void Protocol::reset()
+{
+    input_queue_->clear();
+    output_queue_->clear();
+    ansi_.reset();
+    scene_.reset();
 }
 

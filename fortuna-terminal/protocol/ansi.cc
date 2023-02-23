@@ -17,6 +17,12 @@ ANSI::ANSI(Scene &scene)
         throw FortunaException("Could not allocate terminal");
 }
 
+void ANSI::reset()
+{
+    std::string clrscr = "\033[2J\033[H";
+    tmt_write(vt_.get(), clrscr.data(), clrscr.size());
+}
+
 void ANSI::send_bytes(std::vector<uint8_t> const &bytes)
 {
     tmt_write(vt_.get(), (const char *) bytes.data(), bytes.size());

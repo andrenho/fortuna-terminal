@@ -74,6 +74,12 @@ public:
         return queue_.size();
     }
 
+    void clear() {
+        std::unique_lock<std::mutex> lock(mutex_);
+        while (!queue_.empty())
+            queue_.pop();
+    }
+
 private:
     std::queue<T>           queue_;
     std::mutex              mutex_;

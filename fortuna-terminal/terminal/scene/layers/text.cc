@@ -65,3 +65,9 @@ void Text::update_blink()
     }
 }
 
+void Text::reset()
+{
+    for (size_t i = 0; i < (columns_ * lines_); ++i)
+        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
+}
+

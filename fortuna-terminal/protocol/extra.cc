@@ -1,27 +1,16 @@
 #include "extra.hh"
+#include "control.hh"
 
+#include <iostream>
 #include <sstream>
 
 void Extra::send_bytes(std::vector<uint8_t> const &bytes)
 {
     for (char c : bytes) {
-        if (escape_active_) {
-            escape_sequence_.push_back(c);
-            if (escape_sequence_.size() == 2 && c != '*') {
-                escape_active_ = false;
-                escape_sequence_.clear();
-            } else if (escape_sequence_.size() > 2 && std::isalpha(c)) {
-                escape_sequence_complete();
-                escape_active_ = false;
-                escape_sequence_.clear();
-            } else {
-                escape_sequence_.push_back(c);
-            }
-        } else {
-            if (c == '\e') {
-                escape_active_ = true;
-                escape_sequence_.push_back(c);
-            }
+        escape_sequence_ += c;
+        if (std::isalpha(c)) {
+            escape_sequence_complete();
+            escape_sequence_.clear();
         }
     }
 }
@@ -31,6 +20,15 @@ void Extra::escape_sequence_complete()
     std::vector<size_t> parameters;
     char command = parse_escape_sequence(parameters);
     switch (command) {
+        case 'r': {
+                std::cout << "Terminal reset." << std::endl;
+                set_reset_on_next_loop(true);
+            }
+            break;
+        case 'x':
+            std::cout << "Computer reset." << std::endl;
+            gpio_.reset();
+            break;
         default:
             break;
     }
@@ -38,7 +36,7 @@ void Extra::escape_sequence_complete()
 
 char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
 {
-    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 3));
+    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 4));
     std::string item;
     while (std::getline(ss, item, ';')) {
         size_t value = std::stoull(item);
@@ -46,4 +44,9 @@ char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
     }
 
     return escape_sequence_.back();
+}
+
+bool Extra::escape_sequence_active() const
+{
+    return !escape_sequence_.empty();
 }

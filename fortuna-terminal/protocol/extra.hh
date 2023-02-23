@@ -7,17 +7,21 @@
 #include "../terminal/scene/scene.hh"
 #include "../gpio/gpio.hh"
 
+class Terminal;
+
 class Extra {
 public:
-    explicit Extra(Scene& scene, GPIO& gpio) : scene_(scene), gpio_(gpio) {}
+    explicit Extra(Terminal& terminal, Scene& scene, GPIO& gpio) : terminal_(terminal), scene_(scene), gpio_(gpio) {}
 
     void send_bytes(std::vector<uint8_t> const &bytes);
 
+    bool escape_sequence_active() const;
+
 private:
+    Terminal& terminal_;
     Scene& scene_;
     GPIO& gpio_;
 
-    bool        escape_active_ = false;
     std::string escape_sequence_;
 
     void escape_sequence_complete();
