@@ -11,7 +11,7 @@ class Extra {
 public:
     explicit Extra(Scene& scene, GPIO& gpio) : scene_(scene), gpio_(gpio) {}
 
-    void send_bytes(std::vector<uint8_t> const &bytes);
+    void send_bytes(std::string const &bytes);
 
     bool escape_sequence_active() const;
 

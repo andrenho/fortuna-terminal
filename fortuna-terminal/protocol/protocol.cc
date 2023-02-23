@@ -2,6 +2,7 @@
 
 #include <csignal>
 
+#include <algorithm>
 #include <iostream>
 #include <thread>
 #include <iomanip>
@@ -30,32 +31,6 @@ void Protocol::run()
         }
     });
 
-    input_thread_ = std::make_unique<std::thread>([this]() {
-        bool previous_was_esc = false;
-
-        while (threads_active_) {
-            std::vector<uint8_t> received_bytes;
-            input_queue_->pop_all_into(received_bytes);
-            for (uint8_t c : received_bytes) {
-                if (c == '\e') {
-                    previous_was_esc = true;
-                } else {
-                    if (previous_was_esc) {
-                        if (c == '*')
-                            extra_.send_bytes({ '\e', c });
-                        else
-                            ansi_.send_bytes({ '\e', c });
-                        previous_was_esc = false;
-                    } else if (extra_.escape_sequence_active()) {
-                        extra_.send_bytes({ '\e', c });
-                    } else {
-                        ansi_.send_bytes({ c });
-                    }
-                }
-            }
-        }
-    });
-
     output_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
             std::vector<uint8_t> bytes_to_output;
@@ -65,6 +40,8 @@ void Protocol::run()
                 std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
         }
     });
+
+    input_thread_ = std::make_unique<std::thread>(&Protocol::process_input_thread, this);
 }
 
 void Protocol::finalize_threads()
@@ -142,5 +119,48 @@ void Protocol::reset()
     output_queue_->clear();
     ansi_.reset();
     scene_.reset();
+}
+
+void Protocol::process_input_thread()
+{
+    std::string received_bytes;
+    bool extra_active = false;
+
+    while (threads_active_) {
+        input_queue_->pop_all_into(received_bytes);
+
+        size_t current_pos = 0;
+        while (true) {
+            if (!extra_active) {
+                // we're not in extra escape sequence, so let's look for a "ESC *" that starts that sequence
+                // if we don't find it, we can send the whole thing to ANSI
+                size_t next_esc_star = received_bytes.find("\e*", current_pos);
+                if (next_esc_star == std::string::npos) {
+                    ansi_.send_bytes(received_bytes.substr(current_pos));
+                    break;
+                } else {
+                    extra_active = true;
+                    ansi_.send_bytes(received_bytes.substr(current_pos, next_esc_star - current_pos));
+                    current_pos = next_esc_star;
+                }
+            } else {
+                auto it_next_alpha = std::find_if(received_bytes.begin() + current_pos, received_bytes.end(), [](char c) { return std::isalpha(c); });
+                if (it_next_alpha == received_bytes.end()) {
+                    extra_.send_bytes(received_bytes.substr(current_pos));
+                    break;
+                } else {
+                    size_t offset = it_next_alpha - received_bytes.begin();
+                    extra_active = false;
+                    extra_.send_bytes(received_bytes.substr(current_pos, offset));
+                    current_pos += offset;
+                }
+            }
+        }
+
+        received_bytes.clear();
+
+        std::this_thread::yield();
+    }
+
 }
 

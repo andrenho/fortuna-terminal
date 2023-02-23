@@ -21,7 +21,7 @@ class ANSI : public NonCopyable {
 public:
     explicit ANSI(Scene& scene);
 
-    void                       send_bytes(std::vector<uint8_t> const& bytes);
+    void                       send_bytes(std::string const& bytes);
     std::optional<std::string> translate_special_key(SpecialKey special_key, KeyMod mod);
 
     void reset();

@@ -5,7 +5,7 @@
 
 #include "control.hh"
 
-void Extra::send_bytes(std::vector<uint8_t> const &bytes)
+void Extra::send_bytes(std::string const &bytes)
 {
     for (char c : bytes) {
         escape_sequence_ += c;

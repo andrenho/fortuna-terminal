@@ -53,6 +53,8 @@ private:
     bool debug_comm_ = false;
 
     void debug_byte(bool is_input, uint8_t byte);
+
+    void process_input_thread();
 };
 
 #endif //PROTOCOL_HH_

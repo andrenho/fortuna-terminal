@@ -23,9 +23,9 @@ void ANSI::reset()
     tmt_write(vt_.get(), clrscr.data(), clrscr.size());
 }
 
-void ANSI::send_bytes(std::vector<uint8_t> const &bytes)
+void ANSI::send_bytes(std::string const &bytes)
 {
-    tmt_write(vt_.get(), (const char *) bytes.data(), bytes.size());
+    tmt_write(vt_.get(), bytes.data(), bytes.size());
 }
 
 ANSI::Cache ANSI::initialize_cache(Size initial_size)
