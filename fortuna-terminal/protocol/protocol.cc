@@ -37,6 +37,7 @@ void Protocol::run()
             if (!received_bytes.empty()) {
                 ansi_.send_bytes(received_bytes);
                 extra_.send_bytes(received_bytes);
+            }
         }
     });
 

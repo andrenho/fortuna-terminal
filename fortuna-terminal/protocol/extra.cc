@@ -30,6 +30,7 @@ void Extra::escape_sequence_complete()
     char command = parse_escape_sequence(parameters);
     switch (command) {
         default:
+            break;
     }
 }
 
