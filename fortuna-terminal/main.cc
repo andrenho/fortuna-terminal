@@ -26,7 +26,7 @@ static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_
 int main(int argc, char* argv[])
 {
     std::unique_ptr<const Options> options;
-    std::unique_ptr<Terminal> terminal;
+    std::unique_ptr<Terminal> terminal = nullptr;
     std::unique_ptr<CommunicationModule> comm;
     std::unique_ptr<GPIO> gpio;
 

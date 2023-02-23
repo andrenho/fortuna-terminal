@@ -51,7 +51,7 @@ TCPIP::TCPIP(TcpIpOptions const &options)
             throw LibcException("Error setting socket options");
 
         if (bind(sock_fd, p->ai_addr, (int) p->ai_addrlen) == -1) {
-#if _WIN32
+#ifdef _WIN32
             closesocket(sock_fd);
 #else
             close(sock_fd);
@@ -79,7 +79,11 @@ std::vector<uint8_t> TCPIP::read_blocking(size_t n)
         SOCKET fd = accept(sock_fd, (struct sockaddr *) &client_addr, &sin_size);
         if (fd == INVALID_SOCKET)
             on_read_error("Error on accept");
+#ifdef _WIN32
         fd_ = (int) fd;
+#else
+        fd_ = fd;
+#endif
 
         std::cout << "Client connected.\n";
 
