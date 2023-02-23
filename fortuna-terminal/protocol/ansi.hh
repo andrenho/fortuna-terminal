@@ -3,8 +3,10 @@
 
 #include "../common/noncopyable.hh"
 
+#include <functional>
 #include <optional>
 #include <string>
+#include <unordered_map>
 
 #include "terminal/scene/scene.hh"
 #include "keys.hh"
