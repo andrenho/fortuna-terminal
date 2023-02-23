@@ -49,7 +49,7 @@ void Protocol::run()
                     } else if (extra_.escape_sequence_active()) {
                         extra_.send_bytes({ '\e', c });
                     } else {
-                        ansi_.send_bytes(received_bytes);
+                        ansi_.send_bytes({ c });
                     }
                 }
             }
