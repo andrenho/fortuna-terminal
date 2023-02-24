@@ -10,7 +10,7 @@ using namespace std::string_literals;
 Terminal::Terminal(TerminalOptions terminal_options)
     : window_mode_(terminal_options.window_mode)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
         throw SDLException("Error initializing SDL");
 
     if (!terminal_options.window_mode) {
@@ -72,12 +72,8 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
             add_keyboard_event(protocol, false, e.key);
         }
 
-        else if (e.type == SDL_MOUSEBUTTONDOWN && mouse_active_) {
-            protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, true);
-        }
-
-        else if (e.type == SDL_MOUSEBUTTONUP && mouse_active_) {
-            protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, false);
+        else if ((e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) && mouse_active_) {
+            protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, e.type == SDL_MOUSEBUTTONDOWN);
         }
 
         else if (e.type == SDL_MOUSEMOTION && mouse_active_ && mouse_register_move_) {
@@ -89,6 +85,14 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
             else if (e.motion.state & SDL_BUTTON_LMASK)
                 button = 1;
             protocol.event_mouse_move(button, e.motion.x, e.motion.y);
+        }
+
+        else if (e.type == SDL_JOYDEVICEADDED || e.type == SDL_JOYDEVICEREMOVED) {
+            SDL_JoystickOpen(e.jdevice.which);
+        }
+
+        else if ((e.type == SDL_JOYBUTTONDOWN || e.type == SDL_JOYBUTTONUP) && joystick_active_) {
+            protocol.event_joystick(e.jdevice.which, e.jbutton.button, e.type == SDL_JOYBUTTONDOWN);
         }
     }
 

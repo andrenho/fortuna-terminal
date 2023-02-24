@@ -33,6 +33,7 @@ public:
     void event_key(SpecialKey key, bool is_down, KeyMod mod);
     void event_mouse_button(int button, int x, int y, bool is_down);
     void event_mouse_move(int button, int x, int y);
+    void event_joystick(size_t joystick_number, size_t button, bool is_down);
 
     Scene const& scene() const { return scene_; }
     Scene&       scene() { return scene_; }

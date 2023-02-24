@@ -97,6 +97,11 @@ void Protocol::event_mouse_move(int button, int x, int y)
     output_queue_->push_all("\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) + "M");
 }
 
+void Protocol::event_joystick(size_t joystick_number, size_t button, bool is_down)
+{
+    output_queue_->push_all("\e#s"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' ));
+}
+
 void Protocol::debug_byte(bool is_input, uint8_t byte)
 {
     if (debug_comm_) {
@@ -187,4 +192,3 @@ void Protocol::set_mode(Mode mode)
     ansi_.set_mode(mode);
     extra_.set_mode(mode);
 }
-

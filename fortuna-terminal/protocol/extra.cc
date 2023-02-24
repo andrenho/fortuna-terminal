@@ -36,16 +36,25 @@ void Extra::escape_sequence_complete()
                     control.emplace(ControlCommand::SetMode, Mode::Graphics);
             }
             break;
-        case 'm':
-            if (!p.empty())
-                control.emplace(ControlCommand::SetMouseActive, p.at(0));
-            break;
-        case 'n':
-            if (!p.empty())
-                control.emplace(ControlCommand::SetMouseMoveReport, p.at(0));
-            break;
-        default:
-            break;
+    }
+
+    if (mode_ == Mode::Graphics) {
+        switch (command) {
+            case 'm':
+                if (!p.empty())
+                    control.emplace(ControlCommand::SetMouseActive, p.at(0));
+                break;
+            case 'n':
+                if (!p.empty())
+                    control.emplace(ControlCommand::SetMouseMoveReport, p.at(0));
+                break;
+            case 'j':
+                if (!p.empty())
+                    control.emplace(ControlCommand::SetJoystickReport, p.at(0));
+                break;
+            default:
+                break;
+        }
     }
 }
 

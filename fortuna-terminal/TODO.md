@@ -16,6 +16,10 @@ New protocol:
     - [x] Implement swap via commands
   - [x] Mouse support
   - [ ] Joystick support
+    - [x] Enable/disable joystick
+    - [x] Joystick buttons
+    - [ ] Joystick directional
+    - [ ] Joystick keyboard emulation
   - [ ] Graphics setup
   - [ ] Graphics draw
   - [ ] Graphics collision support

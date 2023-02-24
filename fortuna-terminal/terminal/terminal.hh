@@ -28,6 +28,7 @@ public:
 
     void set_mouse_active(bool value);
     void set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
+    void set_joystick_active(bool value) { joystick_active_ = value; }
 
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
@@ -47,6 +48,7 @@ private:
 
     bool mouse_active_ = false;
     bool mouse_register_move_ = false;
+    bool joystick_active_ = true;
 };
 
 #endif //TERMINAL_HH_
