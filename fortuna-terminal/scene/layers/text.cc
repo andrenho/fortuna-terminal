@@ -1,7 +1,7 @@
 #include "text.hh"
-#include "terminal/scene/scene.hh"
+#include "scene/scene.hh"
 
-#include <SDL2/SDL.h>
+#include "lib/SDL2-windows/include/SDL2/SDL.h"
 
 using namespace std::chrono_literals;
 

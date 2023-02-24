@@ -1,12 +1,13 @@
 #ifndef SCENE_HH_
 #define SCENE_HH_
 
-#include "layers/text.hh"
-#include "../../common/noncopyable.hh"
+#include "scene/layers/text.hh"
+#include "common/noncopyable.hh"
 #include "common/geometry.hh"
 #include "protocol/mode.hh"
+#include "../common/noncopyable.hh"
 
-struct Scene {
+struct Scene : NonCopyable {
     explicit Scene(Mode mode);
 
     Text text;

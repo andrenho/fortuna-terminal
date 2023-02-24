@@ -20,8 +20,16 @@ New protocol:
     - [x] Joystick buttons
     - [x] Joystick directional
     - [x] Joystick keyboard emulation
+  - [x] Set background color
   - [ ] Graphics setup
+    - [ ] Tilemap images
+    - [ ] Sprite images
+    - [ ] Maps
   - [ ] Graphics draw
+    - [ ] Enable/disable layer
+    - [ ] Draw sprite
+    - [ ] Draw map
+    - [ ] Change palette
   - [ ] Graphics collision support
 
 Emulator support

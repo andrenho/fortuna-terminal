@@ -4,7 +4,7 @@
 #include <mutex>
 #include <thread>
 
-#include "terminal/palette/palette.hh"
+#include "../palette/palette.hh"
 
 class Layer {
 public:

@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 #include "comm/comm.hh"
-#include "terminal/scene/scene.hh"
+#include "scene/scene.hh"
 #include "common/syncqueue.hh"
 #include "common/geometry.hh"
 #include "ansi.hh"

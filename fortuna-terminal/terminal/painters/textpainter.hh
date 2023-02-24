@@ -5,9 +5,9 @@
 #include <memory>
 
 #include <SDL2/SDL.h>
-#include "../scene/layers/text.hh"
+#include "scene/layers/text.hh"
 
-#include "../../common/noncopyable.hh"
+#include "common/noncopyable.hh"
 #include "common/geometry.hh"
 
 class TextPainter : NonCopyable {

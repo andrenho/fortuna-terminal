@@ -1,6 +1,6 @@
 #include "scene.hh"
 
-#include "../painters/textpainter.hh"
+#include "terminal/painters/textpainter.hh"
 #include "exceptions/fortunaexception.hh"
 
 Scene::Scene(Mode mode)

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../terminal/scene/scene.hh"
+#include "scene/scene.hh"
 #include "../gpio/gpio.hh"
 
 class Extra {

@@ -52,6 +52,10 @@ void Extra::escape_sequence_complete()
                 if (!p.empty())
                     control.emplace(ControlCommand::SetJoystickEmulation, p.at(0));
                 break;
+            case 'B':
+                if (!p.empty())
+                    scene_.text.bg_color = p.at(0) % PALETTE_SZ;
+                break;
             default:
                 break;
         }
