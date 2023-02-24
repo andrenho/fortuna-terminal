@@ -99,7 +99,32 @@ void Protocol::event_mouse_move(int button, int x, int y)
 
 void Protocol::event_joystick(size_t joystick_number, size_t button, bool is_down)
 {
-    output_queue_->push_all("\e#s"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' ));
+    output_queue_->push_all("\e#"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' ));
+}
+
+void Protocol::event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value)
+{
+    JoystickState& state = joy_state_[joystick_number];
+    JoystickState new_state = state;
+
+    if (axis == 1) {
+        new_state.up = (value == -1);
+        new_state.down = (value == 1);
+    } else {
+        new_state.left = (value == -1);
+        new_state.right = (value == 1);
+    }
+
+    if (state.up != new_state.up)
+        output_queue_->push_all("\e#"s + std::to_string(joystick_number) + ";18" + (new_state.up ? 'J' : 'K'));
+    if (state.down != new_state.down)
+        output_queue_->push_all("\e#"s + std::to_string(joystick_number) + ";19" + (new_state.down ? 'J' : 'K'));
+    if (state.left != new_state.left)
+        output_queue_->push_all("\e#"s + std::to_string(joystick_number) + ";16" + (new_state.left ? 'J' : 'K'));
+    if (state.right != new_state.right)
+        output_queue_->push_all("\e#"s + std::to_string(joystick_number) + ";17" + (new_state.right ? 'J' : 'K'));
+
+    joy_state_[joystick_number] = new_state;
 }
 
 void Protocol::debug_byte(bool is_input, uint8_t byte)

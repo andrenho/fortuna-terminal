@@ -7,6 +7,8 @@
 
 using namespace std::string_literals;
 
+#define JOY_THRESHOLD 1000
+
 Terminal::Terminal(TerminalOptions terminal_options)
     : window_mode_(terminal_options.window_mode)
 {
@@ -93,6 +95,15 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
 
         else if ((e.type == SDL_JOYBUTTONDOWN || e.type == SDL_JOYBUTTONUP) && joystick_active_) {
             protocol.event_joystick(e.jdevice.which, e.jbutton.button, e.type == SDL_JOYBUTTONDOWN);
+        }
+
+        else if (e.type == SDL_JOYAXISMOTION && joystick_active_) {
+            int8_t value = 0;
+            if (e.jaxis.value > JOY_THRESHOLD)
+                value = 1;
+            else if (e.jaxis.value < -JOY_THRESHOLD)
+                value = -1;
+            protocol.event_joystick_directional(e.jaxis.which, e.jaxis.axis, value);
         }
     }
 

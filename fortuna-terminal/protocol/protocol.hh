@@ -5,6 +5,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <unordered_map>
 
 #include "comm/comm.hh"
 #include "terminal/scene/scene.hh"
@@ -34,12 +35,14 @@ public:
     void event_mouse_button(int button, int x, int y, bool is_down);
     void event_mouse_move(int button, int x, int y);
     void event_joystick(size_t joystick_number, size_t button, bool is_down);
+    void event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value);
 
     Scene const& scene() const { return scene_; }
     Scene&       scene() { return scene_; }
 
     void set_debug_comm(bool debug_comm) { debug_comm_ = debug_comm; }
     void set_mode(Mode mode);
+
 
 private:
     std::unique_ptr<CommunicationModule> comm_ {};
@@ -58,6 +61,11 @@ private:
     Mode mode_;
 
     void debug_byte(bool is_input, uint8_t byte);
+
+    struct JoystickState {
+        bool up = false, down = false, left = false, right = false;
+    };
+    std::unordered_map<size_t, JoystickState> joy_state_ {};
 };
 
 #endif //PROTOCOL_HH_
