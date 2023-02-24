@@ -38,8 +38,12 @@ void TextPainter::draw_cell(Text const &text, size_t line, size_t column) const
 
     unsigned int orig_x = (c / 16) * TextChar_W;
     unsigned int orig_y = (c % 16) * TextChar_H;
-    unsigned int dest_x = (unsigned int) ((column * TextChar_W) + TextBorder);
-    unsigned int dest_y = (unsigned int) ((line * TextChar_H) + TextBorder);
+    unsigned int dest_x = (unsigned int) (column * TextChar_W);
+    unsigned int dest_y = (unsigned int) (line * TextChar_H);
+    if (text.mode() == Mode::Text) {
+        dest_x += TextBorder;
+        dest_y += TextBorder;
+    }
 
     Color fg = text.palette[chr.attrib.color];
     Color bg = text.palette[text.bg_color];

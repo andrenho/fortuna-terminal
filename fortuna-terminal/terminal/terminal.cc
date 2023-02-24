@@ -71,6 +71,14 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
         else if (e.type == SDL_KEYDOWN) {
             add_keyboard_event(protocol, false, e.key);
         }
+
+        else if (e.type == SDL_MOUSEBUTTONDOWN && mouse_active_) {
+            protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, true);
+        }
+
+        else if (e.type == SDL_MOUSEBUTTONUP && mouse_active_) {
+            protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, false);
+        }
     }
 
 }
@@ -178,4 +186,10 @@ void Terminal::add_keyboard_event(Protocol& protocol, bool is_down, SDL_Keyboard
         }
         protocol.event_key(special_key, is_down, key_modifiers);
     }
+}
+
+void Terminal::set_mouse_active(bool value)
+{
+    mouse_active_ = value;
+    SDL_ShowCursor(mouse_active_ ? SDL_ENABLE : SDL_DISABLE);
 }

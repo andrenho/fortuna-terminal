@@ -6,6 +6,7 @@
 using namespace std::chrono_literals;
 
 Text::Text(Mode mode)
+    : mode_(mode)
 {
     set_mode(mode);
 }
@@ -57,6 +58,8 @@ void Text::reset()
 
 void Text::set_mode(Mode mode)
 {
+    mode_ = mode;
+
     if (mode == Mode::Text) {
         columns_ = Columns_80Columns;
         lines_ = Lines_80Columns;

@@ -31,6 +31,7 @@ public:
     void event_text_input(std::string const& text);
     void event_key(uint8_t key, bool is_down, KeyMod mod);
     void event_key(SpecialKey key, bool is_down, KeyMod mod);
+    void event_mouse_button(int button, int x, int y, bool is_down);
 
     Scene const& scene() const { return scene_; }
     Scene&       scene() { return scene_; }

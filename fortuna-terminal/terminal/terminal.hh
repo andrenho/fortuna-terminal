@@ -26,6 +26,8 @@ public:
 
     void wait_for_enter(bool* quit);
 
+    void set_mouse_active(bool value);
+
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;

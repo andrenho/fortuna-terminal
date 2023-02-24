@@ -85,6 +85,13 @@ void Protocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
     }
 }
 
+void Protocol::event_mouse_button(int button, int x, int y, bool is_down)
+{
+    std::string s = "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) +
+            ";" + (is_down ? "B" : "R");
+    output_queue_->push_all(s);
+}
+
 void Protocol::debug_byte(bool is_input, uint8_t byte)
 {
     if (debug_comm_) {

@@ -36,6 +36,10 @@ void Extra::escape_sequence_complete()
                     control.emplace(ControlCommand::SetMode, Mode::Graphics);
             }
             break;
+        case 'm':
+            if (!p.empty())
+                control.emplace(ControlCommand::SetMouseActive, p.at(0));
+            break;
         default:
             break;
     }

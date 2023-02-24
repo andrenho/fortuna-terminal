@@ -67,12 +67,14 @@ public:
     [[nodiscard]] size_t        columns() const { return columns_; }
     [[nodiscard]] size_t        lines() const   { return lines_; }
 
+    [[nodiscard]] Mode mode() const { return mode_; }
+
     [[nodiscard]] Cursor const& cursor() const  { return cursor_; }
 
     static constexpr size_t Columns_80Columns = 80;
     static constexpr size_t Lines_80Columns   = 30;
-    static constexpr size_t Columns_40Columns = 40;
-    static constexpr size_t Lines_40Columns   = 25;
+    static constexpr size_t Columns_40Columns = 43;
+    static constexpr size_t Lines_40Columns   = 28;
 
     void reset();
 
@@ -82,6 +84,8 @@ private:
 
     size_t                  columns_ = 0;
     size_t                  lines_ = 0;
+
+    Mode                    mode_;
 
     void  reset_blink();
 };

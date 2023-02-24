@@ -44,6 +44,9 @@ static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& 
                 terminal->resize_window(protocol->scene());
                 std::cout << (cc.mode == Mode::Text ? "Text" : "Graphics") << " mode set." << std::endl;
                 break;
+            case ControlCommand::SetMouseActive:
+                terminal->set_mouse_active(cc.active);
+                break;
         }
     }
 }
