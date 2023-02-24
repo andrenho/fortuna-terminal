@@ -29,6 +29,7 @@ void Scene::reset()
 
 void Scene::set_mode(Mode mode)
 {
+    mode_ = mode;
     text.set_mode(mode);
 }
 

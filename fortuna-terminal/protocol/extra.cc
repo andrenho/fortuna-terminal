@@ -18,15 +18,23 @@ void Extra::send_bytes(std::string const &bytes)
 
 void Extra::escape_sequence_complete()
 {
-    std::vector<size_t> parameters;
-    char command = parse_escape_sequence(parameters);
+    std::vector<size_t> p;
+    char command = parse_escape_sequence(p);
     switch (command) {
         case 'r':
-            control_commands.push(ControlCommand::ResetProtocol);
+            control.emplace(ControlCommand::ResetProtocol);
             break;
         case 'x':
             std::cout << "Computer reset." << std::endl;
             gpio_.reset();
+            break;
+        case 'g':
+            if (!p.empty()) {
+                if (p.at(0) == 0)
+                    control.emplace(ControlCommand::SetMode, Mode::Text);
+                else if (p.at(0) == 1)
+                    control.emplace(ControlCommand::SetMode, Mode::Graphics);
+            }
             break;
         default:
             break;

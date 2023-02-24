@@ -9,7 +9,7 @@
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
-SyncQueue<ControlCommand> control_commands;
+SyncQueue<Control> control;
 
 std::vector<Protocol> &execute_control(Terminal *terminal, std::vector<Protocol> const &protocols, Protocol *protocol);
 
@@ -27,22 +27,22 @@ static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_
 
 static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& protocols, Protocol *protocol)
 {
-    std::optional<ControlCommand> occ;
-    while ((occ = control_commands.pop_nonblock()).has_value()) {
-        switch (occ.value()) {
+    std::optional<Control> occ;
+    while ((occ = control.pop_nonblock()).has_value()) {
+        Control& cc = occ.value();
+        switch (cc.command) {
             case ControlCommand::Reset:
                 ALL_PROTOCOLS(p.reset());
+                std::cout << "Terminal reset." << std::endl;
                 break;
             case ControlCommand::ResetProtocol:
                 protocol->reset();
+                std::cout << "Scene reset." << std::endl;
                 break;
-            case ControlCommand::SetTextMode:
-                protocol->set_mode(Mode::Text);
+            case ControlCommand::SetMode:
+                protocol->set_mode(cc.mode);
                 terminal->resize_window(protocol->scene());
-                break;
-            case ControlCommand::SetGraphicsMode:
-                protocol->set_mode(Mode::Graphics);
-                terminal->resize_window(protocol->scene());
+                std::cout << (cc.mode == Mode::Text ? "Text" : "Graphics") << " mode set." << std::endl;
                 break;
         }
     }
@@ -100,7 +100,7 @@ restart:
         bool quit = false;
         on_error(terminal.get(), protocols, current_protocol, e, &quit);
         if (!quit) {
-            control_commands.push(ControlCommand::Reset);
+            control.emplace(ControlCommand::Reset);
             goto restart;
         }
     }

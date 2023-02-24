@@ -16,6 +16,13 @@ public:
         cond_.notify_one();
     }
 
+    template <typename ...Args>
+    void emplace(Args const&... args) {
+        std::unique_lock<std::mutex> lock(mutex_);
+        queue_.emplace(args...);
+        cond_.notify_one();
+    }
+
     void push(T item) {
         std::unique_lock<std::mutex> lock(mutex_);
         queue_.push(item);

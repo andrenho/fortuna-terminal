@@ -3,8 +3,20 @@
 
 #include "common/syncqueue.hh"
 
-enum class ControlCommand { Reset, ResetProtocol, SetTextMode, SetGraphicsMode };
+enum class ControlCommand { Reset, ResetProtocol, SetMode };
 
-extern SyncQueue<ControlCommand> control_commands;
+struct Control {
+    ControlCommand command;
+    union {
+        Mode mode;
+        bool active;
+    };
+
+    explicit Control(ControlCommand command) : command(command) {}
+    Control(ControlCommand command, Mode mode) : command(command), mode(mode) {}
+    Control(ControlCommand command, bool active) : command(command), active(active) {}
+};
+
+extern SyncQueue<Control> control;
 
 #endif //CONTROL_HH_

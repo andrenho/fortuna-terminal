@@ -123,47 +123,54 @@ void Protocol::reset()
 void Protocol::execute_inputs()
 {
     static std::string received_bytes;
-    bool extra_active = false;
+    static bool extra_active = false;
 
     input_queue_->optionally_pop_all_into(received_bytes);
-    if (received_bytes.empty())
-        return;
 
-    size_t current_pos = 0;
-    while (true) {
-        if (!extra_active) {
-            // we're not in extra escape sequence, so let's look for a "ESC *" that starts that sequence
-            // if we don't find it, we can send the whole thing to ANSI
-            size_t next_esc_star = received_bytes.find("\e*", current_pos);
-            if (next_esc_star == std::string::npos) {
-                ansi_.send_bytes(received_bytes.substr(current_pos));
-                break;
+    bool last_is_esc = received_bytes.ends_with('\e');
+    if (last_is_esc)
+        received_bytes = received_bytes.substr(0, received_bytes.size() - 1);
+
+    if (!received_bytes.empty()) {
+
+        size_t current_pos = 0;
+        while (true) {
+            if (!extra_active) {
+                // we're not in extra escape sequence, so let's look for a "ESC *" that starts that sequence
+                // if we don't find it, we can send the whole thing to ANSI
+                size_t next_esc_star = received_bytes.find("\e*", current_pos);
+                if (next_esc_star == std::string::npos) {
+                    ansi_.send_bytes(received_bytes.substr(current_pos));
+                    break;
+                } else {
+                    extra_active = true;
+                    ansi_.send_bytes(received_bytes.substr(current_pos, next_esc_star - current_pos));
+                    current_pos = next_esc_star;
+                }
             } else {
-                extra_active = true;
-                ansi_.send_bytes(received_bytes.substr(current_pos, next_esc_star - current_pos));
-                current_pos = next_esc_star;
-            }
-        } else {
-            auto it_next_alpha = std::find_if(received_bytes.begin() + current_pos, received_bytes.end(), [](char c) { return std::isalpha(c); });
-            if (it_next_alpha == received_bytes.end()) {
-                extra_.send_bytes(received_bytes.substr(current_pos));
-                break;
-            } else {
-                size_t offset = it_next_alpha - received_bytes.begin() + 1;
-                extra_active = false;
-                extra_.send_bytes(received_bytes.substr(current_pos, offset - current_pos));
-                current_pos = offset;
+                auto it_next_alpha = std::find_if(received_bytes.begin() + current_pos, received_bytes.end(), [](char c) { return std::isalpha(c); });
+                if (it_next_alpha == received_bytes.end()) {
+                    extra_.send_bytes(received_bytes.substr(current_pos));
+                    break;
+                } else {
+                    size_t offset = it_next_alpha - received_bytes.begin() + 1;
+                    extra_active = false;
+                    extra_.send_bytes(received_bytes.substr(current_pos, offset - current_pos));
+                    current_pos = offset;
+                }
             }
         }
-    }
 
-    received_bytes.clear();
+        received_bytes.clear();
+    }
+    if (last_is_esc)
+        received_bytes.push_back('\e');
 
 }
 
 void Protocol::set_mode(Mode mode)
 {
-    mode = mode_;
+    mode_ = mode;
     scene_.set_mode(mode);
     ansi_.set_mode(mode);
     extra_.set_mode(mode);
