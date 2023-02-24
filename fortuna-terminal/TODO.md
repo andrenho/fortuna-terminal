@@ -10,7 +10,7 @@
 - [ ] Create test circuit
 
 New protocol:
-  - [ ] Activate graphics mode
+  - [x] Activate graphics mode
     - [x] Adjust classes
     - [x] Create switch to start in graphic mode
     - [x] Implement swap via commands
