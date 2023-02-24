@@ -50,8 +50,8 @@ static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& 
             case ControlCommand::SetMouseMoveReport:
                 terminal->set_mouse_register_move(cc.active);
                 break;
-            case ControlCommand::SetJoystickReport:
-                terminal->set_joystick_active(cc.active);
+            case ControlCommand::SetJoystickEmulation:
+                terminal->set_joystick_emulation(cc.active);
                 break;
         }
     }

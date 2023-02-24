@@ -50,7 +50,7 @@ void Extra::escape_sequence_complete()
                 break;
             case 'j':
                 if (!p.empty())
-                    control.emplace(ControlCommand::SetJoystickReport, p.at(0));
+                    control.emplace(ControlCommand::SetJoystickEmulation, p.at(0));
                 break;
             default:
                 break;

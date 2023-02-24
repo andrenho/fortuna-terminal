@@ -3,7 +3,7 @@
 
 #include "common/syncqueue.hh"
 
-enum class ControlCommand { Reset, ResetProtocol, SetMode, SetMouseActive, SetMouseMoveReport, SetJoystickReport };
+enum class ControlCommand { Reset, ResetProtocol, SetMode, SetMouseActive, SetMouseMoveReport, SetJoystickEmulation };
 
 struct Control {
     ControlCommand command;

@@ -18,7 +18,7 @@ New protocol:
   - [ ] Joystick support
     - [x] Enable/disable joystick
     - [x] Joystick buttons
-    - [ ] Joystick directional
+    - [x] Joystick directional
     - [ ] Joystick keyboard emulation
   - [ ] Graphics setup
   - [ ] Graphics draw

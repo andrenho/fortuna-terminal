@@ -28,7 +28,7 @@ public:
 
     void set_mouse_active(bool value);
     void set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
-    void set_joystick_active(bool value) { joystick_active_ = value; }
+    void set_joystick_emulation(bool value) { joystick_emulation_ = value; }
 
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
@@ -44,11 +44,11 @@ private:
 
     void add_keyboard_event(Protocol& protocol, bool is_down, SDL_KeyboardEvent key);
 
-    size_t total_scene_events_ = 0;
-
     bool mouse_active_ = false;
     bool mouse_register_move_ = false;
-    bool joystick_active_ = false;
+    bool joystick_emulation_ = false;
+
+    static constexpr const char* emulated_keys = "XxZzSsAaQqWw\r\n\t";
 };
 
 #endif //TERMINAL_HH_

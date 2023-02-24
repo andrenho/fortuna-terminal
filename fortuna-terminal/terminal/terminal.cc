@@ -4,6 +4,7 @@
 #include "exceptions/fortunaexception.hh"
 
 #include <iostream>
+#include <cstring>
 
 using namespace std::string_literals;
 
@@ -63,6 +64,8 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
             *quit = true;
 
         else if (e.type == SDL_TEXTINPUT) {
+            if (joystick_emulation_ && strlen(e.text.text) == 1 && strchr(emulated_keys, e.text.text[0]) != nullptr)
+                break;
             protocol.event_text_input(e.text.text);
         }
 
@@ -70,7 +73,7 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
             add_keyboard_event(protocol, true, e.key);
         }
 
-        else if (e.type == SDL_KEYDOWN) {
+        else if (e.type == SDL_KEYUP) {
             add_keyboard_event(protocol, false, e.key);
         }
 
@@ -93,11 +96,11 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
             SDL_JoystickOpen(e.jdevice.which);
         }
 
-        else if ((e.type == SDL_JOYBUTTONDOWN || e.type == SDL_JOYBUTTONUP) && joystick_active_) {
+        else if (e.type == SDL_JOYBUTTONDOWN || e.type == SDL_JOYBUTTONUP) {
             protocol.event_joystick(e.jdevice.which, e.jbutton.button, e.type == SDL_JOYBUTTONDOWN);
         }
 
-        else if (e.type == SDL_JOYAXISMOTION && joystick_active_) {
+        else if (e.type == SDL_JOYAXISMOTION) {
             int8_t value = 0;
             if (e.jaxis.value > JOY_THRESHOLD)
                 value = 1;
@@ -166,6 +169,25 @@ void Terminal::beep()
 
 void Terminal::add_keyboard_event(Protocol& protocol, bool is_down, SDL_KeyboardEvent key)
 {
+    if (joystick_emulation_) {
+        if (key.repeat != 0)
+            return;
+        switch (key.keysym.sym) {
+            case SDLK_UP: protocol.event_joystick_directional(0, 1, is_down ? -1 : 0); return;
+            case SDLK_DOWN: protocol.event_joystick_directional(0, 1, is_down ? 1 : 0); return;
+            case SDLK_LEFT: protocol.event_joystick_directional(0, 0, is_down ? -1 : 0); return;
+            case SDLK_RIGHT: protocol.event_joystick_directional(0, 0, is_down ? 1 : 0); return;
+            case SDLK_x: protocol.event_joystick(0, 1, is_down); return;
+            case SDLK_z: protocol.event_joystick(0, 2, is_down); return;
+            case SDLK_s: protocol.event_joystick(0, 0, is_down); return;
+            case SDLK_a: protocol.event_joystick(0, 3, is_down); return;
+            case SDLK_RETURN: protocol.event_joystick(0, 9, is_down); return;
+            case SDLK_TAB: protocol.event_joystick(0, 8, is_down); return;
+            case SDLK_q: protocol.event_joystick(0, 4, is_down); return;
+            case SDLK_w: protocol.event_joystick(0, 5, is_down); return;
+        }
+    }
+
     KeyMod key_modifiers {
         (key.keysym.mod & KMOD_SHIFT) != 0,
         (key.keysym.mod & KMOD_CTRL) != 0,
