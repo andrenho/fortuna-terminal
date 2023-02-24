@@ -15,11 +15,11 @@ New protocol:
     - [x] Create switch to start in graphic mode
     - [x] Implement swap via commands
   - [x] Mouse support
-  - [ ] Joystick support
+  - [x] Joystick support
     - [x] Enable/disable joystick
     - [x] Joystick buttons
     - [x] Joystick directional
-    - [ ] Joystick keyboard emulation
+    - [x] Joystick keyboard emulation
   - [ ] Graphics setup
   - [ ] Graphics draw
   - [ ] Graphics collision support
