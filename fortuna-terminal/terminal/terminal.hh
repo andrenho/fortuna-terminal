@@ -27,6 +27,7 @@ public:
     void wait_for_enter(bool* quit);
 
     void set_mouse_active(bool value);
+    void set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
 
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;

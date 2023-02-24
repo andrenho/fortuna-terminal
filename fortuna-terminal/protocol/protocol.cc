@@ -92,6 +92,11 @@ void Protocol::event_mouse_button(int button, int x, int y, bool is_down)
     output_queue_->push_all(s);
 }
 
+void Protocol::event_mouse_move(int button, int x, int y)
+{
+    output_queue_->push_all("\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) + "M");
+}
+
 void Protocol::debug_byte(bool is_input, uint8_t byte)
 {
     if (debug_comm_) {

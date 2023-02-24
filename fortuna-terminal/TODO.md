@@ -14,7 +14,7 @@ New protocol:
     - [x] Adjust classes
     - [x] Create switch to start in graphic mode
     - [x] Implement swap via commands
-  - [ ] Mouse support
+  - [x] Mouse support
   - [ ] Joystick support
   - [ ] Graphics setup
   - [ ] Graphics draw

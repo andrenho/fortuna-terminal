@@ -40,6 +40,10 @@ void Extra::escape_sequence_complete()
             if (!p.empty())
                 control.emplace(ControlCommand::SetMouseActive, p.at(0));
             break;
+        case 'n':
+            if (!p.empty())
+                control.emplace(ControlCommand::SetMouseMoveReport, p.at(0));
+            break;
         default:
             break;
     }

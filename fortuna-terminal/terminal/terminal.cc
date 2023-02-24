@@ -79,6 +79,17 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
         else if (e.type == SDL_MOUSEBUTTONUP && mouse_active_) {
             protocol.event_mouse_button(e.button.button, e.button.x, e.button.y, false);
         }
+
+        else if (e.type == SDL_MOUSEMOTION && mouse_active_ && mouse_register_move_) {
+            int button = 0;
+            if (e.motion.state & SDL_BUTTON_MMASK)
+                button = 2;
+            else if (e.motion.state & SDL_BUTTON_RMASK)
+                button = 3;
+            else if (e.motion.state & SDL_BUTTON_LMASK)
+                button = 1;
+            protocol.event_mouse_move(button, e.motion.x, e.motion.y);
+        }
     }
 
 }

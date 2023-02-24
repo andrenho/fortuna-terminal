@@ -73,8 +73,8 @@ public:
 
     static constexpr size_t Columns_80Columns = 80;
     static constexpr size_t Lines_80Columns   = 30;
-    static constexpr size_t Columns_40Columns = 43;
-    static constexpr size_t Lines_40Columns   = 28;
+    static constexpr size_t Columns_40Columns = 42;
+    static constexpr size_t Lines_40Columns   = 26;
 
     void reset();
 

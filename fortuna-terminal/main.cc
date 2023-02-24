@@ -47,6 +47,9 @@ static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& 
             case ControlCommand::SetMouseActive:
                 terminal->set_mouse_active(cc.active);
                 break;
+            case ControlCommand::SetMouseMoveReport:
+                terminal->set_mouse_register_move(cc.active);
+                break;
         }
     }
 }
