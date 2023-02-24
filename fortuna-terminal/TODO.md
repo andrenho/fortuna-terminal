@@ -21,15 +21,17 @@ New protocol:
     - [x] Joystick directional
     - [x] Joystick keyboard emulation
   - [x] Set background color
-  - [ ] Graphics setup
-    - [ ] Tilemap images
-    - [ ] Sprite images
-    - [ ] Maps
-  - [ ] Graphics draw
-    - [ ] Enable/disable layer
+  - [ ] Sprites
+    - [ ] Create images
     - [ ] Draw sprite
-    - [ ] Draw map
     - [ ] Change palette
+  - [ ] Tilemap
+    - [ ] Create tilemap images
+    - [ ] Create maps
+    - [ ] Draw maps
+    - [ ] Change palette
+    - [ ] Multiple layers
+  - [ ] Enable/disable layer
   - [ ] Graphics collision support
 
 Emulator support
