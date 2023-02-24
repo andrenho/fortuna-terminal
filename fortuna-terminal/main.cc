@@ -42,7 +42,7 @@ static void execute_control_commands(Terminal *terminal, std::vector<Protocol>& 
             case ControlCommand::SetMode:
                 protocol->set_mode(cc.mode);
                 terminal->resize_window(protocol->scene());
-                std::cout << (cc.mode == Mode::Text ? "Text" : "Graphics") << " mode set." << std::endl;
+                std::cout << (cc.mode == Mode::Text ? "TextLayer" : "Graphics") << " mode set." << std::endl;
                 break;
             case ControlCommand::SetMouseActive:
                 terminal->set_mouse_active(cc.active);

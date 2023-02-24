@@ -24,14 +24,14 @@ TextPainter::TextPainter(SDL_Renderer *renderer)
     SDL_FreeSurface(sf);
 }
 
-void TextPainter::draw(Text const &text) const
+void TextPainter::draw(TextLayer const &text) const
 {
     for (size_t y = 0; y < text.lines(); ++y)
         for (size_t x = 0; x < text.columns(); ++x)
             draw_cell(text, y, x);
 }
 
-void TextPainter::draw_cell(Text const &text, size_t line, size_t column) const
+void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column) const
 {
     Char chr = text.get(line, column);
     uint8_t c = chr.c;
@@ -74,7 +74,7 @@ void TextPainter::draw_cell(Text const &text, size_t line, size_t column) const
     }
 }
 
-void TextPainter::draw_background(Text const &text) const
+void TextPainter::draw_background(TextLayer const &text) const
 {
     Color bg = text.palette[text.bg_color];
     SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);

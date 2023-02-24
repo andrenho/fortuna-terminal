@@ -13,11 +13,11 @@ Size Scene::terminal_size() const
 {
     Size sz {};
     if (mode_ == Mode::Graphics) {
-        sz.w = Text::Columns_40Columns * TextPainter::TextChar_W;
-        sz.h = Text::Lines_40Columns * TextPainter::TextChar_H;
+        sz.w = TextLayer::Columns_40Columns * TextPainter::TextChar_W;
+        sz.h = TextLayer::Lines_40Columns * TextPainter::TextChar_H;
     } else {
-        sz.w = Text::Columns_80Columns * TextPainter::TextChar_W + 2 * TextPainter::TextBorder;
-        sz.h = Text::Lines_80Columns * TextPainter::TextChar_H + 2 * TextPainter::TextBorder;
+        sz.w = TextLayer::Columns_80Columns * TextPainter::TextChar_W + 2 * TextPainter::TextBorder;
+        sz.h = TextLayer::Lines_80Columns * TextPainter::TextChar_H + 2 * TextPainter::TextBorder;
     }
     return sz;
 }

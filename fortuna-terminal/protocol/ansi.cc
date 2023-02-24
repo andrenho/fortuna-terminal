@@ -7,11 +7,11 @@
 
 ANSI::ANSI(Mode mode, Scene &scene)
     : scene_(scene),
-      cache_(initialize_cache({Text::Columns_80Columns, std::max(Text::Lines_40Columns, Text::Lines_80Columns) })),
+      cache_(initialize_cache({TextLayer::Columns_80Columns, std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns) })),
         vt_(decltype(vt_)(
                 tmt_open(
-                        mode == Mode::Text ? Text::Lines_80Columns : Text::Lines_40Columns,
-                        mode == Mode::Text ? Text::Columns_80Columns : Text::Columns_40Columns,
+                        mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
+                        mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
                         ANSI::tmt_callback, this, nullptr),
                 [](TMT* vt) { tmt_close(vt); }
         ))
@@ -179,7 +179,7 @@ bool ANSI::tmtchar_equals(TMTCHAR const& c1, TMTCHAR const& c2)
 void ANSI::set_mode(Mode mode)
 {
     tmt_resize(vt_.get(),
-           mode == Mode::Text ? Text::Lines_80Columns : Text::Lines_40Columns,
-           mode == Mode::Text ? Text::Columns_80Columns : Text::Columns_40Columns);
+           mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
+           mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns);
 }
 

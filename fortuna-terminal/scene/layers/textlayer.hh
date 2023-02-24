@@ -1,5 +1,5 @@
-#ifndef TEXT_HH_
-#define TEXT_HH_
+#ifndef TEXTLAYER_HH_
+#define TEXTLAYER_HH_
 
 #include <cstdint>
 
@@ -48,9 +48,9 @@ struct Cell {
     Cell(Char const &chr_, size_t line_, size_t column_) : chr(chr_), line(line_), column(column_) {}
 };
 
-class Text : public Layer {
+class TextLayer : public Layer {
 public:
-    explicit Text(Mode mode);
+    explicit TextLayer(Mode mode);
 
     void          set(size_t line, size_t column, Char c);
     void          set(std::vector<Cell> const& cells);

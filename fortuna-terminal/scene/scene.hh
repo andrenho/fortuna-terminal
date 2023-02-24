@@ -1,16 +1,18 @@
 #ifndef SCENE_HH_
 #define SCENE_HH_
 
-#include "scene/layers/text.hh"
+#include "scene/layers/textlayer.hh"
 #include "common/noncopyable.hh"
 #include "common/geometry.hh"
 #include "protocol/mode.hh"
 #include "../common/noncopyable.hh"
+#include "scene/layers/spritelayer.hh"
 
 struct Scene : NonCopyable {
     explicit Scene(Mode mode);
 
-    Text text;
+    TextLayer   text;
+    SpriteLayer sprites;
 
     [[nodiscard]] Size terminal_size() const;
 
