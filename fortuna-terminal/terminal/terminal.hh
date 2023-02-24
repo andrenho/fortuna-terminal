@@ -48,7 +48,7 @@ private:
 
     bool mouse_active_ = false;
     bool mouse_register_move_ = false;
-    bool joystick_active_ = true;
+    bool joystick_active_ = false;
 };
 
 #endif //TERMINAL_HH_
