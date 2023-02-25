@@ -14,7 +14,6 @@ void SpritePainter::draw(SpriteLayer& sprite_layer)
 {
     initialize_sprites(sprite_layer);
 
-    // TODO - z-order
     struct PaintParameters {
         SDL_Texture*     tx = nullptr;
         size_t           z = 256 * SpriteLayer::MAX_SPRITES;
@@ -50,7 +49,7 @@ void SpritePainter::draw(SpriteLayer& sprite_layer)
     std::sort(std::begin(pp), std::begin(pp) + pp_sz,
               [](auto const& a, auto const& b) { return a.z < b.z; });
 
-    for (uint16_t i = 0; i < pp_sz; ++i) {
+    for (size_t i = 0; i < pp_sz; ++i) {
         static SDL_Point center { 0, 0 };
         static SDL_Rect orig { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
         SDL_RenderCopyEx(renderer_, pp[i].tx, &orig, &pp[i].dest, 0, &center, pp[i].flip);

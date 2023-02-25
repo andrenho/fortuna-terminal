@@ -1,6 +1,8 @@
 import png
 import sys
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 # Get the filename from the command line
 if len(sys.argv) < 3:
     print("Usage: python gen_image.py [-s|-t] <filename>")
@@ -53,7 +55,7 @@ with open(filename, 'rb') as f:
             px = []
             for x in range(0, 16):
                 for y in range(0, 16):
-                    px.append(str(rows[iy + y][ix + x]))
+                    px.append(str(rows[ix + x][iy + y]))
             output.append(';'.join(px))
             output.append(tp)
 
