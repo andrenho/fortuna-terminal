@@ -2,6 +2,8 @@
 #include "exceptions/sdlexception.hh"
 
 #include <cstring>
+#include <iostream>
+#include <iterator>
 
 SpritePainter::SpritePainter(SDL_Renderer *renderer)
     : renderer_(renderer)
@@ -11,6 +13,48 @@ SpritePainter::SpritePainter(SDL_Renderer *renderer)
 void SpritePainter::draw(SpriteLayer& sprite_layer)
 {
     initialize_sprites(sprite_layer);
+
+    // TODO - z-order
+    struct PaintParameters {
+        SDL_Texture*     tx = nullptr;
+        size_t           z = 256 * SpriteLayer::MAX_SPRITES;
+        SDL_RendererFlip flip = SDL_FLIP_NONE;
+        SDL_Rect         dest { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
+    };
+    PaintParameters pp[SpriteLayer::MAX_SPRITES];
+
+    size_t pp_sz = 0;
+
+    for (uint16_t i = 0; i < SpriteLayer::MAX_SPRITES; ++i) {
+        SpriteState const& ss = sprite_layer.sprite_state[i];
+        if (ss.visible) {
+            pp[pp_sz].tx = textures_.at(ss.image).get();
+            if (pp[pp_sz].tx == nullptr)
+                break;
+            pp[pp_sz].z = ss.z_order * SpriteLayer::MAX_SPRITES + i;
+
+            if (ss.mirrored_h && !ss.mirrored_v)
+                pp[pp_sz].flip = SDL_FLIP_HORIZONTAL;
+            else if (!ss.mirrored_h && ss.mirrored_v)
+                pp[pp_sz].flip = SDL_FLIP_VERTICAL;
+            else if (ss.mirrored_h && ss.mirrored_v)
+                pp[pp_sz].flip = static_cast<SDL_RendererFlip>(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL);
+
+            pp[pp_sz].dest.x = (int) ss.pos_x;
+            pp[pp_sz].dest.y = (int) ss.pos_y;
+
+            ++pp_sz;
+        }
+    }
+
+    std::sort(std::begin(pp), std::begin(pp) + pp_sz,
+              [](auto const& a, auto const& b) { return a.z < b.z; });
+
+    for (uint16_t i = 0; i < pp_sz; ++i) {
+        static SDL_Point center { 0, 0 };
+        static SDL_Rect orig { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
+        SDL_RenderCopyEx(renderer_, pp[i].tx, &orig, &pp[i].dest, 0, &center, pp[i].flip);
+    }
 }
 
 void SpritePainter::initialize_sprites(SpriteLayer& layer)

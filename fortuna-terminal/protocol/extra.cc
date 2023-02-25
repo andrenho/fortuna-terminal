@@ -61,12 +61,29 @@ void Extra::escape_sequence_complete()
                     std::cerr << "warning: trying to create a sprite but has less than 258 bytes" << std::endl;
                 } else {
                     Image image {
-                        .key = (uint16_t) (p.at(0) % SpriteLayer::MAX_SPRITES),
+                        .key = (uint16_t) (p.at(0) % SpriteLayer::MAX_SPRITE_IMAGES),
                         .transparent_color = (uint8_t) p.at(1),
                         .image = {0}
                     };
                     std::copy(p.begin() + 2, p.end(), image.image);
                     scene_.sprites.create_image(std::move(image));
+                }
+                break;
+            case 'S':
+                if (p.size() >= 3) {
+                    SpriteState& ss = scene_.sprites.sprite_state[p.at(0) & SpriteLayer::MAX_SPRITES];
+                    ss.pos_x = p.at(1);
+                    ss.pos_y = p.at(2);
+                    if (p.size() >= 4)
+                        ss.visible = static_cast<bool>(p.at(3));
+                    if (p.size() >= 5)
+                        ss.mirrored_h = static_cast<bool>(p.at(4));
+                    if (p.size() >= 6)
+                        ss.mirrored_h = static_cast<bool>(p.at(5));
+                    if (p.size() >= 7)
+                        ss.z_order = (uint8_t) p.at(6);
+                    if (p.size() >= 8)
+                        ss.image = (uint16_t) p.at(7);
                 }
                 break;
             default:

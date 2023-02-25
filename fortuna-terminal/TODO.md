@@ -22,9 +22,9 @@ New protocol:
     - [x] Joystick keyboard emulation
   - [x] Set background color
   - [x] Create tool for generating images
-  - [ ] Sprites
+  - [x] Sprites
     - [x] Create images
-    - [ ] Draw sprite
+    - [x] Draw sprite
     - [ ] Change palette
   - [ ] Tilemap
     - [ ] Create tilemap images
