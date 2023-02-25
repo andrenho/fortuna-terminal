@@ -5,7 +5,7 @@ OBJ =   main.o options.o \
 		scene/layers/textlayer.o \
 		scene/palette/palette.o \
         terminal/terminal.o \
-        terminal/painters/textpainter.o \
+        terminal/painters/textpainter.o terminal/painters/spritepainter.o \
         lib/tmt/tmt.o
 
 EXE = fortuna-terminal

@@ -46,10 +46,12 @@ Terminal::Terminal(TerminalOptions terminal_options)
         throw SDLException("Error creating renderer");
 
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
+    sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
 }
 
 Terminal::~Terminal()
 {
+    sprite_painter_.reset();
     text_painter_.reset();
     renderer_.reset();
     window_.reset();
@@ -112,12 +114,13 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
 
 }
 
-void Terminal::draw(Scene const& scene) const
+void Terminal::draw(Scene& scene) const
 {
     SDL_SetRenderDrawColor(renderer_.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer_.get());
 
     text_painter_->draw_background(scene.text);
+    sprite_painter_->draw(scene.sprites);
     text_painter_->draw(scene.text);
 
     SDL_RenderPresent(renderer_.get());

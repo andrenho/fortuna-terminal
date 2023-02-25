@@ -13,6 +13,7 @@
 #include "options.hh"
 #include "painters/textpainter.hh"
 #include "protocol/protocol.hh"
+#include "terminal/painters/spritepainter.hh"
 
 class Terminal : NonCopyable {
 public:
@@ -20,7 +21,7 @@ public:
     ~Terminal();
 
     void do_events(Protocol& protocol, bool* quit);
-    void draw(Scene const& scene) const;
+    void draw(Scene& scene) const;
 
     void resize_window(Scene const& scene);
 
@@ -35,6 +36,7 @@ private:
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
 
     std::unique_ptr<TextPainter> text_painter_;
+    std::unique_ptr<SpritePainter> sprite_painter_;
 
     int win_w_ = 800, win_h_ = 600;
 

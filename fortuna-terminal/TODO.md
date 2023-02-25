@@ -21,9 +21,9 @@ New protocol:
     - [x] Joystick directional
     - [x] Joystick keyboard emulation
   - [x] Set background color
-  - [ ] Create tool for generating images
+  - [x] Create tool for generating images
   - [ ] Sprites
-    - [ ] Create images
+    - [x] Create images
     - [ ] Draw sprite
     - [ ] Change palette
   - [ ] Tilemap
@@ -34,6 +34,7 @@ New protocol:
     - [ ] Multiple layers
   - [ ] Enable/disable layer
   - [ ] Graphics collision support
+  - [ ] Request version
 
 Emulator support
   - [ ] Emulator

@@ -61,7 +61,7 @@ void Extra::escape_sequence_complete()
                     std::cerr << "warning: trying to create a sprite but has less than 258 bytes" << std::endl;
                 } else {
                     Image image {
-                        .key = (uint16_t) p.at(0),
+                        .key = (uint16_t) (p.at(0) % SpriteLayer::MAX_SPRITES),
                         .transparent_color = (uint8_t) p.at(1),
                         .image = {0}
                     };
