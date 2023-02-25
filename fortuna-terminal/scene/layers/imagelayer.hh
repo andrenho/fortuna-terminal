@@ -7,10 +7,11 @@
 struct Image {
     static constexpr size_t IMAGE_W = 16;
     static constexpr size_t IMAGE_H = 16;
+    static constexpr size_t IMAGE_SZ = IMAGE_W * IMAGE_H;
 
     uint16_t key;
-    uint8_t  image[IMAGE_W * IMAGE_H];
     uint8_t  transparent_color;
+    uint8_t  image[IMAGE_W * IMAGE_H];
 };
 
 class ImageLayer : public Layer {

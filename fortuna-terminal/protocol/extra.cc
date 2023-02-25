@@ -56,6 +56,19 @@ void Extra::escape_sequence_complete()
                 if (!p.empty())
                     scene_.text.bg_color = p.at(0) % PALETTE_SZ;
                 break;
+            case 's':
+                if (p.size() < (Image::IMAGE_SZ + 2)) {
+                    std::cerr << "warning: trying to create a sprite but has less than 258 bytes" << std::endl;
+                } else {
+                    Image image {
+                        .key = (uint16_t) p.at(0),
+                        .transparent_color = (uint8_t) p.at(1),
+                        .image = {0}
+                    };
+                    std::copy(p.begin() + 2, p.end(), image.image);
+                    scene_.sprites.create_image(std::move(image));
+                }
+                break;
             default:
                 break;
         }
