@@ -21,6 +21,7 @@ New protocol:
     - [x] Joystick directional
     - [x] Joystick keyboard emulation
   - [x] Set background color
+  - [ ] Create tool for generating images
   - [ ] Sprites
     - [ ] Create images
     - [ ] Draw sprite
