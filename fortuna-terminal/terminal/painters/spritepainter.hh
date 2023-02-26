@@ -5,6 +5,8 @@
 #include "../../common/noncopyable.hh"
 #include "scene/layers/spritelayer.hh"
 
+#include <functional>
+#include <memory>
 #include <unordered_map>
 
 class SpritePainter : NonCopyable {

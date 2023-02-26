@@ -25,6 +25,7 @@ New protocol:
   - [x] Sprites
     - [x] Create images
     - [x] Draw sprite
+    - [ ] Migrate to simple texture
     - [ ] Change palette
   - [ ] Tilemap
     - [ ] Create tilemap images
