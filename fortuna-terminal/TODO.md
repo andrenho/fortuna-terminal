@@ -34,6 +34,7 @@ New protocol:
     - [ ] Change palette
     - [ ] Multiple layers
   - [ ] Enable/disable layer
+  - [ ] Beep
   - [ ] Graphics collision support
   - [ ] Request version
 
