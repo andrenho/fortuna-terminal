@@ -3,7 +3,6 @@
 #include "scene/layers/spritelayer.hh"
 
 #include <cstring>
-#include <iostream>
 #include <iterator>
 
 std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(ImageLayer const &layer, TextureManager const& texture_manager) const
@@ -29,8 +28,7 @@ std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(ImageLaye
             else if (ss.mirrored_h && ss.mirrored_v)
                 image.flip = static_cast<SDL_RendererFlip>(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL);
 
-            image.dest.x = (int) ss.pos_x;
-            image.dest.y = (int) ss.pos_y;
+            image.dest = { (int) ss.pos_x, (int) ss.pos_y, Image::IMAGE_W, Image::IMAGE_H };
 
             images.emplace_back(std::move(image));
         }
