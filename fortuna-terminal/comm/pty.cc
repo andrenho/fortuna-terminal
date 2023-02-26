@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "../exceptions/libcexception.hh"
-#include "../terminal/scene/layers/textlayer.hh"
+#include "scene/layers/textlayer.hh"
 
 PTY::PTY(PTYOptions const& pty_options)
 {
