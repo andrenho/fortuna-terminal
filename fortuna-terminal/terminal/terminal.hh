@@ -51,6 +51,8 @@ private:
     bool joystick_emulation_ = false;
 
     static constexpr const char* emulated_keys = "XxZzSsAaQqWw\r\n\t";
+
+    void print_renderer_info();
 };
 
 #endif //TERMINAL_HH_

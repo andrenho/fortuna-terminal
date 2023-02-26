@@ -37,6 +37,10 @@ New protocol:
   - [ ] Graphics collision support
   - [ ] Request version
 
+Alternative screens:
+  - [ ] Terminal (shell)
+  - [ ] Additional info
+
 Emulator support
   - [ ] Emulator
 

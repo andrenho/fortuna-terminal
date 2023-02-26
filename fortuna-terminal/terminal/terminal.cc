@@ -45,6 +45,8 @@ Terminal::Terminal(TerminalOptions terminal_options)
     if (!renderer_)
         throw SDLException("Error creating renderer");
 
+    print_renderer_info();
+
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
     sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
 }
@@ -243,4 +245,24 @@ void Terminal::set_mouse_active(bool value)
 {
     mouse_active_ = value;
     SDL_ShowCursor(mouse_active_ ? SDL_ENABLE : SDL_DISABLE);
+}
+
+void Terminal::print_renderer_info()
+{
+    SDL_RendererInfo info;
+    SDL_GetRendererInfo(renderer_.get(), &info);
+    std::cout << "Renderer:\n";
+    std::cout << "  Name: " << info.name << "\n";
+    std::cout << "  Flags: ";
+    if (info.flags & SDL_RENDERER_SOFTWARE)
+        std::cout << "software ";
+    if (info.flags & SDL_RENDERER_ACCELERATED)
+        std::cout << "accelerated ";
+    if (info.flags & SDL_RENDERER_PRESENTVSYNC)
+        std::cout << "vsync ";
+    if (info.flags & SDL_RENDERER_TARGETTEXTURE)
+        std::cout << "target_texture ";
+    std::cout << "\n";
+    std::cout << "  Max texture width: " << info.max_texture_width << "\n";
+    std::cout << "  Max texture height: " << info.max_texture_height << "\n";
 }
