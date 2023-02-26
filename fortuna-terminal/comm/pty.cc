@@ -9,11 +9,11 @@
 #include <iostream>
 
 #include "../exceptions/libcexception.hh"
-#include "scene/layers/textlayer.hh"
+#include "../scene/layers/textlayer.hh"
 
 PTY::PTY(PTYOptions const& pty_options)
 {
-    struct winsize winp = { (short unsigned int) Text::Lines_80Columns, (short unsigned int) Text::Columns_80Columns, 0 , 0 };
+    struct winsize winp = { (short unsigned int) TextLayer::Lines_80Columns, (short unsigned int) TextLayer::Columns_80Columns, 0 , 0 };
 
     char name[256];
     pid_t pid = forkpty(&fd_, name, nullptr, &winp);
