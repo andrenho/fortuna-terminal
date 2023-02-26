@@ -125,7 +125,7 @@ void Terminal::draw(Scene& scene) const
     SDL_RenderClear(renderer_.get());
 
     text_painter_->draw_background(scene.text);
-    sprite_painter_->draw(scene.sprites);
+    sprite_painter_->draw(scene.sprites, *texture_manager_);
     text_painter_->draw(scene.text);
 
     SDL_RenderPresent(renderer_.get());
