@@ -47,12 +47,15 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
     print_renderer_info();
 
+    texture_manager_ = std::make_unique<TextureManager>(renderer_.get(), 2, 512);
+
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
     sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
 }
 
 Terminal::~Terminal()
 {
+    texture_manager_.reset();
     sprite_painter_.reset();
     text_painter_.reset();
     renderer_.reset();
@@ -122,7 +125,7 @@ void Terminal::draw(Scene& scene) const
     SDL_RenderClear(renderer_.get());
 
     text_painter_->draw_background(scene.text);
-    sprite_painter_->draw(scene.sprites);
+    sprite_painter_->draw(scene.sprites, *texture_manager_);
     text_painter_->draw(scene.text);
 
     SDL_RenderPresent(renderer_.get());

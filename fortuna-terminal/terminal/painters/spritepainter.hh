@@ -2,26 +2,20 @@
 #define SPRITEPAINTER_HH_
 
 #include <SDL2/SDL.h>
-#include "../../common/noncopyable.hh"
-#include "scene/layers/spritelayer.hh"
+#include "terminal/texturemanager.hh"
+#include "imagepainter.hh"
 
 #include <functional>
 #include <memory>
 #include <unordered_map>
 
-class SpritePainter : NonCopyable {
+class SpritePainter : public ImagePainter {
 public:
-    explicit SpritePainter(SDL_Renderer* renderer);
-
-    void draw(SpriteLayer& sprite_layer);
+    explicit SpritePainter(SDL_Renderer* renderer) : ImagePainter(renderer) {}
 
 private:
-    SDL_Renderer* renderer_;
-
-    void initialize_sprites(SpriteLayer& layer);
-
-    using TextureUniquePtr = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>>;
-    std::unordered_map<uint16_t, TextureUniquePtr> textures_ {};
+    [[nodiscard]] std::vector<ImageToPaint> images_to_paint(ImageLayer const &layer, TextureManager const& texture_manager) const override;
+    [[nodiscard]] size_t texture_index() const override;
 };
 
 #endif //SPRITEPAINTER_HH_

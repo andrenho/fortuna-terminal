@@ -22,6 +22,9 @@ public:
 
     [[nodiscard]] std::unique_ptr<SyncQueue<Image>>& pending_images() { return pending_images_; }
 
+    static constexpr size_t SPRITE_IDX  = 0;
+    static constexpr size_t TILEMAP_IDX = 1;
+
 protected:
     ImageLayer() = default;
     std::unique_ptr<SyncQueue<Image>> pending_images_ = std::make_unique<SyncQueue<Image>>();
