@@ -47,12 +47,15 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
     print_renderer_info();
 
+    texture_manager_ = std::make_unique<TextureManager>(renderer_.get(), 2, 512);
+
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
     sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
 }
 
 Terminal::~Terminal()
 {
+    texture_manager_.reset();
     sprite_painter_.reset();
     text_painter_.reset();
     renderer_.reset();

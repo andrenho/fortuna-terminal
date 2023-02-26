@@ -4,7 +4,7 @@ OBJ =   main.o options.o \
         scene/scene.o \
 		scene/layers/textlayer.o \
 		scene/palette/palette.o \
-        terminal/terminal.o \
+        terminal/terminal.o terminal/texturemanager.o \
         terminal/painters/textpainter.o terminal/painters/spritepainter.o \
         lib/tmt/tmt.o
 
