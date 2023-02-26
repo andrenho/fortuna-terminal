@@ -10,8 +10,10 @@ SpritePainter::SpritePainter(SDL_Renderer *renderer)
 {
 }
 
-void SpritePainter::draw(SpriteLayer& sprite_layer, TextureManager const& texture_manager)
+void SpritePainter::draw(SpriteLayer& sprite_layer, TextureManager& texture_manager)
 {
+    initialize_sprites(sprite_layer, texture_manager);
+
     struct PaintParameters {
         SDL_Texture*     tx = nullptr;
         size_t           z = 256 * SpriteLayer::MAX_SPRITES;
@@ -54,5 +56,14 @@ void SpritePainter::draw(SpriteLayer& sprite_layer, TextureManager const& textur
     for (size_t i = 0; i < pp_sz; ++i) {
         static SDL_Point center { 0, 0 };
         SDL_RenderCopyEx(renderer_, pp[i].tx, &pp[i].src, &pp[i].dest, 0, &center, pp[i].flip);
+    }
+}
+
+void SpritePainter::initialize_sprites(SpriteLayer &layer, TextureManager& texture_manager)
+{
+    std::optional<Image> oimg;
+    while ((oimg = layer.pending_images()->pop_nonblock()).has_value()) {
+        Image const& img = oimg.value();
+        texture_manager.add_image(ImageLayer::SPRITE_IDX, img, layer.palette);
     }
 }

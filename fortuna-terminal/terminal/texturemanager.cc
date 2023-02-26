@@ -12,6 +12,7 @@ TextureManager::TextureManager(SDL_Renderer* renderer, size_t textures, size_t i
         );
         if (!textures_.back())
             throw SDLException("Error creating texture");
+        SDL_SetTextureBlendMode(textures_.back().get(), SDL_BLENDMODE_BLEND);
     }
 }
 

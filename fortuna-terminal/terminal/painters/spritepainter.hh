@@ -14,10 +14,12 @@ class SpritePainter : NonCopyable {
 public:
     explicit SpritePainter(SDL_Renderer* renderer);
 
-    void draw(SpriteLayer& sprite_layer, TextureManager const& texture_manager);
+    void draw(SpriteLayer& sprite_layer, TextureManager& texture_manager);
 
 private:
     SDL_Renderer* renderer_;
+
+    void initialize_sprites(SpriteLayer &layer, TextureManager &manager);
 };
 
 #endif //SPRITEPAINTER_HH_
