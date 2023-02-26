@@ -12,7 +12,7 @@
 
 class SpritePainter : NonCopyable {
 public:
-    explicit SpritePainter(SDL_Renderer* renderer);
+    explicit SpritePainter(SDL_Renderer* renderer) : renderer_(renderer) {}
 
     void draw(SpriteLayer& sprite_layer, TextureManager& texture_manager);
 

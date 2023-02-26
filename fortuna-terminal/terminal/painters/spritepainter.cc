@@ -5,11 +5,6 @@
 #include <iostream>
 #include <iterator>
 
-SpritePainter::SpritePainter(SDL_Renderer *renderer)
-    : renderer_(renderer)
-{
-}
-
 void SpritePainter::draw(SpriteLayer& sprite_layer, TextureManager& texture_manager)
 {
     initialize_sprites(sprite_layer, texture_manager);
