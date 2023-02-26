@@ -265,4 +265,7 @@ void Terminal::print_renderer_info()
     std::cout << "\n";
     std::cout << "  Max texture width: " << info.max_texture_width << "\n";
     std::cout << "  Max texture height: " << info.max_texture_height << "\n";
+    std::cout << "  Texture formats:\n";
+    for (size_t i = 0; i < info.num_texture_formats; ++i)
+        std::cout << "    " << SDL_GetPixelFormatName(info.texture_formats[i]) << "\n";
 }
