@@ -14,9 +14,8 @@ public:
     explicit SpritePainter(SDL_Renderer* renderer) : ImagePainter(renderer) {}
 
 private:
-    std::vector<ImageToPaint> images_to_paint(ImageLayer const &layer, TextureManager const& texture_manager) const override;
-
-    size_t texture_index() const override;
+    [[nodiscard]] std::vector<ImageToPaint> images_to_paint(ImageLayer const &layer, TextureManager const& texture_manager) const override;
+    [[nodiscard]] size_t texture_index() const override;
 };
 
 #endif //SPRITEPAINTER_HH_

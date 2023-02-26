@@ -9,6 +9,8 @@
 
 class Layer {
 public:
+    virtual ~Layer() = default;
+
     Palette palette = {};
 
 protected:

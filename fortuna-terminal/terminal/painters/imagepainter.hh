@@ -11,7 +11,7 @@ public:
     void draw(ImageLayer& layer, TextureManager& texture_manager);
 
 protected:
-    struct ImageToPaint {
+    struct ImageToPaint : NonCopyable {
         SDL_Texture*     tx = nullptr;
         size_t           z = 0;
         SDL_RendererFlip flip = SDL_FLIP_NONE;

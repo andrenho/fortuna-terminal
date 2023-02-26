@@ -10,7 +10,7 @@ std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(ImageLaye
     std::vector<ImageToPaint> images;
 
     for (size_t i = 0; i < SpriteLayer::MAX_SPRITES; ++i) {
-        SpriteState const& ss = static_cast<SpriteLayer const*>(&layer)->sprite_state[i];
+        SpriteState const& ss = reinterpret_cast<SpriteLayer const*>(&layer)->sprite_state[i];
         if (ss.visible) {
             TextureInfo ti = texture_manager.texture_info(ImageLayer::SPRITE_IDX, ss.image);
 
