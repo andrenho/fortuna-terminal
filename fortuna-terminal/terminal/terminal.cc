@@ -47,7 +47,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
     print_renderer_info();
 
-    texture_manager_ = std::make_unique<TextureManager>(renderer_.get(), 2, 512);
+    texture_manager_ = std::make_unique<TextureManager>(renderer_.get());
 
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
     sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
@@ -61,6 +61,13 @@ Terminal::~Terminal()
     renderer_.reset();
     window_.reset();
     SDL_Quit();
+}
+
+void Terminal::setup_scene(Scene const &scene)
+{
+    resize_window(scene);
+    texture_manager_->create_texture(scene.sprite_image_texture_idx, SpriteLayer::MAX_SPRITE_IMAGES);
+    // texture_manager_->create_texture(scene.tile_image_texture_idx, SpriteLayer::MAX_SPRITE_IMAGES);
 }
 
 void Terminal::do_events(Protocol& protocol, bool *quit)
@@ -272,3 +279,4 @@ void Terminal::print_renderer_info()
     for (size_t i = 0; i < info.num_texture_formats; ++i)
         std::cout << "    " << SDL_GetPixelFormatName(info.texture_formats[i]) << "\n";
 }
+

@@ -1,19 +1,19 @@
 #include "texturemanager.hh"
 #include "exceptions/sdlexception.hh"
 
-TextureManager::TextureManager(SDL_Renderer* renderer, size_t textures, size_t images_per_texture)
-    : renderer_(renderer)
+void TextureManager::create_texture(size_t texture_n, size_t images_per_texture)
 {
-    for (size_t i = 0; i < textures; ++i) {
-        int h = (int) (images_per_texture / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
-        textures_.emplace_back(
-                SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h),
-                [](SDL_Texture* t) { SDL_DestroyTexture(t); }
-        );
-        if (!textures_.back())
-            throw SDLException("Error creating texture");
-        SDL_SetTextureBlendMode(textures_.back().get(), SDL_BLENDMODE_BLEND);
-    }
+    int h = (int) (images_per_texture / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
+    textures_.emplace(
+        texture_n,
+        TextureUniquePtr(
+            SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h),
+            [](SDL_Texture* t) { SDL_DestroyTexture(t); }
+        )
+    );
+    if (!textures_.at(texture_n))
+        throw SDLException("Error creating texture");
+    SDL_SetTextureBlendMode(textures_.at(texture_n).get(), SDL_BLENDMODE_BLEND);
 }
 
 void TextureManager::add_image(size_t texture_n, Image const &image, Palette const& palette)
@@ -62,3 +62,4 @@ std::pair<int, int> TextureManager::index_location_in_texture(size_t key)
     int y = ((int) key * 16) / MAX_TEXTURE_W;
     return { x, y };
 }
+

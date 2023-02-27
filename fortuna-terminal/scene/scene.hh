@@ -14,16 +14,19 @@ struct Scene : NonCopyable {
     TextLayer   text;
     SpriteLayer sprites;
 
-    [[nodiscard]] Size terminal_size() const;
+    size_t sprite_image_texture_idx;
+    size_t tile_image_texture_idx;
 
     void reset();
-
     void set_mode(Mode mode);
 
     [[nodiscard]] Mode mode() const { return mode_; }
+    [[nodiscard]] Size terminal_size() const;
 
 private:
     Mode mode_;
+
+    static size_t image_texture_idx_counter;
 };
 
 #endif //SCENE_HH_

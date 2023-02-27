@@ -3,8 +3,12 @@
 #include "terminal/painters/textpainter.hh"
 #include "exceptions/fortunaexception.hh"
 
+size_t Scene::image_texture_idx_counter = 0;
+
 Scene::Scene(Mode mode)
     : text(mode),
+      sprite_image_texture_idx(image_texture_idx_counter++),
+      tile_image_texture_idx(image_texture_idx_counter++),
       mode_(mode)
 {
 }

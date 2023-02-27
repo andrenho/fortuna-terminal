@@ -5,7 +5,7 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 #include <SDL2/SDL.h>
 
@@ -18,14 +18,15 @@ struct TextureInfo {
 
 class TextureManager {
 public:
-    TextureManager(SDL_Renderer* renderer, size_t textures, size_t images_per_texture);
+    TextureManager(SDL_Renderer* renderer) : renderer_(renderer) {}
 
+    void        create_texture(size_t texture_n, size_t images_per_texture);
     void        add_image(size_t texture_n, Image const& image, Palette const& palette);
     TextureInfo texture_info(size_t texture_n, size_t image_key) const;
 
 private:
     using TextureUniquePtr = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>>;
-    std::vector<TextureUniquePtr> textures_ {};
+    std::unordered_map<size_t, TextureUniquePtr> textures_ {};
 
     static std::pair<int, int> index_location_in_texture(size_t key);
 

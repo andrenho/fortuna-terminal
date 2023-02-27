@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
             ALL_PROTOCOLS(p.set_debug_comm(true));
         }
 
-        terminal->resize_window(protocol->scene());
+        terminal->setup_scene(protocol->scene());
 
         gpio->reset();
 
