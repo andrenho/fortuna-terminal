@@ -18,8 +18,6 @@ class ImageLayer : public Layer {
 public:
     void create_image(Image&& image) { pending_images_->emplace(std::move(image)); }
 
-    static constexpr size_t MAX_IMAGES = 512;
-
     [[nodiscard]] std::unique_ptr<SyncQueue<Image>>& pending_images() { return pending_images_; }
 
 protected:

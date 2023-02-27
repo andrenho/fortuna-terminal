@@ -7,12 +7,15 @@
 #include "protocol/mode.hh"
 #include "../common/noncopyable.hh"
 #include "scene/layers/spritelayer.hh"
+#include "scene/layers/tilemaplayer.hh"
 
 struct Scene : NonCopyable {
     explicit Scene(Mode mode);
 
-    TextLayer   text;
-    SpriteLayer sprites;
+    TilemapLayer tilemap_background, tilemap_obstacles;
+    SpriteLayer  sprites;
+    TilemapLayer tilemap_foreground, tilemap_ui;
+    TextLayer    text;
 
     size_t sprite_image_texture_idx;
     size_t tile_image_texture_idx;

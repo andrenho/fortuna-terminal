@@ -2,6 +2,8 @@
 
 #include "../exceptions/sdlexception.hh"
 #include "exceptions/fortunaexception.hh"
+#include "scene/layers/spritelayer.hh"
+#include "scene/layers/tilemaplayer.hh"
 
 #include <iostream>
 #include <cstring>
@@ -67,7 +69,7 @@ void Terminal::setup_scene(Scene const &scene)
 {
     resize_window(scene);
     texture_manager_->create_texture(scene.sprite_image_texture_idx, SpriteLayer::MAX_SPRITE_IMAGES);
-    // texture_manager_->create_texture(scene.tile_image_texture_idx, SpriteLayer::MAX_SPRITE_IMAGES);
+    texture_manager_->create_texture(scene.tile_image_texture_idx, TilemapLayer::MAX_TILEMAP_IMAGES);
 }
 
 void Terminal::do_events(Protocol& protocol, bool *quit)
