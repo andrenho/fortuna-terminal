@@ -41,6 +41,7 @@ private:
     std::unique_ptr<TextureManager> texture_manager_;
     std::unique_ptr<TextPainter> text_painter_;
     std::unique_ptr<SpritePainter> sprite_painter_;
+    std::unique_ptr<TilemapLayer> tilemap_painter_;
 
     int win_w_ = 800, win_h_ = 600;
 

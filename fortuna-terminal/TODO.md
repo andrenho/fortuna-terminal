@@ -26,13 +26,12 @@ New protocol:
     - [x] Create images
     - [x] Draw sprite
     - [x] Migrate to simple texture
-    - [ ] Change palette
-  - [ ] Tilemap
-    - [ ] Create tilemap images
-    - [ ] Create maps
+  - [x] Tilemap
+    - [x] Create tilemap images
+    - [x] Create maps
     - [ ] Draw maps
-    - [ ] Change palette
     - [ ] Multiple layers
+  - [ ] Change palette
   - [ ] Enable/disable layer
   - [ ] Beep
   - [ ] Graphics collision support
