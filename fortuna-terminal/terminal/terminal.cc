@@ -131,11 +131,13 @@ void Terminal::draw(Scene& scene) const
     SDL_RenderClear(renderer_.get());
 
     graphics_painter_->draw_background(scene);
-    graphics_painter_->draw(scene, LAYER_TILEMAP_BG);
-    graphics_painter_->draw(scene, LAYER_TILEMAP_OBSTACLES);
-    graphics_painter_->draw(scene, LAYER_SPRITES);
-    graphics_painter_->draw(scene, LAYER_TILEMAP_FG);
-    graphics_painter_->draw(scene, LAYER_TILEMAP_UI);
+    if (scene.mode() == Mode::Graphics) {
+        graphics_painter_->draw(scene, LAYER_TILEMAP_BG);
+        graphics_painter_->draw(scene, LAYER_TILEMAP_OBSTACLES);
+        graphics_painter_->draw(scene, LAYER_SPRITES);
+        graphics_painter_->draw(scene, LAYER_TILEMAP_FG);
+        graphics_painter_->draw(scene, LAYER_TILEMAP_UI);
+    }
     text_painter_->draw(scene);
 
     SDL_RenderPresent(renderer_.get());

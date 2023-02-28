@@ -30,7 +30,7 @@ New protocol:
     - [x] Create images images
     - [x] Create maps
     - [x] Draw maps
-    - [ ] Multiple layers
+    - [x] Multiple layers
   - [ ] Change palette
   - [ ] Enable/disable layer
   - [ ] Beep
