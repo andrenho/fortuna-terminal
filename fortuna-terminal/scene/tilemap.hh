@@ -5,7 +5,7 @@
 #include <vector>
 
 struct Tilemap {
-    std::vector<size_t> tilemap {};
+    std::vector<size_t> images {};
 
     size_t w = 0;
     size_t h = 0;

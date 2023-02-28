@@ -40,6 +40,9 @@ struct Scene : NonCopyable {
     ImageLayer const*  image_layer_unsafe(LayerIdentifier layer_id) const { return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get()); }
     ImageLayer*        image_layer_unsafe(LayerIdentifier layer_id) { return const_cast<ImageLayer *>(const_cast<Scene const *>(this)->image_layer_unsafe(layer_id)); }
 
+    TilemapLayer const* tilemap_layer(LayerIdentifier layer_id) const { return dynamic_cast<TilemapLayer const *>(layers_.at(layer_id).get()); }
+    TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) { return const_cast<TilemapLayer *>(const_cast<Scene const *>(this)->tilemap_layer(layer_id)); }
+
     void reset();
     void set_mode(Mode mode);
 

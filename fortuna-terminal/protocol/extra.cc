@@ -78,8 +78,8 @@ void Extra::escape_sequence_complete()
                         Tilemap& tilemap = scene_.tilemap[tilemap_idx];
                         tilemap.w = w;
                         tilemap.h = h;
-                        tilemap.tilemap.clear();
-                        std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.tilemap));
+                        tilemap.images.clear();
+                        std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.images));
                     }
                 }
                 break;
@@ -100,18 +100,16 @@ void Extra::escape_sequence_complete()
                         ss.image = (uint16_t) p.at(7);
                 }
                 break;
-                /*
             case 'M':
                 if (p.size() > 4) {
-                    TilemapLayer* tilemap_layer = scene_.tilemap_layer(p.at(0)).value_or(nullptr);
+                    TilemapLayer* tilemap_layer = scene_.tilemap_layer((LayerIdentifier) p.at(0));
                     if (tilemap_layer == nullptr)
                         break;
-                    tilemap_layer->map = p.at(0) & Tilemap::MAX_TILEMAPS;
+                    tilemap_layer->map = (ssize_t) (p.at(0) & Tilemap::MAX_TILEMAPS);
                     tilemap_layer->pos_x = p.at(1);
                     tilemap_layer->pos_y = p.at(2);
                 }
                 break;
-                 */
             default:
                 break;
         }

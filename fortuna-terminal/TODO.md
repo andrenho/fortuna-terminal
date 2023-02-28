@@ -27,22 +27,22 @@ New protocol:
     - [x] Draw sprites
     - [x] Migrate to simple texture
   - [x] Tilemap
-    - [x] Create tilemap images
+    - [x] Create images images
     - [x] Create maps
-    - [ ] Draw maps
-    - [ ] Multiple layers_
+    - [x] Draw maps
+    - [ ] Multiple layers
   - [ ] Change palette
   - [ ] Enable/disable layer
   - [ ] Beep
   - [ ] Graphics collision support
   - [ ] Request version
 
-- [ ] Changes to scene
+- [x] Changes to scene
   - [x] constant identifying layers_ (enum)
-  - [x] vector of layers_, functions to return text layer, sprites layer and tilemap layers_ (n)
-  - [ ] should hold images (or, at least, create images)
-  - [ ] move terminal_size to text
-  - [ ] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
+  - [x] vector of layers_, functions to return text layer, sprites layer and images layers_ (n)
+  - [x] should hold images (or, at least, create images)
+  - [x] move terminal_size to text
+  - [x] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
 Alternative screens:
   - [ ] Terminal (shell)

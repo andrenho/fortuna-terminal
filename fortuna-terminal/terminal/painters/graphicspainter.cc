@@ -28,6 +28,8 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
 {
     ImageLayer const* layer = scene.image_layer_unsafe(layer_id);
 
+    auto [sw, sh] = scene.size_in_pixels();
+
     for (auto const& image: layer->images_to_draw(scene)) {
         static SDL_Point center { 0, 0 };
         TextureInfo ti = texture_manager_->texture_info(scene.texture_image_index(), image.image);
@@ -42,6 +44,10 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
             flip = SDL_FLIP_VERTICAL;
         else if (image.mirrored_h && image.mirrored_v)
             flip = static_cast<SDL_RendererFlip>(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL);
+
+        // check if within screen bounds
+        if (ti.src.x > sw || ti.src.y > sh || (ti.src.x + ti.src.w) < 0 || (ti.src.y + ti.src.h) < 0)
+            break;
 
         if (SDL_RenderCopyEx(renderer_, ti.tx, &ti.src, &dest, 0, &center, flip) < 0)
             throw SDLException("Error renderering");
