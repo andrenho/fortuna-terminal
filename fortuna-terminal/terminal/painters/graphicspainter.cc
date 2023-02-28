@@ -28,7 +28,7 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
 {
     ImageLayer const* layer = scene.image_layer_unsafe(layer_id);
 
-    for (auto const& image: layer->images_to_draw()) {
+    for (auto const& image: layer->images_to_draw(scene)) {
         static SDL_Point center { 0, 0 };
         TextureInfo ti = texture_manager_->texture_info(scene.texture_image_index(), image.image);
         if (ti.tx == nullptr)

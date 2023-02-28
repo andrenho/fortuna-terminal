@@ -1,6 +1,6 @@
 #include "spritelayer.hh"
 
-std::vector<ImageToDraw> SpriteLayer::images_to_draw() const
+std::vector<ImageToDraw> SpriteLayer::images_to_draw(class Scene const& scene) const
 {
     std::vector<ImageToDraw> images_to_draw;
     images_to_draw.reserve(MAX_SPRITES);

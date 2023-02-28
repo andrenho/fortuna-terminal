@@ -17,7 +17,7 @@ public:
     static constexpr size_t MAX_SPRITES = 128;
     Sprite sprites[MAX_SPRITES] {};
 
-    [[nodiscard]] std::vector<ImageToDraw> images_to_draw() const override;
+    [[nodiscard]] std::vector<ImageToDraw> images_to_draw([[maybe_unused]] class Scene const& scene) const override;
 };
 
 #endif //SPRITELAYER_HH_

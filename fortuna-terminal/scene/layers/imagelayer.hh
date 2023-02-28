@@ -13,7 +13,7 @@ struct ImageToDraw {
 };
 
 struct ImageLayer : public Layer {
-    virtual std::vector<ImageToDraw> images_to_draw() const = 0;
+    virtual std::vector<ImageToDraw> images_to_draw(class Scene const& scene) const = 0;
 };
 
 #endif //IMAGELAYER_HH_
