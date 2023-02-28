@@ -2,7 +2,6 @@
 #define PTY_HH_
 
 #include "../options.hh"
-#include "../common/geometry.hh"
 #include "fdcomm.hh"
 
 class PTY : public FDComm {
