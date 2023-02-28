@@ -13,7 +13,6 @@
 #include "options.hh"
 #include "painters/textpainter.hh"
 #include "protocol/protocol.hh"
-#include "terminal/painters/spritepainter.hh"
 #include "texturemanager.hh"
 #include "terminal/painters/graphicspainter.hh"
 
