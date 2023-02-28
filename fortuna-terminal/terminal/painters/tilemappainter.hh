@@ -9,7 +9,7 @@ public:
     explicit TilemapPainter(SDL_Renderer* renderer) : ImagePainter(renderer) {}
 
 private:
-    [[nodiscard]] std::vector<ImageToPaint> images_to_paint(size_t texture_idx, ImageLayer const &layer, TextureManager const& texture_manager) const override;
+    [[nodiscard]] std::vector<ImageToPaint> images_to_paint(Scene const& scene, ImageLayer const &layer, TextureManager const& texture_manager) const override;
 };
 
 #endif //TILEMAPPAINTER_HH_

@@ -133,7 +133,7 @@ void Terminal::draw(Scene& scene) const
     SDL_RenderClear(renderer_.get());
 
     text_painter_->draw_background(scene.text);
-    sprite_painter_->draw(scene.texture_image_index(), scene.sprites, *texture_manager_);
+    sprite_painter_->draw(scene, scene.sprites, *texture_manager_);
     text_painter_->draw(scene.text);
 
     SDL_RenderPresent(renderer_.get());
