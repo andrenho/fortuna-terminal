@@ -18,7 +18,7 @@ void Extra::send_bytes(std::string const &bytes)
 
 void Extra::escape_sequence_complete()
 {
-    std::vector<size_t> p;
+    std::vector<ssize_t> p;
     char command = parse_escape_sequence(p);
     switch (command) {
         case 'r':
@@ -69,6 +69,20 @@ void Extra::escape_sequence_complete()
                     scene_.sprites.create_image(std::move(image));
                 }
                 break;
+            case 't':
+                if (p.size() >= 3) {
+                    size_t tilemap_idx = p.at(0) % Tilemap::MAX_TILEMAPS;
+                    size_t w = p.at(1);
+                    size_t h = p.at(2);
+                    if (p.size() >= 3 + (w * h)) {
+                        Tilemap& tilemap = scene_.tilemap[tilemap_idx];
+                        tilemap.w = w;
+                        tilemap.h = h;
+                        tilemap.tilemap.clear();
+                        std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.tilemap));
+                    }
+                }
+                break;
             case 'S':
                 if (p.size() >= 3) {
                     SpriteState& ss = scene_.sprites.sprite_state[p.at(0) & SpriteLayer::MAX_SPRITES];
@@ -86,18 +100,28 @@ void Extra::escape_sequence_complete()
                         ss.image = (uint16_t) p.at(7);
                 }
                 break;
+            case 'M':
+                if (p.size() > 4) {
+                    TilemapLayer* tilemap_layer = scene_.tilemap_layer(p.at(0)).value_or(nullptr);
+                    if (tilemap_layer == nullptr)
+                        break;
+                    tilemap_layer->map = p.at(0) & Tilemap::MAX_TILEMAPS;
+                    tilemap_layer->pos_x = p.at(1);
+                    tilemap_layer->pos_y = p.at(2);
+                }
+                break;
             default:
                 break;
         }
     }
 }
 
-char Extra::parse_escape_sequence(std::vector<size_t> &parameters) const
+char Extra::parse_escape_sequence(std::vector<ssize_t> &parameters) const
 {
     std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 3));
     std::string item;
     while (std::getline(ss, item, ';')) {
-        size_t value = std::stoull(item);
+        ssize_t value = std::stoll(item);
         parameters.push_back(value);
     }
 

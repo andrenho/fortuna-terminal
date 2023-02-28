@@ -23,7 +23,7 @@ private:
     std::string escape_sequence_ {};
 
     void escape_sequence_complete();
-    char parse_escape_sequence(std::vector<size_t>& parameters) const;
+    char parse_escape_sequence(std::vector<ssize_t>& parameters) const;
 };
 
 #endif //EXTRA_HH_

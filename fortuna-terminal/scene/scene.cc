@@ -36,3 +36,14 @@ void Scene::set_mode(Mode mode)
     text.set_mode(mode);
 }
 
+std::optional<TilemapLayer *> Scene::tilemap_layer(size_t index)
+{
+    switch (index) {
+        case 4: return &tilemap_background;
+        case 8: return &tilemap_obstacles;
+        case 16: return &tilemap_foreground;
+        case 20: return &tilemap_ui;
+        default: return {};
+    }
+}
+

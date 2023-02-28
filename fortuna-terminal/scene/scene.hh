@@ -8,9 +8,14 @@
 #include "../common/noncopyable.hh"
 #include "scene/layers/spritelayer.hh"
 #include "scene/layers/tilemaplayer.hh"
+#include "tilemap.hh"
+
+#include <optional>
 
 struct Scene : NonCopyable {
     explicit Scene(Mode mode);
+
+    Tilemap tilemap[Tilemap::MAX_TILEMAPS] {};
 
     TilemapLayer tilemap_background, tilemap_obstacles;
     SpriteLayer  sprites;
@@ -22,6 +27,7 @@ struct Scene : NonCopyable {
 
     [[nodiscard]] Mode mode() const { return mode_; }
     [[nodiscard]] Size terminal_size() const;
+    [[nodiscard]] std::optional<TilemapLayer*> tilemap_layer(size_t index);
 
     size_t texture_image_index() const { return texture_image_index_; }
 
