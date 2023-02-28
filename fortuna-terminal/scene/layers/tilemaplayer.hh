@@ -30,7 +30,6 @@ public:
     ssize_t pos_x = 0;
     ssize_t pos_y = 0;
 
-    static constexpr size_t MAX_TILEMAP_IMAGES = 512;
     static constexpr size_t MAX_W = TILEMAP_MAX_W, MAX_H = 512;
 
 private:

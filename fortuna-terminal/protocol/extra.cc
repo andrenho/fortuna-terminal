@@ -56,12 +56,12 @@ void Extra::escape_sequence_complete()
                 if (!p.empty())
                     scene_.text.bg_color = p.at(0) % PALETTE_SZ;
                 break;
-            case 's':
+            case 'i':
                 if (p.size() < (Image::IMAGE_SZ + 2)) {
                     std::cerr << "warning: trying to create a sprite but has less than 258 bytes" << std::endl;
                 } else {
                     Image image {
-                        .key = (uint16_t) (p.at(0) % SpriteLayer::MAX_SPRITE_IMAGES),
+                        .key = (uint16_t) (p.at(0) % Scene::MAX_IMAGES),
                         .transparent_color = (uint8_t) p.at(1),
                         .image = {0}
                     };

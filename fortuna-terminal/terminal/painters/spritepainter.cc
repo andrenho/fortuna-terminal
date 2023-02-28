@@ -5,14 +5,14 @@
 #include <cstring>
 #include <iterator>
 
-std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(ImageLayer const &layer, TextureManager const& texture_manager) const
+std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(size_t texture_idx, ImageLayer const &layer, TextureManager const& texture_manager) const
 {
     std::vector<ImageToPaint> images;
 
     for (size_t i = 0; i < SpriteLayer::MAX_SPRITES; ++i) {
         SpriteState const& ss = reinterpret_cast<SpriteLayer const*>(&layer)->sprite_state[i];
         if (ss.visible) {
-            TextureInfo ti = texture_manager.texture_info(texture_index(), ss.image);
+            TextureInfo ti = texture_manager.texture_info(texture_idx, ss.image);
 
             ImageToPaint image;
             image.tx = ti.tx;
@@ -38,9 +38,4 @@ std::vector<ImagePainter::ImageToPaint> SpritePainter::images_to_paint(ImageLaye
               [](auto const& a, auto const& b) { return a.z < b.z; });
 
     return images;
-}
-
-size_t SpritePainter::texture_index() const
-{
-    return 0;  // TODO
 }

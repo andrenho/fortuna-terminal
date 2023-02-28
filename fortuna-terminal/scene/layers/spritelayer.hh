@@ -14,7 +14,6 @@ struct SpriteState {
 
 class SpriteLayer : public ImageLayer {
 public:
-    static constexpr size_t MAX_SPRITE_IMAGES = 512;
     static constexpr size_t MAX_SPRITES = 128;
 
     SpriteState sprite_state[MAX_SPRITES] {};

@@ -36,11 +36,13 @@ void TextureManager::add_image(size_t texture_n, Image const &image, Palette con
         throw SDLException("Error creating texture");
 
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderTarget(renderer_, textures_.at(texture_n).get());
+    if (SDL_SetRenderTarget(renderer_, textures_.at(texture_n).get()) < 0)
+        throw SDLException("Error setting target");
     auto [x, y] = index_location_in_texture(image.key);
     SDL_Rect src = { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
     SDL_Rect dest = { x, y, Image::IMAGE_W, Image::IMAGE_H };
-    SDL_RenderCopy(renderer_, texture, &src, &dest);
+    if (SDL_RenderCopy(renderer_, texture, &src, &dest) < 0)
+        throw SDLException("Error rendering target");
     SDL_SetRenderTarget(renderer_, nullptr);
 
     SDL_DestroyTexture(texture);

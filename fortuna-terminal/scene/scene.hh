@@ -17,17 +17,19 @@ struct Scene : NonCopyable {
     TilemapLayer tilemap_foreground, tilemap_ui;
     TextLayer    text;
 
-    size_t sprite_image_texture_idx;
-    size_t tile_image_texture_idx;
-
     void reset();
     void set_mode(Mode mode);
 
     [[nodiscard]] Mode mode() const { return mode_; }
     [[nodiscard]] Size terminal_size() const;
 
+    size_t texture_image_index() const { return texture_image_index_; }
+
+    static size_t constexpr MAX_IMAGES = 1024;
+
 private:
     Mode mode_;
+    size_t texture_image_index_;
 
     static size_t image_texture_idx_counter;
 };

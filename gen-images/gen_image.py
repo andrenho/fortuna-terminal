@@ -4,15 +4,10 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
 # Get the filename from the command line
-if len(sys.argv) < 3:
-    print("Usage: python gen_image.py [-s|-t] <filename>")
+if len(sys.argv) < 2:
+    print("Usage: python gen_image.py <filename>")
     sys.exit(1)
-tp = sys.argv[1][1]
-filename = sys.argv[2]
-
-if tp != 's' and tp != 't':
-    print('Type must be "s" (sprite) or "t" (tile)')
-    sys.exit(1)
+filename = sys.argv[1]
 
 # Open the PNG file and read its contents
 with open(filename, 'rb') as f:
@@ -57,6 +52,6 @@ with open(filename, 'rb') as f:
                 for y in range(0, 16):
                     px.append(str(rows[ix + x][iy + y]))
             output.append(';'.join(px))
-            output.append(tp)
+            output.append('i')
 
     print(''.join(output))
