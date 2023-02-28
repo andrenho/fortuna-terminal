@@ -101,13 +101,27 @@ void Extra::escape_sequence_complete()
                 }
                 break;
             case 'M':
-                if (p.size() > 4) {
+                if (p.size() >= 4) {
                     TilemapLayer* tilemap_layer = scene_.tilemap_layer((LayerIdentifier) p.at(0));
                     if (tilemap_layer == nullptr)
                         break;
-                    tilemap_layer->map = (ssize_t) (p.at(0) & Tilemap::MAX_TILEMAPS);
-                    tilemap_layer->pos_x = p.at(1);
-                    tilemap_layer->pos_y = p.at(2);
+                    tilemap_layer->map = (ssize_t) (p.at(1) & Tilemap::MAX_TILEMAPS);
+                    tilemap_layer->pos_x = p.at(2);
+                    tilemap_layer->pos_y = p.at(3);
+                }
+                break;
+            case 'P':
+                if (p.size () >= 3) {
+                    Palette palette;
+                    std::copy(std::begin(scene_.palette), std::end(scene_.palette), palette);
+                    for (size_t i = 0; i < PALETTE_SZ; ++i) {
+                        if (p.size() >= ((i + 1) * 3)) {
+                            palette[i].r = (uint8_t) p.at(i * 3);
+                            palette[i].g = (uint8_t) p.at(i * 3 + 1);
+                            palette[i].b = (uint8_t) p.at(i * 3 + 2);
+                        }
+                    }
+                    std::copy(std::begin(palette), std::end(palette), scene_.palette);
                 }
                 break;
             default:
