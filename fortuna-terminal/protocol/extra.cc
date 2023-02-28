@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 #include "control.hh"
 
@@ -122,6 +123,13 @@ void Extra::escape_sequence_complete()
                         }
                     }
                     std::copy(std::begin(palette), std::end(palette), scene_.palette);
+                }
+                break;
+            case 'L':
+                if (p.size() >= 2) {
+                    try {
+                        scene_.layer(static_cast<LayerIdentifier>(p.at(0)))->enabled = p.at(1);
+                    } catch (std::out_of_range&) {}
                 }
                 break;
             default:

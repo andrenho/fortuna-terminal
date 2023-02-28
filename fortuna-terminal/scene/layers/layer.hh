@@ -10,6 +10,8 @@
 class Layer {
 public:
     virtual ~Layer() = default;
+
+    bool enabled = true;
 };
 
 #endif //LAYER_HH_

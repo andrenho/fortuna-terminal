@@ -31,8 +31,8 @@ New protocol:
     - [x] Create maps
     - [x] Draw maps
     - [x] Multiple layers
-  - [ ] Change palette
-  - [ ] Enable/disable layer
+  - [x] Change palette
+  - [x] Enable/disable layer
   - [ ] Beep
   - [ ] Graphics collision support
   - [ ] Request version

@@ -43,6 +43,8 @@ struct Scene : NonCopyable {
     TilemapLayer const* tilemap_layer(LayerIdentifier layer_id) const { return dynamic_cast<TilemapLayer const *>(layers_.at(layer_id).get()); }
     TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) { return const_cast<TilemapLayer *>(const_cast<Scene const *>(this)->tilemap_layer(layer_id)); }
 
+    Layer*              layer(LayerIdentifier id) { return layers_.at(id).get(); }
+
     void reset();
     void set_mode(Mode mode);
 
