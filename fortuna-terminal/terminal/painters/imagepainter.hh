@@ -9,7 +9,7 @@
 
 class ImagePainter : NonCopyable {
 public:
-    void draw(Scene const& scene, ImageLayer &layer, TextureManager& texture_manager);
+    void draw(Scene const& scene, Images &layer, TextureManager& texture_manager);
 
 protected:
     struct ImageToPaint : NonCopyable {
@@ -22,12 +22,12 @@ protected:
 
     explicit ImagePainter(SDL_Renderer* renderer) : renderer_(renderer) {}
 
-    [[nodiscard]] virtual std::vector<ImageToPaint> images_to_paint(Scene const& scene, ImageLayer const& layer, TextureManager const& texture_manager) const = 0;
+    [[nodiscard]] virtual std::vector<ImageToPaint> images_to_paint(Scene const& scene, Images const& layer, TextureManager const& texture_manager) const = 0;
 
 private:
     SDL_Renderer* renderer_;
 
-    static void initialize_sprites(Scene const& scene, ImageLayer &layer, TextureManager &manager);
+    static void initialize_sprites(Scene const& scene, Images &layer, TextureManager &manager);
 };
 
 #endif //IMAGEPAINTER_HH_

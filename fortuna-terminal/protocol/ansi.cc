@@ -7,7 +7,7 @@
 
 ANSI::ANSI(Mode mode, Scene &scene)
     : scene_(scene),
-      cache_(initialize_cache({TextLayer::Columns_80Columns, std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns) })),
+      cache_(initialize_cache(TextLayer::Columns_80Columns, std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns))),
         vt_(decltype(vt_)(
                 tmt_open(
                         mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
@@ -31,10 +31,10 @@ void ANSI::send_bytes(std::string const &bytes)
     tmt_write(vt_.get(), bytes.data(), bytes.size());
 }
 
-ANSI::Cache ANSI::initialize_cache(Size initial_size)
+ANSI::Cache ANSI::initialize_cache(size_t w, size_t h)
 {
     Cache k;
-    for (size_t i = 0; i < (initial_size.w * initial_size.h); ++i)
+    for (size_t i = 0; i < (w * h); ++i)
         k.push_back(TMTCHAR { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } });
     return k;
 }
@@ -50,7 +50,7 @@ void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
     switch (m) {
 
         case TMT_MSG_MOVED: {
-            this_->scene_.text.move_cursor_to(c->r, c->c);
+            this_->scene_.text().move_cursor_to(c->r, c->c);
             tmt_clean(vt);
         }
             break;
@@ -69,7 +69,7 @@ void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p)
                     }
                 }
             }
-            this_->scene_.text.set(cells);
+            this_->scene_.text().set(cells);
             tmt_clean(vt);
         }
             break;

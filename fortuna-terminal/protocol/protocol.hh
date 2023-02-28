@@ -10,7 +10,6 @@
 #include "comm/comm.hh"
 #include "scene/scene.hh"
 #include "common/syncqueue.hh"
-#include "common/geometry.hh"
 #include "ansi.hh"
 #include "keys.hh"
 #include "gpio/gpio.hh"

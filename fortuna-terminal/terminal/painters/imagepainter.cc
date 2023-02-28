@@ -1,7 +1,7 @@
 #include "imagepainter.hh"
 #include "exceptions/sdlexception.hh"
 
-void ImagePainter::draw(Scene const& scene, ImageLayer &layer, TextureManager &texture_manager)
+void ImagePainter::draw(Scene const& scene, Images &layer, TextureManager &texture_manager)
 {
     initialize_sprites(scene, layer, texture_manager);
 
@@ -12,7 +12,7 @@ void ImagePainter::draw(Scene const& scene, ImageLayer &layer, TextureManager &t
     }
 }
 
-void ImagePainter::initialize_sprites(Scene const& scene, ImageLayer &layer, TextureManager &texture_manager)
+void ImagePainter::initialize_sprites(Scene const& scene, Images &layer, TextureManager &texture_manager)
 {
     std::optional<Image> oimg;
     while ((oimg = layer.pending_images()->pop_nonblock()).has_value()) {

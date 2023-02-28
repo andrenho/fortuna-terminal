@@ -10,7 +10,6 @@
 
 #include "../common/noncopyable.hh"
 #include "../options.hh"
-#include "../common/geometry.hh"
 
 class CommunicationModule : NonCopyable {
 public:

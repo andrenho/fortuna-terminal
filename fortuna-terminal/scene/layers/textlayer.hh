@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "layer.hh"
-#include "common/geometry.hh"
 #include "protocol/mode.hh"
 
 using TimePoint = std::chrono::high_resolution_clock::time_point;
@@ -58,9 +57,7 @@ public:
 
     void          set_mode(Mode mode);
 
-    uint8_t       bg_color = COLOR_BLACK;
-
-    void                        update_blink();
+    void          update_blink();
 
     [[nodiscard]] Char const&   get(size_t line, size_t column) const;
 

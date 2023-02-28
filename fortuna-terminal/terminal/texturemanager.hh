@@ -9,7 +9,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "scene/layers/imagelayer.hh"
+#include "scene/layers/images.hh"
 
 struct TextureInfo {
     SDL_Texture* tx;
@@ -18,7 +18,7 @@ struct TextureInfo {
 
 class TextureManager {
 public:
-    TextureManager(SDL_Renderer* renderer) : renderer_(renderer) {}
+    explicit TextureManager(SDL_Renderer* renderer) : renderer_(renderer) {}
 
     void        create_texture(size_t texture_n, size_t images_per_texture);
     void        add_image(size_t texture_n, Image const& image, Palette const& palette);

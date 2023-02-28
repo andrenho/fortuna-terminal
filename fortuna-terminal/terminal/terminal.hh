@@ -15,6 +15,7 @@
 #include "protocol/protocol.hh"
 #include "terminal/painters/spritepainter.hh"
 #include "texturemanager.hh"
+#include "terminal/painters/graphicspainter.hh"
 
 class Terminal : NonCopyable {
 public:
@@ -38,10 +39,8 @@ private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
 
-    std::unique_ptr<TextureManager> texture_manager_;
-    std::unique_ptr<TextPainter> text_painter_;
-    std::unique_ptr<SpritePainter> sprite_painter_;
-    std::unique_ptr<TilemapLayer> tilemap_painter_;
+    std::unique_ptr<TextPainter>     text_painter_;
+    std::unique_ptr<GraphicsPainter> graphics_painter_;
 
     int win_w_ = 800, win_h_ = 600;
 

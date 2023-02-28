@@ -3,7 +3,6 @@
 #include "../exceptions/sdlexception.hh"
 #include "exceptions/fortunaexception.hh"
 #include "scene/layers/spritelayer.hh"
-#include "scene/layers/tilemaplayer.hh"
 
 #include <iostream>
 #include <cstring>
@@ -49,16 +48,13 @@ Terminal::Terminal(TerminalOptions terminal_options)
 
     print_renderer_info();
 
-    texture_manager_ = std::make_unique<TextureManager>(renderer_.get());
-
     text_painter_ = std::make_unique<TextPainter>(renderer_.get());
-    sprite_painter_ = std::make_unique<SpritePainter>(renderer_.get());
+    graphics_painter_ = std::make_unique<GraphicsPainter>(renderer_.get());
 }
 
 Terminal::~Terminal()
 {
-    texture_manager_.reset();
-    sprite_painter_.reset();
+    graphics_painter_.reset();
     text_painter_.reset();
     renderer_.reset();
     window_.reset();
@@ -68,7 +64,7 @@ Terminal::~Terminal()
 void Terminal::setup_scene(Scene const &scene)
 {
     resize_window(scene);
-    texture_manager_->create_texture(scene.texture_image_index(), Scene::MAX_IMAGES);
+    graphics_painter_->setup_scene(scene);
 }
 
 void Terminal::do_events(Protocol& protocol, bool *quit)
@@ -129,37 +125,42 @@ void Terminal::do_events(Protocol& protocol, bool *quit)
 
 void Terminal::draw(Scene& scene) const
 {
+    graphics_painter_->initialize_pending_images(scene);
+
     SDL_SetRenderDrawColor(renderer_.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer_.get());
 
-    text_painter_->draw_background(scene.text);
-    sprite_painter_->draw(scene, scene.sprites, *texture_manager_);
-    text_painter_->draw(scene.text);
+    graphics_painter_->draw_background(scene);
+    graphics_painter_->draw(scene, LAYER_SPRITES);
+    /*
+    sprite_painter_->draw(scene, scene.sprites(), *texture_manager_);
+     */
+    text_painter_->draw(scene);
 
     SDL_RenderPresent(renderer_.get());
 }
 
 void Terminal::resize_window(Scene const& scene)
 {
-    Size terminal_size = scene.terminal_size();
+    auto [w, h] = scene.size_in_pixels();
 
     if (window_mode_) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
 
         // find adequate zoom
-        unsigned int zoom_w = mode.w / (int) terminal_size.w;
-        unsigned int zoom_h = mode.h / (int) terminal_size.h;
+        unsigned int zoom_w = mode.w / w;
+        unsigned int zoom_h = mode.h / h;
         unsigned int zoom = std::min(zoom_w, zoom_h);
 
-        win_w_ = (int) terminal_size.w * zoom;
-        win_h_ = (int) terminal_size.h * zoom;
+        win_w_ = w * zoom;
+        win_h_ = h * zoom;
 
         SDL_SetWindowSize(window_.get(), win_w_, win_h_);
         SDL_SetWindowPosition(window_.get(), (mode.w - win_w_) / 2, (mode.h - win_h_) / 2);
     }
 
-    SDL_RenderSetLogicalSize(renderer_.get(), (int) terminal_size.w, (int) terminal_size.h);
+    SDL_RenderSetLogicalSize(renderer_.get(), w, h);
 }
 
 void Terminal::wait_for_enter(bool* quit)

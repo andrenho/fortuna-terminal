@@ -35,7 +35,7 @@ private:
 
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
     static void tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
-    static Cache initialize_cache(Size initial_size);
+    static Cache initialize_cache(size_t w, size_t h);
 
     static bool tmtchar_equals(TMTCHAR const &c1, TMTCHAR const &c2);
 };

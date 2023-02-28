@@ -10,11 +10,6 @@
 class Layer {
 public:
     virtual ~Layer() = default;
-
-    Palette palette = {};
-
-protected:
-    Layer() { palette_init(palette); }
 };
 
 #endif //LAYER_HH_

@@ -98,7 +98,7 @@ restart:
         while (!quit) {
             execute_control_commands(terminal.get(), protocols, protocol);
 
-            ALL_PROTOCOLS(p.scene().text.update_blink())
+            ALL_PROTOCOLS(p.scene().text().update_blink())
             protocol->execute_inputs();
             gpio->vsync();
 

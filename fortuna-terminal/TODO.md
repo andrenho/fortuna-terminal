@@ -6,7 +6,7 @@
   - [x] Show error
   - [x] Add recommended flags
   - [x] Rename Protocol (?)
-- [x] Update documentation (create reset, separate sprite from sprite image)
+- [x] Update documentation (create reset, separate sprites from sprites image)
 - [ ] Create test circuit
 
 New protocol:
@@ -24,18 +24,25 @@ New protocol:
   - [x] Create tool for generating images
   - [x] Sprites
     - [x] Create images
-    - [x] Draw sprite
+    - [x] Draw sprites
     - [x] Migrate to simple texture
   - [x] Tilemap
     - [x] Create tilemap images
     - [x] Create maps
     - [ ] Draw maps
-    - [ ] Multiple layers
+    - [ ] Multiple layers_
   - [ ] Change palette
   - [ ] Enable/disable layer
   - [ ] Beep
   - [ ] Graphics collision support
   - [ ] Request version
+
+- [ ] Changes to scene
+  - [x] constant identifying layers_ (enum)
+  - [x] vector of layers_, functions to return text layer, sprites layer and tilemap layers_ (n)
+  - [ ] should hold images (or, at least, create images)
+  - [ ] move terminal_size to text
+  - [ ] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
 Alternative screens:
   - [ ] Terminal (shell)

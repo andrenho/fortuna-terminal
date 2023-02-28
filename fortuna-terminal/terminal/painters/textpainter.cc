@@ -24,14 +24,15 @@ TextPainter::TextPainter(SDL_Renderer *renderer)
     SDL_FreeSurface(sf);
 }
 
-void TextPainter::draw(TextLayer const &text) const
+void TextPainter::draw(Scene const& scene) const
 {
+    TextLayer const& text = scene.text();
     for (size_t y = 0; y < text.lines(); ++y)
         for (size_t x = 0; x < text.columns(); ++x)
-            draw_cell(text, y, x);
+            draw_cell(text, y, x, scene.palette, scene.bg_color);
 }
 
-void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column) const
+void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const
 {
     Char chr = text.get(line, column);
     uint8_t c = chr.c;
@@ -45,11 +46,11 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column) c
         dest_y += TextBorder;
     }
 
-    Color fg = text.palette[chr.attrib.color];
-    Color bg = text.palette[text.bg_color];
+    Color fg = palette[chr.attrib.color];
+    Color bg = palette[bg_color];
 
     if (text.cursor().x == column && text.cursor().y == line && text.cursor().attrib.visible && text.cursor().blink_state) {
-        Color cg = text.palette[text.cursor().attrib.color];
+        Color cg = palette[text.cursor().attrib.color];
         SDL_SetRenderDrawColor(renderer_, cg.r, cg.g, cg.b, SDL_ALPHA_OPAQUE);
         SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
         SDL_RenderFillRect(renderer_, &r);
@@ -73,16 +74,3 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column) c
         SDL_RenderCopy(renderer_, font_.get(), &r1, &r2);
     }
 }
-
-void TextPainter::draw_background(TextLayer const &text) const
-{
-    Color bg = text.palette[text.bg_color];
-    SDL_SetRenderDrawColor(renderer_, bg.r, bg.g, bg.b, SDL_ALPHA_OPAQUE);
-    SDL_Rect r = {
-            0, 0,
-            (int) ((text.columns() * TextChar_W) + (2 * TextBorder)),
-            (int) ((text.lines() * TextChar_H) + (2 * TextBorder)),
-    };
-    SDL_RenderFillRect(renderer_, &r);
-}
-
