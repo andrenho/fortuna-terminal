@@ -37,6 +37,9 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
     Char chr = text.get(line, column);
     uint8_t c = chr.c;
 
+    if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line))
+        return;
+
     unsigned int orig_x = (c / 16) * TextChar_W;
     unsigned int orig_y = (c % 16) * TextChar_H;
     unsigned int dest_x = (unsigned int) (column * TextChar_W);

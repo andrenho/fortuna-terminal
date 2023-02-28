@@ -1,5 +1,7 @@
+#include <chrono>
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include "terminal/terminal.hh"
 #include "exceptions/fortunaexception.hh"
@@ -9,9 +11,9 @@
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
-SyncQueue<Control> control;
+using namespace std::chrono_literals;
 
-std::vector<Protocol> &execute_control(Terminal *terminal, std::vector<Protocol> const &protocols, Protocol *protocol);
+SyncQueue<Control> control;
 
 static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
@@ -96,6 +98,7 @@ restart:
 
         bool quit = false;
         while (!quit) {
+            auto frame_start = std::chrono::high_resolution_clock::now();
             execute_control_commands(terminal.get(), protocols, protocol);
 
             ALL_PROTOCOLS(p.scene().text().update_blink())
@@ -104,6 +107,10 @@ restart:
 
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
+
+            auto frame_end = std::chrono::high_resolution_clock::now();
+            if (frame_end < (frame_start + 16ms))
+                std::this_thread::sleep_for(frame_end - (frame_start + 16ms));
         }
 
     } catch (std::exception& e) {
