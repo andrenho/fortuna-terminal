@@ -33,8 +33,9 @@ New protocol:
     - [x] Multiple layers
   - [x] Change palette
   - [x] Enable/disable layer
-  - [ ] Graphics collision support
-  - [ ] Request version
+  - [x] Graphics collision support
+  - [x] Request version
+  - [ ] Improve Makefile
 
 - [x] Changes to scene
   - [x] constant identifying layers_ (enum)

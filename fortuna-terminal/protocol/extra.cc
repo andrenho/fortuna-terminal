@@ -6,6 +6,8 @@
 
 #include "control.hh"
 
+// protocol described at https://github.com/andrenho/fortuna-terminal/wiki/ANSI-protocol-extension-for-Fortuna-Terminal
+
 void Extra::send_bytes(std::string const &bytes)
 {
     for (char c : bytes) {
@@ -36,6 +38,9 @@ void Extra::escape_sequence_complete()
                 else if (p.at(0) == 1)
                     control.emplace(ControlCommand::SetMode, Mode::Graphics);
             }
+            break;
+        case 'v':
+            response_ += "\e#0v";
             break;
     }
 
@@ -161,4 +166,14 @@ char Extra::parse_escape_sequence(std::vector<ssize_t> &parameters) const
     }
 
     return escape_sequence_.back();
+}
+
+std::string Extra::latest_response()
+{
+    if (response_.empty())
+        return "";
+
+    std::string r = response_;
+    response_.clear();
+    return r;
 }

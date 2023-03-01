@@ -15,12 +15,16 @@ public:
 
     void set_mode(Mode mode) { mode_ = mode; }
 
+    std::string latest_response();
+
 private:
     Mode mode_;
     Scene& scene_;
     GPIO&  gpio_;
 
     std::string escape_sequence_ {};
+
+    std::string response_;
 
     void escape_sequence_complete();
     char parse_escape_sequence(std::vector<ssize_t>& parameters) const;

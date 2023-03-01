@@ -220,9 +220,15 @@ void Protocol::set_mode(Mode mode)
 
 void Protocol::vsync_tasks()
 {
-    for (auto const& collision: scene_.sprites().check_for_new_collisions()) {
-        output_queue_->push_all("\e#"s +
-                (collision.type == Collision::Type::Colliding ? "1" : "0") +
-                ";" + std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b));
+    std::string response = extra_.latest_response();
+    if (!response.empty())
+        output_queue_->push_all(response);
+
+    if (mode_ == Mode::Graphics) {
+        for (auto const& collision: scene_.sprites().check_for_new_collisions()) {
+            output_queue_->push_all("\e#"s +
+                    (collision.type == Collision::Type::Colliding ? "1" : "0") +
+                    ";" + std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b));
+        }
     }
 }
