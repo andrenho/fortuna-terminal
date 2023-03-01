@@ -217,3 +217,12 @@ void Protocol::set_mode(Mode mode)
     ansi_.set_mode(mode);
     extra_.set_mode(mode);
 }
+
+void Protocol::vsync_tasks()
+{
+    for (auto const& collision: scene_.sprites().check_for_new_collisions()) {
+        output_queue_->push_all("\e#"s +
+                (collision.type == Collision::Type::Colliding ? "1" : "0") +
+                ";" + std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b));
+    }
+}

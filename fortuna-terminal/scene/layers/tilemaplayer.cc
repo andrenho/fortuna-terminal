@@ -6,6 +6,9 @@ std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const
 {
     std::vector<ImageToDraw> images_to_draw;
 
+    if (map < 0)
+        return {};
+
     Tilemap const& tilemap = scene.tilemap[map];
     for (int x = 0; x < (int) tilemap.w; ++x) {
         for (int y = 0; y < (int) tilemap.h; ++y) {
@@ -25,5 +28,5 @@ void TilemapLayer::reset()
 {
     pos_x = 0;
     pos_y = 0;
-    map = 0;
+    map = -1;
 }

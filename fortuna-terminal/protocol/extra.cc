@@ -86,7 +86,7 @@ void Extra::escape_sequence_complete()
                 break;
             case 'S':
                 if (p.size() >= 3) {
-                    Sprite& ss = scene_.sprites().sprites[p.at(0) & SpriteLayer::MAX_SPRITES];
+                    Sprite& ss = scene_.sprites().sprites[p.at(0) % SpriteLayer::MAX_SPRITES];
                     ss.pos_x = (int) p.at(1);
                     ss.pos_y = (int) p.at(2);
                     if (p.size() >= 4)
@@ -103,12 +103,14 @@ void Extra::escape_sequence_complete()
                 break;
             case 'M':
                 if (p.size() >= 4) {
-                    TilemapLayer* tilemap_layer = scene_.tilemap_layer((LayerIdentifier) p.at(0));
-                    if (tilemap_layer == nullptr)
-                        break;
-                    tilemap_layer->map = (ssize_t) (p.at(1) & Tilemap::MAX_TILEMAPS);
-                    tilemap_layer->pos_x = p.at(2);
-                    tilemap_layer->pos_y = p.at(3);
+                    try {
+                        TilemapLayer* tilemap_layer = scene_.tilemap_layer((LayerIdentifier) p.at(0));
+                        if (tilemap_layer == nullptr)
+                            break;
+                        tilemap_layer->map = (ssize_t) (p.at(1) % Tilemap::MAX_TILEMAPS);
+                        tilemap_layer->pos_x = p.at(2);
+                        tilemap_layer->pos_y = p.at(3);
+                    } catch (std::out_of_range&) {}
                 }
                 break;
             case 'P':
@@ -131,6 +133,17 @@ void Extra::escape_sequence_complete()
                         scene_.layer(static_cast<LayerIdentifier>(p.at(0)))->enabled = p.at(1);
                     } catch (std::out_of_range&) {}
                 }
+                break;
+            case 'C':
+                if (p.size() >= 2)
+                    scene_.sprites().subscribe_to_collisions(p.at(0), p.at(1));
+                break;
+            case 'U':
+                if (p.size() >= 2)
+                    scene_.sprites().unsubscribe_to_collisions(p.at(0), p.at(1));
+                break;
+            case 'X':
+                scene_.sprites().unsubscribe_to_all_collisions();
                 break;
             default:
                 break;

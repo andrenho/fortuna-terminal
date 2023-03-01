@@ -6,7 +6,7 @@
 struct TilemapLayer : public ImageLayer {
     ssize_t pos_x = 0;
     ssize_t pos_y = 0;
-    ssize_t map = 0;
+    ssize_t map = -1;
 
     [[nodiscard]] std::vector<ImageToDraw> images_to_draw(class Scene const& scene) const override;
 

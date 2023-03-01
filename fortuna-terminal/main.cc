@@ -103,6 +103,7 @@ restart:
 
             ALL_PROTOCOLS(p.scene().text().update_blink())
             protocol->execute_inputs();
+            protocol->vsync_tasks();
             gpio->vsync();
 
             terminal->do_events(*protocol, &quit);
@@ -110,7 +111,7 @@ restart:
 
             auto frame_end = std::chrono::high_resolution_clock::now();
             if (frame_end < (frame_start + 16ms))
-                std::this_thread::sleep_for(frame_end - (frame_start + 16ms));
+                std::this_thread::sleep_for((frame_start + 16ms) - frame_end);
         }
 
     } catch (std::exception& e) {

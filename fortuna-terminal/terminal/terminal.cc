@@ -38,7 +38,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
     SDL_ShowCursor(SDL_DISABLE);
 
     renderer_ = decltype(renderer_)(
-        SDL_CreateRenderer(window_.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
+        SDL_CreateRenderer(window_.get(), -1, SDL_RENDERER_ACCELERATED),
         [](SDL_Renderer* r) {
             SDL_DestroyRenderer(r);
         }

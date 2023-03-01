@@ -80,17 +80,19 @@ bool SpriteLayer::sprites_colliding(unsigned long long int const sprite_a, unsig
     if (!a.visible || !b.visible)
         return false;
 
-    // if rectangle has area 0, no overlap
-    if (a.pos_x == b.pos_x || a.pos_y == b.pos_y || (b.pos_x + Image::IMAGE_W) == (a.pos_x + Image::IMAGE_W) || (a.pos_y + Image::IMAGE_H) == (b.pos_y + Image::IMAGE_H))
-        return false;
+    int left1 = a.pos_x;
+    int right1 = a.pos_x + Image::IMAGE_W;
+    int top1 = a.pos_y;
+    int bottom1 = a.pos_y + Image::IMAGE_H;
 
-    // If one rectangle is on left side of other
-    if (a.pos_x > (b.pos_x + Image::IMAGE_W) || (a.pos_x + Image::IMAGE_W) > b.pos_x)
-        return false;
+    int left2 = b.pos_x;
+    int right2 = b.pos_x + Image::IMAGE_W;
+    int top2 = b.pos_y;
+    int bottom2 = b.pos_y + Image::IMAGE_H;
 
-    // If one rectangle is above other
-    if (b.pos_y > (a.pos_y + Image::IMAGE_H) || (b.pos_y + Image::IMAGE_H) > a.pos_y)
+    if (left1 > right2 || left2 > right1 || top1 > bottom2 || top2 > bottom1) {
         return false;
+    }
 
     return true;
 }

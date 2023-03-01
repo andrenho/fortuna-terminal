@@ -22,6 +22,7 @@ public:
 
     void run();
     void execute_inputs();
+    void vsync_tasks();
     void reset();
 
     void show_error(std::exception const& e);
@@ -41,7 +42,6 @@ public:
 
     void set_debug_comm(bool debug_comm) { debug_comm_ = debug_comm; }
     void set_mode(Mode mode);
-
 
 private:
     std::unique_ptr<CommunicationModule> comm_ {};
