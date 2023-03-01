@@ -35,7 +35,7 @@ New protocol:
   - [x] Enable/disable layer
   - [x] Graphics collision support
   - [x] Request version
-  - [ ] Improve Makefile
+  - [x] Improve Makefile
 
 - [x] Changes to scene
   - [x] constant identifying layers_ (enum)
