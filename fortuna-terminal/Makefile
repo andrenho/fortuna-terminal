@@ -15,13 +15,12 @@ ifeq ($(OS),Windows_NT)
 	WINDOWS := 1
 else
 	INCLUDE_UART_PTY := 1
-endif
-
-ifeq ($(shell uname -m),armv7l)
-    ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
-    	RASPBERRY := 1
-    	INCLUDE_SPI_I2C := 1
-    endif
+	ifeq ($(shell uname -m),armv7l)
+		ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
+			RASPBERRY := 1
+			INCLUDE_SPI_I2C := 1
+		endif
+	endif
 endif
 
 #
@@ -46,30 +45,30 @@ LDFLAGS=-pthread
 
 ifeq ($(WINDOWS),1)
 	EXE := ${EXE}.exe
-	CPPFLAGS += -Ilib/SDL2-windows/include
-	LDFLAGS += -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
+	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include
+	LDFLAGS := ${LDFLAGS} -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
 else
-	CPPFLAGS += ${CPPFLAGS} `sdl2-config --cflags`
-	LDFLAGS += ${CFLAGS} `sdl2-config --libs` -lpthread -lutil
+	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags`
+	LDFLAGS := ${LDFLAGS} `sdl2-config --libs` -lpthread -lutil
 endif
 
 ifeq ($(RASPBERRY),1)
-	CPPFLAGS += -Wno-psabi
+	CPPFLAGS := ${CPPFLAGS} -Wno-psabi
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ += comm/pty.o comm/uart.o
-	CPPFLAGS += -DCOMM_UART -DCOMM_PTY
+	OBJ := ${OBJ} comm/pty.o comm/uart.o
+	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 
 ifeq ($(FAST),0)
-	CPPFLAGS += @warnings.cfg
+	CPPFLAGS := ${CPPFLAGS} @warnings.cfg
 endif
 
 ifeq ($(RELEASE),1)
-	CPPFLAGS += -O3
+	CPPFLAGS := ${CPPFLAGS} -O3
 else
-	CPPFLAGS += -O0 -ggdb
+	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
 endif
 
 #
