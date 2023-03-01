@@ -2,7 +2,7 @@
 #include "../exceptions/fortunaexception.hh"
 #include "../exceptions/libcexception.hh"
 
-#if _WIN32
+#ifdef _WIN32
 #  include <winsock2.h>
 #  include <wspiapi.h>
 #else
@@ -22,7 +22,7 @@ using namespace std::string_literals;
 
 TCPIP::TCPIP(TcpIpOptions const &options)
 {
-#if _WIN32
+#ifdef _WIN32
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0)
