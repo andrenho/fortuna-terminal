@@ -1,6 +1,8 @@
 #include "spritelayer.hh"
 #include "images.hh"
 
+#include <algorithm>
+
 std::vector<ImageToDraw> SpriteLayer::images_to_draw([[ maybe_unused ]] class Scene const& scene) const
 {
     std::vector<ImageToDraw> images_to_draw;

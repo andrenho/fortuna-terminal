@@ -12,6 +12,7 @@
 #include "scene/layers/images.hh"
 
 #include <optional>
+#include <unordered_map>
 
 enum LayerIdentifier {
     LAYER_DEEP_BG           =  0,
