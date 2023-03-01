@@ -42,7 +42,7 @@ extern "C" {
 #define FONT_LINE_HEIGHT    (FONT_CHARACTER_SIZE + 2)
 
 /**
- *  \brief Draw a string in the currently set font.
+ *  \brief Draw a string in the currently set data.
  *
  *  \param renderer The renderer_ to draw on.
  *  \param x The X coordinate of the upper left corner of the character.
@@ -54,9 +54,9 @@ extern "C" {
 int SDLTest_DrawCharacter(SDL_Renderer *renderer, int x, int y, Uint32 c);
 
 /**
- *  \brief Draw a UTF-8 string in the currently set font.
+ *  \brief Draw a UTF-8 string in the currently set data.
  *
- *  The font currently only supports characters in the Basic Latin and Latin-1 Supplement sets.
+ *  The data currently only supports characters in the Basic Latin and Latin-1 Supplement sets.
  *
  *  \param renderer The renderer_ to draw on.
  *  \param x The X coordinate of the upper left corner of the string.
@@ -153,7 +153,7 @@ void SDLTest_TextWindowClear(SDLTest_TextWindow *textwin);
 void SDLTest_TextWindowDestroy(SDLTest_TextWindow *textwin);
 
 /**
- *  \brief Cleanup textures used by font drawing functions.
+ *  \brief Cleanup textures used by data drawing functions.
  */
 void SDLTest_CleanupTextDrawing(void);
 

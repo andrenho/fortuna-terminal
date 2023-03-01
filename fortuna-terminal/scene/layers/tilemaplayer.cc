@@ -20,3 +20,10 @@ std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const
     }
     return images_to_draw;
 }
+
+void TilemapLayer::reset()
+{
+    pos_x = 0;
+    pos_y = 0;
+    map = 0;
+}

@@ -33,7 +33,6 @@ New protocol:
     - [x] Multiple layers
   - [x] Change palette
   - [x] Enable/disable layer
-  - [ ] Beep
   - [ ] Graphics collision support
   - [ ] Request version
 
@@ -54,6 +53,7 @@ Emulator support
 Audio:
   - [ ] Design audio
   - [ ] Implement audio
+  - [ ] Beep
 
 New communication modes:
   - [ ] SPI

@@ -21,7 +21,7 @@ Scene::Scene(Mode mode)
 
 void Scene::reset()
 {
-    text().reset();
+    std::for_each(layers_.begin(), layers_.end(), [](auto& i) { i.second->reset(); });
 }
 
 void Scene::set_mode(Mode mode)

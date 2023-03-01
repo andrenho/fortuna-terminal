@@ -2,7 +2,7 @@
 
 #include <mutex>
 
-#include "font/font.h"
+#include "data/font.h"
 #include "exceptions/sdlexception.hh"
 
 TextPainter::TextPainter(SDL_Renderer *renderer)
@@ -14,10 +14,10 @@ TextPainter::TextPainter(SDL_Renderer *renderer)
         throw SDLException("Error loading font BMP");
 
     SDL_SetColorKey(sf, SDL_RLEACCEL, 0);
-    font_ = decltype(font_)(
+    font_ = {
             SDL_CreateTextureFromSurface(renderer_, sf),
             [](SDL_Texture* t) { SDL_DestroyTexture(t); }
-    );
+    };
     if (!font_)
         throw SDLException("Could not create texture for font");
 

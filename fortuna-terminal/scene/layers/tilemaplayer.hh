@@ -9,6 +9,8 @@ struct TilemapLayer : public ImageLayer {
     ssize_t map = 0;
 
     [[nodiscard]] std::vector<ImageToDraw> images_to_draw(class Scene const& scene) const override;
+
+    void reset() override;
 };
 
 #endif //TILEMAPLAYER_HH_

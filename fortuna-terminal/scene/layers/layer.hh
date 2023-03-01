@@ -11,6 +11,8 @@ class Layer {
 public:
     virtual ~Layer() = default;
 
+    virtual void reset() = 0;
+
     bool enabled = true;
 };
 

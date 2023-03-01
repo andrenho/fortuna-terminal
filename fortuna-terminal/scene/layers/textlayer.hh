@@ -73,7 +73,7 @@ public:
     static constexpr size_t Columns_40Columns = 42;
     static constexpr size_t Lines_40Columns   = 28;
 
-    void reset();
+    void reset() override;
 
 private:
     std::unique_ptr<Char[]> matrix_ {};
