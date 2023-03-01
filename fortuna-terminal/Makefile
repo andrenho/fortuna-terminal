@@ -1,27 +1,80 @@
+#
+# Makefile configuration
+#
+
+RELEASE ?= 0
+FAST ?= 0
+
+WINDOWS := 0
+RASPBERRY := 0
+INCLUDE_UART_PTY := 0
+INCLUDE_SPI_I2C := 0
+
+# autodetect configuration
+ifeq ($(OS),Windows_NT)
+	WINDOWS := 1
+else
+	INCLUDE_UART_PTY := 1
+endif
+
+ifeq ($(shell uname -m),armv7l)
+    ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
+    	RASPBERRY := 1
+    	INCLUDE_SPI_I2C := 1
+    endif
+endif
+
+#
+# configure objects and compilation options
+#
+
 OBJ =   main.o options.o \
 		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
 		protocol/protocol.o protocol/ansi.o protocol/extra.o \
-        scene/scene.o \
+		scene/scene.o \
 		scene/layers/textlayer.o scene/layers/spritelayer.o scene/layers/tilemaplayer.o \
 		scene/palette/palette.o \
-        terminal/terminal.o terminal/texturemanager.o \
-        terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
-        lib/tmt/tmt.o
+		terminal/terminal.o terminal/texturemanager.o \
+		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
+		lib/tmt/tmt.o
 
 EXE = fortuna-terminal
 
 CPPFLAGS=-I. -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
+LDFLAGS=-pthread
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(WINDOWS),1)
 	EXE := ${EXE}.exe
-	CPPFLAGS := ${CPPFLAGS} @warnings.cfg -Ilib/SDL2-windows/include -O0 -ggdb
-	LDFLAGS = -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2 -lpthread
+	CPPFLAGS += -Ilib/SDL2-windows/include
+	LDFLAGS += -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
 else
-	OBJ := ${OBJ} comm/pty.o comm/uart.o
-	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags` -Wno-psabi -O3 -ggdb -DCOMM_UART -DCOMM_PTY
-	LDFLAGS := ${CFLAGS} `sdl2-config --libs` -lpthread -lutil
+	CPPFLAGS += ${CPPFLAGS} `sdl2-config --cflags`
+	LDFLAGS += ${CFLAGS} `sdl2-config --libs` -lpthread -lutil
 endif
+
+ifeq ($(RASPBERRY),1)
+	CPPFLAGS += -Wno-psabi
+endif
+
+ifeq ($(INCLUDE_UART_PTY),1)
+	OBJ += comm/pty.o comm/uart.o
+	CPPFLAGS += -DCOMM_UART -DCOMM_PTY
+endif
+
+ifeq ($(FAST),0)
+	CPPFLAGS += @warnings.cfg
+endif
+
+ifeq ($(RELEASE),1)
+	CPPFLAGS += -O3
+else
+	CPPFLAGS += -O0 -ggdb
+endif
+
+#
+# Rules
+#
 
 all: ${EXE}
 
@@ -33,8 +86,8 @@ ${EXE}: ${OBJ}
 
 .PHONY: clean
 clean:
-ifeq ($(OS),Windows_NT)
-	del /Q /F $(subst /,\,${OBJ} ${STDIN_OBJ} ${SERIAL_OBJ} ${EXE})
+ifeq ($(WINDOWS),1)
+	del /Q /F $(subst /,\,${OBJ} ${EXE})
 else
-	rm -f ${OBJ} ${STDIN_OBJ} ${SERIAL_OBJ} ${EXE}
+	rm -f ${OBJ} ${EXE}
 endif

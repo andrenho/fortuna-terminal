@@ -27,7 +27,7 @@ New protocol:
     - [x] Draw sprites
     - [x] Migrate to simple texture
   - [x] Tilemap
-    - [x] Create images images
+    - [x] Create images
     - [x] Create maps
     - [x] Draw maps
     - [x] Multiple layers
