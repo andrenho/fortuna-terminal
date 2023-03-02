@@ -44,6 +44,10 @@ New protocol:
   - [x] move terminal_size to text
   - [x] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
+Electronics:
+  - [ ] Build circuit
+  - [ ] Write sample software for UART on the test circuit
+
 Alternative screens:
   - [ ] Terminal (shell)
   - [ ] Additional info
