@@ -45,8 +45,12 @@ New protocol:
   - [x] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
 Electronics:
-  - [ ] Build circuit
+  - [x] Build circuit
   - [ ] Write sample software for UART on the test circuit
+
+Improvements:
+  - [ ] Command compression
+  - [ ] 32 colors
 
 Alternative screens:
   - [ ] Terminal (shell)
