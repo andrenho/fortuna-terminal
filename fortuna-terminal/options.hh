@@ -7,6 +7,7 @@ enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo };
 
 struct TerminalOptions {
     bool window_mode = false;
+    bool show_fps_counter = false;
 };
 
 struct UartOptions {

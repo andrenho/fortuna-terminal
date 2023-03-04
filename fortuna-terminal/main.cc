@@ -97,6 +97,8 @@ restart:
     try {
 
         bool quit = false;
+
+        Duration frame_duration;
         while (!quit) {
             auto frame_start = std::chrono::high_resolution_clock::now();
             execute_control_commands(terminal.get(), protocols, protocol);
@@ -110,8 +112,13 @@ restart:
             terminal->draw(protocol->scene());
 
             auto frame_end = std::chrono::high_resolution_clock::now();
-            if (frame_end < (frame_start + 16ms))
-                std::this_thread::sleep_for((frame_start + 16ms) - frame_end);
+            if (frame_end < (frame_start + 16ms)) {
+                auto duration = (frame_start + 16ms) - frame_end;
+                std::this_thread::sleep_for(duration);
+            }
+
+            frame_duration = std::chrono::high_resolution_clock::now() - frame_start;
+            terminal->set_frame_duration(frame_duration);
         }
 
     } catch (std::exception& e) {

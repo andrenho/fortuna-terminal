@@ -12,7 +12,8 @@ using namespace std::string_literals;
 #define JOY_THRESHOLD 1000
 
 Terminal::Terminal(TerminalOptions terminal_options)
-    : window_mode_(terminal_options.window_mode)
+    : window_mode_(terminal_options.window_mode),
+      show_fps_(terminal_options.show_fps_counter),
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
         throw SDLException("Error initializing SDL");

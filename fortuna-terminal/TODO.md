@@ -49,8 +49,10 @@ Electronics:
   - [ ] Write sample software for UART on the test circuit
 
 Improvements:
+  - [ ] Add FPS counter
   - [ ] Command compression
   - [ ] 32 colors
+  - [ ] Activate command to start receiving VSYNC (?)
 
 Alternative screens:
   - [ ] Terminal (shell)
