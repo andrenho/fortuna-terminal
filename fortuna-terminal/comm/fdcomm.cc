@@ -33,8 +33,8 @@ std::vector<uint8_t> FDComm::read_blocking(size_t n)
 void FDComm::write(std::vector<uint8_t> const &data)
 {
     int fd = write_fd_;
-    if (write_fd_ == INVALID_FD)
-        fd = write_fd_;
+    if (fd == INVALID_FD)
+        fd = fd_;
     if (fd == INVALID_FD)
         return;
 
