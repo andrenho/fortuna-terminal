@@ -98,7 +98,6 @@ restart:
 
         bool quit = false;
 
-        Duration frame_duration;
         while (!quit) {
             auto frame_start = std::chrono::high_resolution_clock::now();
             execute_control_commands(terminal.get(), protocols, protocol);
@@ -117,8 +116,7 @@ restart:
                 std::this_thread::sleep_for(duration);
             }
 
-            frame_duration = std::chrono::high_resolution_clock::now() - frame_start;
-            terminal->set_frame_duration(frame_duration);
+            terminal->set_frame_duration(std::chrono::high_resolution_clock::now() - frame_start);
         }
 
     } catch (std::exception& e) {

@@ -19,6 +19,8 @@
 
 using Duration = decltype(std::chrono::high_resolution_clock::now() - std::chrono::high_resolution_clock::now());
 
+using namespace std::chrono_literals;
+
 class Terminal : NonCopyable {
 public:
     explicit Terminal(TerminalOptions terminal_options);
@@ -59,7 +61,7 @@ private:
     bool mouse_register_move_ = false;
     bool joystick_emulation_ = false;
 
-    Duration frame_duration_;
+    Duration frame_duration_ = 0ms;
 
     static constexpr const char* emulated_keys = "XxZzSsAaQqWw\r\n\t";
 
