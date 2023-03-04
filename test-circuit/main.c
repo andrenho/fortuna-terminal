@@ -9,6 +9,11 @@ int main(void)
 
     for (;;) {
         char c = c_getchar_block();
-        c_putchar(c);
+        if (c == '\r') {
+            c_putchar('\n');
+            c_putchar('\r');
+        } else {
+            c_putchar(c);
+        }
     }
 }
