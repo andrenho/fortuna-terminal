@@ -232,3 +232,13 @@ void Protocol::vsync_tasks()
         }
     }
 }
+
+void Protocol::show_fps_counter(Duration duration)
+{
+    double ms = (double) std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    size_t fps = (1000.0 / ms);
+    if (fps > 999)
+        fps = 999;
+    std::string row_column = std::to_string(scene_.text().lines() - 1) + ";" + std::to_string(scene_.text().columns() - 8);
+    input_queue_->push_all("\e7\e[" + row_column + "H\e[7;33mFPS " + std::to_string(fps) + "\e[0m   \e8");
+}

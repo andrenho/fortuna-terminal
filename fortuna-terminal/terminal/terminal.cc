@@ -7,13 +7,10 @@
 #include <iostream>
 #include <cstring>
 
-using namespace std::string_literals;
-
 #define JOY_THRESHOLD 1000
 
 Terminal::Terminal(TerminalOptions terminal_options)
-    : window_mode_(terminal_options.window_mode),
-      show_fps_(terminal_options.show_fps_counter)
+    : window_mode_(terminal_options.window_mode)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
         throw SDLException("Error initializing SDL");
@@ -39,7 +36,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
     SDL_ShowCursor(SDL_DISABLE);
 
     renderer_ = decltype(renderer_)(
-        SDL_CreateRenderer(window_.get(), -1, SDL_RENDERER_ACCELERATED),
+        SDL_CreateRenderer(window_.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
         [](SDL_Renderer* r) {
             SDL_DestroyRenderer(r);
         }

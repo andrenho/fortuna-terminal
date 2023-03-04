@@ -40,7 +40,7 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
     Char chr = text.get(line, column);
     uint8_t c = chr.c;
 
-    if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line))
+    if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line) && !chr.attrib.reverse)
         return;
 
     unsigned int orig_x = (c / 16) * TextChar_W;

@@ -17,8 +17,6 @@
 #include "texturemanager.hh"
 #include "terminal/painters/graphicspainter.hh"
 
-using Duration = decltype(std::chrono::high_resolution_clock::now() - std::chrono::high_resolution_clock::now());
-
 using namespace std::chrono_literals;
 
 class Terminal : NonCopyable {
@@ -39,8 +37,6 @@ public:
 
     void setup_scene(Scene const& scene);
 
-    void set_frame_duration(Duration duration) { frame_duration_ = duration; }
-
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
@@ -51,7 +47,6 @@ private:
     int win_w_ = 800, win_h_ = 600;
 
     bool window_mode_;
-    bool show_fps_;
 
     void beep();
 
@@ -60,8 +55,6 @@ private:
     bool mouse_active_ = false;
     bool mouse_register_move_ = false;
     bool joystick_emulation_ = false;
-
-    Duration frame_duration_ = 0ms;
 
     static constexpr const char* emulated_keys = "XxZzSsAaQqWw\r\n\t";
 

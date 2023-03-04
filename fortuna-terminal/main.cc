@@ -8,6 +8,7 @@
 #include "protocol/protocol.hh"
 #include "gpio/gpio.hh"
 #include "control.hh"
+#include "common/duration.hh"
 
 #define ALL_PROTOCOLS(...) { std::for_each(std::begin(protocols), std::end(protocols), [&](Protocol& p) { __VA_ARGS__; }); }
 
@@ -97,6 +98,8 @@ restart:
     try {
 
         bool quit = false;
+        Duration duration = 0ms;
+        size_t frame = 0;
 
         while (!quit) {
             auto frame_start = std::chrono::high_resolution_clock::now();
@@ -105,18 +108,26 @@ restart:
             ALL_PROTOCOLS(p.scene().text().update_blink())
             protocol->execute_inputs();
             protocol->vsync_tasks();
+            if (options->terminal_options.show_fps_counter && (frame % 30 == 0)) {
+                protocol->show_fps_counter(duration / 30);
+                duration = 0ms;
+            }
             gpio->vsync();
 
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
 
+            /*
             auto frame_end = std::chrono::high_resolution_clock::now();
             if (frame_end < (frame_start + 16ms)) {
                 auto duration = (frame_start + 16ms) - frame_end;
                 std::this_thread::sleep_for(duration);
             }
+             */
 
-            terminal->set_frame_duration(std::chrono::high_resolution_clock::now() - frame_start);
+            duration += std::chrono::high_resolution_clock::now() - frame_start;
+
+            ++frame;
         }
 
     } catch (std::exception& e) {

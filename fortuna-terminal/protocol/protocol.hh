@@ -15,6 +15,7 @@
 #include "gpio/gpio.hh"
 #include "extra.hh"
 #include "mode.hh"
+#include "common/duration.hh"
 
 class Protocol : public NonCopyable {
 public:
@@ -36,6 +37,8 @@ public:
     void event_mouse_move(int button, int x, int y);
     void event_joystick(size_t joystick_number, size_t button, bool is_down);
     void event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value);
+
+    void show_fps_counter(Duration duration);
 
     Scene const& scene() const { return scene_; }
     Scene&       scene() { return scene_; }
