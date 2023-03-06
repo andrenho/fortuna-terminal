@@ -47,9 +47,10 @@ New protocol:
 Electronics:
   - [x] Build circuit
   - [ ] Write sample software for UART on the test circuit
+  - [ ] GPIO
 
 Improvements:
-  - [ ] Add FPS counter
+  - [x] Add FPS counter
   - [ ] Command compression
   - [ ] 32 colors
   - [ ] Activate command to start receiving VSYNC (?)
@@ -67,5 +68,6 @@ Audio:
   - [ ] Beep
 
 New communication modes:
-  - [ ] SPI
-  - [ ] I²C
+- [ ] SPI
+- [ ] I²C
+
