@@ -3,9 +3,11 @@
 
 #include <stdint.h>
 
-#define BUFFER_SZ 1024
+#define BUFFER_SZ 256
 
-extern uint8_t  buffer[BUFFER_SZ];
-extern uint16_t buffer_sz;
+extern uint8_t  out_buffer[BUFFER_SZ];
+extern uint16_t out_buffer_sz;
+extern uint8_t  in_buffer[BUFFER_SZ];
+extern uint16_t in_buffer_sz;
 
 #endif

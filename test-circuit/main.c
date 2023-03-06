@@ -10,21 +10,6 @@ volatile uint8_t data = 0;
 
 int main(void)
 {
-    uart_init();
-    spi_init();
-
-    sei();
-
-    data = '+';
-
-    for (;;) {
-        if (data != 0) {
-            uart_printchar(data);
-            data = 0;
-        }
-    }
-
-    /*
     c_init(C_SPI);
     sei();
 
@@ -39,5 +24,4 @@ int main(void)
             c_putchar(c);
         }
     }
-    */
 }
