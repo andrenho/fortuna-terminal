@@ -3,7 +3,7 @@
 
 #include <avr/pgmspace.h>
 
-typedef enum { C_UART } CommType;
+typedef enum { C_UART, C_SPI } CommType;
 
 void c_init(CommType comm_type);
 

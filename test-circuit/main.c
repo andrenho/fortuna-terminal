@@ -1,10 +1,33 @@
 #include "client.h"
 
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
+
+#include "uart.h"
+#include "spi.h"
+
+volatile uint8_t data = 0;
 
 int main(void)
 {
-    c_init(C_UART);
+    uart_init();
+    spi_init();
+
+    sei();
+
+    data = '+';
+
+    for (;;) {
+        if (data != 0) {
+            uart_printchar(data);
+            data = 0;
+        }
+    }
+
+    /*
+    c_init(C_SPI);
+    sei();
+
     c_print_P(PSTR("\e[2J\e[H\e[1;36mWelcome to Fortuna Terminal!\e[0m\n\r\n\r"));
 
     for (;;) {
@@ -16,4 +39,5 @@ int main(void)
             c_putchar(c);
         }
     }
+    */
 }

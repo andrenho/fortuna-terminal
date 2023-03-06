@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "spi.h"
 #include "uart.h"
 
 static CommType comm_type_;
@@ -16,6 +17,9 @@ void c_init(CommType comm_type)
         case C_UART:
             uart_init();
             break;
+        case C_SPI:
+            spi_init();
+            break;
     }
 }
 
@@ -25,6 +29,9 @@ void c_putchar(char c)
         case C_UART:
             uart_printchar(c);
             break;
+        case C_SPI:
+            spi_printchar(c);
+            break;
     }
 }
 
@@ -33,6 +40,8 @@ char c_getchar_nonblock(void)
     switch (comm_type_) {
         case C_UART:
             return uart_getchar_nonblocking();
+        case C_SPI:
+            return spi_getchar_nonblocking();
     }
     return 0;
 }
@@ -42,6 +51,8 @@ char c_getchar_block(void)
     switch (comm_type_) {
         case C_UART:
             return uart_getchar_blocking();
+        case C_SPI:
+            return spi_getchar_blocking();
     }
     return 0;
 }
