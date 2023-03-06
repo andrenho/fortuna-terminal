@@ -69,5 +69,6 @@ Audio:
 
 New communication modes:
 - [ ] SPI
+  - Wire in pin 16 should go to pin 26, then use /dev/spidev0.1
 - [ ] I²C
 
