@@ -27,8 +27,12 @@ endif
 # configure objects and compilation options
 #
 
-OBJ =   application/application.o \
+OBJ =   application/application.o application/options.o \
+		environment/environment.o \
 		lib/tmt/tmt.o
+
+#		environment/scene/scene.o \
+#		environment/scene/layers/spritelayer.o environment/scene/layers/textlayer.o environment/scene/layers/tilemaplayer.o \
 
 EXE = fortuna-terminal
 

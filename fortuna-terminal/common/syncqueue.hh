@@ -105,4 +105,7 @@ private:
     std::condition_variable cond_ {};
 };
 
+template <class T>
+using SyncQueueUniqPtr = std::unique_ptr<SyncQueue<T>>;
+
 #endif //SYNCQUEUE_HH_

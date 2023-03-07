@@ -4,9 +4,10 @@
 #include <iostream>
 #include <optional>
 
-Application::Application(int argc, char **argv)
+Application::Application(int argc, char* argv[])
+    : options(argc, argv)
 {
-
+    envs.emplace_back(options);
 }
 
 void Application::run()
