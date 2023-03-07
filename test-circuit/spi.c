@@ -8,10 +8,7 @@
 
 void spi_init(void)
 {
-    // SS, MOSI & SCK as input, MISO as output
-    // DDRB &= ~_BV(PB2) | ~_BV(PB3) | ~_BV(PB5);
-    DDRB |= _BV(PB4);
-    // PORTB |= _BV(PB3);  // pullup on MOSI
+    DDRB |= _BV(PB4);  // MOSI
 
     // enable SPI
     SPCR = (1<<SPE) | (1<<SPIE);
@@ -20,31 +17,41 @@ void spi_init(void)
 
 void spi_printchar(uint8_t c)
 {
+    if (out_buffer_sz >= BUFFER_SZ - 1)
+        return;
+    memmove(&out_buffer[1], out_buffer, ++out_buffer_sz);
+    out_buffer[0] = c;
 }
 
 uint8_t spi_getchar_nonblocking(void)
 {
-    if (buffer_sz == 0)
+    if (in_buffer_sz == 0) {
         return 0;
-    uint8_t data = buffer[0];
-    --buffer_sz;
-    memmove(buffer, &buffer[1], buffer_sz);
-    return data;
+    } else {
+        uint8_t data = in_buffer[0];
+        memmove(&in_buffer[1], in_buffer, --in_buffer_sz);
+        return data;
+    }
 }
 
 uint8_t spi_getchar_blocking(void)
 {
     while (1) {
         uint8_t data = spi_getchar_nonblocking();
-        if (data == 0)
+        if (data != 0)
             return data;
     }
 }
 
-extern uint8_t data;
-
 ISR (SPI_STC_vect)
 {
-    data = SPDR;
-    SPDR = data;
+    uint8_t data = SPDR;
+    if (data != 0xff)
+        in_buffer[in_buffer_sz++] = data;
+
+    if (out_buffer_sz == 0) {
+        SPDR = 0xff;
+    } else {
+        SPDR = out_buffer[out_buffer_sz--];
+    }
 }
