@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 #include "common/exceptions/libcexception.hh"
-#include "applications/options.hh"
+#include "application/options.hh"
 
 UART::UART(UartOptions const &uart_options)
 {
