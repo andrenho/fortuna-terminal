@@ -80,7 +80,7 @@ Options::Options(int argc, char* argv[])
                 break;
 
             case 'g':
-                graphics_mode = true;
+                mode = Mode::Graphics;
                 break;
 
             case 'B':

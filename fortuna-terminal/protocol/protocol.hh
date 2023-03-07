@@ -19,7 +19,7 @@
 
 class Protocol : public NonCopyable {
 public:
-    explicit Protocol(Mode mode, std::unique_ptr<CommunicationModule> comm, GPIO& gpio);
+    explicit Protocol(Mode mode, CommunicationModule& comm, GPIO& gpio);
 
     void run();
     void execute_inputs();
@@ -47,7 +47,7 @@ public:
     void set_mode(Mode mode);
 
 private:
-    std::unique_ptr<CommunicationModule> comm_ {};
+    CommunicationModule& comm_;
     Scene scene_;
     ANSI  ansi_;
     Extra extra_;

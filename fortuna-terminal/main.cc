@@ -1,6 +1,30 @@
+#include <cstdlib>
+
+#include <iostream>
+#include <optional>
+#include <stdexcept>
+
+#include "application/application.hh"
+
+int main(int argc, char* argv[])
+{
+    std::optional<Application> application;
+
+    try {
+        application.emplace(argc, argv);
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    application->run();
+
+    return 0;
+}
+
+/*
 #include <chrono>
 #include <iostream>
-#include <memory>
 #include <thread>
 
 #include "terminal/terminal.hh"
@@ -134,3 +158,4 @@ restart:
     return EXIT_SUCCESS;
 }
 
+*/

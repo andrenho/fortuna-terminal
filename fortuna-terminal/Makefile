@@ -28,6 +28,7 @@ endif
 #
 
 OBJ =   main.o control.o options.o \
+        application/application.o \
 		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
 		protocol/protocol.o protocol/ansi.o protocol/extra.o \
 		scene/scene.o \

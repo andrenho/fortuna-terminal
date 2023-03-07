@@ -12,8 +12,8 @@
 using namespace std::chrono_literals;
 using namespace std::string_literals;
 
-Protocol::Protocol(Mode mode, std::unique_ptr<CommunicationModule> comm, GPIO& gpio)
-        : comm_(std::move(comm)),
+Protocol::Protocol(Mode mode, CommunicationModule& comm, GPIO& gpio)
+        : comm_(comm),
           scene_(mode),
           ansi_(mode, scene_),
           extra_(mode, scene_, gpio),
@@ -25,7 +25,7 @@ void Protocol::run()
 {
     read_thread_ = std::make_unique<std::thread>([this]() {
         while (threads_active_) {
-            auto byte = comm_->read_blocking();
+            auto byte = comm_.read_blocking();
             if (byte.has_value()) {
                 input_queue_->push(byte.value());
                 debug_byte(true, byte.value());
@@ -37,7 +37,7 @@ void Protocol::run()
         while (threads_active_) {
             std::vector<uint8_t> bytes_to_output;
             output_queue_->pop_all_into(bytes_to_output);
-            comm_->write(bytes_to_output);
+            comm_.write(bytes_to_output);
             if (debug_comm_)
                 std::for_each(bytes_to_output.begin(), bytes_to_output.end(), [this](uint8_t byte) { debug_byte(false, byte); });
         }
@@ -47,7 +47,7 @@ void Protocol::run()
 void Protocol::finalize_threads()
 {
     threads_active_ = false;
-    if (comm_->release_locks()) {
+    if (comm_.release_locks()) {
         read_thread_->join();
     } else {
         pthread_kill(read_thread_->native_handle(), 9);

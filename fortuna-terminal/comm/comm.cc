@@ -19,9 +19,9 @@ std::optional<uint8_t> CommunicationModule::read_blocking()
         return v.at(0);
 }
 
-std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options const *options)
+std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options const& options)
 {
-    switch (options->comm_type) {
+    switch (options.comm_type) {
         case CommType::NotChosen:
             throw FortunaException("Invalid communication mode");
         case CommType::I2C:
@@ -39,7 +39,7 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create_unique(Options 
             throw FortunaException("Communication mode not supported on Windows");
 #endif
         case CommType::TcpIp:
-            return std::make_unique<TCPIP>(options->tcpip_options);
+            return std::make_unique<TCPIP>(options.tcpip_options);
         case CommType::Echo:
             return std::make_unique<Echo>();
         case CommType::Pipes:

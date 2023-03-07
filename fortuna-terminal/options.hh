@@ -2,6 +2,7 @@
 #define OPTIONS_HH_
 
 #include <string>
+#include "protocol/mode.hh"
 
 enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo };
 
@@ -31,7 +32,7 @@ public:
 
     CommType        comm_type   = CommType::NotChosen;
     bool            debug_comm = false;
-    bool            graphics_mode = false;
+    Mode            mode = Mode::Text;
 
     TerminalOptions terminal_options {};
     UartOptions     uart_options {};
