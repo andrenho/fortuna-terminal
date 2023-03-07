@@ -1,6 +1,6 @@
 #include "options.hh"
-#include "exceptions/libcexception.hh"
-#include "exceptions/fortunaexception.hh"
+#include "common/exceptions/libcexception.hh"
+#include "common/exceptions/fortunaexception.hh"
 
 #include <cstring>
 #include <getopt.h>

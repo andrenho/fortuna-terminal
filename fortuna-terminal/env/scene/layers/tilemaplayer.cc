@@ -1,7 +1,7 @@
 #include "tilemaplayer.hh"
 
-#include "environment/scene/scene.hh"
-#include "environment/scene/tilemap.hh"
+#include "env/scene/scene.hh"
+#include "env/scene/tilemap.hh"
 #include "images.hh"
 
 std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const

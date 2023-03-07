@@ -28,11 +28,14 @@ endif
 #
 
 OBJ =   application/application.o application/options.o \
-		environment/environment.o \
- 		environment/scene/scene.o environment/scene/palette/palette.o \
- 		environment/scene/layers/spritelayer.o environment/scene/layers/textlayer.o environment/scene/layers/tilemaplayer.o \
+        env/comm/comm.o \
+        env/comm/io/comm_io.o env/comm/io/echo.o \
+		env/environment.o \
+ 		env/scene/scene.o env/scene/palette/palette.o \
+ 		env/scene/layers/spritelayer.o env/scene/layers/textlayer.o env/scene/layers/tilemaplayer.o \
 		lib/tmt/tmt.o
 
+        #env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
 
 EXE = fortuna-terminal
 
@@ -54,7 +57,7 @@ ifeq ($(RASPBERRY),1)
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ := ${OBJ} comm/pty.o comm/uart.o
+	OBJ := ${OBJ} env/comm/io/fd/pty.o env/comm/io/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 

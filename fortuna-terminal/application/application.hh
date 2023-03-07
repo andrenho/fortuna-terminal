@@ -5,7 +5,7 @@
 
 #include "common/noncopyable.hh"
 #include "options.hh"
-#include "environment/environment.hh"
+#include "env/environment.hh"
 
 class Application : NonCopyable {
 public:

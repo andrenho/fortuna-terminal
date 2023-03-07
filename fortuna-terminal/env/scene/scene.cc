@@ -1,6 +1,6 @@
 #include "scene.hh"
 
-#include "exceptions/fortunaexception.hh"
+#include "common/exceptions/fortunaexception.hh"
 #include "common/pixelsize.hh"
 
 size_t Scene::image_texture_idx_counter = 0;
