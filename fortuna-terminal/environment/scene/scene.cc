@@ -1,7 +1,7 @@
 #include "scene.hh"
 
-#include "old/terminal/painters/textpainter.hh"
-#include "old/exceptions/fortunaexception.hh"
+#include "exceptions/fortunaexception.hh"
+#include "common/pixelsize.hh"
 
 size_t Scene::image_texture_idx_counter = 0;
 
@@ -34,13 +34,13 @@ std::pair<int, int> Scene::size_in_pixels() const
 {
     if (mode_ == Mode::Graphics) {
         return {
-            TextLayer::Columns_40Columns * TextPainter::TextChar_W,
-            TextLayer::Lines_40Columns * TextPainter::TextChar_H
+            TextLayer::Columns_40Columns * PixelSize::TextChar_W,
+            TextLayer::Lines_40Columns * PixelSize::TextChar_H
         };
     } else {
         return {
-            TextLayer::Columns_80Columns * TextPainter::TextChar_W + 2 * TextPainter::TextBorder,
-            TextLayer::Lines_80Columns * TextPainter::TextChar_H + 2 * TextPainter::TextBorder
+            TextLayer::Columns_80Columns * PixelSize::TextChar_W + 2 * PixelSize::TextBorder,
+            TextLayer::Lines_80Columns * PixelSize::TextChar_H + 2 * PixelSize::TextBorder
         };
     }
 }

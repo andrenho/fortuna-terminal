@@ -1,5 +1,6 @@
 #include "tilemaplayer.hh"
 
+#include "environment/scene/scene.hh"
 #include "environment/scene/tilemap.hh"
 #include "images.hh"
 

@@ -8,8 +8,8 @@
 #include "layers/spritelayer.hh"
 #include "layers/tilemaplayer.hh"
 #include "tilemap.hh"
-#include "old/scene/palette/palette.hh"
-#include "old/scene/layers/images.hh"
+#include "palette/palette.hh"
+#include "layers/images.hh"
 
 #include <optional>
 #include <unordered_map>

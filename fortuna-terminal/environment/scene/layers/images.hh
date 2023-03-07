@@ -2,7 +2,7 @@
 #define IMAGES_HH_
 
 #include "layer.hh"
-#include "old/common/syncqueue.hh"
+#include "common/syncqueue.hh"
 
 struct Image {
     static constexpr int IMAGE_W = 16;
@@ -18,10 +18,10 @@ class Images : NonCopyable {
 public:
     void create_image(Image&& image) { pending_images_->emplace(std::move(image)); }
 
-    [[nodiscard]] std::unique_ptr<SyncQueue<Image>>& pending_images() { return pending_images_; }
+    [[nodiscard]] SyncQueueUniqPtr<Image>& pending_images() { return pending_images_; }
 
 private:
-    std::unique_ptr<SyncQueue<Image>> pending_images_ = std::make_unique<SyncQueue<Image>>();
+    SyncQueueUniqPtr<Image> pending_images_ = std::make_unique<SyncQueue<Image>>();
 };
 
 #endif //IMAGES_HH_
