@@ -30,12 +30,12 @@ endif
 OBJ =   application/application.o application/options.o \
         env/comm/comm.o \
         env/comm/io/comm_io.o env/comm/io/echo.o \
+        env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
 		env/environment.o \
  		env/scene/scene.o env/scene/palette/palette.o \
  		env/scene/layers/spritelayer.o env/scene/layers/textlayer.o env/scene/layers/tilemaplayer.o \
 		lib/tmt/tmt.o
 
-        #env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
 
 EXE = fortuna-terminal
 

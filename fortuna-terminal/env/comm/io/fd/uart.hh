@@ -2,7 +2,7 @@
 #define UART_HH_
 
 #include "fdcomm.hh"
-#include "../options.hh"
+#include "application/options.hh"
 
 class UART : public FDComm {
 public:

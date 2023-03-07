@@ -1,6 +1,6 @@
 #include "tcpip.hh"
-#include "old/exceptions/fortunaexception.hh"
-#include "old/exceptions/libcexception.hh"
+#include "common/exceptions/fortunaexception.hh"
+#include "common/exceptions/libcexception.hh"
 
 #ifdef _WIN32
 #  include <winsock2.h>

@@ -10,8 +10,8 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "../exceptions/libcexception.hh"
-#include "../options.hh"
+#include "common/exceptions/libcexception.hh"
+#include "applications/options.hh"
 
 UART::UART(UartOptions const &uart_options)
 {

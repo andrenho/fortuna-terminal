@@ -1,7 +1,7 @@
 #ifndef PTY_HH_
 #define PTY_HH_
 
-#include "../options.hh"
+#include "application/options.hh"
 #include "fdcomm.hh"
 
 class PTY : public FDComm {

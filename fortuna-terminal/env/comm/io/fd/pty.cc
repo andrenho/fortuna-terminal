@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "../exceptions/libcexception.hh"
-#include "../scene/layers/textlayer.hh"
+#include "common/exceptions/libcexception.hh"
+#include "env/scene/layers/textlayer.hh"
 
 PTY::PTY(PTYOptions const& pty_options)
 {

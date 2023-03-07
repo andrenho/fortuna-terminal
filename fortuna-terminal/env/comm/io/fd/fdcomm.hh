@@ -1,9 +1,9 @@
 #ifndef FDCOMM_HH_
 #define FDCOMM_HH_
 
-#include "comm.hh"
+#include "env/comm/io/comm_io.hh"
 
-class FDComm : public CommunicationModule {
+class FDComm : public CommIO {
 public:
     ~FDComm() override;
 
