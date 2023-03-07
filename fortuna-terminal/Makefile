@@ -27,15 +27,7 @@ endif
 # configure objects and compilation options
 #
 
-OBJ =   main.o control.o options.o \
-        application/application.o \
-		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
-		protocol/protocol.o protocol/ansi.o protocol/extra.o \
-		scene/scene.o \
-		scene/layers/textlayer.o scene/layers/spritelayer.o scene/layers/tilemaplayer.o \
-		scene/palette/palette.o \
-		terminal/terminal.o terminal/texturemanager.o \
-		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
+OBJ =   application/application.o \
 		lib/tmt/tmt.o
 
 EXE = fortuna-terminal
