@@ -15,7 +15,8 @@ private:
     CommUniquePtr             comm_;
     SyncQueueUniqPtr<uint8_t> input_queue_ {};
     SyncQueueUniqPtr<uint8_t> output_queue_ {};
-    Protocol                  protocol_ {};
+    Scene                     scene_;
+    Protocol                  protocol_;
 };
 
 #endif //ENVIRONMENT_HH_

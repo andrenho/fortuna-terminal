@@ -28,8 +28,7 @@ void Extra::escape_sequence_complete()
             control.emplace(ControlCommand::ResetProtocol);
             break;
         case 'x':
-            std::cout << "Computer reset." << std::endl;
-            gpio_.reset();
+            control.emplace(ControlCommand::ResetComputer);
             break;
         case 'g':
             if (!p.empty()) {
