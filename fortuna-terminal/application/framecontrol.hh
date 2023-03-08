@@ -1,7 +1,7 @@
 #ifndef FRAMECONTROL_HH_
 #define FRAMECONTROL_HH_
 
-#include "../common/duration.hh"
+#include "common/duration.hh"
 
 class FrameControl {
     using Time = decltype(std::chrono::high_resolution_clock::now());

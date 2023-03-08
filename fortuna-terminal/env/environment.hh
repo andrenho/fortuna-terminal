@@ -16,14 +16,24 @@ public:
 
     void show_error(std::exception const &e);
 
-    void blink_cursor();
+    Scene const &scene() const { return scene_; }
+
+    Events &events_interface() { return protocol_; }
+
+    void reset();
+
+    void set_mode(Mode mode);
 
 private:
-    CommUniquePtr             comm_;
-    SyncQueueUniqPtr<uint8_t> input_queue_ {};
-    SyncQueueUniqPtr<uint8_t> output_queue_ {};
-    Scene                     scene_;
-    Protocol                  protocol_;
+    std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
+    std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();
+
+    void show_fps_counter(Duration duration);
+
+    CommUniquePtr comm_;
+    Scene         scene_;
+    Protocol      protocol_;
+    bool          show_fps_counter_;
 };
 
 #endif //ENVIRONMENT_HH_

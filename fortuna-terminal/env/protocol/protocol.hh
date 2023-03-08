@@ -6,19 +6,21 @@
 #include "common/mode.hh"
 #include "env/scene/scene.hh"
 #include "common/duration.hh"
+#include "events.hh"
 
-class Protocol {
+class Protocol : ANSI, Extra, public Events {
 public:
-    explicit Protocol(Mode mode, Scene& scene);
+    explicit Protocol(Mode initial_mode, Scene& scene, SyncQueueByte& output_queue);
 
-    void execute_inputs();
-    void show_error(std::exception const& e);
-
-    void show_fps_counter(Duration duration);
+    void execute_inputs(SyncQueueByte &input_queue);
+    void execute_outputs(SyncQueueByte &output_queue);
 
 private:
-    ANSI  ansi_;
-    Extra extra_;
+    Scene& scene_;
+
+    void output_pending_responses(SyncQueueByte &output_queue);
+
+    void output_collisions(SyncQueueByte &output_queue);
 };
 
 #endif //PROTOCOL_HH_

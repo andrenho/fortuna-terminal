@@ -5,16 +5,17 @@
 
 #include "old/exceptions/fortunaexception.hh"
 
-ANSI::ANSI(Mode mode, Scene &scene)
+ANSI::ANSI(Mode initial_mode, Scene &scene)
     : scene_(scene),
       cache_(initialize_cache(TextLayer::Columns_80Columns, std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns))),
         vt_(decltype(vt_)(
                 tmt_open(
-                        mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
-                        mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
+                        initial_mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
+                        initial_mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
                         ANSI::tmt_callback, this, nullptr),
                 [](TMT* vt) { tmt_close(vt); }
-        ))
+        )),
+      current_mode_(initial_mode)
 {
     if (!vt_)
         throw FortunaException("Could not allocate terminal");
@@ -26,9 +27,13 @@ void ANSI::reset()
     tmt_write(vt_.get(), clrscr.data(), clrscr.size());
 }
 
-void ANSI::send_bytes(std::string const &bytes)
+void ANSI::send_ansi_bytes(std::string const &bytes)
 {
     tmt_write(vt_.get(), bytes.data(), bytes.size());
+    if (scene_.mode() != current_mode_) {
+        current_mode_ = scene_.mode();
+        resize_text_terminal(current_mode_);
+    }
 }
 
 ANSI::Cache ANSI::initialize_cache(size_t w, size_t h)
@@ -123,46 +128,6 @@ CharAttrib ANSI::translate_attrib(TMTATTRS a)
     return attr;
 }
 
-std::optional<std::string> ANSI::translate_special_key(SpecialKey special_key, KeyMod mod)
-{
-    (void) mod;
-
-    switch (special_key) {
-        case SpecialKey::ESC:        return "\e";
-        case SpecialKey::ENTER:      return "\r";
-        case SpecialKey::TAB:        return "\t";
-        case SpecialKey::BACKSPACE:  return "\b";
-        case SpecialKey::F1:         return "\e[11~";
-        case SpecialKey::F2:         return "\e[12~";
-        case SpecialKey::F3:         return "\e[13~";
-        case SpecialKey::F4:         return "\e[14~";
-        case SpecialKey::F5:         return "\e[15~";
-        case SpecialKey::F6:         return "\e[17~";
-        case SpecialKey::F7:         return "\e[18~";
-        case SpecialKey::F8:         return "\e[19~";
-        case SpecialKey::F9:         return "\e[20~";
-        case SpecialKey::F10:        return "\e[21~";
-        case SpecialKey::F11:        return "\e[23~";
-        case SpecialKey::F12:        return "\e[24~";
-        case SpecialKey::INSERT:     return "\e[2~";
-        case SpecialKey::HOME:       return "\e[1~";
-        case SpecialKey::END:        return "\e[4~";
-        case SpecialKey::PAGEUP:     return "\e[5~";
-        case SpecialKey::PAGEDOWN:   return "\e[6~";
-        case SpecialKey::UP:         return "\e[A";
-        case SpecialKey::DOWN:       return "\e[B";
-        case SpecialKey::LEFT:       return "\e[D";
-        case SpecialKey::RIGHT:      return "\e[C";
-        case SpecialKey::DELETE:     return "\e[3~";
-        case SpecialKey::PRINTSCREEN:
-        case SpecialKey::PAUSEBREAK:
-        case SpecialKey::CAPSLOCK:
-        case SpecialKey::WIN:
-            break;
-    }
-    return {};
-}
-
 bool ANSI::tmtchar_equals(TMTCHAR const& c1, TMTCHAR const& c2)
 {
     return (uint8_t) c1.c == (uint8_t) c2.c &&
@@ -176,7 +141,7 @@ bool ANSI::tmtchar_equals(TMTCHAR const& c1, TMTCHAR const& c2)
         c1.a.bg == c2.a.bg;
 }
 
-void ANSI::set_mode(Mode mode)
+void ANSI::resize_text_terminal(Mode mode)
 {
     tmt_resize(vt_.get(),
            mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,

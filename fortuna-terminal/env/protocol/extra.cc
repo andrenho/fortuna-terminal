@@ -8,7 +8,7 @@
 
 // protocol described at https://github.com/andrenho/fortuna-terminal/wiki/ANSI-protocol-extension-for-Fortuna-Terminal
 
-void Extra::send_bytes(std::string const &bytes)
+void Extra::send_extra_bytes(std::string const &bytes)
 {
     for (char c : bytes) {
         escape_sequence_ += c;
@@ -43,7 +43,7 @@ void Extra::escape_sequence_complete()
             break;
     }
 
-    if (mode_ == Mode::Graphics) {
+    if (scene_.mode() == Mode::Graphics) {
         switch (command) {
             case 'm':
                 if (!p.empty())

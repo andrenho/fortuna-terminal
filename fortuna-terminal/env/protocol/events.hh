@@ -5,8 +5,11 @@
 #include <string>
 #include <unordered_map>
 #include "keys.hh"
+#include "common/syncqueue.hh"
 
 class Events {
+public:
+    explicit Events(SyncQueueByte& output_queue) : output_queue_(output_queue) {}
 
     void event_text_input(std::string const& text);
     void event_key(uint8_t key, bool is_down, KeyMod mod);
@@ -20,6 +23,11 @@ class Events {
         bool up = false, down = false, left = false, right = false;
     };
     std::unordered_map<size_t, JoystickState> joy_state_ {};
+
+private:
+    static std::optional<std::string> translate_special_key(SpecialKey special_key, KeyMod mod);
+
+    SyncQueueByte& output_queue_;
 };
 
 #endif //EVENTS_HH_

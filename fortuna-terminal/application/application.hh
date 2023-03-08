@@ -7,6 +7,7 @@
 #include "options.hh"
 #include "env/environment.hh"
 #include "framecontrol.hh"
+#include "terminal/terminal.hh"
 
 class Application : NonCopyable {
 public:
@@ -15,7 +16,8 @@ public:
     void run();
 
 private:
-    Options                  options;
+    Options                  options_;
+    Terminal                 terminal_;
     GPIO                     gpio_ {};
     std::vector<Environment> envs {};
     int                      current_env = -1;

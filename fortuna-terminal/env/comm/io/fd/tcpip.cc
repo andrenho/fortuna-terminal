@@ -48,7 +48,7 @@ TCPIP::TCPIP(TcpIpOptions const &options)
 
         int yes = 1;
         if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (const char *) &yes, sizeof(int)) == -1)
-            throw LibcException("Error setting socket options");
+            throw LibcException("Error setting socket options_");
 
         if (bind(sock_fd, p->ai_addr, (int) p->ai_addrlen) == -1) {
 #ifdef _WIN32

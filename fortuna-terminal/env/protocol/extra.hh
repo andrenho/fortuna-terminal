@@ -9,16 +9,13 @@
 
 class Extra {
 public:
-    explicit Extra(Mode mode, Scene& scene) : mode_(mode), scene_(scene) {}
+    explicit Extra(Scene& scene) : scene_(scene) {}
 
-    void send_bytes(std::string const &bytes);
-
-    void set_mode(Mode mode) { mode_ = mode; }
+    void send_extra_bytes(std::string const &bytes);
 
     std::string latest_response();
 
 private:
-    Mode mode_;
     Scene& scene_;
 
     std::string escape_sequence_ {};

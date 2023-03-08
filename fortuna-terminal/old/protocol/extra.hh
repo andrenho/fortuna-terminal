@@ -11,7 +11,7 @@ class Extra {
 public:
     explicit Extra(Mode mode, Scene& scene, GPIO& gpio) : mode_(mode), scene_(scene), gpio_(gpio) {}
 
-    void send_bytes(std::string const &bytes);
+    void send_extra_bytes(std::string const &bytes);
 
     void set_mode(Mode mode) { mode_ = mode; }
 
