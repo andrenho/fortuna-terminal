@@ -46,8 +46,10 @@ New protocol:
 
 Refactoring 3:
  - [x] Create runner
- - [ ] Cursor not blinking
- - [ ] Graphics not working
+ - [ ] Not working
+     - [x] Cursor
+     - [ ] Graphics
+     - [ ] FPS
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII
