@@ -6,6 +6,7 @@
 #include "common/noncopyable.hh"
 #include "options.hh"
 #include "env/environment.hh"
+#include "framecontrol.hh"
 
 class Application : NonCopyable {
 public:
@@ -15,7 +16,14 @@ public:
 
 private:
     Options                  options;
+    GPIO                     gpio_ {};
     std::vector<Environment> envs {};
+    int                      current_env = -1;
+    FrameControl             frame_control_ {};
+
+    void execute_control_commands();
+
+    void on_error(std::exception const &e, bool& quit);
 };
 
 #endif //APPLICATION_HH_

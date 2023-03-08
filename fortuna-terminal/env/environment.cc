@@ -7,3 +7,23 @@ Environment::Environment(Options const &options)
 {
 
 }
+
+void Environment::run_io_threads()
+{
+
+}
+
+void Environment::execute_step(Duration duration)
+{
+
+}
+
+void Environment::show_error(std::exception const &e)
+{
+
+}
+
+void Environment::blink_cursor()
+{
+
+}

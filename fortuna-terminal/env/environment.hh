@@ -11,6 +11,13 @@ class Environment {
 public:
     explicit Environment(Options const& options);
 
+    void run_io_threads();
+    void execute_step(Duration duration);
+
+    void show_error(std::exception const &e);
+
+    void blink_cursor();
+
 private:
     CommUniquePtr             comm_;
     SyncQueueUniqPtr<uint8_t> input_queue_ {};
