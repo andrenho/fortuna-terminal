@@ -4,7 +4,7 @@
 #include "ansi.hh"
 #include "extra.hh"
 #include "common/mode.hh"
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
 #include "common/duration.hh"
 #include "events.hh"
 

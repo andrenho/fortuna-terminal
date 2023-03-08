@@ -9,7 +9,7 @@
 
 #include "lib/SDL2-windows/include/SDL2/SDL.h"
 
-#include "env/scene/layers/images.hh"
+#include "scene/layers/images.hh"
 
 struct TextureInfo {
     SDL_Texture* tx;

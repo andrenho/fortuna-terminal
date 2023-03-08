@@ -5,7 +5,7 @@
 
 #include <memory>
 #include "terminal/texturemanager.hh"
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
 
 class GraphicsPainter {
 public:

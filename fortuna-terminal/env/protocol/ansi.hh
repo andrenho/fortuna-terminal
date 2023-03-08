@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
 #include "keys.hh"
 
 extern "C" {

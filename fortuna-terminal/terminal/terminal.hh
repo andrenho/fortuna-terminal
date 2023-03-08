@@ -8,7 +8,7 @@
 
 #include "lib/SDL2-windows/include/SDL2/SDL.h"
 
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
 #include "common/syncqueue.hh"
 #include "common/noncopyable.hh"
 #include "application/options.hh"

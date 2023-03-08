@@ -5,8 +5,8 @@
 #include <memory>
 
 #include "lib/SDL2-windows/include/SDL2/SDL.h"
-#include "env/scene/layers/textlayer.hh"
-#include "env/scene/scene.hh"
+#include "scene/layers/textlayer.hh"
+#include "scene/scene.hh"
 
 #include "old/common/noncopyable.hh"
 

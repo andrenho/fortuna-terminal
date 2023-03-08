@@ -4,12 +4,12 @@
 #include "common/noncopyable.hh"
 #include "common/mode.hh"
 #include "common/noncopyable.hh"
-#include "layers/textlayer.hh"
-#include "layers/spritelayer.hh"
-#include "layers/tilemaplayer.hh"
+#include "scene/layers/textlayer.hh"
+#include "scene/layers/spritelayer.hh"
+#include "scene/layers/tilemaplayer.hh"
 #include "tilemap.hh"
-#include "palette/palette.hh"
-#include "layers/images.hh"
+#include "scene/palette/palette.hh"
+#include "scene/layers/images.hh"
 
 #include <optional>
 #include <unordered_map>

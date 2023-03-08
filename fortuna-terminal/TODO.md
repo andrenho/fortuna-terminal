@@ -44,6 +44,14 @@ New protocol:
   - [x] move terminal_size to text
   - [x] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
+Refactoring 3:
+ - [ ] Create runner
+ - [ ] Rearrange Protocol class
+ - [ ] I/O debugging
+ - [ ] Refactor SDL RAII
+ - [ ] Reset
+ - [ ] General overview + make compilation faster (?)
+
 Electronics:
   - [x] Build circuit
   - [ ] Write sample software for UART on the test circuit

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
 #include "old/gpio/gpio.hh"
 
 class Extra {

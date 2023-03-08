@@ -5,7 +5,8 @@
 #include "env/comm/comm.hh"
 #include "common/syncqueue.hh"
 #include "env/protocol/protocol.hh"
-#include "env/scene/scene.hh"
+#include "scene/scene.hh"
+#include "runner.hh"
 
 class Environment {
 public:
@@ -16,13 +17,12 @@ public:
 
     void show_error(std::exception const &e);
 
-    Scene const &scene() const { return scene_; }
-
-    Events &events_interface() { return protocol_; }
-
     void reset();
 
     void set_mode(Mode mode);
+
+    [[nodiscard]] Scene const& scene() const { return scene_; }
+    Events&                    events_interface() { return protocol_; }
 
 private:
     std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
@@ -33,6 +33,7 @@ private:
     CommUniquePtr comm_;
     Scene         scene_;
     Protocol      protocol_;
+    Runner        runner_;
     bool          show_fps_counter_;
 };
 
