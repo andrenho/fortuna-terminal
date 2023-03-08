@@ -50,6 +50,9 @@ void Application::run()
         if (!quit)
             run();
     }
+
+    for (Environment& env: envs)
+        env.finalize_threads();
 }
 
 void Application::on_error(std::exception const& e, bool& quit)

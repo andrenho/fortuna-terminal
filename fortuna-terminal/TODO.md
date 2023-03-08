@@ -45,7 +45,9 @@ New protocol:
   - [x] sort of unify SpriteLayer and TilemapLayer, use a single painter for both
 
 Refactoring 3:
- - [ ] Create runner
+ - [x] Create runner
+ - [ ] Cursor not blinking
+ - [ ] Graphics not working
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII

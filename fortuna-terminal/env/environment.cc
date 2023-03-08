@@ -7,13 +7,19 @@ Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
       protocol_(options.mode, scene_, *output_queue_),
+      runner_(*input_queue_, *output_queue_, *comm_),
       show_fps_counter_(options.terminal_options.show_fps_counter)
 {
 }
 
 void Environment::run_io_threads()
 {
-    // TODO
+    runner_.run_io_threads();
+}
+
+void Environment::finalize_threads()
+{
+    runner_.finalize_threads();
 }
 
 void Environment::execute_step(Duration duration)

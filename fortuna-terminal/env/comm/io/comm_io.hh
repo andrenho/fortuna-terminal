@@ -16,7 +16,6 @@ public:
     void                           write(std::string const& str);
     void                           write(uint8_t byte);
 
-    virtual bool                   release_locks() { return false; }
 };
 
 #endif //COMM_IO_HH_

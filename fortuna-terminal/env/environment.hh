@@ -13,6 +13,8 @@ public:
     explicit Environment(Options const& options);
 
     void run_io_threads();
+    void finalize_threads();
+
     void execute_step(Duration duration);
 
     void show_error(std::exception const &e);

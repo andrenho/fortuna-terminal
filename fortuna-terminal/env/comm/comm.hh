@@ -17,6 +17,7 @@ public:
     virtual ~CommunicationModule() = default;
 
     virtual Channels channels() const = 0;
+    virtual bool     release_locks() { return false; }
 
     static std::unique_ptr<CommunicationModule> create(Options const& options);
 };
