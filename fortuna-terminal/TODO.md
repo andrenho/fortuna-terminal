@@ -67,6 +67,7 @@ Improvements:
   - [ ] Command compression
   - [ ] 32 colors
   - [ ] Activate command to start receiving VSYNC (?)
+  - [ ] Other text options (standout, etc)
 
 Alternative screens:
   - [ ] Terminal (shell)

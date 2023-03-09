@@ -55,17 +55,16 @@ public:
     void          set(std::vector<Cell> const& cells);
     void          move_cursor_to(size_t line, size_t column);
 
+    void          write(size_t row, size_t column, std::string const& text, CharAttrib attrib);
+
     void          set_mode(Mode mode);
 
     void          update_blink();
 
-    [[nodiscard]] Char const&   get(size_t line, size_t column) const;
-
+    [[nodiscard]] Char const&   get_char(size_t line, size_t column) const;
     [[nodiscard]] size_t        columns() const { return columns_; }
     [[nodiscard]] size_t        lines() const   { return lines_; }
-
-    [[nodiscard]] Mode mode() const { return mode_; }
-
+    [[nodiscard]] Mode          mode() const { return mode_; }
     [[nodiscard]] Cursor const& cursor() const  { return cursor_; }
 
     static constexpr size_t Columns_80Columns = 80;

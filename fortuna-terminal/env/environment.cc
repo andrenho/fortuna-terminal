@@ -38,8 +38,7 @@ void Environment::show_fps_counter(Duration duration)
     size_t fps = (1000.0 / ms);
     if (fps > 999)
         fps = 999;
-    std::string row_column = std::to_string(scene_.text().lines() - 1) + ";" + std::to_string(scene_.text().columns() - 8);
-    input_queue_->push_all("\e7\e[" + row_column + "H\e[7;33mFPS " + std::to_string(fps) + "\e[0m   \e8");
+    scene_.text().write(scene_.text().lines() - 1, scene_.text().columns() - 8, "FPS " + std::to_string(fps), { COLOR_ORANGE, true, false });
 }
 
 void Environment::show_error(std::exception const &e)

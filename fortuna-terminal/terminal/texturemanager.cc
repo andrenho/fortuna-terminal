@@ -53,7 +53,7 @@ TextureInfo TextureManager::texture_info(size_t texture_n, size_t image_key) con
 {
     auto [x, y] = index_location_in_texture(image_key);
     return {
-        textures_.at(texture_n).get(),
+            textures_.at(texture_n).get(),
         { x, y, Image::IMAGE_W, Image::IMAGE_H },
     };
 }

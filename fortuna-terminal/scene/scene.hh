@@ -34,14 +34,18 @@ struct Scene : NonCopyable {
     uint8_t bg_color = COLOR_BLACK;
 
     TextLayer&         text() { return *reinterpret_cast<TextLayer*>(layers_.at(LAYER_TILEMAP_TEXT).get()); }
-    TextLayer const&   text() const { return *reinterpret_cast<TextLayer const*>(layers_.at(LAYER_TILEMAP_TEXT).get()); }
+    TextLayer const&   text() const { return *reinterpret_cast<TextLayer const*>(layers_.at(
+                LAYER_TILEMAP_TEXT).get()); }
     SpriteLayer&       sprites() { return *reinterpret_cast<SpriteLayer*>(layers_.at(LAYER_SPRITES).get()); }
-    SpriteLayer const& sprites() const { return *reinterpret_cast<SpriteLayer const*>(layers_.at(LAYER_SPRITES).get()); }
+    SpriteLayer const& sprites() const { return *reinterpret_cast<SpriteLayer const*>(layers_.at(
+                LAYER_SPRITES).get()); }
 
-    ImageLayer const*  image_layer_unsafe(LayerIdentifier layer_id) const { return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get()); }
+    ImageLayer const*  image_layer_unsafe(LayerIdentifier layer_id) const { return reinterpret_cast<ImageLayer const *>(layers_.at(
+                layer_id).get()); }
     ImageLayer*        image_layer_unsafe(LayerIdentifier layer_id) { return const_cast<ImageLayer *>(const_cast<Scene const *>(this)->image_layer_unsafe(layer_id)); }
 
-    TilemapLayer const* tilemap_layer(LayerIdentifier layer_id) const { return dynamic_cast<TilemapLayer const *>(layers_.at(layer_id).get()); }
+    TilemapLayer const* tilemap_layer(LayerIdentifier layer_id) const { return dynamic_cast<TilemapLayer const *>(layers_.at(
+                layer_id).get()); }
     TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) { return const_cast<TilemapLayer *>(const_cast<Scene const *>(this)->tilemap_layer(layer_id)); }
 
     Layer*              layer(LayerIdentifier id) { return layers_.at(id).get(); }

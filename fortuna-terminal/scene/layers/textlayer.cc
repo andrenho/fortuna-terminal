@@ -10,7 +10,7 @@ TextLayer::TextLayer(Mode mode)
     set_mode(mode);
 }
 
-Char const &TextLayer::get(size_t line, size_t column) const
+Char const &TextLayer::get_char(size_t line, size_t column) const
 {
     return matrix_[line * columns_ + column];
 }
@@ -72,4 +72,16 @@ void TextLayer::set_mode(Mode mode)
     for (size_t i = 0; i < (columns_ * lines_); ++i)
         matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
     // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
+}
+
+void TextLayer::write(size_t row, size_t column, std::string const &text, CharAttrib attrib)
+{
+    if (row >= lines_)
+        return;
+
+    for (uint8_t c: text) {
+        if (column > columns_)
+            return;
+        set(row, column++, {c, attrib });
+    }
 }

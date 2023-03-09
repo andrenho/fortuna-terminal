@@ -35,7 +35,7 @@ void TextPainter::draw(Scene const& scene) const
 
 void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const
 {
-    Char chr = text.get(line, column);
+    Char chr = text.get_char(line, column);
     uint8_t c = chr.c;
 
     if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line) && !chr.attrib.reverse)
