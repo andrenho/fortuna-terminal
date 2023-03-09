@@ -48,7 +48,7 @@ Refactoring 3:
  - [x] Create runner
  - [ ] Not working
      - [x] Cursor
-     - [ ] Graphics
+     - [x] Graphics
      - [ ] FPS
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
