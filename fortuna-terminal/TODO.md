@@ -49,7 +49,7 @@ Refactoring 3:
  - [ ] Not working
      - [x] Cursor
      - [x] Graphics
-     - [ ] FPS
+     - [x] FPS
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII
