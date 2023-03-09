@@ -54,6 +54,7 @@ Refactoring 3:
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII
  - [ ] Reset
+ - [ ] Scene id
  - [ ] General overview + make compilation faster (?)
 
 Electronics:
