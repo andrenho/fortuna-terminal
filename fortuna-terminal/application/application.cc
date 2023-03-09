@@ -20,6 +20,8 @@ Application::Application(int argc, char* argv[])
         env.run_io_threads();
 
     control.emplace(ControlCommand::SetMode, options_.mode);
+
+    terminal_.setup_scene(envs.at(current_env).scene());  // TODO - remove this
 }
 
 void Application::run()

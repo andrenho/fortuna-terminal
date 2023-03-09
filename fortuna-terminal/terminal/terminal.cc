@@ -61,8 +61,8 @@ Terminal::~Terminal()
 
 void Terminal::setup_scene(Scene const &scene)
 {
-    resize_window(scene);
-    graphics_painter_->setup_scene(scene);
+    // resize_window(scene);
+    graphics_painter_->setup_scene(scene);  // TODO - improve this
 }
 
 void Terminal::do_events(Events& events, bool *quit)
