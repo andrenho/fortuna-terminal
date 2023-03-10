@@ -1,6 +1,8 @@
 #include "texturemanager.hh"
 #include "common/exceptions/sdlexception.hh"
 
+#include <cstring>
+
 void TextureManager::create_texture(size_t texture_n, size_t images_per_texture)
 {
     int h = (int) (images_per_texture / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
