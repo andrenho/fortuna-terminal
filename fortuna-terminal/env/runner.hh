@@ -1,6 +1,9 @@
 #ifndef RUNNER_HH_
 #define RUNNER_HH_
 
+#include <memory>
+#include <thread>
+
 #include "common/syncqueue.hh"
 #include "env/comm/comm.hh"
 

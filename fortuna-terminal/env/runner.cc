@@ -6,6 +6,8 @@
 #include <memory>
 #include <thread>
 
+#include <signal.h>
+
 void Runner::run_io_threads()
 {
     if (comm_.channels() == Channels::InputAndOutput) {
