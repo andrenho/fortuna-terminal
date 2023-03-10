@@ -57,6 +57,16 @@ Refactoring 3:
  - [ ] Scene id
  - [ ] General overview + make compilation faster (?)
 
+- For each class
+  - pimpl
+  - external templates
+  - precompiled headers
+- For the project
+  - ccache
+  - compile remotely / cross-compile
+  - ram disk
+  - LTO
+
 Electronics:
   - [x] Build circuit
   - [ ] Write sample software for UART on the test circuit
