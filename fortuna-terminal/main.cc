@@ -14,8 +14,6 @@
 
 using namespace std::chrono_literals;
 
-SyncQueue<Control> control;
-
 static void on_error(Terminal* terminal, std::vector<Protocol>& protocols, size_t current_protocol, std::exception& e, bool* quit)
 {
     std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
@@ -116,14 +114,6 @@ restart:
 
             terminal->do_events(*protocol, &quit);
             terminal->draw(protocol->scene());
-
-            /*
-            auto frame_end = std::chrono::high_resolution_clock::now();
-            if (frame_end < (frame_start + 16ms)) {
-                auto duration = (frame_start + 16ms) - frame_end;
-                std::this_thread::sleep_for(duration);
-            }
-             */
 
             duration += std::chrono::high_resolution_clock::now() - frame_start;
 
