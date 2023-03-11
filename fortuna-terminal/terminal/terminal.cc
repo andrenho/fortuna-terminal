@@ -59,12 +59,12 @@ Terminal::~Terminal()
     SDL_Quit();
 }
 
-void Terminal::do_events(Events& events, bool *quit)
+ExecutionStatus Terminal::process_user_events(Events& events)
 {
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL))
-            *quit = true;
+            return ExecutionStatus::Quit;
 
         else if (e.type == SDL_TEXTINPUT) {
             if (joystick_emulation_ && strlen(e.text.text) == 1 && strchr(emulated_keys, e.text.text[0]) != nullptr)
@@ -112,6 +112,8 @@ void Terminal::do_events(Events& events, bool *quit)
             events.event_joystick_directional(e.jaxis.which, e.jaxis.axis, value);
         }
     }
+
+    return ExecutionStatus::Continue;
 }
 
 void Terminal::draw(Scene const& scene) const
@@ -157,17 +159,15 @@ void Terminal::resize_window(Scene const& scene)
     SDL_RenderSetLogicalSize(renderer_.get(), w, h);
 }
 
-void Terminal::wait_for_enter(bool* quit)
+ExecutionStatus Terminal::wait_for_enter()
 {
     while (true) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_F12 && e.key.keysym.mod & KMOD_CTRL)) {
-                if (quit)
-                    *quit = true;
-                return;
+                return ExecutionStatus::Quit;
             } else if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER)) {
-                return;
+                return ExecutionStatus::Continue;
             }
         }
     }

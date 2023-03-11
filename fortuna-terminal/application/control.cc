@@ -1,6 +1,5 @@
 #include "control.hh"
-#include "common/syncqueue.hh"
 
-SyncQueue<Control> control;
+SyncQueue<Control> control_queue;
 
 template class SyncQueue<Control>;

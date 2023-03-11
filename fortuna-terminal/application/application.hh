@@ -4,9 +4,10 @@
 #include <vector>
 
 #include "common/noncopyable.hh"
-#include "options.hh"
+#include "common/execution.hh"
 #include "env/environment.hh"
 #include "framecontrol.hh"
+#include "options.hh"
 #include "terminal/terminal.hh"
 
 class Application : NonCopyable {
@@ -19,13 +20,14 @@ private:
     Options                  options_;
     Terminal                 terminal_;
     GPIO                     gpio_ {};
-    std::vector<Environment> envs {};
-    int                      current_env;
+    std::vector<Environment> environments {};
+    int                      current_env_idx;
     FrameControl             frame_control_ {};
 
-    void execute_control_commands();
+    ExecutionStatus execute_single_step();
+    ExecutionStatus on_error(std::exception const& exception);
 
-    void on_error(std::exception const &e, bool& quit);
+    void            execute_control_queue();
 };
 
 #endif //APPLICATION_HH_

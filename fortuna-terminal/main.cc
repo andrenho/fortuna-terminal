@@ -1,8 +1,7 @@
+#include <cstdio>
 #include <optional>
 
 #include "application/application.hh"
-
-#include <iostream>
 
 int main(int argc, char* argv[])
 {
@@ -10,7 +9,7 @@ int main(int argc, char* argv[])
     try {
         application.emplace(argc, argv);
     } catch (std::exception& e) {
-        std::cerr << "Error initializing Fortuna Terminal: " << e.what() << std::endl;
+        fprintf(stderr, "Error initializing Fortuna Terminal: %s\n", e.what());
         exit(EXIT_FAILURE);
     }
 

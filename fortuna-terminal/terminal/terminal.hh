@@ -11,6 +11,7 @@
 #include "scene/scene.hh"
 #include "common/syncqueue.hh"
 #include "common/noncopyable.hh"
+#include "common/execution.hh"
 #include "application/options.hh"
 #include "env/protocol/protocol.hh"
 #include "texturemanager.hh"
@@ -24,16 +25,15 @@ public:
     explicit Terminal(TerminalOptions terminal_options);
     ~Terminal();
 
-    void do_events(Events& events, bool* quit);
-    void draw(Scene const& scene) const;
+    void            draw(Scene const& scene) const;
+    void            resize_window(Scene const& scene);
 
-    void resize_window(Scene const& scene);
+    ExecutionStatus process_user_events(Events& events);
+    ExecutionStatus wait_for_enter();
 
-    void wait_for_enter(bool* quit);
-
-    void set_mouse_active(bool value);
-    void set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
-    void set_joystick_emulation(bool value) { joystick_emulation_ = value; }
+    void            set_mouse_active(bool value);
+    void            set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
+    void            set_joystick_emulation(bool value) { joystick_emulation_ = value; }
 
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;

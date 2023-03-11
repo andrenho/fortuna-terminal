@@ -24,7 +24,7 @@ void Environment::finalize_threads()
     runner_.finalize_threads();
 }
 
-void Environment::execute_step(Duration duration)
+void Environment::execute_single_step(Duration duration)
 {
     scene_.text().update_blink();
     protocol_.execute_inputs(*input_queue_);   // TODO - parellize these two requests (?)

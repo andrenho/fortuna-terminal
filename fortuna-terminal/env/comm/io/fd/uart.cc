@@ -49,7 +49,7 @@ UART::UART(UartOptions const &uart_options)
     else
         opt.c_cflag &= ~CSTOPB;
 
-    opt.c_cflag &= ~CRTSCTS;  // disable flow control
+    opt.c_cflag &= ~CRTSCTS;  // disable flow control_queue
 
     opt.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
     opt.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);

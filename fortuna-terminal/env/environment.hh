@@ -15,7 +15,7 @@ public:
     void run_io_threads(bool debug_comm);
     void finalize_threads();
 
-    void execute_step(Duration duration);
+    void execute_single_step(Duration duration);
 
     void show_error(std::exception const &e);
 

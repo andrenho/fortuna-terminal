@@ -25,17 +25,17 @@ void Extra::escape_sequence_complete()
     char command = parse_escape_sequence(p);
     switch (command) {
         case 'r':
-            control.emplace(ControlCommand::ResetProtocol);
+            control_queue.emplace(ControlCommand::ResetProtocol);
             break;
         case 'x':
-            control.emplace(ControlCommand::ResetComputer);
+            control_queue.emplace(ControlCommand::ResetComputer);
             break;
         case 'g':
             if (!p.empty()) {
                 if (p.at(0) == 0)
-                    control.emplace(ControlCommand::SetMode, Mode::Text);
+                    control_queue.emplace(ControlCommand::SetMode, Mode::Text);
                 else if (p.at(0) == 1)
-                    control.emplace(ControlCommand::SetMode, Mode::Graphics);
+                    control_queue.emplace(ControlCommand::SetMode, Mode::Graphics);
             }
             break;
         case 'v':
@@ -47,15 +47,15 @@ void Extra::escape_sequence_complete()
         switch (command) {
             case 'm':
                 if (!p.empty())
-                    control.emplace(ControlCommand::SetMouseActive, p.at(0));
+                    control_queue.emplace(ControlCommand::SetMouseActive, p.at(0));
                 break;
             case 'n':
                 if (!p.empty())
-                    control.emplace(ControlCommand::SetMouseMoveReport, p.at(0));
+                    control_queue.emplace(ControlCommand::SetMouseMoveReport, p.at(0));
                 break;
             case 'j':
                 if (!p.empty())
-                    control.emplace(ControlCommand::SetJoystickEmulation, p.at(0));
+                    control_queue.emplace(ControlCommand::SetJoystickEmulation, p.at(0));
                 break;
             case 'B':
                 if (!p.empty())

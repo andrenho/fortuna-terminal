@@ -1,102 +1,115 @@
 #include "application.hh"
-#include "control.hh"
 
-#include <cstdlib>
-#include <iostream>
+#include <cstdio>
 #include <optional>
+
+#include "control.hh"
 
 Application::Application(int argc, char* argv[])
     : options_(argc, argv),
       terminal_(options_.terminal_options)
 {
-    envs.emplace_back(options_);
-    current_env = 0;
+    environments.emplace_back(options_);
+    current_env_idx = 0;
 
-    for (Environment& env: envs)
-        env.run_io_threads(options_.debug_comm);
+    for (auto& environment: environments)
+        environment.run_io_threads(options_.debug_comm);
 
-    control.emplace(ControlCommand::SetMode, options_.mode);
+    control_queue.emplace(ControlCommand::SetMode, options_.mode);
 
-    gpio_.reset();
+    gpio_.reset();  // restart computer
 }
 
 void Application::run()
 {
-    bool quit = false;
+retry:
     try {
 
-        while (!quit) {
-            Environment& cur_ev = envs.at(current_env);
+        while (execute_single_step() == ExecutionStatus::Continue) {}
 
-            frame_control_.start_frame();
+    } catch (std::exception& exception) {
 
-            execute_control_commands();
-
-            for (auto& env: envs)
-                env.execute_step(frame_control_.avg_fps());
-
-            gpio_.vsync();
-            terminal_.do_events(cur_ev.events_interface(), &quit);
-            terminal_.draw(cur_ev.scene());
-
-            frame_control_.end_frame();
-        }
-
-    } catch (std::exception& e) {
-
-        on_error(e, quit);
-        if (!quit)
-            run();
+        if (on_error(exception) == ExecutionStatus::Continue)
+            goto retry;
     }
 
-    for (Environment& env: envs)
-        env.finalize_threads();
+    for (auto& environment: environments)
+        environment.finalize_threads();
 }
 
-void Application::on_error(std::exception const& e, bool& quit)
+ExecutionStatus Application::execute_single_step()
 {
-    std::cerr << "\e[1;31m" << e.what() << "\e0m\n";
-    for (auto& env: envs)
-        env.show_error(e);
-    terminal_.draw(envs.at(current_env).scene());
-    terminal_.wait_for_enter(&quit);
-    if (!quit) {
-        control.emplace(ControlCommand::Reset);
-        run();
-    }
+    frame_control_.start_frame();
+
+    Environment& currrent_environment = environments.at(current_env_idx);
+
+    execute_control_queue();
+
+    for (auto& environment: environments)
+        environment.execute_single_step(frame_control_.avg_fps());
+
+    gpio_.vsync();
+
+    ExecutionStatus execution_status = terminal_.process_user_events(currrent_environment.events_interface());
+    terminal_.draw(currrent_environment.scene());
+
+    frame_control_.end_frame();
+
+    return execution_status;
 }
 
-void Application::execute_control_commands()
+ExecutionStatus Application::on_error(std::exception const& e)
 {
-    Environment& cur_ev = envs.at(current_env);
+    fprintf(stderr, "\e[1;31m%s\e0m\n", e.what());
 
-    std::optional<Control> occ;
-    while ((occ = control.pop_nonblock()).has_value()) {
-        Control& cc = occ.value();
-        switch (cc.command) {
+    for (auto& environment: environments)
+        environment.show_error(e);
+
+    terminal_.draw(environments.at(current_env_idx).scene());
+
+    ExecutionStatus execution_status = terminal_.wait_for_enter();
+
+    if (execution_status == ExecutionStatus::Continue)
+        control_queue.emplace(ControlCommand::Reset);
+
+    return execution_status;
+}
+
+void Application::execute_control_queue()
+{
+    Environment& currrent_env = environments.at(current_env_idx);
+
+    std::optional<Control> cc;
+    while ((cc = control_queue.pop_nonblock()).has_value()) {
+
+        switch (cc->command) {
+
             case ControlCommand::Reset:
-                for (auto& env: envs)
-                    env.reset();
-                std::cout << "Terminal reset." << std::endl;
+                for (auto& environment: environments)
+                    environment.reset();
                 break;
+
             case ControlCommand::ResetProtocol:
-                cur_ev.reset();
-                std::cout << "Scene reset." << std::endl;
+                currrent_env.reset();
                 break;
+
             case ControlCommand::SetMode:
-                cur_ev.set_mode(cc.mode);
-                terminal_.resize_window(cur_ev.scene());
-                std::cout << (cc.mode == Mode::Text ? "TextLayer" : "Graphics") << " mode set." << std::endl;
+                currrent_env.set_mode(cc->mode);
+                terminal_.resize_window(currrent_env.scene());
                 break;
+
             case ControlCommand::SetMouseActive:
-                terminal_.set_mouse_active(cc.active);
+                terminal_.set_mouse_active(cc->active);
                 break;
+
             case ControlCommand::SetMouseMoveReport:
-                terminal_.set_mouse_register_move(cc.active);
+                terminal_.set_mouse_register_move(cc->active);
                 break;
+
             case ControlCommand::SetJoystickEmulation:
-                terminal_.set_joystick_emulation(cc.active);
+                terminal_.set_joystick_emulation(cc->active);
                 break;
+
             case ControlCommand::ResetComputer:
                 gpio_.reset();
                 break;
