@@ -8,7 +8,7 @@
 
 #include <signal.h>
 
-void Runner::run_io_threads(bool debug_comm)
+void Runner::run_comm_threads(bool debug_comm)
 {
     // TODO - debug communication
 
@@ -39,7 +39,7 @@ void Runner::run_io_threads(bool debug_comm)
     }
 }
 
-void Runner::finalize_threads()
+void Runner::finalize_comm_threads()
 {
     threads_active_ = false;
     if (comm_.release_locks()) {

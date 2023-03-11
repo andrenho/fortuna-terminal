@@ -5,7 +5,7 @@
 #include "extra.hh"
 #include "common/mode.hh"
 #include "scene/scene.hh"
-#include "common/duration.hh"
+#include "common/time.hh"
 #include "events.hh"
 
 class Protocol : ANSI, Extra, public Events {
@@ -14,6 +14,8 @@ public:
 
     void execute_inputs(SyncQueueByte &input_queue);
     void execute_outputs(SyncQueueByte &output_queue);
+
+    void reset();
 
 private:
     Scene& scene_;

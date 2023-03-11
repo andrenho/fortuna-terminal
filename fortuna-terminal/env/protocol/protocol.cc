@@ -80,3 +80,8 @@ void Protocol::execute_inputs(SyncQueueByte& input_queue)
     if (last_is_esc)
         received_bytes.push_back('\e');
 }
+
+void Protocol::reset()
+{
+    // TODO
+}

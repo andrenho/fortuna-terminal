@@ -10,9 +10,7 @@
 
 #include "layer.hh"
 #include "common/mode.hh"
-
-using TimePoint = std::chrono::high_resolution_clock::time_point;
-using Time = std::chrono::high_resolution_clock;
+#include "common/time.hh"
 
 struct CursorAttrib {
     uint8_t color;

@@ -99,12 +99,13 @@ ${GCH_HEADER}.gch: ${GCH_HEADER}
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}
 
+-include ${DEPS}
+
 .PHONY: clean
 clean:
 ifeq ($(WINDOWS),1)
-	del /Q /F $(subst /,\,${OBJ} ${EXE} ${GCH_HEADER_BIN})
+	del /Q /F $(subst /,\,${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS})
 else
-	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN}
+	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS}
 endif
 
--include $(DEPS)
