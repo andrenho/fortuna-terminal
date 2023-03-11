@@ -9,11 +9,13 @@ WINDOWS := 0
 RASPBERRY := 0
 INCLUDE_UART_PTY := 0
 INCLUDE_SPI_I2C := 0
+COLOR_TERMINAL := 0
 
 # autodetect configuration
 ifeq ($(OS),Windows_NT)
 	WINDOWS := 1
 else
+	COLOR_TERMINAL := 1
 	INCLUDE_UART_PTY := 1
 	ifeq ($(shell uname -m),armv7l)
 		ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
@@ -29,7 +31,7 @@ endif
 
 OBJ =   main.o \
 		application/application.o application/options.o application/control.o application/framecontrol.o \
-		env/environment.o env/runner.o \
+		env/environment.o env/threadrunner.o \
         env/comm/comm.o \
         env/comm/io/comm_io.o env/comm/io/echo.o \
         env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
@@ -44,7 +46,7 @@ DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-I. -D_GNU_SOURCE -pthread
+CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DCOLOR_TERMINAL=${COLOR_TERMINAL}
 CXXFLAGS=-std=c++20
 LDFLAGS=-pthread
 

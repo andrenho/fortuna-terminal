@@ -6,7 +6,7 @@
 #include "env/comm/comm.hh"
 #include "env/protocol/protocol.hh"
 #include "scene/scene.hh"
-#include "runner.hh"
+#include "threadrunner.hh"
 
 class Environment {
 public:
@@ -32,7 +32,7 @@ private:
     CommUniquePtr comm_;
     Scene         scene_;
     Protocol      protocol_;
-    Runner        runner_;
+    ThreadRunner        runner_;
     bool          show_fps_counter_;
 
     void show_fps_counter(size_t fps);

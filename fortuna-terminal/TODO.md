@@ -50,12 +50,13 @@ Refactoring 3:
      - [x] Cursor
      - [x] Graphics
      - [x] FPS
-     - [ ] Exceptions are not showing
+     - [x] Exceptions are not showing
+     - [ ] Why 'pacman' is printing zeroes?
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII
  - [ ] Reset
- - [ ] Scene id
+ - [x] Scene id
  - [ ] General overview + make compilation faster (?)
 
 - For each class
