@@ -75,7 +75,8 @@ ifeq ($(FAST),0)
 endif
 
 ifeq ($(RELEASE),1)
-	CPPFLAGS := ${CPPFLAGS} -O3
+	CPPFLAGS := ${CPPFLAGS} -O3 -flto
+	LDFLAGS := ${LDFLAGS} -O3 -flto
 else
 	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
 endif
