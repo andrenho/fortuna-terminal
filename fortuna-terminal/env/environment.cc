@@ -14,9 +14,9 @@ Environment::Environment(Options const &options)
 {
 }
 
-void Environment::run_io_threads()
+void Environment::run_io_threads(bool debug_comm)
 {
-    runner_.run_io_threads();
+    runner_.run_io_threads(debug_comm);
 }
 
 void Environment::finalize_threads()

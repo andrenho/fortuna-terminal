@@ -46,7 +46,7 @@ New protocol:
 
 Refactoring 3:
  - [x] Create runner
- - [ ] Not working
+ - [x] Not working
      - [x] Cursor
      - [x] Graphics
      - [x] FPS
@@ -65,7 +65,7 @@ Refactoring 3:
   - [ ] ccache
   - [ ] compile remotely / cross-compile
   - [ ] ram disk
-  - [ ] LTO
+  - [x] LTO
 
 Electronics:
   - [x] Build circuit

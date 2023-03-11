@@ -8,8 +8,10 @@
 
 #include <signal.h>
 
-void Runner::run_io_threads()
+void Runner::run_io_threads(bool debug_comm)
 {
+    // TODO - debug communication
+
     if (comm_.channels() == Channels::InputAndOutput) {
         auto comm_io = dynamic_cast<CommIO*>(&comm_);
 

@@ -12,7 +12,7 @@ class Environment {
 public:
     explicit Environment(Options const& options);
 
-    void run_io_threads();
+    void run_io_threads(bool debug_comm);
     void finalize_threads();
 
     void execute_step(Duration duration);

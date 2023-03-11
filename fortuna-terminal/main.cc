@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     try {
         application.emplace(argc, argv);
     } catch (std::exception& e) {
-        std::cerr << "Error initializing terminal: " << e.what() << std::endl;
+        std::cerr << "Error initializing Fortuna Terminal: " << e.what() << std::endl;
         exit(EXIT_FAILURE);
     }
 

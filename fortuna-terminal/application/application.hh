@@ -20,7 +20,7 @@ private:
     Terminal                 terminal_;
     GPIO                     gpio_ {};
     std::vector<Environment> envs {};
-    int                      current_env = -1;
+    int                      current_env;
     FrameControl             frame_control_ {};
 
     void execute_control_commands();

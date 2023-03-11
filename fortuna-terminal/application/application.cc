@@ -12,16 +12,14 @@ Application::Application(int argc, char* argv[])
     envs.emplace_back(options_);
     current_env = 0;
 
-    // TODO - set debugging option
-
-    gpio_.reset();
-
     for (Environment& env: envs)
-        env.run_io_threads();
+        env.run_io_threads(options_.debug_comm);
 
     control.emplace(ControlCommand::SetMode, options_.mode);
 
     terminal_.setup_scene(envs.at(current_env).scene());  // TODO - remove this
+
+    gpio_.reset();
 }
 
 void Application::run()
