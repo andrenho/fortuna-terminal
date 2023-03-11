@@ -58,10 +58,10 @@ Refactoring 3:
  - [ ] General overview + make compilation faster (?)
 
 - For each class
-  - [ ] external templates
+  - [x] external templates
   - [X] precompiled headers
 - For the project
-  - [ ] dependencies
+  - [x] dependencies
   - [ ] ccache
   - [ ] compile remotely / cross-compile
   - [ ] ram disk

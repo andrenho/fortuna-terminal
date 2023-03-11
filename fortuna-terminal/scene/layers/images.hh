@@ -25,4 +25,6 @@ private:
     mutable SyncQueueUniqPtr<Image> pending_images_ = std::make_unique<SyncQueue<Image>>();
 };
 
+extern template class SyncQueue<Image>;
+
 #endif //IMAGES_HH_
