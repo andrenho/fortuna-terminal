@@ -55,7 +55,7 @@ struct Scene : NonCopyable {
 
     [[nodiscard]] Mode mode() const { return mode_; }
 
-    [[nodiscard]] size_t texture_image_index() const { return texture_image_index_; }
+    [[nodiscard]] size_t unique_id() const { return unique_id_; }
 
     std::pair<int, int> size_in_pixels() const;
 
@@ -63,11 +63,11 @@ struct Scene : NonCopyable {
 
 private:
     Mode mode_;
-    size_t texture_image_index_;
+    size_t unique_id_;
 
     std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
 
-    static size_t image_texture_idx_counter;
+    static size_t unique_id_counter;
 };
 
 #endif //SCENE_HH_

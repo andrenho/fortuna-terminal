@@ -59,12 +59,6 @@ Terminal::~Terminal()
     SDL_Quit();
 }
 
-void Terminal::setup_scene(Scene const &scene)
-{
-    // resize_window(scene);
-    graphics_painter_->setup_scene(scene);  // TODO - improve this
-}
-
 void Terminal::do_events(Events& events, bool *quit)
 {
     SDL_Event e;

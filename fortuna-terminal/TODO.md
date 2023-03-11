@@ -50,6 +50,7 @@ Refactoring 3:
      - [x] Cursor
      - [x] Graphics
      - [x] FPS
+     - [ ] Exceptions are not showing
  - [ ] Rearrange Protocol class
  - [ ] I/O debugging
  - [ ] Refactor SDL RAII

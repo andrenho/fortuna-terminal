@@ -1,25 +1,13 @@
 #include "texturemanager.hh"
 #include "common/exceptions/sdlexception.hh"
+#include "scene/scene.hh"
 
 #include <cstring>
 
-void TextureManager::create_texture(size_t texture_n, size_t images_per_texture)
+void TextureManager::add_image(size_t scene_id, Image const &image, Palette const& palette)
 {
-    int h = (int) (images_per_texture / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
-    textures_.emplace(
-        texture_n,
-        TextureUniquePtr(
-            SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h),
-            [](SDL_Texture* t) { SDL_DestroyTexture(t); }
-        )
-    );
-    if (!textures_.at(texture_n))
-        throw SDLException("Error creating texture");
-    SDL_SetTextureBlendMode(textures_.at(texture_n).get(), SDL_BLENDMODE_BLEND);
-}
+    SDL_Texture* scene_texture = get_or_create_texture(scene_id);
 
-void TextureManager::add_image(size_t texture_n, Image const &image, Palette const& palette)
-{
     SDL_Surface* sf = SDL_CreateRGBSurface(0, Image::IMAGE_W, Image::IMAGE_H, 8, 0, 0, 0, 0);
     if (!sf)
         throw SDLException("Error creating surface");
@@ -38,7 +26,7 @@ void TextureManager::add_image(size_t texture_n, Image const &image, Palette con
         throw SDLException("Error creating texture");
 
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-    if (SDL_SetRenderTarget(renderer_, textures_.at(texture_n).get()) < 0)
+    if (SDL_SetRenderTarget(renderer_, scene_texture) < 0)
         throw SDLException("Error setting target");
     auto [x, y] = index_location_in_texture(image.key);
     SDL_Rect src = { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
@@ -49,6 +37,29 @@ void TextureManager::add_image(size_t texture_n, Image const &image, Palette con
 
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(sf);
+}
+
+SDL_Texture *TextureManager::get_or_create_texture(size_t scene_id)
+{
+    auto it = textures_.find(scene_id);
+
+    if (it != textures_.end()) {
+        return it->second.get();
+    } else {
+        int h = (int) (Scene::MAX_IMAGES / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
+        auto [itr, _] = textures_.emplace(
+                scene_id,
+                TextureUniquePtr(
+                        SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h),
+                        [](SDL_Texture* t) { SDL_DestroyTexture(t); }
+                )
+        );
+        SDL_Texture* texture = itr->second.get();
+        if (!texture)
+            throw SDLException("Error creating texture");
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        return texture;
+    }
 }
 
 TextureInfo TextureManager::texture_info(size_t texture_n, size_t image_key) const
@@ -66,4 +77,3 @@ std::pair<int, int> TextureManager::index_location_in_texture(size_t key)
     int y = ((int) key * 16) / MAX_TEXTURE_W;
     return { x, y };
 }
-

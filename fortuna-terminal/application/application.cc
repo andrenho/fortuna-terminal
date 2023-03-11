@@ -17,8 +17,6 @@ Application::Application(int argc, char* argv[])
 
     control.emplace(ControlCommand::SetMode, options_.mode);
 
-    terminal_.setup_scene(envs.at(current_env).scene());  // TODO - remove this
-
     gpio_.reset();
 }
 

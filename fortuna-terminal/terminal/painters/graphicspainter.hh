@@ -12,8 +12,6 @@ public:
     explicit GraphicsPainter(SDL_Renderer* renderer)
         : texture_manager_(std::make_unique<TextureManager>(renderer)), renderer_(renderer) {}
 
-    void setup_scene(Scene const& scene);
-
     void initialize_pending_images(Scene const& scene);
 
     void draw_background(Scene const& scene) const;

@@ -6,13 +6,8 @@ void GraphicsPainter::initialize_pending_images(Scene const& scene)
     std::optional<Image> oimg;
     while ((oimg = scene.images.pending_images()->pop_nonblock()).has_value()) {
         Image const& img = oimg.value();
-        texture_manager_->add_image(scene.texture_image_index(), img, scene.palette);
+        texture_manager_->add_image(scene.unique_id(), img, scene.palette);
     }
-}
-
-void GraphicsPainter::setup_scene(Scene const &scene)
-{
-    texture_manager_->create_texture(scene.texture_image_index(), Scene::MAX_IMAGES);
 }
 
 void GraphicsPainter::draw_background(Scene const &scene) const
@@ -34,7 +29,7 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
 
     for (auto const& image: layer->images_to_draw(scene)) {
         static SDL_Point center { 0, 0 };
-        TextureInfo ti = texture_manager_->texture_info(scene.texture_image_index(), image.image);
+        TextureInfo ti = texture_manager_->texture_info(scene.unique_id(), image.image);
         if (ti.tx == nullptr)
             break;
         SDL_Rect dest { image.pos_x, image.pos_y, Image::IMAGE_W, Image::IMAGE_H };

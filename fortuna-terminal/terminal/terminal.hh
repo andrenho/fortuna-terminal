@@ -35,8 +35,6 @@ public:
     void set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
     void set_joystick_emulation(bool value) { joystick_emulation_ = value; }
 
-    void setup_scene(Scene const& scene);
-
 private:
     std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;

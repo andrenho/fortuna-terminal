@@ -3,11 +3,11 @@
 #include "common/exceptions/fortunaexception.hh"
 #include "common/pixelsize.hh"
 
-size_t Scene::image_texture_idx_counter = 0;
+size_t Scene::unique_id_counter = 0;
 
 Scene::Scene(Mode mode)
     : mode_(mode),
-      texture_image_index_(image_texture_idx_counter++)
+      unique_id_(unique_id_counter++)
 {
     layers_.emplace(LAYER_TILEMAP_BG, std::make_unique<TilemapLayer>());
     layers_.emplace(LAYER_TILEMAP_OBSTACLES, std::make_unique<TilemapLayer>());
