@@ -3,3 +3,4 @@
 
 SyncQueue<Control> control;
 
+template class SyncQueue<Control>;

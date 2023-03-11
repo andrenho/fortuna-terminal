@@ -3,7 +3,6 @@
 
 #include <cstdint>
 
-#include <algorithm>
 #include <chrono>
 #include <memory>
 #include <string>

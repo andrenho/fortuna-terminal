@@ -20,4 +20,6 @@ struct Control {
 
 extern SyncQueue<Control> control;
 
+extern template class SyncQueue<Control>;
+
 #endif //CONTROL_HH_

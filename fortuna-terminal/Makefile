@@ -24,7 +24,7 @@ else
 endif
 
 #
-# configure objects and compilation options_
+# configure objects and compilation options
 #
 
 OBJ =   application/application.o application/options.o application/control.o application/framecontrol.o \
@@ -46,6 +46,8 @@ CPPFLAGS=-I. -D_GNU_SOURCE -pthread
 CXXFLAGS=-std=c++20
 LDFLAGS=-pthread
 
+GCH_HEADER=precompile.hh
+
 ifeq ($(WINDOWS),1)
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include
@@ -53,6 +55,8 @@ ifeq ($(WINDOWS),1)
 else
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags`
 	LDFLAGS := ${LDFLAGS} `sdl2-config --libs` -lpthread -lutil
+	GCH_HEADER_BIN=${GCH_HEADER}.gch
+	INCLUDE_HEADER=-include precompile.hh
 endif
 
 ifeq ($(RASPBERRY),1)
@@ -83,13 +87,19 @@ all: ${EXE}
 lib/tmt/tmt.o: lib/tmt/tmt.c
 	${CC} -c -o $@ $^ -O0 -ggdb
 
+${GCH_HEADER}.gch: ${GCH_HEADER}
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
+
+%.o: %.cc ${GCH_HEADER_BIN}
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${INCLUDE_HEADER} -c -o $@ $<
+
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}
 
 .PHONY: clean
 clean:
 ifeq ($(WINDOWS),1)
-	del /Q /F $(subst /,\,${OBJ} ${EXE})
+	del /Q /F $(subst /,\,${OBJ} ${EXE} ${GCH_HEADER_BIN})
 else
-	rm -f ${OBJ} ${EXE}
+	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN}
 endif

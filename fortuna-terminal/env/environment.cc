@@ -3,6 +3,8 @@
 using namespace std::string_literals;
 using namespace std::chrono_literals;
 
+template class SyncQueue<uint8_t>;
+
 Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
