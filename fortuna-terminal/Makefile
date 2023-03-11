@@ -27,7 +27,8 @@ endif
 # configure objects and compilation options
 #
 
-OBJ =   application/application.o application/options.o application/control.o application/framecontrol.o \
+OBJ =   main.o \
+		application/application.o application/options.o application/control.o application/framecontrol.o \
 		env/environment.o env/runner.o \
         env/comm/comm.o \
         env/comm/io/comm_io.o env/comm/io/echo.o \
