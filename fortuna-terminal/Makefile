@@ -39,6 +39,8 @@ OBJ =   application/application.o application/options.o application/control.o ap
  		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
 
+DEPS := $(COBJS:.o=.d)
+-include $(DEPS)
 
 EXE = fortuna-terminal
 
@@ -91,7 +93,7 @@ ${GCH_HEADER}.gch: ${GCH_HEADER}
 	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
 
 %.o: %.cc ${GCH_HEADER_BIN}
-	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${INCLUDE_HEADER} -c -o $@ $<
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${INCLUDE_HEADER} -MM -MF $(patsubst %.o,%.d,$@) -c -o $@ $<
 
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}
