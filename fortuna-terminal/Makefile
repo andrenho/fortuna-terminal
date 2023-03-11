@@ -40,8 +40,7 @@ OBJ =   main.o \
  		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
 
-DEPS := $(COBJS:.o=.d)
--include $(DEPS)
+DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
 
@@ -106,3 +105,5 @@ ifeq ($(WINDOWS),1)
 else
 	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN}
 endif
+
+-include $(DEPS)
