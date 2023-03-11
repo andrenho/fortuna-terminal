@@ -58,14 +58,14 @@ Refactoring 3:
  - [ ] General overview + make compilation faster (?)
 
 - For each class
-  - pimpl
-  - external templates
-  - precompiled headers
+  - [ ] external templates
+  - [X] precompiled headers
 - For the project
-  - ccache
-  - compile remotely / cross-compile
-  - ram disk
-  - LTO
+  - [ ] dependencies
+  - [ ] ccache
+  - [ ] compile remotely / cross-compile
+  - [ ] ram disk
+  - [ ] LTO
 
 Electronics:
   - [x] Build circuit
