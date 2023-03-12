@@ -32,7 +32,7 @@ private:
     CommUniquePtr comm_;
     Scene         scene_;
     Protocol      protocol_;
-    ThreadRunner        runner_;
+    ThreadRunner  runner_;
     bool          show_fps_counter_;
 
     void show_fps_counter(size_t fps);

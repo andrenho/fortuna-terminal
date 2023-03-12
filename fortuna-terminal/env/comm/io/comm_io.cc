@@ -2,7 +2,7 @@
 
 std::optional<uint8_t> CommIO::read_blocking()
 {
-    auto v = read_blocking(1);
+    std::vector<uint8_t> v = read_blocking(1);
     if (v.empty())
         return {};
     else

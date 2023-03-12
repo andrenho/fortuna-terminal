@@ -17,9 +17,9 @@ struct Control {
         bool active;
     };
 
-    explicit Control(ControlCommand command) : command(command), active(false) {}
-             Control(ControlCommand command, Mode mode) : command(command), mode(mode) {}
-             Control(ControlCommand command, bool active) : command(command), active(active) {}
+    explicit constexpr Control(ControlCommand command) : command(command), active(false) {}
+             constexpr Control(ControlCommand command, Mode mode) : command(command), mode(mode) {}
+             constexpr Control(ControlCommand command, bool active) : command(command), active(active) {}
 };
 
 extern SyncQueue<Control> control_queue;

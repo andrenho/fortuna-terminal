@@ -4,6 +4,8 @@
 #include "env/comm/comm.hh"
 
 #include <string>
+#include <optional>
+#include <vector>
 
 class CommIO : public CommunicationModule {
 public:
@@ -15,7 +17,6 @@ public:
     virtual void                   write(std::vector<uint8_t> const& data) = 0;
     void                           write(std::string const& str);
     void                           write(uint8_t byte);
-
 };
 
 #endif //COMM_IO_HH_

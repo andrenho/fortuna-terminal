@@ -65,7 +65,7 @@ void ThreadRunner::debug_byte(uint8_t byte, bool is_input) const
     if (byte >= 32 && byte < 127)
         printf("%c", byte);
     else if (byte == '\e')
-        printf("[ESC]");
+        printf("\n[ESC]");
     else
         printf("[%02X]", byte);
     if (byte == 10)
