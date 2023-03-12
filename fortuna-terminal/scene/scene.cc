@@ -17,6 +17,7 @@ Scene::Scene(Mode mode)
     layers_.emplace(LAYER_TILEMAP_TEXT, std::make_unique<TextLayer>(mode));
 
     palette_init(palette);
+    set_mode(mode);
 }
 
 void Scene::reset()
@@ -27,20 +28,18 @@ void Scene::reset()
 void Scene::set_mode(Mode mode)
 {
     mode_ = mode;
-    text().set_mode(mode);
-}
 
-consteval std::pair<int, int> Scene::size_in_pixels() const
-{
     if (mode_ == Mode::Graphics) {
-        return {
-            TextLayer::Columns_40Columns * PixelSize::TextChar_W,
-            TextLayer::Lines_40Columns * PixelSize::TextChar_H
+        size_in_pixels_ = {
+                TextLayer::Columns_40Columns * PixelSize::TextChar_W,
+                TextLayer::Lines_40Columns * PixelSize::TextChar_H
         };
     } else {
-        return {
-            TextLayer::Columns_80Columns * PixelSize::TextChar_W + 2 * PixelSize::TextBorder,
-            TextLayer::Lines_80Columns * PixelSize::TextChar_H + 2 * PixelSize::TextBorder
+        size_in_pixels_ = {
+                TextLayer::Columns_80Columns * PixelSize::TextChar_W + 2 * PixelSize::TextBorder,
+                TextLayer::Lines_80Columns * PixelSize::TextChar_H + 2 * PixelSize::TextBorder
         };
     }
+
+    text().set_mode(mode);
 }

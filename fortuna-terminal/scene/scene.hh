@@ -50,12 +50,13 @@ struct Scene : NonCopyable {
     [[nodiscard]] Mode   mode() const { return mode_; }
     [[nodiscard]] size_t unique_id() const { return unique_id_; }
 
-    consteval std::pair<int, int> size_in_pixels() const;
+    std::pair<int, int> size_in_pixels() const { return size_in_pixels_; }
 
     static size_t constexpr MAX_IMAGES = 1024;
 
 private:
     Mode mode_;
+    std::pair<int, int> size_in_pixels_;
     size_t unique_id_;
 
     std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
