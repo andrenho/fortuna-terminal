@@ -1,6 +1,5 @@
 #include "fortuna.hh"
 
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 
@@ -65,7 +64,7 @@ void FortunaProtocol::execute_escape_sequence()
                 break;
             case 'i':
                 if (p.size() < (Image::IMAGE_SZ + 2)) {
-                    std::cerr << "warning: trying to create a sprites but has less than 258 bytes" << std::endl;
+                    fprintf(stderr, "warning: trying to create a sprites but has less than 258 bytes\n");
                 } else {
                     Image image {
                         .key = (uint16_t) (p.at(0) % Scene::MAX_IMAGES),
