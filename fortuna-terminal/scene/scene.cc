@@ -30,7 +30,7 @@ void Scene::set_mode(Mode mode)
     text().set_mode(mode);
 }
 
-std::pair<int, int> Scene::size_in_pixels() const
+consteval std::pair<int, int> Scene::size_in_pixels() const
 {
     if (mode_ == Mode::Graphics) {
         return {
