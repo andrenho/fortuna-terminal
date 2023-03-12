@@ -14,8 +14,6 @@
 #  define INVALID_SOCKET -1
 #endif
 
-#include <iostream>
-
 #define BACKLOG 1
 
 using namespace std::string_literals;
@@ -85,7 +83,7 @@ std::vector<uint8_t> TCPIP::read_blocking(size_t n)
         fd_ = fd;
 #endif
 
-        std::cout << "Client connected.\n";
+        printf("Client connected.\n");
 
         return {};
 

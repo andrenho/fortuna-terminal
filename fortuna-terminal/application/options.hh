@@ -40,7 +40,7 @@ public:
     PTYOptions      pty_options {};
 
 private:
-    [[ noreturn ]] void print_help(int exit_status);
+    [[ noreturn ]] static void print_help(int exit_status);
     void parse_uart_settings(std::string const& opt);
 };
 

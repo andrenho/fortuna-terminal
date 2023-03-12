@@ -23,7 +23,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
     }
 
     window_ = decltype(window_)(
-            SDL_CreateWindow("Fortuna-3 emulator",
+            SDL_CreateWindow("FortunaProtocol-3 emulator",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 win_w_, win_h_,
                 SDL_WINDOW_OPENGL),

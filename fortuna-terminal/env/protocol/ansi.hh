@@ -23,22 +23,21 @@ public:
 
     void     send_ansi_bytes(std::string const& bytes);
 
-    void     reset();
+    void     reset_ansi_protocol();
 
 private:
     Scene& scene_;
+    Mode current_mode_;
+
     Cache cache_ {};
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
 
+    void              resize_text_terminal(Mode mode);
+
+    static Cache      initialize_cache(size_t w, size_t h);
     static CharAttrib translate_attrib(TMTATTRS tmtattrs);
-    static void tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
-    static Cache initialize_cache(size_t w, size_t h);
-
-    static bool tmtchar_equals(TMTCHAR const &c1, TMTCHAR const &c2);
-
-    Mode current_mode_;
-
-    void resize_text_terminal(Mode mode);
+    static void       tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
+    static bool       tmtchar_not_equals(TMTCHAR const &c1, TMTCHAR const &c2);
 };
 
 #endif //ANSI_HH_

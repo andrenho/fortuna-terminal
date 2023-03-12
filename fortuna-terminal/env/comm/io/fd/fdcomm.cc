@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #include <cstring>
-#include <iostream>
 
 FDComm::~FDComm()
 {
@@ -58,17 +57,17 @@ void FDComm::client_disconnected()
         close(write_fd_);
         write_fd_ = INVALID_FD;
     }
-    std::cout << "Client disconnected." << std::endl;
+    printf("Client disconnected.\n");
 }
 
 void FDComm::on_read_error(std::string const &error)
 {
-    std::cerr << "\e[1;31mError reading from file descriptor: " << error << "\e[0m" << std::endl;
+    fprintf(stderr, "Error reading from file descriptor: %s\n", error.c_str());
     client_disconnected();
 }
 
 void FDComm::on_write_error(std::string const &error)
 {
-    std::cerr << "\e[1;31mError writing to file descriptor: " << error << "\e[0m" << std::endl;
+    fprintf(stderr, "Error writing to file descriptor: %s\n", error.c_str());
     client_disconnected();
 }

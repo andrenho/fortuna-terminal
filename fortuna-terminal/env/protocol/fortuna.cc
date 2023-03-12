@@ -1,4 +1,4 @@
-#include "extra.hh"
+#include "fortuna.hh"
 
 #include <iostream>
 #include <sstream>
@@ -8,18 +8,20 @@
 
 // protocol described at https://github.com/andrenho/fortuna-terminal/wiki/ANSI-protocol-extension-for-Fortuna-Terminal
 
-void Extra::send_extra_bytes(std::string const &bytes)
+using namespace std::string_literals;
+
+void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
 {
     for (char c : bytes) {
-        escape_sequence_ += c;
+        current_escape_sequence_ += c;
         if (std::isalpha(c)) {
-            escape_sequence_complete();
-            escape_sequence_.clear();
+            execute_escape_sequence();
+            current_escape_sequence_.clear();
         }
     }
 }
 
-void Extra::escape_sequence_complete()
+void FortunaProtocol::execute_escape_sequence()
 {
     std::vector<ssize_t> p;
     char command = parse_escape_sequence(p);
@@ -39,7 +41,7 @@ void Extra::escape_sequence_complete()
             }
             break;
         case 'v':
-            response_ += "\e#0v";
+            output_queue_.push_all("\e#0v");
             break;
     }
 
@@ -155,24 +157,31 @@ void Extra::escape_sequence_complete()
     }
 }
 
-char Extra::parse_escape_sequence(std::vector<ssize_t> &parameters) const
+char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) const
 {
-    std::stringstream ss(escape_sequence_.substr(2, escape_sequence_.size() - 3));
+    std::stringstream ss(current_escape_sequence_.substr(2, current_escape_sequence_.size() - 3));
     std::string item;
     while (std::getline(ss, item, ';')) {
         ssize_t value = std::stoll(item);
         parameters.push_back(value);
     }
 
-    return escape_sequence_.back();
+    return current_escape_sequence_.back();
 }
 
-std::string Extra::latest_response()
+void FortunaProtocol::output_collisions()
 {
-    if (response_.empty())
-        return "";
-
-    std::string r = response_;
-    response_.clear();
-    return r;
+    if (scene_.mode() == Mode::Graphics) {
+        for (auto const& collision: scene_.sprites().check_for_new_collisions()) {
+            output_queue_.push_all("\e#"s +
+                                  (collision.type == Collision::Colliding ? "1" : "0") +
+                                  ";" + std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b));
+        }
+    }
 }
+
+void FortunaProtocol::reset_fortuna_protocol()
+{
+    current_escape_sequence_.clear();
+}
+

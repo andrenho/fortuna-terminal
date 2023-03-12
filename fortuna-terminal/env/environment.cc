@@ -21,12 +21,12 @@ void Environment::execute_single_step(size_t avg_fps)
     scene_.text().update_blink();
 #ifdef RUN_IN_OUT_PARALLEL
     std::thread ti([this]() { protocol_.execute_inputs(*input_queue_); });
-    std::thread to([this]() { protocol_.execute_outputs(*output_queue_); });
+    std::thread to([this]() { protocol_.execute_outputs(); });
     ti.join();
     to.join();
 #else
     protocol_.execute_inputs(*input_queue_);
-    protocol_.execute_outputs(*output_queue_);
+    protocol_.execute_outputs();
 #endif
     show_fps_counter(avg_fps);
 }

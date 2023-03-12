@@ -1,28 +1,29 @@
 #ifndef PROTOCOL_HH_
 #define PROTOCOL_HH_
 
+#include <string>
+
 #include "ansi.hh"
-#include "extra.hh"
 #include "common/mode.hh"
-#include "scene/scene.hh"
 #include "common/time.hh"
+#include "fortuna.hh"
 #include "events.hh"
 
-class Protocol : ANSI, Extra, public Events {
+class Protocol :
+        private ANSI,
+        private FortunaProtocol,
+        public Events {
 public:
-    explicit Protocol(Mode initial_mode, Scene& scene, SyncQueueByte& output_queue);
+    explicit Protocol(Mode initial_mode, class Scene& scene, SyncQueueByte& output_queue);
 
     void execute_inputs(SyncQueueByte &input_queue);
-    void execute_outputs(SyncQueueByte &output_queue);
+    void execute_outputs();
 
     void reset();
 
 private:
-    Scene& scene_;
-
-    void output_pending_responses(SyncQueueByte &output_queue);
-
-    void output_collisions(SyncQueueByte &output_queue);
+    bool        extra_active_ = false;
+    std::string received_bytes_;
 };
 
 #endif //PROTOCOL_HH_

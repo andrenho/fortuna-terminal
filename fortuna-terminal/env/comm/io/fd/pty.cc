@@ -5,8 +5,8 @@
 #include <pty.h>
 #include <termios.h>
 
+#include <cstdio>
 #include <cstdlib>
-#include <iostream>
 
 #include "common/exceptions/libcexception.hh"
 #include "scene/layers/textlayer.hh"
@@ -27,7 +27,7 @@ PTY::PTY(PTYOptions const& pty_options)
             throw LibcException("Could not initialize shell.");
     }
 
-    std::cout << "Initializing terminal " << name << "." << std::endl;
+    printf("Initializing terminal %s.\n", name);
 
     // make read blocking
     int flags = fcntl(fd_, F_GETFL);

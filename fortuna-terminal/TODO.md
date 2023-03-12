@@ -6,7 +6,7 @@
   - [x] Show error
   - [x] Add recommended flags
   - [x] Rename Protocol (?)
-- [x] Update documentation (create reset, separate sprites from sprites image)
+- [x] Update documentation (create reset_ansi_protocol, separate sprites from sprites image)
 - [ ] Create test circuit
 
 New protocol:

@@ -5,8 +5,6 @@
 #include <cstring>
 #include <getopt.h>
 
-#include <iostream>
-
 Options::Options(int argc, char* argv[])
 {
     int c;
@@ -37,10 +35,10 @@ Options::Options(int argc, char* argv[])
 
         switch (c) {
             case 0:
-                std::cout << "option " << long_options[option_index].name;
+                printf("option %s", long_options[option_index].name);
                 if (optarg)
-                    std::cout << " with arg " << optarg;
-                std::cout << "\n";
+                    printf(" with arg %s", optarg);
+                printf("\n");
                 break;
 
             case 'h':
@@ -118,18 +116,18 @@ Options::Options(int argc, char* argv[])
 
 [[ noreturn ]] void Options::print_help(int exit_status)
 {
-    std::cout << "    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n";
-    std::cout << "    -w, --window                    Window mode (as opposed to the default, which is full screen)\n";
-    std::cout << "    -g, --graphics                  Start in graphics mode (40 columns)\n";
-    std::cout << "    -d, --debug-comm                Print all bytes that entered or exited the terminal\n";
-    std::cout << "Options valid for `uart`:\n";
-    std::cout << "    -P, --serial-port               Serial port (default: /dev/serial0)\n";
-    std::cout << "    -B, --baud                      Baud speed for UART (default: 57600)\n";
-    std::cout << "    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n";
-    std::cout << "Options valid for `tcpip`:\n";
-    std::cout << "    -R, --tcpip-port                TCP/IP port (default: 8076)\n";
-    std::cout << "Options valid for `pty`:\n";
-    std::cout << "    -S, --shell                     Shell executable (default: /bin/sh)\n";
+    printf("    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n");
+    printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
+    printf("    -g, --graphics                  Start in graphics mode (40 columns)\n");
+    printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");
+    printf("Options valid for `uart`:\n");
+    printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");
+    printf("    -B, --baud                      Baud speed for UART (default: 57600)\n");
+    printf("    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n");
+    printf("Options valid for `tcpip`:\n");
+    printf("    -R, --tcpip-port                TCP/IP port (default: 8076)\n");
+    printf("Options valid for `pty`:\n");
+    printf("    -S, --shell                     Shell executable (default: /bin/sh)\n");
     exit(exit_status);
 }
 

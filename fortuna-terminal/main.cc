@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     try {
         application.emplace(argc, argv);
     } catch (std::exception& e) {
-        fprintf(stderr, "Error initializing Fortuna Terminal: %s\n", e.what());
+        fprintf(stderr, "Error initializing FortunaProtocol Terminal: %s\n", e.what());
         exit(EXIT_FAILURE);
     }
 
