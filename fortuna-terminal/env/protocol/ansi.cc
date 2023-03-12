@@ -1,9 +1,8 @@
 #include "ansi.hh"
 
 #include <cstring>
-#include <iostream>
 
-#include "old/exceptions/fortunaexception.hh"
+#include "common/exceptions/fortunaexception.hh"
 
 ANSI::ANSI(Mode initial_mode, Scene &scene)
     : scene_(scene),

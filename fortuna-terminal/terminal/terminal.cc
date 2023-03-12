@@ -1,8 +1,8 @@
 #include "terminal.hh"
 
-#include "old/exceptions/sdlexception.hh"
-#include "old/exceptions/fortunaexception.hh"
-#include "old/scene/layers/spritelayer.hh"
+#include "common/exceptions/sdlexception.hh"
+#include "common/exceptions/fortunaexception.hh"
+#include "scene/layers/spritelayer.hh"
 
 #include <iostream>
 #include <cstring>

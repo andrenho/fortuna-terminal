@@ -8,7 +8,7 @@
 #include "scene/layers/textlayer.hh"
 #include "scene/scene.hh"
 
-#include "old/common/noncopyable.hh"
+#include "common/noncopyable.hh"
 
 class TextPainter : NonCopyable {
 public:

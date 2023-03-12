@@ -4,9 +4,6 @@
 #include <mutex>
 #include <thread>
 
-#include "old/scene/palette/palette.hh"
-#include "old/common/noncopyable.hh"
-
 class Layer {
 public:
     virtual ~Layer() = default;

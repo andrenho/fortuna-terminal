@@ -1,5 +1,5 @@
 #include "fdcomm.hh"
-#include "old/exceptions/fortunaexception.hh"
+#include "common/exceptions/fortunaexception.hh"
 
 #include <unistd.h>
 

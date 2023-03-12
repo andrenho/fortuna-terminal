@@ -11,6 +11,7 @@
 #include "layer.hh"
 #include "common/mode.hh"
 #include "common/time.hh"
+#include "common/color.hh"
 
 struct CursorAttrib {
     uint8_t color;

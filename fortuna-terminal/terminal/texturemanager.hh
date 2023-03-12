@@ -10,6 +10,7 @@
 #include "lib/SDL2-windows/include/SDL2/SDL.h"
 
 #include "scene/layers/images.hh"
+#include "scene/palette/palette.hh"
 
 struct TextureInfo {
     SDL_Texture* tx;
