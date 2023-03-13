@@ -21,7 +21,7 @@ void GraphicsPainter::draw_background(Scene const &scene) const
 
 void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
 {
-    ImageLayer const* layer = scene.image_layer_fast(layer_id);
+    ImageLayer const* layer = scene.image_layer_unsafe(layer_id);
     if (!layer->enabled)
         return;
 

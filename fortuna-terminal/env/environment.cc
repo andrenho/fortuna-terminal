@@ -36,19 +36,19 @@ void Environment::show_fps_counter(size_t fps)
     if (show_fps_counter_) {
         if (fps > 999)
             fps = 999;
-        scene_.text().write(
+        scene_.text().write_text(
                 scene_.text().lines() - 1,
                 scene_.text().columns() - 9,
                 " FPS " + std::to_string(fps) + " ",
-                { COLOR_ORANGE, true, false });
+                {COLOR_ORANGE, true, false});
     }
 }
 
 void Environment::show_error(std::exception const &e)
 {
     static std::string press_enter = "-- Press ENTER to continue or Ctrl+F12 to quit --";
-    scene_.text().write(scene_.text().lines() - 2, 0, e.what(), { COLOR_RED, true, false });
-    scene_.text().write(scene_.text().lines() - 1, 0, press_enter, { COLOR_RED, true, false });
+    scene_.text().write_text(scene_.text().lines() - 2, 0, e.what(), {COLOR_RED, true, false});
+    scene_.text().write_text(scene_.text().lines() - 1, 0, press_enter, {COLOR_RED, true, false});
 }
 
 void Environment::reset()

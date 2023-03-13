@@ -29,7 +29,7 @@ UART::UART(UartOptions const &uart_options)
     if (cfsetspeed(&opt, (speed_t) uart_options.baud) < 0)
         throw LibcException("Error setting serial speed");
 
-    opt.c_cflag |= (CLOCAL | CREAD);  // enable received and set local mode
+    opt.c_cflag |= (CLOCAL | CREAD);  // enable received and update_char local mode
 
     opt.c_cflag &= ~CSIZE; /* Mask the character size bits */
     opt.c_cflag |= CS8; /* Select 8 data bits */

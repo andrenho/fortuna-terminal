@@ -67,11 +67,11 @@ void FortunaProtocol::execute_escape_sequence()
                     fprintf(stderr, "warning: trying to create a sprites but has less than 258 bytes\n");
                 } else {
                     Image image {
-                        .key = (uint16_t) (p.at(0) % Scene::MAX_IMAGES),
+                        .index = (uint16_t) (p.at(0) % Scene::MAX_IMAGES),
                         .transparent_color = (uint8_t) p.at(1),
-                        .image = {0}
+                        .pixels = {0}
                     };
-                    std::copy(p.begin() + 2, p.end(), image.image);
+                    std::copy(p.begin() + 2, p.end(), image.pixels);
                     scene_.images.create_image(std::move(image));
                 }
                 break;
@@ -84,8 +84,8 @@ void FortunaProtocol::execute_escape_sequence()
                         Tilemap& tilemap = scene_.tilemaps[tilemap_idx];
                         tilemap.w = w;
                         tilemap.h = h;
-                        tilemap.images.clear();
-                        std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.images));
+                        tilemap.image_indexes.clear();
+                        std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.image_indexes));
                     }
                 }
                 break;

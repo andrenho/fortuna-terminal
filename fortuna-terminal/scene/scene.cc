@@ -23,6 +23,7 @@ Scene::Scene(Mode mode)
 void Scene::reset()
 {
     std::for_each(layers_.begin(), layers_.end(), [](auto& i) { i.second->reset(); });
+    set_mode(Mode::Text);
 }
 
 void Scene::set_mode(Mode mode)
@@ -54,17 +55,21 @@ SpriteLayer &Scene::sprites() const
     return *reinterpret_cast<SpriteLayer*>(layers_.at(LAYER_SPRITES).get());
 }
 
-ImageLayer const *Scene::image_layer_fast(LayerIdentifier layer_id) const
+ImageLayer const *Scene::image_layer_unsafe(LayerIdentifier layer_id) const
 {
     return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get());
 }
 
-TilemapLayer *Scene::tilemap_layer(LayerIdentifier layer_id) const
+TilemapLayer* Scene::tilemap_layer(LayerIdentifier layer_id) const
 {
     return dynamic_cast<TilemapLayer*>(layers_.at(layer_id).get());
 }
 
-Layer *Scene::layer(LayerIdentifier id) const
+Layer* Scene::layer(LayerIdentifier id) const
 {
-    return layers_.at(id).get();
+    try {
+        return layers_.at(id).get();
+    } catch (std::out_of_range&) {
+        return nullptr;
+    }
 }

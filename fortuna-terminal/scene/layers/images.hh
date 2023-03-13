@@ -9,9 +9,9 @@ struct Image {
     static constexpr int IMAGE_H = 16;
     static constexpr int IMAGE_SZ = IMAGE_W * IMAGE_H;
 
-    uint16_t key;
+    uint16_t index;
     uint8_t  transparent_color;
-    uint8_t  image[IMAGE_W * IMAGE_H];
+    uint8_t  pixels[IMAGE_W * IMAGE_H];
 };
 
 class Images : NonCopyable {

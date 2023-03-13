@@ -20,7 +20,7 @@ void TextureManager::add_image(size_t scene_id, Image const &image, Palette cons
     if (image.transparent_color < PALETTE_SZ)
         SDL_SetColorKey(sf, SDL_RLEACCEL, image.transparent_color);
 
-    memcpy(sf->pixels, image.image, Image::IMAGE_SZ);
+    memcpy(sf->pixels, image.pixels, Image::IMAGE_SZ);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer_, sf);
     if (texture == nullptr)
         throw SDLException("Error creating texture");
@@ -28,7 +28,7 @@ void TextureManager::add_image(size_t scene_id, Image const &image, Palette cons
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     if (SDL_SetRenderTarget(renderer_, scene_texture) < 0)
         throw SDLException("Error setting target");
-    auto [x, y] = index_location_in_texture(image.key);
+    auto [x, y] = index_location_in_texture(image.index);
     SDL_Rect src = { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
     SDL_Rect dest = { x, y, Image::IMAGE_W, Image::IMAGE_H };
     if (SDL_RenderCopy(renderer_, texture, &src, &dest) < 0)

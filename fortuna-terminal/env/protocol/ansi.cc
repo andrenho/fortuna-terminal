@@ -78,7 +78,7 @@ void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, [[maybe_unused]] void const *a, vo
                     }
                 }
             }
-            this_->scene_.text().set(cells);
+            this_->scene_.text().update_cell(cells);
             tmt_clean(vt);
         }
             break;
@@ -95,9 +95,9 @@ void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, [[maybe_unused]] void const *a, vo
     }
 }
 
-CharAttrib ANSI::translate_attrib(TMTATTRS a)
+Char::Attrib ANSI::translate_attrib(TMTATTRS a)
 {
-    CharAttrib attr {};
+    Char::Attrib attr {};
 
     if (!a.bold) {
         switch (a.fg) {

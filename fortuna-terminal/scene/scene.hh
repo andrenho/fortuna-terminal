@@ -14,7 +14,7 @@
 #include <optional>
 #include <unordered_map>
 
-enum LayerIdentifier {
+enum LayerIdentifier : uint8_t {
     LAYER_DEEP_BG           =  0,
     LAYER_TILEMAP_BG        =  4,
     LAYER_TILEMAP_OBSTACLES =  8,
@@ -41,7 +41,7 @@ struct Scene : NonCopyable {
     [[nodiscard]] TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) const;
     [[nodiscard]] Layer*              layer(LayerIdentifier id) const;
 
-    [[nodiscard]] ImageLayer const*   image_layer_fast(LayerIdentifier layer_id) const;
+    [[nodiscard]] ImageLayer const*   image_layer_unsafe(LayerIdentifier layer_id) const;
 
     [[nodiscard]] Mode                mode() const { return mode_; }
     [[nodiscard]] size_t              unique_id() const { return unique_id_; }
@@ -51,9 +51,9 @@ struct Scene : NonCopyable {
     static size_t constexpr MAX_IMAGES = 1024;
 
 private:
-    Mode mode_;
+    Mode                mode_;
     std::pair<int, int> size_in_pixels_;
-    size_t unique_id_;
+    const size_t        unique_id_;
 
     std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
 
