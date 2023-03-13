@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-std::vector<ImageToDraw> SpriteLayer::images_to_draw([[ maybe_unused ]] class Scene const& scene) const
+std::vector<ImageToDraw> SpriteLayer::images_to_draw_next_frame([[ maybe_unused ]] class Scene const& scene) const
 {
     std::vector<ImageToDraw> images_to_draw;
     images_to_draw.reserve(MAX_SPRITES);
@@ -15,7 +15,7 @@ std::vector<ImageToDraw> SpriteLayer::images_to_draw([[ maybe_unused ]] class Sc
 
     for (auto const& s : sprite_copy) {
         if (s.visible)
-            images_to_draw.push_back({ s.image, s.pos_x, s.pos_y, s.mirrored_h, s.mirrored_v });
+            images_to_draw.push_back({s.image_idx, s.pos_x, s.pos_y, s.mirrored_h, s.mirrored_v });
     }
 
     return images_to_draw;
@@ -38,7 +38,7 @@ void SpriteLayer::unsubscribe_to_all_collisions()
     collision_subscriptions_.clear();
 }
 
-std::vector<Collision> SpriteLayer::check_for_new_collisions()
+std::vector<Collision> SpriteLayer::check_for_new_collisions() const
 {
     std::vector<Collision> new_collisions;
     std::set<std::pair<size_t, size_t>> collisions;
@@ -74,10 +74,10 @@ void SpriteLayer::reset()
     current_collisions_.clear();
 }
 
-bool SpriteLayer::sprites_colliding(unsigned long long int const sprite_a, unsigned long long int const sprite_b)
+bool SpriteLayer::sprites_colliding(size_t sprite_a, size_t sprite_b) const
 {
-    Sprite& a = sprites[sprite_a];
-    Sprite& b = sprites[sprite_b];
+    Sprite const& a = sprites[sprite_a];
+    Sprite const& b = sprites[sprite_b];
 
     if (!a.visible || !b.visible)
         return false;

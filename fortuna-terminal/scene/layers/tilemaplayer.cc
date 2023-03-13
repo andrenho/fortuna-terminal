@@ -4,7 +4,7 @@
 #include "scene/tilemap.hh"
 #include "images.hh"
 
-std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const
+std::vector<ImageToDraw> TilemapLayer::images_to_draw_next_frame(Scene const &scene) const
 {
     std::vector<ImageToDraw> images_to_draw;
 
@@ -14,10 +14,10 @@ std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const
     Tilemap const& tilemap = scene.tilemaps[map];
     for (int x = 0; x < (int) tilemap.w; ++x) {
         for (int y = 0; y < (int) tilemap.h; ++y) {
-            ssize_t image = tilemap.image_indexes[x + (y * tilemap.w)];
-            if (image >= 0) {
+            ssize_t image_idx = tilemap.image_indexes[x + (y * tilemap.w)];
+            if (image_idx >= 0) {
                 images_to_draw.push_back({
-                    (uint16_t) image,
+                    (uint16_t) image_idx,
                     (int) (pos_x + (x * Image::IMAGE_W)),
                     (int) (pos_y + (y * Image::IMAGE_H)),
                     false, false

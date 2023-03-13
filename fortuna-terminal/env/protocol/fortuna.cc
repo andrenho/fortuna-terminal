@@ -103,7 +103,7 @@ void FortunaProtocol::execute_escape_sequence()
                     if (p.size() >= 7)
                         ss.z_order = (uint8_t) p.at(6);
                     if (p.size() >= 8)
-                        ss.image = (uint16_t) p.at(7);
+                        ss.image_idx = (uint16_t) p.at(7);
                 }
                 break;
             case 'M':
