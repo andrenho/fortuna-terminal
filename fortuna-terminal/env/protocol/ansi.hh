@@ -1,7 +1,7 @@
 #ifndef ANSI_HH_
 #define ANSI_HH_
 
-#include "common/noncopyable.hh"
+#include "common/types/noncopyable.hh"
 
 #include <functional>
 #include <optional>

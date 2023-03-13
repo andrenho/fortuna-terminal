@@ -4,8 +4,8 @@
 #include <string>
 
 #include "ansi.hh"
-#include "common/mode.hh"
-#include "common/time.hh"
+#include "common/enums/mode.hh"
+#include "common/types/time.hh"
 #include "fortuna.hh"
 #include "events.hh"
 

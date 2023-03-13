@@ -2,7 +2,7 @@
 #define CONTROL_HH_
 
 #include "common/syncqueue.hh"
-#include "common/mode.hh"
+#include "common/enums/mode.hh"
 
 enum class ControlCommand {
     Reset, ResetProtocol, ResetComputer, SetMode, SetMouseActive, SetMouseMoveReport, SetJoystickEmulation

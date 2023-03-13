@@ -11,7 +11,7 @@ std::vector<ImageToDraw> TilemapLayer::images_to_draw(Scene const &scene) const
     if (map < 0)
         return {};
 
-    Tilemap const& tilemap = scene.tilemap[map];
+    Tilemap const& tilemap = scene.tilemaps[map];
     for (int x = 0; x < (int) tilemap.w; ++x) {
         for (int y = 0; y < (int) tilemap.h; ++y) {
             ssize_t image = tilemap.images[x + (y * tilemap.w)];

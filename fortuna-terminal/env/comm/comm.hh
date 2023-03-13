@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "application/options.hh"
-#include "common/noncopyable.hh"
+#include "common/types/noncopyable.hh"
 
 enum class Channels {
     InputAndOutput, Exchange,

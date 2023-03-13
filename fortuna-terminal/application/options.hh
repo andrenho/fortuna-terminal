@@ -2,7 +2,7 @@
 #define OPTIONS_HH_
 
 #include <string>
-#include "common/mode.hh"
+#include "common/enums/mode.hh"
 
 enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo };
 

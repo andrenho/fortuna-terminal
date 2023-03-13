@@ -9,8 +9,8 @@
 #include <vector>
 
 #include "layer.hh"
-#include "common/mode.hh"
-#include "common/time.hh"
+#include "common/enums/mode.hh"
+#include "common/types/time.hh"
 #include "common/color.hh"
 
 struct CursorAttrib {

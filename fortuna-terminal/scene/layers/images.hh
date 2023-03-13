@@ -18,8 +18,7 @@ class Images : NonCopyable {
 public:
     void create_image(Image&& image) { pending_images_->emplace(std::move(image)); }
 
-    [[nodiscard]] SyncQueueUniqPtr<Image> & pending_images() const
-    { return pending_images_; }
+    [[nodiscard]] SyncQueueUniqPtr<Image>& pending_images() const { return pending_images_; }
 
 private:
     mutable SyncQueueUniqPtr<Image> pending_images_ = std::make_unique<SyncQueue<Image>>();

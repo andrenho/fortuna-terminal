@@ -1,7 +1,7 @@
 #ifndef FRAMECONTROL_HH_
 #define FRAMECONTROL_HH_
 
-#include "common/time.hh"
+#include "common/types/time.hh"
 
 using namespace std::chrono_literals;
 

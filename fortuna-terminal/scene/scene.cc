@@ -1,7 +1,7 @@
 #include "scene.hh"
 
 #include "common/exceptions/fortunaexception.hh"
-#include "common/pixelsize.hh"
+#include "common/enums/pixelsize.hh"
 
 size_t Scene::unique_id_counter = 0;
 
@@ -42,4 +42,29 @@ void Scene::set_mode(Mode mode)
     }
 
     text().set_mode(mode);
+}
+
+TextLayer &Scene::text() const
+{
+    return *reinterpret_cast<TextLayer*>(layers_.at(LAYER_TILEMAP_TEXT).get());
+}
+
+SpriteLayer &Scene::sprites() const
+{
+    return *reinterpret_cast<SpriteLayer*>(layers_.at(LAYER_SPRITES).get());
+}
+
+ImageLayer const *Scene::image_layer_fast(LayerIdentifier layer_id) const
+{
+    return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get());
+}
+
+TilemapLayer *Scene::tilemap_layer(LayerIdentifier layer_id) const
+{
+    return dynamic_cast<TilemapLayer*>(layers_.at(layer_id).get());
+}
+
+Layer *Scene::layer(LayerIdentifier id) const
+{
+    return layers_.at(id).get();
 }

@@ -10,8 +10,8 @@
 
 #include "scene/scene.hh"
 #include "common/syncqueue.hh"
-#include "common/noncopyable.hh"
-#include "common/execution.hh"
+#include "common/types/noncopyable.hh"
+#include "common/enums/execution.hh"
 #include "application/options.hh"
 #include "env/protocol/protocol.hh"
 #include "texturemanager.hh"

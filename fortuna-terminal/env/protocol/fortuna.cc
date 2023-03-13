@@ -81,7 +81,7 @@ void FortunaProtocol::execute_escape_sequence()
                     size_t w = p.at(1);
                     size_t h = p.at(2);
                     if (p.size() >= 3 + (w * h)) {
-                        Tilemap& tilemap = scene_.tilemap[tilemap_idx];
+                        Tilemap& tilemap = scene_.tilemaps[tilemap_idx];
                         tilemap.w = w;
                         tilemap.h = h;
                         tilemap.images.clear();

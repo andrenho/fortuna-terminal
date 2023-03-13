@@ -1,9 +1,9 @@
 #ifndef SCENE_HH_
 #define SCENE_HH_
 
-#include "common/noncopyable.hh"
-#include "common/mode.hh"
-#include "common/noncopyable.hh"
+#include "common/types/noncopyable.hh"
+#include "common/enums/mode.hh"
+#include "common/types/noncopyable.hh"
 #include "scene/layers/textlayer.hh"
 #include "scene/layers/spritelayer.hh"
 #include "scene/layers/tilemaplayer.hh"
@@ -27,30 +27,26 @@ enum LayerIdentifier {
 struct Scene : NonCopyable {
     explicit Scene(Mode mode);
 
-    Tilemap tilemap[Tilemap::MAX_TILEMAPS] {};
+    Tilemap tilemaps[Tilemap::MAX_TILEMAPS] {};
     Images  images;
-    Palette palette;
+    Palette palette {};
 
     uint8_t bg_color = COLOR_BLACK;
 
     void reset();
     void set_mode(Mode mode);
 
-    TextLayer&         text() { return *reinterpret_cast<TextLayer*>(layers_.at(LAYER_TILEMAP_TEXT).get()); }
-    TextLayer const&   text() const { return *reinterpret_cast<TextLayer const*>(layers_.at(LAYER_TILEMAP_TEXT).get()); }
-    SpriteLayer&       sprites() { return *reinterpret_cast<SpriteLayer*>(layers_.at(LAYER_SPRITES).get()); }
+    [[nodiscard]] TextLayer&          text() const;
+    [[nodiscard]] SpriteLayer&        sprites() const;
+    [[nodiscard]] TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) const;
+    [[nodiscard]] Layer*              layer(LayerIdentifier id) const;
 
-    ImageLayer const*  image_layer_unsafe(LayerIdentifier layer_id) const { return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get()); }
+    [[nodiscard]] ImageLayer const*   image_layer_fast(LayerIdentifier layer_id) const;
 
-    TilemapLayer const* tilemap_layer(LayerIdentifier layer_id) const { return dynamic_cast<TilemapLayer const *>(layers_.at(layer_id).get()); }
-    TilemapLayer*       tilemap_layer(LayerIdentifier layer_id) { return const_cast<TilemapLayer *>(const_cast<Scene const *>(this)->tilemap_layer(layer_id)); }
+    [[nodiscard]] Mode                mode() const { return mode_; }
+    [[nodiscard]] size_t              unique_id() const { return unique_id_; }
 
-    Layer*              layer(LayerIdentifier id) { return layers_.at(id).get(); }
-
-    [[nodiscard]] Mode   mode() const { return mode_; }
-    [[nodiscard]] size_t unique_id() const { return unique_id_; }
-
-    std::pair<int, int> size_in_pixels() const { return size_in_pixels_; }
+    [[nodiscard]] std::pair<int, int> size_in_pixels() const { return size_in_pixels_; }
 
     static size_t constexpr MAX_IMAGES = 1024;
 

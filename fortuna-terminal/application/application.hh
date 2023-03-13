@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "common/noncopyable.hh"
-#include "common/execution.hh"
+#include "common/types/noncopyable.hh"
+#include "common/enums/execution.hh"
 #include "env/environment.hh"
 #include "framecontrol.hh"
 #include "options.hh"
