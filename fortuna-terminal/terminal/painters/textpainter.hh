@@ -9,6 +9,7 @@
 #include "scene/scene.hh"
 
 #include "common/types/noncopyable.hh"
+#include "common/types/unique_ptr.hh"
 
 class TextPainter : NonCopyable {
 public:
@@ -22,7 +23,7 @@ public:
 
 private:
     SDL_Renderer* renderer_;
-    std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture *)>>    font_;
+    UniquePtrWithDeleter<SDL_Texture> font_;
 
     void draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const;
 };

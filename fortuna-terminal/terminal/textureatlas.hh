@@ -1,5 +1,5 @@
-#ifndef TEXTUREMAP_HH_
-#define TEXTUREMAP_HH_
+#ifndef TEXTUREATLAS_HH_
+#define TEXTUREATLAS_HH_
 
 #include <cstddef>
 
@@ -17,9 +17,9 @@ struct TextureInfo {
     SDL_Rect     src;
 };
 
-class TextureMap {
+class TextureAtlas {
 public:
-    explicit TextureMap(SDL_Renderer* renderer) : renderer_(renderer) {}
+    explicit TextureAtlas(SDL_Renderer* renderer) : renderer_(renderer) {}
 
     void        emplace_from_image(size_t index, Image const& image, Palette const& palette);
     TextureInfo get_texture(size_t index, size_t image_key) const;
@@ -36,4 +36,4 @@ private:
     static std::pair<int, int> index_location_in_texture(size_t key);
 };
 
-#endif //TEXTUREMAP_HH_
+#endif //TEXTUREATLAS_HH_

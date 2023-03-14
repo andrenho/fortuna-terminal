@@ -14,7 +14,7 @@
 #include "common/enums/execution.hh"
 #include "application/options.hh"
 #include "env/protocol/protocol.hh"
-#include "texturemap.hh"
+#include "textureatlas.hh"
 #include "painters/textpainter.hh"
 #include "painters/graphicspainter.hh"
 #include "sdl/sdl.hh"

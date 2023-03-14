@@ -1,4 +1,4 @@
-#include "texturemap.hh"
+#include "textureatlas.hh"
 #include "common/types/unique_ptr.hh"
 #include "common/exceptions/sdlexception.hh"
 #include "scene/scene.hh"
@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-void TextureMap::emplace_from_image(size_t index, Image const &image, Palette const& palette)
+void TextureAtlas::emplace_from_image(size_t index, Image const &image, Palette const& palette)
 {
     SDL_Texture* scene_texture = get_or_create_texture(index);
 
@@ -44,7 +44,7 @@ void TextureMap::emplace_from_image(size_t index, Image const &image, Palette co
     SDL_SetRenderTarget(renderer_, nullptr);
 }
 
-SDL_Texture *TextureMap::get_or_create_texture(size_t scene_id)
+SDL_Texture *TextureAtlas::get_or_create_texture(size_t scene_id)
 {
     auto it = textures_.find(scene_id);
 
@@ -62,7 +62,7 @@ SDL_Texture *TextureMap::get_or_create_texture(size_t scene_id)
     }
 }
 
-TextureInfo TextureMap::get_texture(size_t index, size_t image_key) const
+TextureInfo TextureAtlas::get_texture(size_t index, size_t image_key) const
 {
     auto [x, y] = index_location_in_texture(image_key);
     return {
@@ -71,7 +71,7 @@ TextureInfo TextureMap::get_texture(size_t index, size_t image_key) const
     };
 }
 
-std::pair<int, int> TextureMap::index_location_in_texture(size_t key)
+std::pair<int, int> TextureAtlas::index_location_in_texture(size_t key)
 {
     int x = ((int) key * 16) % MAX_TEXTURE_W;
     int y = ((int) key * 16) / MAX_TEXTURE_W;

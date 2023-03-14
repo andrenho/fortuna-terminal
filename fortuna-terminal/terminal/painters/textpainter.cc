@@ -7,19 +7,20 @@ TextPainter::TextPainter(SDL_Renderer *renderer)
     : renderer_(renderer)
 {
     SDL_RWops* io = SDL_RWFromConstMem(font_bmp, (int) font_bmp_len);
-    SDL_Surface* sf = SDL_LoadBMP_RW(io, 1);
+    UniquePtrWithDeleter<SDL_Surface> sf {
+            SDL_LoadBMP_RW(io, 1),
+            [](SDL_Surface* sf) { SDL_FreeSurface(sf); }
+    };
     if (!sf)
         throw SDLException("Error loading font BMP");
 
-    SDL_SetColorKey(sf, SDL_RLEACCEL, 0);
+    SDL_SetColorKey(sf.get(), SDL_RLEACCEL, 0);
     font_ = {
-            SDL_CreateTextureFromSurface(renderer_, sf),
+            SDL_CreateTextureFromSurface(renderer_, sf.get()),
             [](SDL_Texture* t) { SDL_DestroyTexture(t); }
     };
     if (!font_)
         throw SDLException("Could not create texture for font");
-
-    SDL_FreeSurface(sf);
 }
 
 void TextPainter::draw(Scene const& scene) const

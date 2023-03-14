@@ -39,7 +39,7 @@ OBJ =   main.o \
  		scene/scene.o scene/palette/palette.o scene/layers/images.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
  		terminal/sdl/sdl.o \
- 		terminal/terminal.o terminal/terminalevents.o terminal/texturemap.o \
+ 		terminal/terminal.o terminal/terminalevents.o terminal/textureatlas.o \
  		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
 
