@@ -16,12 +16,12 @@ Terminal::Terminal(TerminalOptions terminal_options)
         win_h_ = mode.h;
     }
 
-    window_ = SDL::get().create_window("FortunaProtocol-3 emulator",
-                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                             win_w_, win_h_,
-                             SDL_WINDOW_OPENGL);
+    window_ = SDL::get().emplace_window("FortunaProtocol-3 emulator",
+                                        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                        win_w_, win_h_,
+                                        SDL_WINDOW_OPENGL);
 
-    renderer_ = SDL::get().create_renderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer_ = SDL::get().emplace_renderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     print_renderer_info();
 

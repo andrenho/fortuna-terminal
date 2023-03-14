@@ -28,7 +28,7 @@ SDL::~SDL()
     }
 }
 
-SDL_Window *SDL::create_window(char const *title, int x, int y, int w, int h, Uint32 flags)
+SDL_Window *SDL::emplace_window(char const *title, int x, int y, int w, int h, Uint32 flags)
 {
     check_was_init();
     SDL_Window* window = SDL_CreateWindow(title, x, y, w, h, flags);
@@ -38,7 +38,7 @@ SDL_Window *SDL::create_window(char const *title, int x, int y, int w, int h, Ui
     return window;
 }
 
-SDL_Renderer *SDL::create_renderer(SDL_Window *window, int index, Uint32 flags)
+SDL_Renderer *SDL::emplace_renderer(SDL_Window *window, int index, Uint32 flags)
 {
     check_was_init();
     SDL_Renderer* renderer = SDL_CreateRenderer(window, index, flags);
@@ -48,7 +48,7 @@ SDL_Renderer *SDL::create_renderer(SDL_Window *window, int index, Uint32 flags)
     return renderer;
 }
 
-SDL_Texture *SDL::create_texture(SDL_Renderer *renderer, Uint32 format, int access, int w, int h)
+SDL_Texture *SDL::emplace_texture(SDL_Renderer *renderer, Uint32 format, int access, int w, int h)
 {
     check_was_init();
     SDL_Texture* texture = SDL_CreateTexture(renderer, format, access, w, h);
