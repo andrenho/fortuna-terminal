@@ -9,11 +9,13 @@ WINDOWS := 0
 RASPBERRY := 0
 INCLUDE_UART_PTY := 0
 INCLUDE_SPI_I2C := 0
+COLOR_TERMINAL := 0
 
 # autodetect configuration
 ifeq ($(OS),Windows_NT)
 	WINDOWS := 1
 else
+	COLOR_TERMINAL := 1
 	INCLUDE_UART_PTY := 1
 	ifeq ($(shell uname -m),armv7l)
 		ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
@@ -27,21 +29,29 @@ endif
 # configure objects and compilation options
 #
 
-OBJ =   main.o control.o options.o \
-		comm/comm.o comm/fdcomm.o comm/echo.o comm/tcpip.o comm/pipes.o \
-		protocol/protocol.o protocol/ansi.o protocol/extra.o \
-		scene/scene.o \
-		scene/layers/textlayer.o scene/layers/spritelayer.o scene/layers/tilemaplayer.o \
-		scene/palette/palette.o \
-		terminal/terminal.o terminal/texturemanager.o \
-		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
+OBJ =   main.o \
+		application/application.o application/options.o application/control.o application/framecontrol.o \
+		env/environment.o env/threadrunner.o \
+        env/comm/comm.o \
+        env/comm/io/comm_io.o env/comm/io/echo.o \
+        env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
+		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
+ 		scene/scene.o scene/palette/palette.o \
+ 		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
+ 		terminal/sdl/sdl.o \
+ 		terminal/terminal.o terminal/terminalevents.o terminal/textureatlas.o \
+ 		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
+
+DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-I. -D_GNU_SOURCE -pthread
+CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DCOLOR_TERMINAL=${COLOR_TERMINAL} -DINCLUDE_UART_PTY=${INCLUDE_UART_PTY}
 CXXFLAGS=-std=c++20
 LDFLAGS=-pthread
+
+GCH_HEADER=precompile.hh
 
 ifeq ($(WINDOWS),1)
 	EXE := ${EXE}.exe
@@ -50,6 +60,8 @@ ifeq ($(WINDOWS),1)
 else
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags`
 	LDFLAGS := ${LDFLAGS} `sdl2-config --libs` -lpthread -lutil
+	GCH_HEADER_BIN=${GCH_HEADER}.gch
+	INCLUDE_HEADER=-include precompile.hh
 endif
 
 ifeq ($(RASPBERRY),1)
@@ -57,7 +69,7 @@ ifeq ($(RASPBERRY),1)
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ := ${OBJ} comm/pty.o comm/uart.o
+	OBJ := ${OBJ} env/comm/io/fd/pty.o env/comm/io/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 
@@ -66,7 +78,8 @@ ifeq ($(FAST),0)
 endif
 
 ifeq ($(RELEASE),1)
-	CPPFLAGS := ${CPPFLAGS} -O3
+	CPPFLAGS := ${CPPFLAGS} -O3 -flto
+	LDFLAGS := ${LDFLAGS} -O3 -flto
 else
 	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
 endif
@@ -80,13 +93,22 @@ all: ${EXE}
 lib/tmt/tmt.o: lib/tmt/tmt.c
 	${CC} -c -o $@ $^ -O0 -ggdb
 
+${GCH_HEADER}.gch: ${GCH_HEADER}
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} -c $^ -o $@
+
+%.o: %.cc ${GCH_HEADER_BIN}
+	${CXX} ${CXXFLAGS} ${CPPFLAGS} ${INCLUDE_HEADER} -MMD -MF $(patsubst %.o,%.d,$@) -c -o $@ $<
+
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}
+
+-include ${DEPS}
 
 .PHONY: clean
 clean:
 ifeq ($(WINDOWS),1)
-	del /Q /F $(subst /,\,${OBJ} ${EXE})
+	del /Q /F $(subst /,\,${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS})
 else
-	rm -f ${OBJ} ${EXE}
+	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS}
 endif
+

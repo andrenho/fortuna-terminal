@@ -13,7 +13,7 @@ struct Sprite {
     bool     mirrored_h = false;
     bool     mirrored_v = false;
     uint8_t  z_order = 0;
-    uint16_t image = 0;
+    uint16_t image_idx = 0;
 };
 
 struct Collision {
@@ -29,21 +29,20 @@ public:
     static constexpr size_t MAX_SPRITES = 128;
     Sprite sprites[MAX_SPRITES] {};
 
-    [[nodiscard]] std::vector<ImageToDraw> images_to_draw([[maybe_unused]] class Scene const& scene) const override;
+    [[nodiscard]] std::vector<ImageToDraw> images_to_draw_next_frame([[maybe_unused]] class Scene const& scene) const override;
+    [[nodiscard]] std::vector<Collision> check_for_new_collisions() const;
 
     void subscribe_to_collisions(size_t sprite_a, size_t sprite_b);
     void unsubscribe_to_collisions(size_t sprite_a, size_t sprite_b);
     void unsubscribe_to_all_collisions();
 
-    std::vector<Collision> check_for_new_collisions();
-
     void reset() override;
 
 private:
     std::set<std::pair<size_t, size_t>> collision_subscriptions_ {};
-    std::set<std::pair<size_t, size_t>> current_collisions_ {};
+    mutable std::set<std::pair<size_t, size_t>> current_collisions_ {};
 
-    bool sprites_colliding(unsigned long long int const sprite_a, unsigned long long int const sprite_b);
+    [[nodiscard]] bool sprites_colliding(size_t sprite_a, size_t sprite_b) const;
 };
 
 #endif //SPRITELAYER_HH_

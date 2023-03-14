@@ -3,40 +3,38 @@
 
 #include <cstdint>
 
-#include <algorithm>
 #include <chrono>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "layer.hh"
-#include "protocol/mode.hh"
-
-using TimePoint = std::chrono::high_resolution_clock::time_point;
-using Time = std::chrono::high_resolution_clock;
-
-struct CursorAttrib {
-    uint8_t color;
-    bool    visible;
-};
-
-struct CharAttrib {
-    uint8_t color;
-    bool    reverse;
-    bool    visible;
-};
+#include "common/enums/mode.hh"
+#include "common/types/time.hh"
+#include "common/color.hh"
 
 struct Cursor {
-    size_t       x = 0;
-    size_t       y = 0;
-    CursorAttrib attrib = { COLOR_ORANGE, true };
-    bool         blink_state = true;
-    TimePoint    last_blink = Time::now();
+    struct Attrib {
+        uint8_t color;
+        bool    visible;
+    };
+
+    size_t     x = 0;
+    size_t     y = 0;
+    Attrib     attrib = { COLOR_ORANGE, true };
+    bool       blink_state = true;
+    TimePoint  last_blink = Time::now();
 };
 
 struct Char {
-    uint8_t    c      = 0;
-    CharAttrib attrib = { COLOR_WHITE, false, false };
+    struct Attrib {
+        uint8_t color;
+        bool    reverse;
+        bool    visible;
+    };
+
+    uint8_t c      = 0;
+    Attrib  attrib = { COLOR_WHITE, false, false };
 };
 
 struct Cell {
@@ -51,29 +49,27 @@ class TextLayer : public Layer {
 public:
     explicit TextLayer(Mode mode);
 
-    void          set(size_t line, size_t column, Char c);
-    void          set(std::vector<Cell> const& cells);
+    void          update_char(size_t line, size_t column, Char c);
+    void          update_cell(std::vector<Cell> const& cells);
+    void          write_text(size_t row, size_t column, std::string const& text, Char::Attrib const& attrib);
+
     void          move_cursor_to(size_t line, size_t column);
 
     void          set_mode(Mode mode);
 
     void          update_blink();
+    void          reset() override;
 
-    [[nodiscard]] Char const&   get(size_t line, size_t column) const;
-
+    [[nodiscard]] Char const&   get_char(size_t line, size_t column) const;
     [[nodiscard]] size_t        columns() const { return columns_; }
     [[nodiscard]] size_t        lines() const   { return lines_; }
-
-    [[nodiscard]] Mode mode() const { return mode_; }
-
+    [[nodiscard]] Mode          mode() const    { return mode_; }
     [[nodiscard]] Cursor const& cursor() const  { return cursor_; }
 
     static constexpr size_t Columns_80Columns = 80;
     static constexpr size_t Lines_80Columns   = 30;
     static constexpr size_t Columns_40Columns = 42;
     static constexpr size_t Lines_40Columns   = 28;
-
-    void reset() override;
 
 private:
     std::unique_ptr<Char[]> matrix_ {};
@@ -84,7 +80,7 @@ private:
 
     Mode                    mode_;
 
-    void  reset_blink();
+    void reset_blink();
 };
 
 #endif
