@@ -79,6 +79,7 @@ Improvements:
   - [x] Add FPS counter
   - [ ] Command compression
   - [ ] 32 colors
+  - [ ] Change palette
   - [ ] Activate command to start receiving VSYNC (?)
   - [ ] Other text options (standout, etc)
 
