@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include "scene/scene.hh"
-#include "keys.hh"
 
 extern "C" {
 #include "lib/tmt/tmt.h"

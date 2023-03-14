@@ -38,7 +38,8 @@ OBJ =   main.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
  		scene/scene.o scene/palette/palette.o scene/layers/images.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
- 		terminal/terminal.o terminal/texturemanager.o \
+ 		terminal/sdl/sdl.o \
+ 		terminal/terminal.o terminal/terminalevents.o terminal/texturemap.o \
  		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
 

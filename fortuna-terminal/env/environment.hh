@@ -23,7 +23,7 @@ public:
     void set_mode(Mode mode);
 
     [[nodiscard]] Scene const& scene() const { return scene_; }
-    Events&                    events_interface() { return protocol_; }
+    IEvent&                    events_interface() { return protocol_; }
 
 private:
     std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();

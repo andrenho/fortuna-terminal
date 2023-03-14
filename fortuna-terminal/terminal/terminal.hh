@@ -14,30 +14,25 @@
 #include "common/enums/execution.hh"
 #include "application/options.hh"
 #include "env/protocol/protocol.hh"
-#include "texturemanager.hh"
+#include "texturemap.hh"
 #include "painters/textpainter.hh"
 #include "painters/graphicspainter.hh"
+#include "sdl/sdl.hh"
+#include "terminalevents.hh"
 
 using namespace std::chrono_literals;
 
-class Terminal : NonCopyable {
+class Terminal : NonCopyable,
+     public TerminalEvents {
 public:
     explicit Terminal(TerminalOptions terminal_options);
-    ~Terminal();
 
-    void            draw(Scene const& scene) const;
-    void            resize_window(Scene const& scene);
-
-    ExecutionStatus process_user_events(Events& events);
-    ExecutionStatus wait_for_enter();
-
-    void            set_mouse_active(bool value);
-    void            set_mouse_register_move(bool mouse_register_move) { mouse_register_move_ = mouse_register_move; }
-    void            set_joystick_emulation(bool value) { joystick_emulation_ = value; }
+    void draw(Scene const& scene) const;
+    void resize_window(Scene const& scene);
 
 private:
-    std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> window_;
-    std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> renderer_;
+    SDL_Window* window_ = nullptr;
+    SDL_Renderer* renderer_ = nullptr;
 
     std::unique_ptr<TextPainter>     text_painter_;
     std::unique_ptr<GraphicsPainter> graphics_painter_;
@@ -47,14 +42,6 @@ private:
     bool window_mode_;
 
     void beep();
-
-    void add_keyboard_event(Events& events, bool is_down, SDL_KeyboardEvent key);
-
-    bool mouse_active_ = false;
-    bool mouse_register_move_ = false;
-    bool joystick_emulation_ = false;
-
-    static constexpr const char* emulated_keys = "XxZzSsAaQqWw\r\n\t";
 
     void print_renderer_info();
 };

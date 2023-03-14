@@ -1,12 +1,13 @@
-#include "texturemanager.hh"
+#include "texturemap.hh"
 #include "common/exceptions/sdlexception.hh"
 #include "scene/scene.hh"
+#include "terminal/sdl/sdl.hh"
 
 #include <cstring>
 
-void TextureManager::add_image(size_t scene_id, Image const &image, Palette const& palette)
+void TextureMap::emplace_from_image(size_t index, Image const &image, Palette const& palette)
 {
-    SDL_Texture* scene_texture = get_or_create_texture(scene_id);
+    SDL_Texture* scene_texture = get_or_create_texture(index);
 
     SDL_Surface* sf = SDL_CreateRGBSurface(0, Image::IMAGE_W, Image::IMAGE_H, 8, 0, 0, 0, 0);
     if (!sf)
@@ -39,39 +40,33 @@ void TextureManager::add_image(size_t scene_id, Image const &image, Palette cons
     SDL_FreeSurface(sf);
 }
 
-SDL_Texture *TextureManager::get_or_create_texture(size_t scene_id)
+SDL_Texture *TextureMap::get_or_create_texture(size_t scene_id)
 {
     auto it = textures_.find(scene_id);
 
     if (it != textures_.end()) {
-        return it->second.get();
+        return it->second;
     } else {
         int h = (int) (Scene::MAX_IMAGES / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
-        auto [itr, _] = textures_.emplace(
-                scene_id,
-                TextureUniquePtr(
-                        SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h),
-                        [](SDL_Texture* t) { SDL_DestroyTexture(t); }
-                )
-        );
-        SDL_Texture* texture = itr->second.get();
+        SDL_Texture* texture = SDL::get().create_texture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h);
         if (!texture)
             throw SDLException("Error creating texture");
+        textures_[scene_id] = texture;
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
         return texture;
     }
 }
 
-TextureInfo TextureManager::texture_info(size_t texture_n, size_t image_key) const
+TextureInfo TextureMap::get_texture(size_t texture_n, size_t image_key) const
 {
     auto [x, y] = index_location_in_texture(image_key);
     return {
-            textures_.at(texture_n).get(),
+        textures_.at(texture_n),
         { x, y, Image::IMAGE_W, Image::IMAGE_H },
     };
 }
 
-std::pair<int, int> TextureManager::index_location_in_texture(size_t key)
+std::pair<int, int> TextureMap::index_location_in_texture(size_t key)
 {
     int x = ((int) key * 16) % MAX_TEXTURE_W;
     int y = ((int) key * 16) / MAX_TEXTURE_W;
