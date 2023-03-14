@@ -30,6 +30,8 @@ public:
     void draw(Scene const& scene) const;
     void resize_window(Scene const& scene);
 
+    void reset(size_t scene_id) { graphics_painter_->reset(scene_id); }
+
 private:
     SDL_Window* window_ = nullptr;
     SDL_Renderer* renderer_ = nullptr;

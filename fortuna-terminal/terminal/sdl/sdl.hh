@@ -1,9 +1,13 @@
 #ifndef SDL_HH_
 #define SDL_HH_
 
+#include <functional>
+#include <memory>
 #include <vector>
 
 #include <SDL2/SDL.h>
+
+using UniquePtrTexture = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>>;
 
 // this class wraps SDL to provide RAII
 class SDL {
@@ -16,6 +20,8 @@ public:
 
     static void init(Uint32 flags);
     static SDL& get();
+
+    static UniquePtrTexture create_independent_texture(SDL_Renderer * renderer, Uint32 format, int access, int w, int h);
 
 private:
     SDL() = default;

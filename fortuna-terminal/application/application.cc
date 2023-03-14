@@ -85,11 +85,14 @@ void Application::execute_control_queue()
         switch (cc->command) {
 
             case ControlCommand::Reset:
-                for (auto& environment: environments)
+                for (auto& environment: environments) {
+                    terminal_.reset(environment.scene().unique_id());
                     environment.reset();
+                }
                 break;
 
             case ControlCommand::ResetProtocol:
+                terminal_.reset(currrent_env.scene().unique_id());
                 currrent_env.reset();
                 break;
 

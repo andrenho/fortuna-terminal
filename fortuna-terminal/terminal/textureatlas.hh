@@ -11,6 +11,7 @@
 
 #include "scene/layers/images.hh"
 #include "scene/palette/palette.hh"
+#include "terminal/sdl/sdl.hh"
 
 struct TextureInfo {
     SDL_Texture* tx;
@@ -24,9 +25,11 @@ public:
     void        emplace_from_image(size_t index, size_t image_idx, Image const& image, Palette const& palette);
     TextureInfo get_texture(size_t index, size_t image_key) const;
 
+    void        reset(size_t scene_id);
+
 private:
     SDL_Renderer* renderer_;
-    std::unordered_map<size_t, SDL_Texture*> textures_ {};
+    std::unordered_map<size_t, UniquePtrTexture> textures_ {};
 
     SDL_Texture* get_or_create_texture(size_t scene_id);
 

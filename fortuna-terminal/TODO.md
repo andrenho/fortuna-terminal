@@ -58,8 +58,8 @@ Refactoring 3:
  - [x] Scene id
  - [x] Refactor SDL RAII
  - [x] General overview + make compilation faster (?)
- - [ ] Don't use pending_images, control that from graphics side
- - [ ] Check reset for terminal
+ - [x] Don't use pending_images, control that from graphics side
+ - [x] Check reset for terminal
 
 - For each class
   - [x] external templates

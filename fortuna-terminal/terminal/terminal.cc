@@ -101,4 +101,3 @@ void Terminal::print_renderer_info()
     for (size_t i = 0; i < info.num_texture_formats; ++i)
         printf("    %s\n", SDL_GetPixelFormatName(info.texture_formats[i]));
 }
-

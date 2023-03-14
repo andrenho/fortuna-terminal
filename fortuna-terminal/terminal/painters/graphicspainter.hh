@@ -18,10 +18,11 @@ public:
     void draw_background(Scene const& scene) const;
     void draw(Scene const& scene, LayerIdentifier layer_id) const;
 
-    TextureAtlas texture_atlas_;
+    void reset(size_t scene_id) { texture_atlas_.reset(scene_id); }
 
 private:
-    SDL_Renderer*              renderer_;
+    TextureAtlas   texture_atlas_;
+    SDL_Renderer*  renderer_;
 };
 
 #endif //GRAPHICSPAINTER_HH_

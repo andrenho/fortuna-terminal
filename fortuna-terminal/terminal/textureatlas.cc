@@ -49,16 +49,15 @@ SDL_Texture *TextureAtlas::get_or_create_texture(size_t scene_id)
     auto it = textures_.find(scene_id);
 
     if (it != textures_.end()) {
-        return it->second;
+        return it->second.get();
     } else {
         int h = (int) (Scene::MAX_IMAGES / (MAX_TEXTURE_W / Image::IMAGE_W) + 1) * 16;
-        SDL_Texture* texture = SDL::get().emplace_texture(renderer_, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
-                                                          MAX_TEXTURE_W, h);
-        if (!texture)
-            throw SDLException("Error creating texture");
-        textures_[scene_id] = texture;
-        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-        return texture;
+        UniquePtrTexture texture = SDL::create_independent_texture(renderer_, SDL_PIXELFORMAT_ARGB8888,
+                                                                   SDL_TEXTUREACCESS_TARGET, MAX_TEXTURE_W, h);
+        SDL_Texture* tx_ptr = texture.get();
+        SDL_SetTextureBlendMode(tx_ptr, SDL_BLENDMODE_BLEND);
+        textures_.emplace(scene_id, std::move(texture));
+        return tx_ptr;
     }
 }
 
@@ -66,7 +65,7 @@ TextureInfo TextureAtlas::get_texture(size_t index, size_t image_key) const
 {
     auto [x, y] = index_location_in_texture(image_key);
     return {
-        textures_.at(index),
+        textures_.at(index).get(),
         { x, y, Image::IMAGE_W, Image::IMAGE_H },
     };
 }
@@ -76,4 +75,9 @@ std::pair<int, int> TextureAtlas::index_location_in_texture(size_t key)
     int x = ((int) key * 16) % MAX_TEXTURE_W;
     int y = ((int) key * 16) / MAX_TEXTURE_W;
     return { x, y };
+}
+
+void TextureAtlas::reset(size_t scene_id)
+{
+    textures_.erase(scene_id);
 }

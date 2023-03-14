@@ -64,3 +64,11 @@ void SDL::check_was_init() const
         throw FortunaException("SDL was not initialized");
 }
 
+UniquePtrTexture SDL::create_independent_texture(SDL_Renderer *renderer, Uint32 format, int access, int w, int h)
+{
+    SDL_Texture* texture = SDL_CreateTexture(renderer, format, access, w, h);
+    if (!texture)
+        throw SDLException("Error creating texture");
+    return { texture, [](SDL_Texture* t) { SDL_DestroyTexture(t); } };
+}
+
