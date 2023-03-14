@@ -3,10 +3,9 @@
 
 void GraphicsPainter::initialize_pending_images(Scene const& scene)
 {
-    std::optional<Image> oimg;
-    while ((oimg = scene.images.pending_images()->pop_nonblock()).has_value()) {
-        Image const& img = oimg.value();
-        texture_atlas_.emplace_from_image(scene.unique_id(), img, scene.palette);
+    std::optional<size_t> image_idx;
+    while ((image_idx = scene.pending_images().pop_nonblock()).has_value()) {
+        texture_atlas_.emplace_from_image(scene.unique_id(), *image_idx, scene.image(*image_idx), scene.palette);
     }
 }
 

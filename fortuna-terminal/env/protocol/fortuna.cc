@@ -66,13 +66,13 @@ void FortunaProtocol::execute_escape_sequence()
                 if (p.size() < (Image::IMAGE_SZ + 2)) {
                     fprintf(stderr, "warning: trying to create a sprites but has less than 258 bytes\n");
                 } else {
-                    Image image {
-                        .index = (uint16_t) (p.at(0) % Scene::MAX_IMAGES),
-                        .transparent_color = (uint8_t) p.at(1),
-                        .pixels = {0}
+                    size_t index = (uint16_t) (p.at(0) % Scene::MAX_IMAGES);
+                    Image image = {
+                            .transparent_color = (uint8_t) p.at(1),
+                            .pixels = {0}
                     };
                     std::copy(p.begin() + 2, p.end(), image.pixels);
-                    scene_.images.create_image(std::move(image));
+                    scene_.add_image(index, std::move(image));
                 }
                 break;
             case 't':

@@ -24,6 +24,8 @@ void Scene::reset()
 {
     std::for_each(layers_.begin(), layers_.end(), [](auto& i) { i.second->reset(); });
     set_mode(Mode::Text);
+    images_.clear();
+    pending_images_->clear();
 }
 
 void Scene::set_mode(Mode mode)
@@ -73,3 +75,11 @@ Layer* Scene::layer(LayerIdentifier id) const
         return nullptr;
     }
 }
+
+void Scene::add_image(size_t index, Image &&image)
+{
+    images_[index] = image;
+    pending_images_->push(index);
+}
+
+template class SyncQueue<size_t>;

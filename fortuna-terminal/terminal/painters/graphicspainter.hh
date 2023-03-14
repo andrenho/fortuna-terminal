@@ -4,6 +4,7 @@
 #include "lib/SDL2-windows/include/SDL2/SDL.h"
 
 #include <memory>
+#include <unordered_set>
 #include "terminal/textureatlas.hh"
 #include "scene/scene.hh"
 
@@ -20,7 +21,7 @@ public:
     TextureAtlas texture_atlas_;
 
 private:
-    SDL_Renderer* renderer_;
+    SDL_Renderer*              renderer_;
 };
 
 #endif //GRAPHICSPAINTER_HH_

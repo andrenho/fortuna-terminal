@@ -36,7 +36,7 @@ OBJ =   main.o \
         env/comm/io/comm_io.o env/comm/io/echo.o \
         env/comm/io/fd/fdcomm.o env/comm/io/fd/pipes.o env/comm/io/fd/tcpip.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
- 		scene/scene.o scene/palette/palette.o scene/layers/images.o \
+ 		scene/scene.o scene/palette/palette.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
  		terminal/sdl/sdl.o \
  		terminal/terminal.o terminal/terminalevents.o terminal/textureatlas.o \

@@ -27,14 +27,17 @@ enum LayerIdentifier : uint8_t {
 struct Scene : NonCopyable {
     explicit Scene(Mode mode);
 
-    Tilemap tilemaps[Tilemap::MAX_TILEMAPS] {};
-    Images  images;
-    Palette palette {};
+    Tilemap                           tilemaps[Tilemap::MAX_TILEMAPS] {};
+    Palette                           palette {};
 
     uint8_t bg_color = COLOR_BLACK;
 
     void reset();
     void set_mode(Mode mode);
+
+    void          add_image(size_t index, Image&& image);
+
+    [[nodiscard]] Image const&        image(size_t index) const { return images_.at(index); }
 
     [[nodiscard]] TextLayer&          text() const;
     [[nodiscard]] SpriteLayer&        sprites() const;
@@ -48,6 +51,8 @@ struct Scene : NonCopyable {
 
     [[nodiscard]] std::pair<int, int> size_in_pixels() const { return size_in_pixels_; }
 
+    [[nodiscard]] SyncQueue<size_t>&  pending_images() const { return *pending_images_; }
+
     static size_t constexpr MAX_IMAGES = 1024;
 
 private:
@@ -56,8 +61,13 @@ private:
     const size_t        unique_id_;
 
     std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
+    std::unordered_map<size_t, Image> images_ {};
+
+    mutable SyncQueueUniqPtr<size_t> pending_images_ = std::make_unique<SyncQueue<size_t>>();
 
     static size_t unique_id_counter;
 };
+
+extern template class SyncQueue<size_t>;
 
 #endif //SCENE_HH_

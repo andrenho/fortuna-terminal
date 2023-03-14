@@ -21,7 +21,7 @@ class TextureAtlas {
 public:
     explicit TextureAtlas(SDL_Renderer* renderer) : renderer_(renderer) {}
 
-    void        emplace_from_image(size_t index, Image const& image, Palette const& palette);
+    void        emplace_from_image(size_t index, size_t image_idx, Image const& image, Palette const& palette);
     TextureInfo get_texture(size_t index, size_t image_key) const;
 
 private:

@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-void TextureAtlas::emplace_from_image(size_t index, Image const &image, Palette const& palette)
+void TextureAtlas::emplace_from_image(size_t index, size_t image_idx, Image const &image, Palette const& palette)
 {
     SDL_Texture* scene_texture = get_or_create_texture(index);
 
@@ -36,7 +36,7 @@ void TextureAtlas::emplace_from_image(size_t index, Image const &image, Palette 
     SDL_SetTextureBlendMode(texture.get(), SDL_BLENDMODE_BLEND);
     if (SDL_SetRenderTarget(renderer_, scene_texture) < 0)
         throw SDLException("Error setting target");
-    auto [x, y] = index_location_in_texture(image.index);
+    auto [x, y] = index_location_in_texture(image_idx);
     SDL_Rect src = { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
     SDL_Rect dest = { x, y, Image::IMAGE_W, Image::IMAGE_H };
     if (SDL_RenderCopy(renderer_, texture.get(), &src, &dest) < 0)
