@@ -4,7 +4,7 @@
 #include <string>
 #include "common/enums/mode.hh"
 
-enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo };
+enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXchg };
 
 struct TerminalOptions {
     bool window_mode = false;

@@ -16,7 +16,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
         win_h_ = mode.h;
     }
 
-    window_ = SDL::get().emplace_window("FortunaProtocol-3 emulator",
+    window_ = SDL::get().emplace_window("Fortuna Terminal",
                                         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                         win_w_, win_h_,
                                         SDL_WINDOW_OPENGL);

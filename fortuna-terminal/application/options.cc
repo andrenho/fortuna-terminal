@@ -48,6 +48,8 @@ Options::Options(int argc, char* argv[])
             case 'c': {
                 if (strcmp(optarg, "echo") == 0)
                     comm_type = CommType::Echo;
+                else if (strcmp(optarg, "echo-xchg") == 0)
+                    comm_type = CommType::EchoXchg;
                 else if (strcmp(optarg, "uart") == 0)
                     comm_type = CommType::Uart;
                 else if (strcmp(optarg, "i2c") == 0)
@@ -116,7 +118,7 @@ Options::Options(int argc, char* argv[])
 
 [[ noreturn ]] void Options::print_help(int exit_status)
 {
-    printf("    -c, --communication-mode        One of \"echo\", \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\"\n");
+    printf("    -c, --communication-mode        One of \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\", \"echo\", \"echo-xchg\"\n");
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
     printf("    -g, --graphics                  Start in graphics mode (40 columns)\n");
     printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");

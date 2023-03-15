@@ -7,6 +7,7 @@
 #  include "env/comm/io/fd/uart.hh"
 #  include "env/comm/io/fd/pty.hh"
 #endif
+#include "env/comm/xchg/echoxchg.hh"
 #include "io/echo.hh"
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
@@ -16,6 +17,8 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
             return std::make_unique<TCPIP>(options.tcpip_options);
         case CommType::Echo:
             return std::make_unique<Echo>();
+        case CommType::EchoXchg:
+            return std::make_unique<EchoXchg>();
         case CommType::Pipes:
             return std::make_unique<Pipes>();
 #if INCLUDE_UART_PTY

@@ -9,8 +9,12 @@ void ThreadRunner::run_comm_threads(bool debug_comm)
 {
     if (comm_.channels() == Channels::InputAndOutput) {
         auto comm_io = dynamic_cast<CommIO*>(&comm_);
-        input_thread_ = std::make_unique<std::thread>(&ThreadRunner::input_thread, this, comm_io, debug_comm);
-        output_thread_ = std::make_unique<std::thread>(&ThreadRunner::output_thread, this, comm_io, debug_comm);
+        input_thread_ = std::thread(&ThreadRunner::input_thread, this, comm_io, debug_comm);
+        output_thread_ = std::thread(&ThreadRunner::output_thread, this, comm_io, debug_comm);
+
+    } else if (comm_.channels() == Channels::Exchange) {
+        auto comm_xchg = dynamic_cast<CommExchange*>(&comm_);
+        exchange_thread_ = std::thread(&ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
     }
 }
 
@@ -21,17 +25,23 @@ void ThreadRunner::finalize_comm_threads()
     input_queue_.push({});  // release the locks
     output_queue_.push({});
 
-    if (comm_.release_locks()) {
-        input_thread_->join();
-    } else {
-        pthread_kill(input_thread_->native_handle(), 9);
-        input_thread_->detach();
-    }
+    if (comm_.channels() == Channels::InputAndOutput) {
+        if (comm_.release_locks()) {
+            input_thread_.join();
+        } else {
+            pthread_kill(input_thread_.native_handle(), 9);
+            input_thread_.detach();
+        }
 
-    output_thread_->join();
+        output_thread_.join();
+
+    } else if (comm_.channels() == Channels::Exchange) {
+        notify_exchange_thread();
+        exchange_thread_.join();
+    }
 }
 
-void ThreadRunner::input_thread(CommIO *comm_io, bool debug_comm) const
+void ThreadRunner::input_thread(CommIO *comm_io, bool debug_comm)
 {
     while (threads_running_) {
         auto byte = comm_io->read_blocking();
@@ -43,7 +53,7 @@ void ThreadRunner::input_thread(CommIO *comm_io, bool debug_comm) const
     }
 }
 
-void ThreadRunner::output_thread(CommIO *comm_io, bool debug_comm) const
+void ThreadRunner::output_thread(CommIO *comm_io, bool debug_comm)
 {
     while (threads_running_) {
         std::vector<uint8_t> bytes_to_output;
@@ -54,9 +64,38 @@ void ThreadRunner::output_thread(CommIO *comm_io, bool debug_comm) const
     }
 }
 
-void ThreadRunner::debug_byte(uint8_t byte, bool is_input) const
+void ThreadRunner::notify_exchange_thread()
 {
-    std::unique_lock<std::mutex> lock(*mutex_);
+    ready_ = true;
+    xchg_cond_.notify_one();
+}
+
+
+void ThreadRunner::exchange_thread(CommExchange *comm_xchg, bool debug_comm)
+{
+    while (threads_running_) {
+        std::unique_lock<std::mutex> lock(xchg_mutex_);
+        xchg_cond_.wait(lock, [this]{ return ready_; });
+
+        uint8_t data_to_send, data_to_receive;
+        do {
+            data_to_send = output_queue_.pop_nonblock().value_or(0xff);
+            data_to_receive = comm_xchg->exchange(data_to_send);
+            if (debug_comm) {
+                debug_byte(data_to_send, false);
+                debug_byte(data_to_receive, true);
+            }
+            if (data_to_receive != 0xff)
+                input_queue_.push(data_to_receive);
+        } while (data_to_send != 0xff || data_to_receive != 0xff);
+
+        ready_ = false;
+    }
+}
+
+void ThreadRunner::debug_byte(uint8_t byte, bool is_input)
+{
+    std::unique_lock<std::mutex> lock(debug_mutex_);
 #if COLOR_TERMINAL
     printf("\e[1;%dm", is_input ? 33 : 34);
 #else
@@ -75,3 +114,4 @@ void ThreadRunner::debug_byte(uint8_t byte, bool is_input) const
 #endif
     fflush(stdout);
 }
+

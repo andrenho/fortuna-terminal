@@ -7,6 +7,7 @@
 #include "common/syncqueue.hh"
 #include "env/comm/comm.hh"
 #include "comm/io/comm_io.hh"
+#include "env/comm/xchg/commexchange.hh"
 
 class ThreadRunner {
 public:
@@ -16,20 +17,28 @@ public:
     void run_comm_threads(bool debug_comm);
     void finalize_comm_threads();
 
+    void notify_exchange_thread();
+
 private:
     bool threads_running_ = true;
-    std::unique_ptr<std::thread> input_thread_ {},
-                                 output_thread_ {};
-    std::unique_ptr<std::mutex>  mutex_ = std::make_unique<std::mutex>();
+    std::thread input_thread_ {},
+                output_thread_ {},
+                exchange_thread_ {};
+    std::mutex  debug_mutex_ {},
+                xchg_mutex_ {};
+
+    bool                     ready_ = false;
+    std::condition_variable  xchg_cond_ {};
 
     SyncQueueByte &input_queue_,
                   &output_queue_;
     CommunicationModule &comm_;
 
-    void input_thread(CommIO* comm_io, bool debug_comm) const;
-    void output_thread(CommIO* comm_io, bool debug_comm) const;
+    void input_thread(CommIO* comm_io, bool debug_comm);
+    void output_thread(CommIO* comm_io, bool debug_comm);
+    void exchange_thread(CommExchange* comm_xchg, bool debug_comm);
 
-    void debug_byte(uint8_t byte, bool is_input) const;
+    void debug_byte(uint8_t byte, bool is_input);
 };
 
 #endif //THREADRUNNER_HH_

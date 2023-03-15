@@ -11,7 +11,7 @@ Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
       protocol_(options.mode, scene_, *output_queue_),
-      runner_(*input_queue_, *output_queue_, *comm_),
+      thread_runner_(std::make_unique<ThreadRunner>(*input_queue_, *output_queue_, *comm_)),
       show_fps_counter_(options.terminal_options.show_fps_counter)
 {
 }
@@ -28,6 +28,7 @@ void Environment::execute_single_step(size_t avg_fps)
     protocol_.execute_inputs(*input_queue_);
     protocol_.execute_outputs();
 #endif
+    thread_runner_->notify_exchange_thread();
     show_fps_counter(avg_fps);
 }
 
