@@ -5,7 +5,7 @@
 #include <mutex>
 #include <optional>
 #include <queue>
-#include "noncopyable.hh"
+#include "common/types/noncopyable.hh"
 
 template <typename T>
 class SyncQueue : NonCopyable {
@@ -104,5 +104,11 @@ private:
     std::mutex              mutex_ {};
     std::condition_variable cond_ {};
 };
+
+template <class T>
+using SyncQueueUniqPtr = std::unique_ptr<SyncQueue<T>>;
+
+using SyncQueueByte = SyncQueue<uint8_t>;
+extern template class SyncQueue<uint8_t>;
 
 #endif //SYNCQUEUE_HH_

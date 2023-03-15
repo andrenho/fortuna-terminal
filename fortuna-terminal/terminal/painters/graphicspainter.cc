@@ -1,18 +1,12 @@
 #include "graphicspainter.hh"
-#include "exceptions/sdlexception.hh"
+#include "common/exceptions/sdlexception.hh"
 
-void GraphicsPainter::initialize_pending_images(Scene& scene)
+void GraphicsPainter::initialize_pending_images(Scene const& scene)
 {
-    std::optional<Image> oimg;
-    while ((oimg = scene.images.pending_images()->pop_nonblock()).has_value()) {
-        Image const& img = oimg.value();
-        texture_manager_->add_image(scene.texture_image_index(), img, scene.palette);
+    std::optional<size_t> image_idx;
+    while ((image_idx = scene.pending_images().pop_nonblock()).has_value()) {
+        texture_atlas_.emplace_from_image(scene.unique_id(), *image_idx, scene.image(*image_idx), scene.palette);
     }
-}
-
-void GraphicsPainter::setup_scene(Scene const &scene)
-{
-    texture_manager_->create_texture(scene.texture_image_index(), Scene::MAX_IMAGES);
 }
 
 void GraphicsPainter::draw_background(Scene const &scene) const
@@ -32,9 +26,10 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
 
     auto [sw, sh] = scene.size_in_pixels();
 
-    for (auto const& image: layer->images_to_draw(scene)) {
+    for (auto const& image: layer->images_to_draw_next_frame(scene)) {
+
         static SDL_Point center { 0, 0 };
-        TextureInfo ti = texture_manager_->texture_info(scene.texture_image_index(), image.image);
+        TextureInfo ti = texture_atlas_.get_texture(scene.unique_id(), image.image_idx);
         if (ti.tx == nullptr)
             break;
         SDL_Rect dest { image.pos_x, image.pos_y, Image::IMAGE_W, Image::IMAGE_H };
@@ -52,7 +47,7 @@ void GraphicsPainter::draw(Scene const &scene, LayerIdentifier layer_id) const
             break;
 
         if (SDL_RenderCopyEx(renderer_, ti.tx, &ti.src, &dest, 0, &center, flip) < 0)
-            throw SDLException("Error renderering");
+            throw SDLException("Error rendering");
     }
 }
 
