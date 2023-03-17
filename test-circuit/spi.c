@@ -19,8 +19,10 @@ void spi_printchar(uint8_t c)
 {
     if (out_buffer_sz >= BUFFER_SZ - 1)
         return;
-    memmove(&out_buffer[1], out_buffer, ++out_buffer_sz);
+    if (out_buffer_sz > 0)
+        memmove(&out_buffer[1], out_buffer, out_buffer_sz);
     out_buffer[0] = c;
+    ++out_buffer_sz;
 }
 
 uint8_t spi_getchar_nonblocking(void)
@@ -46,21 +48,14 @@ uint8_t spi_getchar_blocking(void)
 ISR (SPI_STC_vect)
 {
     uint8_t data = SPDR;
+
     if (data != 0xff)
         in_buffer[in_buffer_sz++] = data;
 
     if (out_buffer_sz == 0) {
         SPDR = 0xff;
     } else {
-        SPDR = out_buffer[out_buffer_sz--];
+        SPDR = out_buffer[out_buffer_sz + 1];
+        --out_buffer_sz;
     }
 }
-
-/*
-extern uint8_t data;
-ISR (SPI_STC_vect)
-{
-    data = SPDR;
-    SPDR = data + 1;
-}
-*/
