@@ -11,7 +11,7 @@ public:
     explicit SPI(SPIOptions spi_options);
     ~SPI() override;
 
-    uint8_t exchange(uint8_t data) override;
+    std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
 
 private:
     int    handle_ = -1;

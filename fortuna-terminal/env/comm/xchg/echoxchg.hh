@@ -7,7 +7,7 @@
 
 class EchoXchg : public CommExchange {
 public:
-    [[nodiscard]] std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) const override;
+    std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
 };
 
 #endif //ECHOXCHG_HH_

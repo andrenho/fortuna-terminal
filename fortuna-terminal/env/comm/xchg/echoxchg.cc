@@ -1,6 +1,6 @@
 #include "echoxchg.hh"
 
-std::vector<uint8_t> EchoXchg::exchange(std::vector<uint8_t> const &data) const
+std::vector<uint8_t> EchoXchg::exchange(std::vector<uint8_t> const &data)
 {
     std::vector<uint8_t> r;
     r.reserve(data.size());

@@ -8,8 +8,7 @@
 class CommExchange : public CommunicationModule {
 public:
     [[nodiscard]] Channels channels() const override { return Channels::Exchange; }
-
-    [[nodiscard]] virtual std::vector<uint8_t> exchange(std::vector<uint8_t> const& data) const = 0;
+    virtual std::vector<uint8_t> exchange(std::vector<uint8_t> const& data) = 0;
 };
 
 #endif //COMMEXCHANGE_HH_
