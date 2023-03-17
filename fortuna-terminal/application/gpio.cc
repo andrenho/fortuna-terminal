@@ -2,7 +2,7 @@
 #include "common/exceptions/fortunaexception.hh"
 
 #ifdef GPIO
-#  include <piopio.h>
+#  include <pigpio.h>
 #endif
 
 Gpio::Gpio()

@@ -12,7 +12,7 @@ void spi_init(void)
 
     // enable SPI
     SPCR = (1<<SPE) | (1<<SPIE);
-    SPDR = 0;
+    SPDR = 0xff;
 }
 
 void spi_printchar(uint8_t c)
@@ -43,6 +43,7 @@ uint8_t spi_getchar_blocking(void)
     }
 }
 
+/*
 ISR (SPI_STC_vect)
 {
     uint8_t data = SPDR;
@@ -54,4 +55,12 @@ ISR (SPI_STC_vect)
     } else {
         SPDR = out_buffer[out_buffer_sz--];
     }
+}
+*/
+
+extern uint8_t data;
+ISR (SPI_STC_vect)
+{
+    data = SPDR;
+    SPDR = data + 1;
 }

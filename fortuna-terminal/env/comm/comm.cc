@@ -10,7 +10,7 @@
 #  include "env/comm/io/fd/pty.hh"
 #endif
 #ifdef COMM_SPI
-#  include "env/comm/io/xchg/spi.hh"
+#  include "env/comm/xchg/spi.hh"
 #endif
 #include "env/comm/xchg/echoxchg.hh"
 #include "io/echo.hh"
