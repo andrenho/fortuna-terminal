@@ -17,11 +17,9 @@ ifeq ($(OS),Windows_NT)
 else
 	COLOR_TERMINAL := 1
 	INCLUDE_UART_PTY := 1
-	ifeq ($(shell uname -m),armv7l)
-		ifeq ($(shell cat /proc/cpuinfo | grep -q BCM; echo $$?),0)
-			RASPBERRY := 1
-			INCLUDE_SPI_I2C := 1
-		endif
+	ifeq ($(shell uname -m),armv6l) || $(shell uname -m),armv7l)
+		RASPBERRY := 1
+		INCLUDE_SPI_I2C := 1
 	endif
 endif
 
@@ -77,7 +75,7 @@ endif
 ifeq ($(INCLUDE_SPI_I2C),1)
 	OBJ := ${OBJ} application/gpio.o env/comm/xchg/spi.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_SPI -DCOMM_I2C -DGPIO
-	LDFLAGS := lpigpio -lrt
+	LDFLAGS := ${LDFLAGS} -lpigpio -lrt -pthread
 endif
 
 ifeq ($(FAST),0)
