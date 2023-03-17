@@ -44,12 +44,12 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
 #else
             throw FortunaException("Communication mode not supported except for Raspberry Pi");
 #endif
+        case CommType::I2C:
 #ifdef COMM_I2C
             return std::make_unique<I2C>(options.i2c_options);
 #else
             throw FortunaException("Communication mode not supported except for Raspberry Pi");
 #endif
-        case CommType::I2C:
         default:
             throw FortunaException("Unsupported communication module");
     }
