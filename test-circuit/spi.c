@@ -55,7 +55,7 @@ ISR (SPI_STC_vect)
     if (out_buffer_sz == 0) {
         SPDR = 0xff;
     } else {
-        SPDR = out_buffer[out_buffer_sz];
+        SPDR = out_buffer[out_buffer_sz-1];
         --out_buffer_sz;
     }
 }
