@@ -78,7 +78,7 @@ void ThreadRunner::exchange_thread(CommExchange *comm_xchg, bool debug_comm)
         xchg_cond_.wait(lock, [this]{ return ready_; });
 
         std::vector<uint8_t> data_to_send, data_to_receive;
-        output_queue_.pop_all_into(data_to_send);
+        output_queue_.pop_all_into_noblock(data_to_send);
         data_to_receive = comm_xchg->exchange(data_to_send);
         if (debug_comm) {
             for (uint8_t b: data_to_send)
