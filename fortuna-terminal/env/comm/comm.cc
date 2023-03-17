@@ -3,9 +3,14 @@
 #include "common/exceptions/fortunaexception.hh"
 #include "env/comm/io/fd/tcpip.hh"
 #include "env/comm/io/fd/pipes.hh"
-#if INCLUDE_UART_PTY
+#ifdef COMM_UART
 #  include "env/comm/io/fd/uart.hh"
+#endif
+#ifdef COMM_PTY
 #  include "env/comm/io/fd/pty.hh"
+#endif
+#ifdef COMM_SPI
+#  include "env/comm/io/xchg/spi.hh"
 #endif
 #include "env/comm/xchg/echoxchg.hh"
 #include "io/echo.hh"
@@ -21,20 +26,25 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
             return std::make_unique<EchoXchg>();
         case CommType::Pipes:
             return std::make_unique<Pipes>();
-#if INCLUDE_UART_PTY
         case CommType::Uart:
+#ifdef COMM_UART
             return std::make_unique<UART>(options.uart_options);
-        case CommType::PTY:
-            return std::make_unique<PTY>(options.pty_options);
-            break;
 #else
-        case CommType::Uart:
-        case CommType::PTY:
             throw FortunaException("Communication mode not supported on Windows");
 #endif
-        case CommType::I2C:
+        case CommType::PTY:
+#ifdef COMM_PTY
+            return std::make_unique<PTY>(options.pty_options);
+#else
+            throw FortunaException("Communication mode not supported on Windows");
+#endif
         case CommType::SPI:
-            throw FortunaException("Communication mode not yet implemented");
+#ifdef COMM_SPI
+            return std::make_unique<SPI>(options.spi_options);
+#else
+            throw FortunaException("Communication mode not supported except for Raspberry Pi");
+#endif
+        case CommType::I2C:
         default:
             throw FortunaException("Unsupported communication module");
     }

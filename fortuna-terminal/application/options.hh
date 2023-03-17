@@ -26,6 +26,10 @@ struct PTYOptions {
     std::string shell = "/bin/bash";
 };
 
+struct SPIOptions {
+    size_t speed = 1000000;
+};
+
 struct Options {
 public:
     Options(int argc, char* argv[]);
@@ -38,6 +42,7 @@ public:
     UartOptions     uart_options {};
     TcpIpOptions    tcpip_options {};
     PTYOptions      pty_options {};
+    SPIOptions      spi_options {};
 
 private:
     [[ noreturn ]] static void print_help(int exit_status);

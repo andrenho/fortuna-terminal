@@ -21,6 +21,8 @@ Options::Options(int argc, char* argv[])
                 { "serial-port",        required_argument, nullptr, 'P' },
                 { "baud",               required_argument, nullptr, 'B' },
                 { "uart-settings",      required_argument, nullptr, 'U' },
+                // spi
+                { "spi-speed",          required_argument, nullptr, 's' },
                 // tcp/ip
                 { "tcpip-port",         required_argument, nullptr, 'R' },
                 // shell
@@ -97,6 +99,12 @@ Options::Options(int argc, char* argv[])
                 parse_uart_settings(optarg);
                 break;
 
+            case 's':
+                spi_options.speed = strtoll(optarg, nullptr, 10);
+                if (errno == ERANGE || errno == EINVAL)
+                    throw LibcException("Invalid SPI speed");
+                break;
+
             case 'R':
                 tcpip_options.port = strtol(optarg, nullptr, 10);
                 if (errno == ERANGE || errno == EINVAL)
@@ -126,6 +134,8 @@ Options::Options(int argc, char* argv[])
     printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");
     printf("    -B, --baud                      Baud speed for UART (default: 57600)\n");
     printf("    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n");
+    printf("Options valid for `spi`:\n");
+    printf("    -s, --spi-speed                 SPI speed in hz (default: 1000000)\n");
     printf("Options valid for `tcpip`:\n");
     printf("    -R, --tcpip-port                TCP/IP port (default: 8076)\n");
     printf("Options valid for `pty`:\n");
