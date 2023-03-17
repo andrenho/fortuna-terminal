@@ -82,8 +82,10 @@ void ThreadRunner::exchange_thread(CommExchange *comm_xchg, bool debug_comm)
             data_to_send = output_queue_.pop_nonblock().value_or(0xff);
             data_to_receive = comm_xchg->exchange(data_to_send);
             if (debug_comm) {
-                debug_byte(data_to_send, false);
-                debug_byte(data_to_receive, true);
+                if (data_to_send != 0xff)
+                    debug_byte(data_to_send, false);
+                if (data_to_receive != 0xff)
+                    debug_byte(data_to_receive, true);
             }
             if (data_to_receive != 0xff)
                 input_queue_.push(data_to_receive);

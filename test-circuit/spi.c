@@ -43,7 +43,6 @@ uint8_t spi_getchar_blocking(void)
     }
 }
 
-/*
 ISR (SPI_STC_vect)
 {
     uint8_t data = SPDR;
@@ -56,11 +55,12 @@ ISR (SPI_STC_vect)
         SPDR = out_buffer[out_buffer_sz--];
     }
 }
-*/
 
+/*
 extern uint8_t data;
 ISR (SPI_STC_vect)
 {
     data = SPDR;
     SPDR = data + 1;
 }
+*/

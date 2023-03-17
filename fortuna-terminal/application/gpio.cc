@@ -8,7 +8,7 @@
 Gpio::Gpio()
 {
 #ifdef GPIO
-    if (gpioInitialize() < 0)
+    if (gpioInitialise() < 0)
         throw FortunaException("Failed to intialize pigpio.");
 #endif
 }
