@@ -1,10 +1,10 @@
 #ifndef GPIO_HH_
 #define GPIO_HH_
 
-class GPIO {
+class Gpio {
 public:
-    GPIO();
-    ~GPIO();
+    Gpio();
+    ~Gpio();
 
     void reset() {}
     void vsync() {}

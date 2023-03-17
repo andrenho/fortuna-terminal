@@ -74,7 +74,7 @@ Refactoring 3:
 Electronics:
   - [x] Build circuit
   - [ ] Write sample software for UART on the test circuit
-  - [ ] GPIO
+  - [ ] Gpio
 
 Improvements:
   - [x] Add FPS counter

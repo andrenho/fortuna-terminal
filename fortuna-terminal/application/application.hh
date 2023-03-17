@@ -19,7 +19,7 @@ public:
 private:
     Options                  options_;
     Terminal                 terminal_;
-    GPIO                     gpio_ {};
+    Gpio                     gpio_ {};
     std::vector<Environment> environments {};
     int                      current_env_idx;
     FrameControl             frame_control_ {};

@@ -1,11 +1,11 @@
 #include "gpio.hh"
-#include "../common/exceptions/fortunaexception.hh"
+#include "common/exceptions/fortunaexception.hh"
 
 #ifdef GPIO
 #  include <piopio.h>
 #endif
 
-GPIO::GPIO()
+Gpio::Gpio()
 {
 #ifdef GPIO
     if (gpioInitialize() < 0)
@@ -13,7 +13,7 @@ GPIO::GPIO()
 #endif
 }
 
-GPIO::~GPIO()
+Gpio::~Gpio()
 {
 #ifdef GPIO
     gpioTerminate();
