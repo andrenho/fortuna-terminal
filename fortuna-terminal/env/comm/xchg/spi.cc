@@ -14,19 +14,20 @@ SPI::~SPI()
 
 std::vector<uint8_t> SPI::exchange(std::vector<uint8_t> const &data)
 {
-    static const uint8_t NO_VALUE = 0xff;
-    uint8_t buf = 0;
+    std::vector<uint8_t> rx_vec;
+    size_t i = 0;
+    do {
+        uint8_t tx = 0xff;
+        if (i < data.size())
+            tx = data.at(i);
 
-    std::vector<uint8_t> rx_buf(data.size(), NO_VALUE);
-    spiXfer(handle_, data.data(), rx_buf.data(), data.size());
-    if (rx_buf.back() == NO_VALUE) {
-        spiXfer(handle_, data.data(), &buf, 1);
-    } else {
-        while (rx_buf.back() != 0xff) {
-            spiXfer(handle_, &NO_VALUE, &buf, 1);
-            rx_buf.push_back(buf);
-        }
-    }
+        uint8_t rx;
+        spiXfer(handle_, &tx, &rx, 1);
+        if (rx != 0xff)
+            rx_vec.push_back(rx);
+
+        ++i;
+    } while (tx != 0xff || rx != 0xff);
 
     return rx_buf;
 }
