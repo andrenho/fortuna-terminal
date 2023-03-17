@@ -3,6 +3,9 @@
 
 class GPIO {
 public:
+    GPIO();
+    ~GPIO();
+
     void reset() {}
     void vsync() {}
 };

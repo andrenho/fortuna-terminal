@@ -30,7 +30,7 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/framecontrol.o \
+		application/application.o application/options.o application/control.o application/framecontrol.o application/gpio.o \
 		env/environment.o env/threadrunner.o \
         env/comm/comm.o \
         env/comm/io/comm_io.o env/comm/io/echo.o \
@@ -48,7 +48,7 @@ DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DCOLOR_TERMINAL=${COLOR_TERMINAL} -DINCLUDE_UART_PTY=${INCLUDE_UART_PTY}
+CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DCOLOR_TERMINAL=${COLOR_TERMINAL}
 CXXFLAGS=-std=c++20
 LDFLAGS=-pthread
 
@@ -72,6 +72,12 @@ endif
 ifeq ($(INCLUDE_UART_PTY),1)
 	OBJ := ${OBJ} env/comm/io/fd/pty.o env/comm/io/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
+endif
+
+ifeq ($(INCLUDE_SPI_I2C),1)
+	OBJ := ${OBJ} application/gpio.o env/comm/xchg/spi.o
+	CPPFLAGS := ${CPPFLAGS} -DCOMM_SPI -DCOMM_I2C -DGPIO
+	LDFLAGS := lpigpio -lrt
 endif
 
 ifeq ($(FAST),0)
