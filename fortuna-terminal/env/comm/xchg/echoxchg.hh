@@ -7,10 +7,7 @@
 
 class EchoXchg : public CommExchange {
 public:
-    uint8_t exchange(uint8_t data) override;
-
-private:
-    std::queue<uint8_t> buffer_;
+    [[nodiscard]] std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) const override;
 };
 
 #endif //ECHOXCHG_HH_

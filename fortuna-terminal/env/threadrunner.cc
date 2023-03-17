@@ -77,19 +77,16 @@ void ThreadRunner::exchange_thread(CommExchange *comm_xchg, bool debug_comm)
         std::unique_lock<std::mutex> lock(xchg_mutex_);
         xchg_cond_.wait(lock, [this]{ return ready_; });
 
-        uint8_t data_to_send, data_to_receive;
-        do {
-            data_to_send = output_queue_.pop_nonblock().value_or(0xff);
-            data_to_receive = comm_xchg->exchange(data_to_send);
-            if (debug_comm) {
-                if (data_to_send != 0xff)
-                    debug_byte(data_to_send, false);
-                if (data_to_receive != 0xff)
-                    debug_byte(data_to_receive, true);
-            }
-            if (data_to_receive != 0xff)
-                input_queue_.push(data_to_receive);
-        } while (data_to_send != 0xff || data_to_receive != 0xff);
+        std::vector<uint8_t> data_to_send, data_to_receive;
+        output_queue_.pop_all_into(data_to_send);
+        data_to_receive = comm_xchg->exchange(data_to_send);
+        if (debug_comm) {
+            for (uint8_t b: data_to_send)
+                debug_byte(b, true);
+            for (uint8_t b: data_to_receive)
+                debug_byte(b, false);
+        }
+        input_queue_.push_all(data_to_receive);
 
         ready_ = false;
     }

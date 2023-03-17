@@ -1,20 +1,18 @@
 #include "echoxchg.hh"
 
-uint8_t EchoXchg::exchange(uint8_t data)
+std::vector<uint8_t> EchoXchg::exchange(std::vector<uint8_t> const &data) const
 {
-    uint8_t return_value;
-    if (buffer_.empty()) {
-        return_value = 0xff;
-    } else {
-        return_value = buffer_.front();
-        buffer_.pop();
+    std::vector<uint8_t> r;
+    r.reserve(data.size());
+
+    for (uint8_t c : data) {
+        if (c == 13) {
+            r.push_back(13);
+            r.push_back(10);
+        } else if (c != 0xff) {
+            r.push_back(c);
+        }
     }
 
-    if (data == 13) {
-        buffer_.push(13);
-        buffer_.push(10);
-    } else if (data != 0xff) {
-        buffer_.push(data);
-    }
-    return return_value;
+    return r;
 }

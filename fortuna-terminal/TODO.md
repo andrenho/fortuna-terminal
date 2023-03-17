@@ -10,6 +10,7 @@ Improvements:
   - [ ] Change palette
   - [ ] Activate command to start receiving VSYNC (?)
   - [ ] Other text options (standout, etc)
+  - [ ] Print welcome information (welcome message, connection details, colors, version number)
 
 Alternative screens:
   - [ ] Terminal (shell)
@@ -26,3 +27,4 @@ Audio:
 New communication modes:
 - [x] SPI
 - [ ] I²C
+  - [ ] Move Comm_IO to multiple bytes
