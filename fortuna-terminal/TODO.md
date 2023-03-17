@@ -3,6 +3,9 @@ Electronics:
   - [ ] Write sample software for UART on the test circuit
   - [ ] Gpio
 
+Refactoring:
+  - [ ] Can frequent creation of thread become a thread with locks?
+
 Improvements:
   - [x] Add FPS counter
   - [ ] Command compression
