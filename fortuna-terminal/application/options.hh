@@ -3,6 +3,7 @@
 
 #include <string>
 #include "common/enums/mode.hh"
+#include "common/types/time.hh"
 
 enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXchg };
 
@@ -27,7 +28,8 @@ struct PTYOptions {
 };
 
 struct SPIOptions {
-    size_t speed = 1000000;
+    size_t   speed = 1000000;
+    Duration delay;
 };
 
 struct Options {

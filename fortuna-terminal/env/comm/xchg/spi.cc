@@ -6,6 +6,7 @@
 using namespace std::chrono_literals;
 
 SPI::SPI(SPIOptions spi_options)
+    : delay_(spi_options.delay)
 {
     handle_ = spiOpen(SPI_CHANNEL, spi_options.speed, 0);
 }
@@ -31,7 +32,7 @@ std::vector<uint8_t> SPI::exchange(std::vector<uint8_t> const &data)
         if (rx != 0xff)
             rx_vec.push_back(rx);
 
-        std::this_thread::sleep_for(10us);
+        std::this_thread::sleep_for(delay_);
 
         ++i;
     } while (!(tx == 0xff && rx == 0xff));

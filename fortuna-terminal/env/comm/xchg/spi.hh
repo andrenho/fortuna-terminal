@@ -2,7 +2,8 @@
 #define SPI_HH_
 
 #include "commexchange.hh"
-#include "../../../application/options.hh"
+#include "application/options.hh"
+#include "common/types/time.hh"
 
 #define SPI_CHANNEL 0
 
@@ -14,7 +15,8 @@ public:
     std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
 
 private:
-    int    handle_ = -1;
+    int      handle_ = -1;
+    Duration delay_;
 };
 
 #endif //SPI_HH_

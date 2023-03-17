@@ -23,6 +23,7 @@ Options::Options(int argc, char* argv[])
                 { "uart-settings",      required_argument, nullptr, 'U' },
                 // spi
                 { "spi-speed",          required_argument, nullptr, 's' },
+                { "delay",              required_argument, nullptr, 'D' },
                 // tcp/ip
                 { "tcpip-port",         required_argument, nullptr, 'R' },
                 // shell
@@ -31,7 +32,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:dgf", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:dgf", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -105,6 +106,12 @@ Options::Options(int argc, char* argv[])
                     throw LibcException("Invalid SPI speed");
                 break;
 
+            case 'D': {
+                spi_options.delay = std::chrono::microseconds(strtoll(optarg, nullptr, 10));
+                if (errno == ERANGE || errno == EINVAL)
+                    throw LibcException("Invalid SPI speed");
+                break;
+
             case 'R':
                 tcpip_options.port = strtol(optarg, nullptr, 10);
                 if (errno == ERANGE || errno == EINVAL)
@@ -136,6 +143,7 @@ Options::Options(int argc, char* argv[])
     printf("    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n");
     printf("Options valid for `spi`:\n");
     printf("    -s, --spi-speed                 SPI speed in hz (default: 1000000)\n");
+    printf("    -D, --delay                     Delay between bytes, in microseconds (default: 10)");
     printf("Options valid for `tcpip`:\n");
     printf("    -R, --tcpip-port                TCP/IP port (default: 8076)\n");
     printf("Options valid for `pty`:\n");
