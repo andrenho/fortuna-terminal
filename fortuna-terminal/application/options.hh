@@ -32,6 +32,10 @@ struct SPIOptions {
     Duration delay;
 };
 
+struct I2COptions {
+    uint8_t address = 0x68;
+};
+
 struct Options {
 public:
     Options(int argc, char* argv[]);
@@ -45,6 +49,7 @@ public:
     TcpIpOptions    tcpip_options {};
     PTYOptions      pty_options {};
     SPIOptions      spi_options {};
+    I2COptions      i2c_options {};
 
 private:
     [[ noreturn ]] static void print_help(int exit_status);

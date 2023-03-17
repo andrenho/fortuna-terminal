@@ -24,6 +24,8 @@ Options::Options(int argc, char* argv[])
                 // spi
                 { "spi-speed",          required_argument, nullptr, 's' },
                 { "delay",              required_argument, nullptr, 'D' },
+                // spi
+                { "address",          required_argument, nullptr, 'a' },
                 // tcp/ip
                 { "tcpip-port",         required_argument, nullptr, 'R' },
                 // shell
@@ -32,7 +34,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:dgf", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dgf", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -106,10 +108,16 @@ Options::Options(int argc, char* argv[])
                     throw LibcException("Invalid SPI speed");
                 break;
 
-            case 'D': {
+            case 'D':
                 spi_options.delay = std::chrono::microseconds(strtoll(optarg, nullptr, 10));
                 if (errno == ERANGE || errno == EINVAL)
-                    throw LibcException("Invalid SPI speed");
+                    throw LibcException("Invalid SPI delay");
+                break;
+
+            case 'a':
+                i2c_options.address = strtoll(optarg, nullptr, 16);
+                if (errno == ERANGE || errno == EINVAL || i2c_options.address > 126)
+                    throw LibcException("Invalid I²C address");
                 break;
 
             case 'R':
@@ -137,17 +145,27 @@ Options::Options(int argc, char* argv[])
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
     printf("    -g, --graphics                  Start in graphics mode (40 columns)\n");
     printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");
+#ifdef COMM_UART
     printf("Options valid for `uart`:\n");
     printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");
     printf("    -B, --baud                      Baud speed for UART (default: 57600)\n");
     printf("    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n");
+#endif
+#ifdef COMM_SPI
     printf("Options valid for `spi`:\n");
     printf("    -s, --spi-speed                 SPI speed in hz (default: 1000000)\n");
     printf("    -D, --delay                     Delay between bytes, in microseconds (default: 10)");
+#endif
+#ifdef COMM_SPI
+    printf("Options valid for `i2c`:\n");
+    printf("    -a, --address                   I²C address (default: 0x68)\n");
+#endif
     printf("Options valid for `tcpip`:\n");
     printf("    -R, --tcpip-port                TCP/IP port (default: 8076)\n");
+#ifndef _WIN32
     printf("Options valid for `pty`:\n");
     printf("    -S, --shell                     Shell executable (default: /bin/sh)\n");
+#endif
     exit(exit_status);
 }
 
