@@ -31,7 +31,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:dgf", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:dgf", long_options, &option_index);
         if (c == -1)
             break;
 
