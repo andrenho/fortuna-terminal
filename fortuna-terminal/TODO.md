@@ -26,5 +26,6 @@ Audio:
 
 New communication modes:
 - [x] SPI
+  - [ ] Add delay between bytes option, join speed options
 - [ ] I²C
   - [ ] Move Comm_IO to multiple bytes
