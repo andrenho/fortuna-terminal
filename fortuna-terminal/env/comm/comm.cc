@@ -12,6 +12,9 @@
 #ifdef COMM_SPI
 #  include "env/comm/xchg/spi.hh"
 #endif
+#ifdef COMM_I2C
+#  include "env/comm/xchg/i2c.hh"
+#endif
 #include "env/comm/xchg/echoxchg.hh"
 #include "io/echo.hh"
 
