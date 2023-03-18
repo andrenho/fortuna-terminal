@@ -158,7 +158,7 @@ Options::Options(int argc, char* argv[])
 #endif
 #ifdef COMM_SPI
     printf("Options valid for `i2c`:\n");
-    printf("    -a, --address                   I²C address (default: 0x68)\n");
+    printf("    -a, --address                   I²C address (default: 0x3b)\n");
 #endif
     printf("Options valid for `tcpip`:\n");
     printf("    -R, --tcpip-port                TCP/IP port (default: 8076)\n");

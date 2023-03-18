@@ -10,7 +10,7 @@ volatile uint8_t data = 0;
 
 int main(void)
 {
-    c_init(C_SPI);
+    c_init(C_I2C);
     sei();
 
     c_print_P(PSTR("\e[2J\e[H\e[1;36mWelcome to Fortuna Terminal!\e[0m\n\r\n\r"));

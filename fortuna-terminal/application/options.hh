@@ -33,7 +33,7 @@ struct SPIOptions {
 };
 
 struct I2COptions {
-    uint8_t address = 0x68;
+    uint8_t address = 0x3b;
 };
 
 struct Options {

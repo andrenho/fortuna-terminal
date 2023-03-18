@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "i2c.h"
 #include "spi.h"
 #include "uart.h"
 
@@ -20,6 +21,9 @@ void c_init(CommType comm_type)
         case C_SPI:
             spi_init();
             break;
+        case C_I2C:
+            i2c_init();
+            break;
     }
 }
 
@@ -32,6 +36,9 @@ void c_putchar(char c)
         case C_SPI:
             spi_printchar(c);
             break;
+        case C_I2C:
+            i2c_printchar(c);
+            break;
     }
 }
 
@@ -42,6 +49,8 @@ char c_getchar_nonblock(void)
             return uart_getchar_nonblocking();
         case C_SPI:
             return spi_getchar_nonblocking();
+        case C_I2C:
+            return i2c_getchar_nonblocking();
     }
     return 0;
 }
@@ -53,6 +62,8 @@ char c_getchar_block(void)
             return uart_getchar_blocking();
         case C_SPI:
             return spi_getchar_blocking();
+        case C_I2C:
+            return i2c_getchar_blocking();
     }
     return 0;
 }
