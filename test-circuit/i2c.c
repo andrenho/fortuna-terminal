@@ -11,7 +11,7 @@
 #define I2C_SLAVE_ADDRESS 0x3b
 
 typedef enum { CS_SIZE, CS_CONTENT } CurrentlySending;
-static CurrentlySending currently_sending = CS_CONTENT;  // will invert in first invocation
+static CurrentlySending currently_sending = CS_SIZE;  // will invert in first invocation
 
 static uint8_t size_idx = 0;
 
@@ -94,12 +94,6 @@ ISR(TWI_vect)
 
         // slave transmitter
         case TW_ST_SLA_ACK:   // 0xA8: SLA+R received, ACK returned
-            if (currently_sending == CS_SIZE) {
-                currently_sending = CS_CONTENT;
-            } else {
-                currently_sending = CS_SIZE;
-            }
-            size_idx = 0;
             // fallthrough!
         case TW_ST_DATA_ACK:  // 0xB8: data transmitted, ACK received
             if (currently_sending == CS_SIZE) {
@@ -109,10 +103,16 @@ ISR(TWI_vect)
                 } else if (size_idx == 1) {
                     TWDR = (out_buffer_sz >> 8) & 0xff;  // end of size transmition
                     size_idx = 0;
+                    if (out_buffer_sz)
+                        currently_sending = CS_CONTENT;
                 }
             } else {
                 TWDR = out_buffer[out_buffer_sz-1];
                 --out_buffer_sz;
+                if (out_buffer_sz == 0) {
+                    currently_sending = CS_SIZE;
+                    size_idx = 0;
+                }
             }
             twcr_ack();
             break;
