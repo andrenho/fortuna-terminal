@@ -35,7 +35,6 @@ private:
     CommUniquePtr                 comm_;
     Scene                         scene_;
     Protocol                      protocol_;
-    std::unique_ptr<ThreadRunner> thread_runner_;
     bool                          show_fps_counter_;
 
     void show_fps_counter(size_t fps);
