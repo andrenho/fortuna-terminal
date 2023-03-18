@@ -10,6 +10,11 @@
 
 #define I2C_SLAVE_ADDRESS 0x3b
 
+typedef enum { CS_SIZE, CS_CONTENT } CurrentlySending;
+static CurrentlySending currently_sending = CS_CONTENT;  // will invert in first invocation
+
+static uint8_t size_idx = 0;
+
 void i2c_init(void)
 {
     TWAR = (I2C_SLAVE_ADDRESS << 1);           // set address
@@ -46,13 +51,6 @@ uint8_t i2c_getchar_blocking(void)
         if (data != 0)
             return data;
     }
-}
-
-static void buffer_add_size_bytes(void)
-{
-    uint16_t sz = (uint16_t) out_buffer_sz;
-    out_buffer[out_buffer_sz++] = (sz >> 8) & 0xff;
-    out_buffer[out_buffer_sz++] = sz & 0xff;
 }
 
 #define twcr_ack() \
@@ -96,21 +94,34 @@ ISR(TWI_vect)
 
         // slave transmitter
         case TW_ST_SLA_ACK:   // 0xA8: SLA+R received, ACK returned
-            buffer_add_size_bytes();
+            if (currently_sending == CS_SIZE) {
+                currently_sending = CS_CONTENT;
+            } else {
+                currently_sending = CS_SIZE;
+            }
+            size_idx = 0;
             // fallthrough!
         case TW_ST_DATA_ACK:  // 0xB8: data transmitted, ACK received
-            TWDR = out_buffer[out_buffer_sz-1];
-            --out_buffer_sz;
+            if (currently_sending == CS_SIZE) {
+                if (size_idx == 0) {
+                    TWDR = out_buffer_sz & 0xff;
+                    ++size_idx;
+                } else if (size_idx == 1) {
+                    TWDR = (out_buffer_sz >> 8) & 0xff;  // end of size transmition
+                    size_idx = 0;
+                }
+            } else {
+                TWDR = out_buffer[out_buffer_sz-1];
+                --out_buffer_sz;
+            }
             twcr_ack();
             break;
 
         case TW_ST_DATA_NACK: // 0xC0: data transmitted, NACK received - no more data is requested
-            out_buffer_sz = 0;
             twcr_reset();
             break;
 
         case TW_ST_LAST_DATA: // 0xC8: last data byte in TWDR transmitted (TWEA = “0”), ACK received
-            out_buffer_sz = 0;
             twcr_reset();
             break;
 
