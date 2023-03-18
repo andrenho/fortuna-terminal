@@ -14,14 +14,16 @@ I2C::~I2C()
 
 std::vector<uint8_t> I2C::exchange(std::vector<uint8_t> const &data)
 {
-    i2cWriteDevice(handle_, (char *) data.data(), data.size());
+    if (data.size() > 0)
+        i2cWriteDevice(handle_, (char *) data.data(), data.size());
 
     uint8_t szb[2];
     i2cReadDevice(handle_, (char *) szb, 2);
     uint16_t sz = ((uint16_t) szb[1] << 8) | szb[0];
 
     std::vector<uint8_t> rx(sz);
-    i2cReadDevice(handle_, (char *) rx.data(), sz);
+    if (sz > 0)
+        i2cReadDevice(handle_, (char *) rx.data(), sz);
 
     return rx;
 }

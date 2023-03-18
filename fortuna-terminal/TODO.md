@@ -5,6 +5,7 @@ Electronics:
 
 Refactoring:
   - [ ] Can frequent creation of thread become a thread with locks?
+  - [ ] Rename CommIO and CommXchg to single and full duplex
 
 Improvements:
   - [x] Add FPS counter
