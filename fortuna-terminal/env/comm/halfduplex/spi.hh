@@ -1,13 +1,13 @@
 #ifndef SPI_HH_
 #define SPI_HH_
 
-#include "commexchange.hh"
+#include "comm_halfduplex.hh"
 #include "application/options.hh"
 #include "common/types/time.hh"
 
 #define SPI_CHANNEL 0
 
-class SPI : public CommExchange {
+class SPI : public CommHalfDuplex {
 public:
     explicit SPI(SPIOptions spi_options);
     ~SPI() override;

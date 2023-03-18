@@ -1,22 +1,22 @@
 #include "comm.hh"
 
 #include "common/exceptions/fortunaexception.hh"
-#include "env/comm/io/fd/tcpip.hh"
-#include "env/comm/io/fd/pipes.hh"
+#include "env/comm/fullduplex/fd/tcpip.hh"
+#include "env/comm/fullduplex/fd/pipes.hh"
 #ifdef COMM_UART
-#  include "env/comm/io/fd/uart.hh"
+#  include "env/comm/fullduplex/fd/uart.hh"
 #endif
 #ifdef COMM_PTY
-#  include "env/comm/io/fd/pty.hh"
+#  include "env/comm/fullduplex/fd/pty.hh"
 #endif
 #ifdef COMM_SPI
-#  include "env/comm/xchg/spi.hh"
+#  include "env/comm/halfduplex/spi.hh"
 #endif
 #ifdef COMM_I2C
-#  include "env/comm/xchg/i2c.hh"
+#  include "env/comm/halfduplex/i2c.hh"
 #endif
-#include "env/comm/xchg/echoxchg.hh"
-#include "io/echo.hh"
+#include "env/comm/halfduplex/echoxchg.hh"
+#include "fullduplex/echo.hh"
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
 {

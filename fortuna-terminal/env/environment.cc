@@ -19,8 +19,8 @@ void Environment::execute_single_step(size_t avg_fps)
 {
     scene_.text().update_blink();
 
-    execute_input_thread_.notify();
-    execute_output_thread_.notify();
+    protocol_.execute_inputs(*input_queue_);
+    protocol_.execute_outputs();
 
     comm_->notify_threads();
 
@@ -62,8 +62,6 @@ void Environment::set_mode(Mode mode)
 
 void Environment::run_threads(bool debug_comm)
 {
-    execute_input_thread_.run_with_wait([=, this]{ protocol_.execute_inputs(*input_queue_); });
-    execute_output_thread_.run_with_wait([=, this]{ protocol_.execute_outputs(); });
     comm_->execute_threads(input_queue_.get(), output_queue_.get(), debug_comm);
 }
 
@@ -72,7 +70,5 @@ void Environment::finalize_threads()
     input_queue_->push({});  // release the locks
     output_queue_->push({});
 
-    execute_input_thread_.finalize();
-    execute_output_thread_.finalize();
     comm_->finalize_threads();
 }

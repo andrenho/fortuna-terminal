@@ -3,9 +3,9 @@
 
 #include <queue>
 
-#include "commexchange.hh"
+#include "comm_halfduplex.hh"
 
-class EchoXchg : public CommExchange {
+class EchoXchg : public CommHalfDuplex {
 public:
     std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
 };

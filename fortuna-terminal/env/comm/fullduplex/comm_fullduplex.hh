@@ -1,5 +1,5 @@
-#ifndef COMM_IO_HH_
-#define COMM_IO_HH_
+#ifndef COMM_FULLDUPLEX_HH_
+#define COMM_FULLDUPLEX_HH_
 
 #include "env/comm/comm.hh"
 #include "common/iterativethread.hh"
@@ -8,7 +8,7 @@
 #include <optional>
 #include <vector>
 
-class CommIO : public CommunicationModule {
+class CommFullDuplex : public CommunicationModule {
 public:
     [[nodiscard]] Channels channels() const override { return Channels::InputAndOutput; }
 
@@ -30,4 +30,4 @@ private:
     void output_thread(SyncQueueByte* output_queue_, bool debug_comm);
 };
 
-#endif //COMM_IO_HH_
+#endif //COMM_FULLDUPLEX_HH_

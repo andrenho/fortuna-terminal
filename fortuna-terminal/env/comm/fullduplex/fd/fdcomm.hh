@@ -1,9 +1,9 @@
 #ifndef FDCOMM_HH_
 #define FDCOMM_HH_
 
-#include "env/comm/io/comm_io.hh"
+#include "env/comm/fullduplex/comm_fullduplex.hh"
 
-class FDComm : public CommIO {
+class FDComm : public CommFullDuplex {
 public:
     ~FDComm() override;
 

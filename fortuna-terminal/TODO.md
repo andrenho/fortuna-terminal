@@ -1,6 +1,9 @@
 Refactoring:
   - [x] Can frequent creation of thread become a thread with locks?
-  - [ ] Rename CommIO and CommXchg to single and full duplex
+  - [x] Rename CommFullDuplex and CommXchg to single and full duplex
+
+Defects:
+ - [x] Garbage when more than one screenful
 
 Electronics:
 - [x] Build circuit

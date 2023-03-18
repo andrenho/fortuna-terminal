@@ -1,12 +1,12 @@
 #ifndef ECHO_HH_
 #define ECHO_HH_
 
-#include "comm_io.hh"
+#include "comm_fullduplex.hh"
 #include "common/syncqueue.hh"
 
 #include <vector>
 
-class Echo : public CommIO {
+class Echo : public CommFullDuplex {
 public:
     std::vector<uint8_t> read_blocking(size_t n) override;
     void                 write(std::vector<uint8_t> const &data) override;

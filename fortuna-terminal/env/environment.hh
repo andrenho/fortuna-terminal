@@ -6,7 +6,7 @@
 #include "env/comm/comm.hh"
 #include "env/protocol/protocol.hh"
 #include "scene/scene.hh"
-#include "threadrunner.hh"
+#include "common/iterativethread.hh"
 
 class Environment {
 public:
@@ -28,9 +28,6 @@ public:
 private:
     std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
     std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();
-
-    IterativeThread execute_input_thread_ {},
-                    execute_output_thread_ {};
 
     CommUniquePtr                 comm_;
     Scene                         scene_;
