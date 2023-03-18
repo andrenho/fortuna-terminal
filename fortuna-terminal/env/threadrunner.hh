@@ -4,6 +4,7 @@
 #include <memory>
 #include <thread>
 
+#include "common/iterativethread.hh"
 #include "common/syncqueue.hh"
 #include "env/comm/comm.hh"
 #include "comm/io/comm_io.hh"
@@ -20,15 +21,13 @@ public:
     void notify_exchange_thread();
 
 private:
-    bool threads_running_ = true;
     std::thread input_thread_ {},
-                output_thread_ {},
-                exchange_thread_ {};
-    std::mutex  debug_mutex_ {},
-                xchg_mutex_ {};
+                output_thread_ {};
+    IterativeThread exchange_thread_ {};
 
-    bool                     ready_ = false;
-    std::condition_variable  xchg_cond_ {};
+    std::mutex debug_mutex_ {};
+
+    bool threads_running_ = true;
 
     SyncQueueByte &input_queue_,
                   &output_queue_;

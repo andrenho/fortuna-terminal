@@ -14,18 +14,19 @@ void ThreadRunner::run_comm_threads(bool debug_comm)
 
     } else if (comm_.channels() == Channels::Exchange) {
         auto comm_xchg = dynamic_cast<CommExchange*>(&comm_);
-        exchange_thread_ = std::thread(&ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
+        // exchange_thread_ = IterativeThread(&ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
+        exchange_thread_.run([=, this] { exchange_thread(comm_xchg, debug_comm); });//   &ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
     }
 }
 
 void ThreadRunner::finalize_comm_threads()
 {
-    threads_running_ = false;
-
     input_queue_.push({});  // release the locks
     output_queue_.push({});
 
     if (comm_.channels() == Channels::InputAndOutput) {
+        threads_running_ = false;
+
         if (comm_.release_locks()) {
             input_thread_.join();
         } else {
@@ -36,8 +37,7 @@ void ThreadRunner::finalize_comm_threads()
         output_thread_.join();
 
     } else if (comm_.channels() == Channels::Exchange) {
-        notify_exchange_thread();
-        exchange_thread_.join();
+        exchange_thread_.finalize(10ms);
     }
 }
 
@@ -66,30 +66,22 @@ void ThreadRunner::output_thread(CommIO *comm_io, bool debug_comm)
 
 void ThreadRunner::notify_exchange_thread()
 {
-    ready_ = true;
-    xchg_cond_.notify_one();
+    exchange_thread_.notify();
 }
 
 
 void ThreadRunner::exchange_thread(CommExchange *comm_xchg, bool debug_comm)
 {
-    while (threads_running_) {
-        std::unique_lock<std::mutex> lock(xchg_mutex_);
-        xchg_cond_.wait(lock, [this]{ return ready_; });
-
-        std::vector<uint8_t> data_to_send, data_to_receive;
-        output_queue_.pop_all_into_noblock(data_to_send);
-        data_to_receive = comm_xchg->exchange(data_to_send);
-        if (debug_comm) {
-            for (uint8_t b: data_to_send)
-                debug_byte(b, true);
-            for (uint8_t b: data_to_receive)
-                debug_byte(b, false);
-        }
-        input_queue_.push_all(data_to_receive);
-
-        ready_ = false;
+    std::vector<uint8_t> data_to_send, data_to_receive;
+    output_queue_.pop_all_into_noblock(data_to_send);
+    data_to_receive = comm_xchg->exchange(data_to_send);
+    if (debug_comm) {
+        for (uint8_t b: data_to_send)
+            debug_byte(b, true);
+        for (uint8_t b: data_to_receive)
+            debug_byte(b, false);
     }
+    input_queue_.push_all(data_to_receive);
 }
 
 void ThreadRunner::debug_byte(uint8_t byte, bool is_input)
