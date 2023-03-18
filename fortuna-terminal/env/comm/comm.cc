@@ -57,3 +57,25 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
             throw FortunaException("Unsupported communication module");
     }
 }
+
+void CommunicationModule::debug_byte(uint8_t byte, bool is_input)
+{
+    std::unique_lock<std::mutex> lock(debug_mutex_);
+#if COLOR_TERMINAL
+    printf("\e[1;%dm", is_input ? 33 : 34);
+#else
+    putchar(is_input ? '>' : '<');
+#endif
+    if (byte >= 32 && byte < 127)
+        printf("%c", byte);
+    else if (byte == '\e')
+        printf("\n[ESC]");
+    else
+        printf("[%02X]", byte);
+    if (byte == 10)
+        printf("\n");
+#if COLOR_TERMINAL
+    printf("\e[0m");
+#endif
+    fflush(stdout);
+}
