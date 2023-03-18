@@ -1,11 +1,11 @@
-Electronics:
-  - [x] Build circuit
-  - [ ] Write sample software for UART on the test circuit
-  - [ ] Gpio
-
 Refactoring:
   - [ ] Can frequent creation of thread become a thread with locks?
   - [ ] Rename CommIO and CommXchg to single and full duplex
+
+Electronics:
+- [x] Build circuit
+- [x] Write sample software for UART on the test circuit
+- [ ] Gpio
 
 Improvements:
   - [x] Add FPS counter
