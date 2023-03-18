@@ -14,8 +14,7 @@ void ThreadRunner::run_comm_threads(bool debug_comm)
 
     } else if (comm_.channels() == Channels::Exchange) {
         auto comm_xchg = dynamic_cast<CommExchange*>(&comm_);
-        // exchange_thread_ = IterativeThread(&ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
-        exchange_thread_.run([=, this] { exchange_thread(comm_xchg, debug_comm); });//   &ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
+        exchange_thread_.run_with_wait([=, this] { exchange_thread(comm_xchg, debug_comm); });//   &ThreadRunner::exchange_thread, this, comm_xchg, debug_comm);
     }
 }
 

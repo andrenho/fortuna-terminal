@@ -14,7 +14,16 @@
 class IterativeThread : NonCopyable {
 public:
     template<typename Callable, typename... Args>
-    void run(Callable&& f, Args&&... args) {
+    void run_without_wait(Callable&& f, Args&&... args) {
+        thread_ = std::make_unique<std::thread>([this](Callable&& f_, Args&&... args_) {
+            while (running_) {
+                std::invoke(f_, args_...);
+            }
+        }, std::forward<Callable>(f), std::forward<Args>(args)...);
+    }
+
+    template<typename Callable, typename... Args>
+    void run_with_wait(Callable&& f, Args&&... args) {
         thread_ = std::make_unique<std::thread>([this](Callable&& f_, Args&&... args_) {
             while (running_) {
                 std::unique_lock<std::mutex> lock(*mutex_);
@@ -32,7 +41,7 @@ public:
     }
 
     template<typename T>
-    void finalize(Duration wait_until_kill = 0ms, T finalization_action = []{}) {
+    void finalize(Duration wait_until_kill , T finalization_action) {
         running_ = false;
         notify();
         finalization_action();
@@ -43,6 +52,7 @@ public:
     }
 
     void finalize(Duration wait_until_kill) { finalize(wait_until_kill, []{}); }
+    void finalize() { finalize(0ms, []{}); }
 
 private:
     bool                                     running_ = true;

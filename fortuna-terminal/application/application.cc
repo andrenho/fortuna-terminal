@@ -13,7 +13,7 @@ Application::Application(int argc, char* argv[])
     current_env_idx = 0;
 
     for (auto& environment: environments)
-        environment.run_comm_threads(options_.debug_comm);
+        environment.run_threads(options_.debug_comm);
 
     control_queue.emplace(ControlCommand::SetMode, options_.mode);
 
@@ -34,7 +34,7 @@ retry:
     }
 
     for (auto& environment: environments)
-        environment.finalize_comm_threads();
+        environment.finalize_threads();
 }
 
 ExecutionStatus Application::execute_single_step()

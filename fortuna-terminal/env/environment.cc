@@ -19,16 +19,12 @@ Environment::Environment(Options const &options)
 void Environment::execute_single_step(size_t avg_fps)
 {
     scene_.text().update_blink();
-#ifdef RUN_IN_OUT_PARALLEL
-    std::thread ti([this]() { protocol_.execute_inputs(*input_queue_); });
-    std::thread to([this]() { protocol_.execute_outputs(); });
-    ti.join();
-    to.join();
-#else
-    protocol_.execute_inputs(*input_queue_);
-    protocol_.execute_outputs();
-#endif
+
+    execute_input_thread_.notify();
+    execute_output_thread_.notify();
+
     thread_runner_->notify_exchange_thread();
+
     show_fps_counter(avg_fps);
 }
 
@@ -63,4 +59,18 @@ void Environment::reset()
 void Environment::set_mode(Mode mode)
 {
     scene_.set_mode(mode);
+}
+
+void Environment::run_threads(bool debug_comm)
+{
+    execute_input_thread_.run_with_wait([=, this]{ protocol_.execute_inputs(*input_queue_); });
+    execute_output_thread_.run_with_wait([=, this]{ protocol_.execute_outputs(); });
+    thread_runner_->run_comm_threads(debug_comm);
+}
+
+void Environment::finalize_threads()
+{
+    execute_input_thread_.finalize();
+    execute_output_thread_.finalize();
+    thread_runner_->finalize_comm_threads();
 }

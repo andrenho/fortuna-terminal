@@ -15,8 +15,8 @@ public:
     void execute_single_step(size_t avg_fps);
     void reset();
 
-    void run_comm_threads(bool debug_comm) { thread_runner_->run_comm_threads(debug_comm); }
-    void finalize_comm_threads()           { thread_runner_->finalize_comm_threads(); }
+    void run_threads(bool debug_comm);
+    void finalize_threads();
 
     void show_error(std::exception const &e);
 
@@ -28,6 +28,9 @@ public:
 private:
     std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
     std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();
+
+    IterativeThread execute_input_thread_ {},
+                    execute_output_thread_ {};
 
     CommUniquePtr                 comm_;
     Scene                         scene_;
