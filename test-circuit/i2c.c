@@ -81,6 +81,7 @@ ISR(TWI_vect)
             break;
 
         case TW_SR_DATA_ACK:  // 0x80: data received, ACK returned
+            in_buffer[in_buffer_sz++] = TWDR;
             twcr_ack();
             break;
 
