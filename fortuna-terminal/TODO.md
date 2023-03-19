@@ -12,7 +12,7 @@ Electronics:
 
 Improvements:
   - [x] Add FPS counter
-  - [ ] Print welcome information (welcome message, connection details, colors, version number)
+  - [x] Print welcome information (welcome message, connection details, colors, version number)
   - [ ] 32 colors
   - [ ] ACS_CHARS
   - [ ] Other text options (standout, etc)
