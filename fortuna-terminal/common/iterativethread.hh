@@ -13,8 +13,13 @@
 
 class IterativeThread : NonCopyable {
 public:
+    ~IterativeThread() {
+        finalize();
+    }
+
     template<typename Callable, typename... Args>
     void run_without_wait(Callable&& f, Args&&... args) {
+        running_ = true;
         thread_ = std::make_unique<std::thread>([this](Callable&& f_, Args&&... args_) {
             while (running_) {
                 std::invoke(f_, args_...);
@@ -24,6 +29,7 @@ public:
 
     template<typename Callable, typename... Args>
     void run_with_wait(Callable&& f, Args&&... args) {
+        running_ = true;
         thread_ = std::make_unique<std::thread>([this](Callable&& f_, Args&&... args_) {
             while (running_) {
                 std::unique_lock<std::mutex> lock(*mutex_);
@@ -42,20 +48,22 @@ public:
 
     template<typename T>
     void finalize(Duration wait_until_kill , T finalization_action) {
-        running_ = false;
-        notify();
-        finalization_action();
-        std::this_thread::sleep_for(wait_until_kill);
-        if (thread_->joinable())
-            pthread_kill(thread_->native_handle(), 9);
-        thread_->detach();
+        if (running_) {
+            running_ = false;
+            notify();
+            finalization_action();
+            std::this_thread::sleep_for(wait_until_kill);
+            if (thread_->joinable())
+                pthread_kill(thread_->native_handle(), 9);
+            thread_->detach();
+        }
     }
 
     void finalize(Duration wait_until_kill) { finalize(wait_until_kill, []{}); }
     void finalize() { finalize(0ms, []{}); }
 
 private:
-    bool                                     running_ = true;
+    bool                                     running_ = false;
     bool                                     ready_ = false;
     std::unique_ptr<std::condition_variable> cond_ = std::make_unique<std::condition_variable>();
     std::unique_ptr<std::mutex>              mutex_ = std::make_unique<std::mutex>();
