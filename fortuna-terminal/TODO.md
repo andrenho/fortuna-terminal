@@ -8,7 +8,7 @@ Defects:
 Electronics:
 - [x] Build circuit
 - [x] Write sample software for UART on the test circuit
-- [ ] Gpio
+- [x] Gpio
 
 Improvements:
   - [x] Add FPS counter

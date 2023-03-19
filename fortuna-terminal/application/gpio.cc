@@ -16,8 +16,7 @@ Gpio::Gpio()
     gpioSetMode(PIN_VSYNC, PI_OUTPUT);
     gpioWrite(PIN_VSYNC, 1);
 
-    gpioSetMode(PIN_RESET, PI_OUTPUT);
-    gpioSetPullUpDown(PIN_RESET, PI_PUD_UP);
+    gpioSetMode(PIN_RESET, PI_INPUT);
 
     vsync_thread_.run_with_wait([this]{ gpioTrigger(PIN_VSYNC, 100, 0); });
 #endif
@@ -33,10 +32,10 @@ Gpio::~Gpio()
 void Gpio::reset()
 {
 #ifdef GPIO
-    gpioSetPullUpDown(PIN_RESET, PI_PUD_OFF);
+    gpioSetMode(PIN_RESET, PI_OUTPUT);
     gpioWrite(PIN_RESET, 0);
     std::this_thread::sleep_for(200ms);
-    gpioSetPullUpDown(PIN_RESET, PI_PUD_UP);
+    gpioSetMode(PIN_RESET, PI_INPUT);
 #endif
 }
 
