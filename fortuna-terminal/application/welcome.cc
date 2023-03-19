@@ -14,5 +14,5 @@ void welcome_message(SyncQueueByte& input_queue, std::string const& comm_desc)
     input_queue.push_all("\e[0m\n\n\r");
 
     // communication module
-    input_queue.push_all("Communication module: \e[1;36m" + comm_desc + "\e[0m\n\n\r");
+    input_queue.push_all("Communication module: \e[1;32m" + comm_desc + "\e[0m\n\n\r");
 }

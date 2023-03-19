@@ -107,7 +107,7 @@ Char::Attrib ANSI::translate_attrib(TMTATTRS a)
             case TMT_COLOR_YELLOW:  attr.color = COLOR_ORANGE; break;
             case TMT_COLOR_BLUE:    attr.color = COLOR_DARK_BLUE; break;
             case TMT_COLOR_MAGENTA: attr.color = COLOR_PURPLE; break;
-            case TMT_COLOR_CYAN:    attr.color = COLOR_TURQUOISE; break;
+            case TMT_COLOR_CYAN:    attr.color = COLOR_CYAN; break;
             default:
                 attr.color = COLOR_WHITE;
                 break;
@@ -116,11 +116,11 @@ Char::Attrib ANSI::translate_attrib(TMTATTRS a)
         switch (a.fg) {
             case TMT_COLOR_BLACK:   attr.color = COLOR_GRAY; break;
             case TMT_COLOR_RED:     attr.color = COLOR_ORANGE; break;
-            case TMT_COLOR_GREEN:   attr.color = COLOR_LIME; break;
+            case TMT_COLOR_GREEN:   attr.color = COLOR_LIGHT_GREEN; break;
             case TMT_COLOR_YELLOW:  attr.color = COLOR_YELLOW; break;
             case TMT_COLOR_BLUE:    attr.color = COLOR_LIGHT_BLUE; break;
             case TMT_COLOR_MAGENTA: attr.color = COLOR_BLUE; break;
-            case TMT_COLOR_CYAN:    attr.color = COLOR_CYAN; break;
+            case TMT_COLOR_CYAN:    attr.color = COLOR_LIGHT_CYAN; break;
             default:
                 attr.color = COLOR_LIGHT_GRAY;
                 break;

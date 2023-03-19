@@ -30,7 +30,7 @@ struct Scene : NonCopyable {
     Tilemap                           tilemaps[Tilemap::MAX_TILEMAPS] {};
     Palette                           palette {};
 
-    uint8_t bg_color = COLOR_BLACK;
+    uint8_t bg_color = COLOR_DARK_SLATE;
 
     void reset();
     void set_mode(Mode mode);
