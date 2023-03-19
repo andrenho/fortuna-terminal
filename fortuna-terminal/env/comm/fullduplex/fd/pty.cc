@@ -12,7 +12,7 @@
 #include "scene/layers/textlayer.hh"
 
 PTY::PTY(PTYOptions const& pty_options)
-    : shell_(shell)
+    : shell_(pty_options.shell)
 {
     struct winsize winp = { (short unsigned int) TextLayer::Lines_80Columns, (short unsigned int) TextLayer::Columns_80Columns, 0 , 0 };
 

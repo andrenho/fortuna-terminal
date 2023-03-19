@@ -13,6 +13,8 @@
 #include "common/exceptions/libcexception.hh"
 #include "application/options.hh"
 
+using namespace std::string_literals;
+
 UART::UART(UartOptions const &uart_options)
     : uart_options_(uart_options)
 {
@@ -62,6 +64,6 @@ UART::UART(UartOptions const &uart_options)
 
 std::string UART::description() const
 {
-    return "UART (port: " + uart_options_.port + ", baud: " + uart_options_.baud +
+    return "UART (port: "s + uart_options_.port + ", baud: " + std::to_string(uart_options_.baud) +
         ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
 }
