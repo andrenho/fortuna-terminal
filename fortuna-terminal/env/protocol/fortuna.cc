@@ -161,8 +161,16 @@ char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) co
     std::stringstream ss(current_escape_sequence_.substr(2, current_escape_sequence_.size() - 3));
     std::string item;
     while (std::getline(ss, item, ';')) {
-        ssize_t value = std::stoll(item);
-        parameters.push_back(value);
+        if (item.starts_with("$")) {
+            int pos = item.find_first_of(',', 0);
+            ssize_t count = std::stoll(item.substr(1, pos - 1));
+            ssize_t value = std::stoll(item.substr(pos + 1));
+            for (size_t i = 0; i < count ; ++i)
+                parameters.push_back(value);
+        } else {
+            ssize_t value = std::stoll(item);
+            parameters.push_back(value);
+        }
     }
 
     return current_escape_sequence_.back();
