@@ -99,30 +99,43 @@ Char::Attrib ANSI::translate_attrib(TMTATTRS a)
 {
     Char::Attrib attr {};
 
-    if (!a.bold) {
+    if (a.bold) {   // brighter
         switch (a.fg) {
-            case TMT_COLOR_BLACK:   attr.color = COLOR_BLACK; break;
+            case TMT_COLOR_BLACK:   attr.color = COLOR_DARK_SLATE; break;
             case TMT_COLOR_RED:     attr.color = COLOR_RED; break;
-            case TMT_COLOR_GREEN:   attr.color = COLOR_GREEN; break;
-            case TMT_COLOR_YELLOW:  attr.color = COLOR_ORANGE; break;
-            case TMT_COLOR_BLUE:    attr.color = COLOR_DARK_BLUE; break;
-            case TMT_COLOR_MAGENTA: attr.color = COLOR_PURPLE; break;
-            case TMT_COLOR_CYAN:    attr.color = COLOR_CYAN; break;
+            case TMT_COLOR_GREEN:   attr.color = COLOR_LIGHT_GREEN; break;
+            case TMT_COLOR_YELLOW:  attr.color = COLOR_YELLOW; break;
+            case TMT_COLOR_BLUE:    attr.color = COLOR_LIGHT_BLUE; break;
+            case TMT_COLOR_MAGENTA: attr.color = COLOR_PINK; break;
+            case TMT_COLOR_CYAN:    attr.color = COLOR_LIGHT_CYAN; break;
             default:
                 attr.color = COLOR_WHITE;
                 break;
         }
-    } else {
+    } else if (a.dim) {   // darker
         switch (a.fg) {
-            case TMT_COLOR_BLACK:   attr.color = COLOR_GRAY; break;
-            case TMT_COLOR_RED:     attr.color = COLOR_ORANGE; break;
-            case TMT_COLOR_GREEN:   attr.color = COLOR_LIGHT_GREEN; break;
-            case TMT_COLOR_YELLOW:  attr.color = COLOR_YELLOW; break;
-            case TMT_COLOR_BLUE:    attr.color = COLOR_LIGHT_BLUE; break;
-            case TMT_COLOR_MAGENTA: attr.color = COLOR_BLUE; break;
-            case TMT_COLOR_CYAN:    attr.color = COLOR_LIGHT_CYAN; break;
+            case TMT_COLOR_BLACK:   attr.color = COLOR_BLACK; break;
+            case TMT_COLOR_RED:     attr.color = COLOR_DARK_RED; break;
+            case TMT_COLOR_GREEN:   attr.color = COLOR_DARK_GREEN; break;
+            case TMT_COLOR_YELLOW:  attr.color = COLOR_BROWN; break;
+            case TMT_COLOR_BLUE:    attr.color = COLOR_DARK_BLUE; break;
+            case TMT_COLOR_MAGENTA: attr.color = COLOR_DARK_PURPLE; break;
+            case TMT_COLOR_CYAN:    attr.color = COLOR_DARK_CYAN; break;
             default:
                 attr.color = COLOR_LIGHT_GRAY;
+                break;
+        }
+    } else {   // normal
+        switch (a.fg) {
+            case TMT_COLOR_BLACK:   attr.color = COLOR_LIGHT_BLACK; break;
+            case TMT_COLOR_RED:     attr.color = COLOR_RED; break;
+            case TMT_COLOR_GREEN:   attr.color = COLOR_GREEN; break;
+            case TMT_COLOR_YELLOW:  attr.color = COLOR_ORANGE; break;
+            case TMT_COLOR_BLUE:    attr.color = COLOR_BLUE; break;
+            case TMT_COLOR_MAGENTA: attr.color = COLOR_PURPLE; break;
+            case TMT_COLOR_CYAN:    attr.color = COLOR_CYAN; break;
+            default:
+                attr.color = COLOR_DARK_WHITE;
                 break;
         }
     }

@@ -32,6 +32,6 @@ void palette_init(Palette& palette)
     palette[COLOR_DARK_GRAY] =   (Color) { 0x41, 0x45, 0x58 };
     palette[COLOR_GRAY] =        (Color) { 0x6d, 0x70, 0x78 };
     palette[COLOR_LIGHT_GRAY] =  (Color) { 0x89, 0x8b, 0x8c };
-    palette[COLOR_DARK_WHITE] =  (Color) { 0xbb, 0xbd, 0xbf };
+    palette[COLOR_DARK_WHITE] =  (Color) { 0xdb, 0xdd, 0xdf };
     palette[COLOR_WHITE] =       (Color) { 0xff, 0xff, 0xff };
 }

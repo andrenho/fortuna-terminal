@@ -17,6 +17,7 @@ Options::Options(int argc, char* argv[])
                 { "fps",                no_argument,       nullptr, 'f' },
                 { "graphics",           no_argument,       nullptr, 'g' },
                 { "debug-comm",         no_argument,       nullptr, 'd' },
+                { "welcome",            no_argument,       nullptr, 'W' },
                 // serial
                 { "serial-port",        required_argument, nullptr, 'P' },
                 { "baud",               required_argument, nullptr, 'B' },
@@ -34,7 +35,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dgf", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dgfW", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -74,6 +75,10 @@ Options::Options(int argc, char* argv[])
 
             case 'w':
                 terminal_options.window_mode = true;
+                break;
+
+            case 'W':
+                welcome_message = false;
                 break;
 
             case 'f':

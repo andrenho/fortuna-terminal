@@ -43,6 +43,7 @@ public:
     CommType        comm_type   = CommType::NotChosen;
     bool            debug_comm = false;
     Mode            mode = Mode::Text;
+    bool            welcome_message = true;
 
     TerminalOptions terminal_options {};
     UartOptions     uart_options {};
