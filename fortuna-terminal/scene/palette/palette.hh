@@ -3,8 +3,6 @@
 
 #include "common/color.hh"
 
-#define PALETTE_SZ 16
-
 using Palette = Color[PALETTE_SZ];
 
 void palette_init(Palette& palette);

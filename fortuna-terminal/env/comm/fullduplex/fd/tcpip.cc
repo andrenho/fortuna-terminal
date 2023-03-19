@@ -19,6 +19,7 @@
 using namespace std::string_literals;
 
 TCPIP::TCPIP(TcpIpOptions const &options)
+    : port_(options.port)
 {
 #ifdef _WIN32
     WSADATA wsaData;
@@ -110,4 +111,9 @@ void TCPIP::write(std::vector<uint8_t> const &data)
         on_write_error(strerror(errno));
     else if (n < 0)
         on_write_zero();
+}
+
+std::string TCPIP::description() const
+{
+    return "TCP/IP (port: " + std::to_string(port_) + ")";
 }

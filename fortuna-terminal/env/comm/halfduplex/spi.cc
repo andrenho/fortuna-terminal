@@ -1,12 +1,14 @@
 #include "spi.hh"
 
+#include <chrono>
 #include <thread>
 #include <pigpio.h>
 
 using namespace std::chrono_literals;
 
 SPI::SPI(SPIOptions spi_options)
-    : delay_(spi_options.delay)
+    : speed_(spi_options.speed),
+      delay_(spi_options.delay)
 {
     handle_ = spiOpen(SPI_CHANNEL, spi_options.speed, 0);
 }
@@ -38,5 +40,12 @@ std::vector<uint8_t> SPI::exchange(std::vector<uint8_t> const &data)
     } while (!(tx == 0xff && rx == 0xff));
 
     return rx_vec;
+}
+
+std::string SPI::description() const
+{
+    char buf[200];
+    sprintf(buf, "SPI (speed: %d hz, delay %dus)", speed_, std::chrono::duration_cast<int, std::chrono::microseconds>(delay_).count());
+    return buf;
 }
 

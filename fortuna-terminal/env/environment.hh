@@ -25,6 +25,9 @@ public:
     [[nodiscard]] Scene const& scene() const { return scene_; }
     IEvent&                    events_interface() { return protocol_; }
 
+    SyncQueueByte& input_queue() { return *input_queue_; }
+    std::string    communication_module_description() const { return comm_->description(); }
+
 private:
     std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
     std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();

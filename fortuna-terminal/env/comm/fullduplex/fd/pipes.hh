@@ -6,6 +6,8 @@
 class Pipes : public FDComm {
 public:
     Pipes();
+
+    [[nodiscard]] std::string description() const override;
 };
 
 #endif //PIPES_HH_

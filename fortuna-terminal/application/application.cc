@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "control.hh"
+#include "welcome.hh"
 
 Application::Application(int argc, char* argv[])
     : options_(argc, argv),
@@ -16,6 +17,9 @@ Application::Application(int argc, char* argv[])
         environment.run_threads(options_.debug_comm);
 
     control_queue.emplace(ControlCommand::SetMode, options_.mode);
+
+    auto& env = environments.at(current_env_idx);
+    welcome_message(env.input_queue(), env.communication_module_description());
 
     gpio_.reset();  // restart computer
 }

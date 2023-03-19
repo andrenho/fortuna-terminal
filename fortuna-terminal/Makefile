@@ -28,7 +28,8 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/framecontrol.o application/gpio.o \
+		application/application.o application/options.o application/control.o application/framecontrol.o \
+		application/gpio.o application/welcome.o \
 		env/environment.o \
         env/comm/comm.o \
         env/comm/fullduplex/comm_fullduplex.o env/comm/fullduplex/echo.o \
@@ -46,7 +47,7 @@ DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
 
-CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DCOLOR_TERMINAL=${COLOR_TERMINAL}
+CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DVERSION=\"$(file < VERSION)\" -DCOLOR_TERMINAL=${COLOR_TERMINAL}
 CXXFLAGS=-std=c++20
 LDFLAGS=-pthread
 

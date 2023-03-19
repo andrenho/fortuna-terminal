@@ -14,6 +14,7 @@
 #include "application/options.hh"
 
 UART::UART(UartOptions const &uart_options)
+    : uart_options_(uart_options)
 {
     fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ < 0)
@@ -57,4 +58,10 @@ UART::UART(UartOptions const &uart_options)
 
     if (tcsetattr(fd_, TCSANOW, &opt) != 0)
         throw LibcException("Error setting serial attributes");
+}
+
+std::string UART::description() const
+{
+    return "UART (port: " + uart_options_.port + ", baud: " + uart_options_.baud +
+        ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
 }

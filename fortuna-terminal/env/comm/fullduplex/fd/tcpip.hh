@@ -18,8 +18,11 @@ public:
 
     void write(std::vector<uint8_t> const &data) override;
 
+    std::string description() const override;
+
 private:
     SOCKET sock_fd = 0;
+    int port_;
 };
 
 #endif //TCPIP_HH_

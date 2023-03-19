@@ -23,7 +23,8 @@ enum : uint8_t {
     COLOR_WHITE,
     COLOR_LIGHT_GRAY,
     COLOR_GRAY,
-    COLOR_DARK_GRAY
+    COLOR_DARK_GRAY,
+    PALETTE_SZ  // not a color
 };
 
 #endif //COLOR_HH_

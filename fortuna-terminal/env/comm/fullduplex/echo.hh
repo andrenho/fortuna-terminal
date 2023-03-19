@@ -13,6 +13,8 @@ public:
 
     bool                 release_locks() override;
 
+    std::string description() const override { return "Echo (full duplex)"; }
+
 private:
     SyncQueue<uint8_t> buffer_;
 };

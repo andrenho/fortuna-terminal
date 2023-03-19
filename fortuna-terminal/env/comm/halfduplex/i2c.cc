@@ -1,8 +1,11 @@
 #include "i2c.hh"
 
+#include <cstdio>
+
 #include <pigpio.h>
 
 I2C::I2C(I2COptions i2c_options)
+    : address_(i2c_options.address)
 {
     handle_ = i2cOpen(I2C_BUS, i2c_options.address, 0);
 }
@@ -28,4 +31,11 @@ std::vector<uint8_t> I2C::exchange(std::vector<uint8_t> const &data)
         i2cReadDevice(handle_, (char *) rx.data(), sz);
 
     return rx;
+}
+
+std::string I2C::description() const
+{
+    char buf[100];
+    sprintf(buf, "I²C (address: 0x%02X)", address_);
+    return buf;
 }

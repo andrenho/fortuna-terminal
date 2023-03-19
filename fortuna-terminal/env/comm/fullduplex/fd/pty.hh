@@ -14,6 +14,11 @@ public:
 
     void client_disconnected() override;
 
+    [[nodiscard]] std::string description() const override;
+
+private:
+    std::string shell_;
+    std::string name_;
 };
 
 #endif //PTY_HH_

@@ -7,6 +7,11 @@
 class UART : public FDComm {
 public:
     explicit UART(UartOptions const& uart_options);
+
+    [[nodiscard]] std::string description() const override;
+
+private:
+    UartOptions uart_options_;
 };
 
 #endif //UART_HH_

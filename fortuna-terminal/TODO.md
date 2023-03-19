@@ -12,11 +12,18 @@ Electronics:
 
 Improvements:
   - [x] Add FPS counter
-  - [ ] Command compression
-  - [ ] 32 colors
-  - [ ] Change palette
-  - [ ] Other text options (standout, etc)
   - [ ] Print welcome information (welcome message, connection details, colors, version number)
+    - [ ] Add TCP/IP address to description
+  - [ ] 32 colors
+  - [ ] ACS_CHARS
+  - [ ] Other text options (standout, etc)
+  - [ ] Change palette
+  - [ ] Script language
+    - [ ] Command compression
+  - [ ] Reduce CPU usage
+  - [ ] Write client library
+  - [ ] Text mode should be default, and graphics mode should be applied later
+  - [ ] Fix TCP/IP
 
 Alternative screens:
   - [ ] Terminal (shell)

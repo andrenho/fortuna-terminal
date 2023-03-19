@@ -14,8 +14,11 @@ public:
 
     std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
 
+    std::string description() const override;
+
 private:
     int      handle_ = -1;
+    int      speed_;
     Duration delay_;
 };
 

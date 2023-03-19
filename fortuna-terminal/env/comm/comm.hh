@@ -17,12 +17,14 @@ public:
 
     virtual bool release_locks() { return false; }
 
-    [[nodiscard]] virtual Channels channels() const = 0;
     virtual void                   execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) = 0;
     virtual void                   notify_threads() {}
     virtual void                   finalize_threads() = 0;
 
     static std::unique_ptr<CommunicationModule> create(Options const& options);
+
+    [[nodiscard]] virtual Channels channels() const = 0;
+    [[nodiscard]] virtual std::string description() const = 0;
 
 protected:
     void debug_byte(uint8_t byte, bool is_input);
