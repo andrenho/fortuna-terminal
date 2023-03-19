@@ -15,7 +15,6 @@ Improvements:
   - [ ] Command compression
   - [ ] 32 colors
   - [ ] Change palette
-  - [ ] Activate command to start receiving VSYNC (?)
   - [ ] Other text options (standout, etc)
   - [ ] Print welcome information (welcome message, connection details, colors, version number)
 
