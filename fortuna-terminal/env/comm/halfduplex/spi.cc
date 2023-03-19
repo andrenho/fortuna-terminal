@@ -45,7 +45,7 @@ std::vector<uint8_t> SPI::exchange(std::vector<uint8_t> const &data)
 std::string SPI::description() const
 {
     char buf[200];
-    sprintf(buf, "SPI (speed: %d hz, delay %dus)", speed_, std::chrono::duration_cast<int, std::chrono::microseconds>(delay_).count());
+    sprintf(buf, "SPI (speed: %d hz, delay %lldus)", speed_, std::chrono::duration_cast<std::chrono::microseconds>(delay_).count());
     return buf;
 }
 

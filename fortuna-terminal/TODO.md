@@ -13,7 +13,6 @@ Electronics:
 Improvements:
   - [x] Add FPS counter
   - [ ] Print welcome information (welcome message, connection details, colors, version number)
-    - [ ] Add TCP/IP address to description
   - [ ] 32 colors
   - [ ] ACS_CHARS
   - [ ] Other text options (standout, etc)
@@ -24,6 +23,7 @@ Improvements:
   - [ ] Write client library
   - [ ] Text mode should be default, and graphics mode should be applied later
   - [ ] Fix TCP/IP
+      - [ ] Add TCP/IP address to description
 
 Alternative screens:
   - [ ] Terminal (shell)
