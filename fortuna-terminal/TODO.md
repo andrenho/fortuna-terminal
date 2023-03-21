@@ -18,6 +18,7 @@ Improvements:
   - [x] ACS_CHARS
   - [ ] Review performance
     - [ ] Limit pushes in output queue (push with wait (?))
+    - [ ] Show a marker on queue overload
   - [ ] Script language
      - [ ] Command compression
   - [ ] Change palette
