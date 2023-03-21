@@ -17,6 +17,7 @@ Improvements:
   - [x] Other text options (standout, etc)
   - [x] ACS_CHARS
   - [ ] Review performance
+    - [ ] Limit pushes in output queue (push with wait (?))
   - [ ] Script language
      - [ ] Command compression
   - [ ] Change palette
