@@ -1,7 +1,11 @@
 #include "fdcomm.hh"
 #include "common/exceptions/fortunaexception.hh"
+#include "common/exceptions/libcexception.hh"
 
 #include <unistd.h>
+#ifdef _WIN32
+#  include <winsock2.h>
+#endif
 
 #include <cstring>
 
@@ -11,6 +15,12 @@ FDComm::~FDComm()
         close(fd_);
     if (write_fd_ != INVALID_FD)
         close(write_fd_);
+}
+
+std::vector<uint8_t> FDComm::read_for(Duration duration)
+{
+    std::this_thread::sleep_for(duration);
+    return read_blocking(32 * 1024);
 }
 
 std::vector<uint8_t> FDComm::read_blocking(size_t n)
@@ -71,3 +81,4 @@ void FDComm::on_write_error(std::string const &error)
     fprintf(stderr, "Error writing to file descriptor: %s\n", error.c_str());
     client_disconnected();
 }
+

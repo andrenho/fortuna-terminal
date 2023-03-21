@@ -7,6 +7,13 @@ class FDComm : public CommFullDuplex {
 public:
     ~FDComm() override;
 
+protected:
+    FDComm() = default;
+
+private:
+    std::vector<uint8_t> read_for(Duration duration) override;
+
+protected:
     std::vector<uint8_t> read_blocking(size_t n) override;
     void                 write(std::vector<uint8_t> const &data) override;
 
@@ -18,9 +25,6 @@ public:
     virtual void         on_write_error(std::string const& error);
 
     virtual void         client_disconnected();
-
-protected:
-    FDComm() = default;
 
     int fd_ = INVALID_FD;
     int write_fd_ = INVALID_FD;   // writes will point to fd_ if unset

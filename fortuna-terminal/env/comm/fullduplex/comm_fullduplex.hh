@@ -12,15 +12,17 @@ class CommFullDuplex : public CommunicationModule {
 public:
     [[nodiscard]] Channels channels() const override { return Channels::InputAndOutput; }
 
+    void                           execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) override;
+    void                           finalize_threads() override;
+
+private:
+    virtual std::vector<uint8_t>   read_for(Duration duration) = 0;
     virtual std::vector<uint8_t>   read_blocking(size_t n) = 0;
     virtual std::optional<uint8_t> read_blocking();
 
     virtual void                   write(std::vector<uint8_t> const& data) = 0;
     void                           write(std::string const& str);
     void                           write(uint8_t byte);
-
-    void                           execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) override;
-    void                           finalize_threads() override;
 
 private:
     IterativeThread input_thread_ {},

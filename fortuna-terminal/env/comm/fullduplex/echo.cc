@@ -1,5 +1,14 @@
 #include "echo.hh"
 
+std::vector<uint8_t> Echo::read_for(Duration duration)
+{
+    std::this_thread::sleep_for(duration);
+
+    std::vector<uint8_t> r;
+    buffer_.pop_all_into_noblock(r);
+    return r;
+}
+
 std::vector<uint8_t> Echo::read_blocking(size_t n)
 {
     std::vector<uint8_t> v;
@@ -28,4 +37,3 @@ bool Echo::release_locks()
     buffer_.push(0x0);
     return true;
 }
-

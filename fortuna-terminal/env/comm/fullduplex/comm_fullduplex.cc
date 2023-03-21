@@ -35,13 +35,22 @@ void CommFullDuplex::finalize_threads()
 
 void CommFullDuplex::input_thread(SyncQueueByte* input_queue_, bool debug_comm)
 {
+    std::vector<uint8_t> bytes = read_for(8ms);
+    if (!bytes.empty()) {
+        input_queue_->push_all(bytes);
+        if (debug_comm) {
+            for (uint8_t byte: bytes)
+                debug_byte(byte, true);
+        }
+    }
+    /*
     auto byte = read_blocking();
     if (byte.has_value()) {
         input_queue_->push(byte.value());
         if (debug_comm)
             debug_byte(byte.value(), true);
     }
-
+    */
 }
 
 void CommFullDuplex::output_thread(SyncQueueByte* output_queue_, bool debug_comm)

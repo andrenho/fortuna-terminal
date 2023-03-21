@@ -15,10 +15,11 @@ Improvements:
   - [x] Print welcome information (welcome message, connection details, colors, version number)
   - [x] 32 colors
   - [x] Other text options (standout, etc)
-  - [ ] ACS_CHARS
-  - [ ] Change palette
+  - [x] ACS_CHARS
+  - [ ] Review performance
   - [ ] Script language
-    - [ ] Command compression
+     - [ ] Command compression
+  - [ ] Change palette
   - [ ] Reduce CPU usage
   - [ ] Write client library
   - [ ] Text mode should be default, and graphics mode should be applied later

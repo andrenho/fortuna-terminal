@@ -9,11 +9,13 @@
 class CommHalfDuplex : public CommunicationModule {
 public:
     [[nodiscard]] Channels channels() const override { return Channels::Exchange; }
-    virtual std::vector<uint8_t> exchange(std::vector<uint8_t> const& data) = 0;
 
     void execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) override;
     void notify_threads() override;
     void finalize_threads() override;
+
+protected:
+    virtual std::vector<uint8_t> exchange(std::vector<uint8_t> const& data) = 0;
 
 private:
     IterativeThread thread_ {};
