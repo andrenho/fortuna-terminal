@@ -38,20 +38,6 @@ PTY::PTY(PTYOptions const& pty_options)
         throw LibcException("Could not update_char file descriptor as blocking.");
 }
 
-std::vector<uint8_t> PTY::read_blocking(size_t n)
-{
-    if (fd_ == INVALID_FD)
-        return {};
-
-    std::vector<uint8_t> data(n);
-    int r = read(fd_, data.data(), n);
-    if (r <= 0)
-        client_disconnected();
-    else if (r < (int) n)
-        data.resize(n);
-    return data;
-}
-
 void PTY::client_disconnected()
 {
     FDComm::client_disconnected();
