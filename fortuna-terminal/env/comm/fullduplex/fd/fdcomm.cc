@@ -22,7 +22,7 @@ std::vector<uint8_t> FDComm::read_for(Duration duration)
     if (fd_ == INVALID_FD)
         return {};
 
-    size_t buffer_sz = 1 * 1024;
+    size_t buffer_sz = 16;
     std::vector<uint8_t> data(buffer_sz);
     int r = read(fd_, data.data(), (int) buffer_sz);
     if (r < 0) {
