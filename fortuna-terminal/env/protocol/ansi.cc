@@ -4,6 +4,40 @@
 
 #include "common/exceptions/fortunaexception.hh"
 
+static constexpr const wchar_t acs_charset[] = {
+        0xa,   // right arrow
+        0xa,   // left arrow
+        0x8,   // up arrow
+        0x9,   // down arrow
+        0x7,   // block
+        0x4,   // diamond
+        0xb2,  // checkerboard
+        0xf8,  // degree
+        0xf1,  // plus/minus
+        0xb1,  // board
+        0xd9,  // lower right corner
+        0xbf,  // upper right corner
+        0xda,  // upper left corner
+        0xd9,  // lower left corner
+        0xc5,  // cross
+        0xee,  // scan line 1
+        0x2d,  // scan line 3
+        0xc4,  // horizontal line
+        0xee,  // scan line 7
+        0x5f,  // scan line 9
+        0xc3,  // left tee
+        0xb4,  // right tee
+        0xc1,  // top tee
+        0xc2,  // bottom tee
+        0xb3,  // vertical line
+        0x11,  // less than or equal (TODO)
+        0x10,  // greater than or equal (TODO)
+        0xf4,  // pi
+        '!',   // not equal (TODO)
+        'f',   // pound starling
+        0xfe,  // bullet
+};
+
 ANSI::ANSI(Mode initial_mode, Scene &scene)
     : scene_(scene),
       current_mode_(initial_mode),
@@ -12,7 +46,7 @@ ANSI::ANSI(Mode initial_mode, Scene &scene)
                 tmt_open(
                         initial_mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
                         initial_mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
-                        ANSI::tmt_callback, this, nullptr),
+                        ANSI::tmt_callback, this, acs_charset),
                 [](TMT* vt) { tmt_close(vt); }
         ))
 {
