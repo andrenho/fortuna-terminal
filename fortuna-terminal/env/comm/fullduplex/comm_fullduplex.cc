@@ -28,13 +28,13 @@ void CommFullDuplex::input_thread(SyncQueueByte* input_queue_, bool debug_comm)
 {
     std::vector<uint8_t> bytes = read_for(8ms);
     if (!bytes.empty()) {
-try_again:
-        try {
-            input_queue_->push_all(bytes);
-        } catch (QueueFullException& e) {
-            std::this_thread::sleep_for(8ms);
-            goto try_again;
-        }
+        size_t pos = 0;
+        do {
+            std::vector<uint8_t> slice(bytes.begin() + pos, bytes.end());
+            pos += input_queue_->push_all(slice);
+            if (pos < bytes.size())
+                std::this_thread::sleep_for(2ms);
+        } while (pos < bytes.size());
         if (debug_comm) {
             for (uint8_t byte: bytes)
                 debug_byte(byte, true);

@@ -6,7 +6,6 @@
 #include <optional>
 #include <queue>
 #include "common/types/noncopyable.hh"
-#include "common/exceptions/queuefullexception.hh"
 
 template <typename T>
 class SyncQueue : NonCopyable {
@@ -21,32 +20,39 @@ public:
     }
 
     template <typename ...Args>
-    void emplace(Args const&... args) {
+    size_t emplace(Args const&... args) {
         std::unique_lock<std::mutex> lock(mutex_);
         if (queue_.size() >= max_sz_ - 1)
-            throw QueueFullException();
+            return 0;
         queue_.emplace(args...);
         cond_.notify_one();
+        return 1;
     }
 
-    void push(T item) {
+    size_t push(T item) {
         std::unique_lock<std::mutex> lock(mutex_);
         if (queue_.size() >= max_sz_ - 1)
-            throw QueueFullException();
+            return 0;
         queue_.push(item);
         cond_.notify_one();
+        return 1;
     }
 
     template <typename U>
-    void push_all(U const& collection) {
+    size_t push_all(U const& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
 
-        if (queue_.size() + std::size(collection) >= max_sz_ - 1)
-            throw QueueFullException();
+        size_t collection_sz = std::size(collection);
+        size_t items_to_push = collection_sz;
+        if (queue_.size() + items_to_push >= (max_sz_ - 1))
+            items_to_push = max_sz_ - queue_.size();
 
-        for (T const& t : collection)
-            queue_.push(t);
+        for (size_t i = 0; i < items_to_push; ++i)
+            queue_.push(collection[i]);
+
         cond_.notify_one();
+
+        return items_to_push;
     }
 
     T pop_block() {

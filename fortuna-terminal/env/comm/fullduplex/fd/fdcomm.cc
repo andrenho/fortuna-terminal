@@ -24,7 +24,7 @@ std::vector<uint8_t> FDComm::read_for(Duration duration)
     if (fd_ == INVALID_FD)
         return {};
 
-    size_t buffer_sz = 32 * 1024;
+    size_t buffer_sz = 1 * 1024;
     std::vector<uint8_t> data(buffer_sz);
     int r = read(fd_, data.data(), (int) buffer_sz);
     if (r < 0)
@@ -32,7 +32,7 @@ std::vector<uint8_t> FDComm::read_for(Duration duration)
     else if (r == 0)
         on_read_zero();
     else if (r < (int) buffer_sz)
-        data.resize(buffer_sz);
+        data.resize(r);
     return data;
 }
 
