@@ -6,10 +6,14 @@
 #include <optional>
 #include <queue>
 #include "common/types/noncopyable.hh"
+#include "common/exceptions/queuefullexception.hh"
 
 template <typename T>
 class SyncQueue : NonCopyable {
 public:
+    SyncQueue() : max_sz_(std::numeric_limits<size_t>::max()) {}
+    explicit SyncQueue(size_t max_sz) : max_sz_(max_sz) {}
+
     void emplace(T&& item) {
         std::unique_lock<std::mutex> lock(mutex_);
         queue_.emplace(std::move(item));
@@ -19,13 +23,29 @@ public:
     template <typename ...Args>
     void emplace(Args const&... args) {
         std::unique_lock<std::mutex> lock(mutex_);
+        if (queue_.size() >= max_sz_ - 1)
+            throw QueueFullException();
         queue_.emplace(args...);
         cond_.notify_one();
     }
 
     void push(T item) {
         std::unique_lock<std::mutex> lock(mutex_);
+        if (queue_.size() >= max_sz_ - 1)
+            throw QueueFullException();
         queue_.push(item);
+        cond_.notify_one();
+    }
+
+    template <typename U>
+    void push_all(U const& collection) {
+        std::unique_lock<std::mutex> lock(mutex_);
+
+        if (queue_.size() + std::size(collection) >= max_sz_ - 1)
+            throw QueueFullException();
+
+        for (T const& t : collection)
+            queue_.push(t);
         cond_.notify_one();
     }
 
@@ -72,15 +92,6 @@ public:
         }
     }
 
-    template <typename U>
-    void push_all(U const& collection) {
-        std::unique_lock<std::mutex> lock(mutex_);
-
-        for (T const& t : collection)
-            queue_.push(t);
-        cond_.notify_one();
-    }
-
     std::optional<T> pop_nonblock() {
         std::unique_lock<std::mutex> lock(mutex_);
 
@@ -110,6 +121,7 @@ public:
     }
 
 private:
+    size_t                  max_sz_ {};
     std::queue<T>           queue_ {};
     std::mutex              mutex_ {};
     std::condition_variable cond_ {};

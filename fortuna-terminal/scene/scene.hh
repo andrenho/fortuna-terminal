@@ -63,7 +63,7 @@ private:
     std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
     std::unordered_map<size_t, Image> images_ {};
 
-    mutable SyncQueueUniqPtr<size_t> pending_images_ = std::make_unique<SyncQueue<size_t>>();
+    mutable SyncQueueUniqPtr<size_t> pending_images_ = std::make_unique<SyncQueue<size_t>>(1024);
 
     static size_t unique_id_counter;
 };

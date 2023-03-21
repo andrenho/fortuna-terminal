@@ -29,8 +29,8 @@ public:
     std::string    communication_module_description() const { return comm_->description(); }
 
 private:
-    std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>();
-    std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();
+    std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>(1024 * 1024);
+    std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>(1024 * 1024);
 
     CommUniquePtr                 comm_;
     Scene                         scene_;

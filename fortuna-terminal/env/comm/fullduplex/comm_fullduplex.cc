@@ -1,14 +1,5 @@
 #include "comm_fullduplex.hh"
 
-std::optional<uint8_t> CommFullDuplex::read_blocking()
-{
-    std::vector<uint8_t> v = read_blocking(1);
-    if (v.empty())
-        return {};
-    else
-        return v.at(0);
-}
-
 void CommFullDuplex::write(std::string const &str)
 {
     std::vector<uint8_t> vec(str.begin(), str.end());
@@ -37,20 +28,18 @@ void CommFullDuplex::input_thread(SyncQueueByte* input_queue_, bool debug_comm)
 {
     std::vector<uint8_t> bytes = read_for(8ms);
     if (!bytes.empty()) {
-        input_queue_->push_all(bytes);
+try_again:
+        try {
+            input_queue_->push_all(bytes);
+        } catch (QueueFullException& e) {
+            std::this_thread::sleep_for(8ms);
+            goto try_again;
+        }
         if (debug_comm) {
             for (uint8_t byte: bytes)
                 debug_byte(byte, true);
         }
     }
-    /*
-    auto byte = read_blocking();
-    if (byte.has_value()) {
-        input_queue_->push(byte.value());
-        if (debug_comm)
-            debug_byte(byte.value(), true);
-    }
-    */
 }
 
 void CommFullDuplex::output_thread(SyncQueueByte* output_queue_, bool debug_comm)

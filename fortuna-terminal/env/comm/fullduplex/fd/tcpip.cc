@@ -70,6 +70,9 @@ TCPIP::TCPIP(TcpIpOptions const &options)
         throw LibcException("Error on listening");
 }
 
+/*
+ * TODO
+ *
 std::vector<uint8_t> TCPIP::read_blocking(size_t n)
 {
     if (fd_ == 0) {   // client disconnected
@@ -100,6 +103,7 @@ std::vector<uint8_t> TCPIP::read_blocking(size_t n)
         return data;
     }
 }
+ */
 
 void TCPIP::write(std::vector<uint8_t> const &data)
 {

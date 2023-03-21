@@ -9,15 +9,6 @@ std::vector<uint8_t> Echo::read_for(Duration duration)
     return r;
 }
 
-std::vector<uint8_t> Echo::read_blocking(size_t n)
-{
-    std::vector<uint8_t> v;
-    v.reserve(n);
-    for (size_t i = 0; i < n; ++i)
-        v.push_back(buffer_.pop_block());
-    return v;
-}
-
 void Echo::write(std::vector<uint8_t> const &data)
 {
     std::vector<uint8_t> new_data;

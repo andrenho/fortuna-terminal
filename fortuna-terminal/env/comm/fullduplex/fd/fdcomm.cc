@@ -19,23 +19,20 @@ FDComm::~FDComm()
 
 std::vector<uint8_t> FDComm::read_for(Duration duration)
 {
-    std::this_thread::sleep_for(duration);
-    return read_blocking(32 * 1024);
-}
+    // std::this_thread::sleep_for(duration);
 
-std::vector<uint8_t> FDComm::read_blocking(size_t n)
-{
     if (fd_ == INVALID_FD)
         return {};
 
-    std::vector<uint8_t> data(n);
-    int r = read(fd_, data.data(), (int) n);
+    size_t buffer_sz = 32 * 1024;
+    std::vector<uint8_t> data(buffer_sz);
+    int r = read(fd_, data.data(), (int) buffer_sz);
     if (r < 0)
         on_read_error(strerror(errno));
     else if (r == 0)
         on_read_zero();
-    else if (r < (int) n)
-        data.resize(n);
+    else if (r < (int) buffer_sz)
+        data.resize(buffer_sz);
     return data;
 }
 

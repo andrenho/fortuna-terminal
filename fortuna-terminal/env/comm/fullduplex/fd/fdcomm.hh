@@ -14,7 +14,6 @@ private:
     std::vector<uint8_t> read_for(Duration duration) override;
 
 protected:
-    std::vector<uint8_t> read_blocking(size_t n) override;
     void                 write(std::vector<uint8_t> const &data) override;
 
     // these can be overwritten at will
