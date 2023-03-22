@@ -10,21 +10,21 @@ template class SyncQueue<uint8_t>;
 Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
-      input_queue_(std::make_unique<SyncQueueByte>(options.inputqueue_sz)),
-      output_queue_(std::make_unique<SyncQueueByte>()),
-      protocol_(options.mode, scene_, *output_queue_),
+      protocol_(options.mode, scene_),
       show_fps_counter_(options.terminal_options.show_fps_counter)
 {
+    if (options.welcome_message)
+        protocol_.execute_inputs(welcome_message());
 }
 
 void Environment::execute_single_step(size_t avg_fps)
 {
     scene_.text().update_blink();
 
-    protocol_.execute_inputs(*input_queue_);
-    protocol_.execute_outputs();
+    std::string data_to_send = protocol_.execute_outputs();
+    std::string received_data = comm_->exchange(data_to_send);
 
-    comm_->notify_threads();
+    protocol_.execute_inputs(received_data);
 
     if (show_fps_counter_)
         show_fps_counter(avg_fps);
@@ -57,8 +57,6 @@ void Environment::show_error(std::exception const &e)
 
 void Environment::reset()
 {
-    input_queue_->clear();
-    output_queue_->clear();
     scene_.reset();
     protocol_.reset();
 }
@@ -68,16 +66,26 @@ void Environment::set_mode(Mode mode)
     scene_.set_mode(mode);
 }
 
-void Environment::run_threads(bool debug_comm)
+std::string Environment::welcome_message() const
 {
-    comm_->execute_threads(input_queue_.get(), output_queue_.get(), debug_comm);
+    std::stringstream ss;
+
+    // version
+    ss << "\e[2J\e[HFortuna terminal " VERSION "\n\n\r ";
+
+    // colors
+    for (size_t j = 30; j < 38; ++j)
+        ss << "\e[2;7;" + std::to_string(j) + "m ";
+    ss << "\e[0m\n\r ";
+    for (size_t j = 30; j < 38; ++j)
+        ss << "\e[0;7;" + std::to_string(j) + "m ";
+    ss << "\e[0m\n\r ";
+    for (size_t j = 30; j < 38; ++j)
+        ss << "\e[1;7;" + std::to_string(j) + "m ";
+    ss << "\e[0m\n\n\r";
+
+    // communication module
+    ss << "Communication module: \e[1;32m" + comm_->description() + "\e[0m\n\n\r";
+
+    return ss.str();
 }
-
-void Environment::finalize_threads()
-{
-    input_queue_->push({});  // release the locks
-    output_queue_->push({});
-
-    comm_->finalize_threads();
-}
-

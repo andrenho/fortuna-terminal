@@ -1,20 +1,20 @@
 #include "protocol.hh"
 
-Protocol::Protocol(Mode initial_mode, class Scene& scene, SyncQueueByte& output_queue)
+Protocol::Protocol(Mode initial_mode, class Scene& scene)
     : ANSI(initial_mode, scene),
-      FortunaProtocol(scene, output_queue),
-      Events(output_queue)
+      FortunaProtocol(scene),
+      Events()
 {
 }
 
-void Protocol::execute_outputs()
+std::string Protocol::execute_outputs()
 {
-    output_collisions();
+    return get_lastest_events() + get_lastest_fortuna_outputs() + output_collisions();
 }
 
-void Protocol::execute_inputs(SyncQueueByte& input_queue)
+void Protocol::execute_inputs(std::string const& data_received)
 {
-    input_queue.optionally_pop_all_into(received_bytes_);
+    received_bytes_ += data_received;
 
     bool last_is_esc = received_bytes_.ends_with('\e');
     if (last_is_esc)

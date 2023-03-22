@@ -43,7 +43,7 @@ void FortunaProtocol::execute_escape_sequence()
         case 'v': {
                 std::string version = VERSION;
                 std::replace(version.begin(), version.end(), '.', ';');
-                output_queue_.push_all("\e#" + version + "v");
+                fortuna_output_queue_ << "\e#" + version + "v";
             }
             break;
     }
@@ -180,19 +180,27 @@ char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) co
     return current_escape_sequence_.back();
 }
 
-void FortunaProtocol::output_collisions()
+std::string FortunaProtocol::output_collisions()
 {
+    std::stringstream ss;
     if (scene_.mode() == Mode::Graphics) {
         for (auto const& collision: scene_.sprites().check_for_new_collisions()) {
-            output_queue_.push_all("\e#"s +
-                                  (collision.type == Collision::Colliding ? "1" : "0") +
-                                  ";" + std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b));
+            ss << "\e#"s + (collision.type == Collision::Colliding ? "1" : "0") + ";" +
+                std::to_string(collision.sprite_a) + ";" + std::to_string(collision.sprite_b);
         }
     }
+    return ss.str();
 }
 
 void FortunaProtocol::reset_fortuna_protocol()
 {
     current_escape_sequence_.clear();
+}
+
+std::string FortunaProtocol::get_lastest_fortuna_outputs()
+{
+    std::string events = fortuna_output_queue_.str();
+    fortuna_output_queue_.str("");
+    return events;
 }
 

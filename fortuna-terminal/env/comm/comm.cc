@@ -1,6 +1,9 @@
 #include "comm.hh"
 
 #include "common/exceptions/fortunaexception.hh"
+#include "env/comm/unbuffered/echo.hh"
+
+/*
 #include "env/comm/fullduplex/fd/tcpip.hh"
 #include "env/comm/fullduplex/fd/pipes.hh"
 #ifdef COMM_UART
@@ -17,14 +20,16 @@
 #endif
 #include "env/comm/halfduplex/echoxchg.hh"
 #include "fullduplex/echo.hh"
+ */
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
 {
     switch (options.comm_type) {
-        case CommType::TcpIp:
-            return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
         case CommType::Echo:
             return std::make_unique<Echo>();
+            /*
+        case CommType::TcpIp:
+            return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
         case CommType::EchoXchg:
             return std::make_unique<EchoXchg>();
         case CommType::Pipes:
@@ -53,6 +58,7 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
 #else
             throw FortunaException("Communication mode not supported except for Raspberry Pi");
 #endif
+         */
         default:
             throw FortunaException("Unsupported communication module");
     }

@@ -89,7 +89,7 @@ typedef enum
 } SDL_BlendFactor;
 
 /**
- * Compose a custom blend mode for renderers.
+ * Compose a unbuffered blend mode for renderers.
  *
  * The functions SDL_SetRenderDrawBlendMode and SDL_SetTextureBlendMode accept
  * the SDL_BlendMode returned by this function if the renderer_ supports it.
@@ -129,7 +129,7 @@ typedef enum
  * either SDL_SetRenderDrawBlendMode or SDL_SetTextureBlendMode. They will
  * return with an error if the blend mode is not supported.
  *
- * This list describes the support of custom blend modes for each renderer_ in
+ * This list describes the support of unbuffered blend modes for each renderer_ in
  * SDL 2.0.6. All renderers support the four blend modes listed in the
  * SDL_BlendMode enumeration.
  *
@@ -149,8 +149,8 @@ typedef enum
  * - **opengles2**: Supports the `SDL_BLENDOPERATION_ADD`,
  *   `SDL_BLENDOPERATION_SUBTRACT`, `SDL_BLENDOPERATION_REV_SUBTRACT`
  *   operations with all factors.
- * - **psp**: No custom blend mode support.
- * - **software**: No custom blend mode support.
+ * - **psp**: No unbuffered blend mode support.
+ * - **software**: No unbuffered blend mode support.
  *
  * Some renderers do not provide an alpha component for the default render
  * target. The `SDL_BLENDFACTOR_DST_ALPHA` and

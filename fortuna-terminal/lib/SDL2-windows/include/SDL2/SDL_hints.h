@@ -1299,7 +1299,7 @@ extern "C" {
 /**
  *  \brief  A variable describing the content orientation on QtWayland-based platforms.
  *
- *  On QtWayland platforms, windows are rotated client-side to allow for custom
+ *  On QtWayland platforms, windows are rotated client-side to allow for unbuffered
  *  transitions. In order to correctly position overlays (e.g. volume bar) and
  *  gestures (e.g. events view, close/minimize gestures), the system needs to
  *  know in which orientation the application is currently drawing its contents.
@@ -1996,7 +1996,7 @@ extern "C" {
 #define SDL_HINT_WINDOWS_FORCE_SEMAPHORE_KERNEL "SDL_WINDOWS_FORCE_SEMAPHORE_KERNEL"
 
 /**
- * \brief A variable to specify custom icon resource id from RC file on Windows platform 
+ * \brief A variable to specify unbuffered icon resource id from RC file on Windows platform
  */
 #define SDL_HINT_WINDOWS_INTRESOURCE_ICON       "SDL_WINDOWS_INTRESOURCE_ICON"
 #define SDL_HINT_WINDOWS_INTRESOURCE_ICON_SMALL "SDL_WINDOWS_INTRESOURCE_ICON_SMALL"
@@ -2261,7 +2261,7 @@ extern "C" {
 #define SDL_HINT_AUDIO_INCLUDE_MONITORS "SDL_AUDIO_INCLUDE_MONITORS"
 
 /**
- *  \brief  A variable that forces X11 windows to create as a custom type.
+ *  \brief  A variable that forces X11 windows to create as a unbuffered type.
  *
  *  This is currently only used for X11 and ignored elsewhere.
  *
@@ -2269,7 +2269,7 @@ extern "C" {
  *  to report to the window_ manager the type of window_ it wants to create.
  *  This might be set to various things if SDL_WINDOW_TOOLTIP or
  *  SDL_WINDOW_POPUP_MENU, etc, were specified. For "normal" windows that
- *  haven't set a specific type, this hint can be used to specify a custom
+ *  haven't set a specific type, this hint can be used to specify a unbuffered
  *  type. For example, a dock window_ might set this to
  *  "_NET_WM_WINDOW_TYPE_DOCK".
  *

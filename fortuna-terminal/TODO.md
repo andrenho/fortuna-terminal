@@ -27,6 +27,9 @@ Improvements:
   - [ ] Fix TCP/IP
       - [ ] Add TCP/IP address to description
 
+Refactor-4:
+  - [ ] https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
+
 Alternative screens:
   - [ ] Terminal (shell)
   - [ ] Additional info

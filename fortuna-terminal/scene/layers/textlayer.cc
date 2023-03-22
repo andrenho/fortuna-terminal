@@ -66,10 +66,6 @@ void TextLayer::set_mode(Mode mode)
     }
 
     matrix_ = std::make_unique<Char[]>(columns_ * lines_);
-
-    for (size_t i = 0; i < (columns_ * lines_); ++i)
-        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
-    // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
 }
 
 void TextLayer::write_text(size_t row, size_t column, std::string const &text, Char::Attrib const& attrib)

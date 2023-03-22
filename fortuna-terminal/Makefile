@@ -29,13 +29,10 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/framecontrol.o \
-		application/gpio.o application/welcome.o \
+		application/application.o application/options.o application/control.o application/framecontrol.o application/gpio.o \
 		env/environment.o \
         env/comm/comm.o \
-        env/comm/fullduplex/comm_fullduplex.o env/comm/fullduplex/echo.o \
-        env/comm/fullduplex/fd/fdcomm.o env/comm/fullduplex/fd/pipes.o env/comm/fullduplex/fd/tcpip.o \
-        env/comm/halfduplex/comm_halfduplex.o env/comm/halfduplex/echoxchg.o \
+        env/comm/unbuffered/echo.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
  		scene/scene.o scene/palette/palette.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
@@ -91,7 +88,7 @@ else ifeq ($(PROF),1)
 	CPPFLAGS := ${CPPFLAGS} -pg -O1 -ggdb -UGPIO
 	LDFLAGS := ${LDFLAGS} -pg -O1 -ggdb
 else
-	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
+	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb -D_GLIBCXX_DEBUG
 endif
 
 #

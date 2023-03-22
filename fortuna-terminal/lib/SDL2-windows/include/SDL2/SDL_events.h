@@ -950,7 +950,7 @@ extern DECLSPEC int SDLCALL SDL_WaitEventTimeout(SDL_Event * event,
  *
  * For pushing application-specific events, please use SDL_RegisterEvents() to
  * get an event type that does not conflict with other code that also wants
- * its own custom event types.
+ * its own unbuffered event types.
  *
  * \param event the SDL_Event to be added to the queue
  * \returns 1 on success, 0 if the event was filtered, or a negative error

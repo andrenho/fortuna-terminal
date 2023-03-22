@@ -14,10 +14,10 @@ class Protocol :
         private FortunaProtocol,
         public Events {
 public:
-    explicit Protocol(Mode initial_mode, class Scene& scene, SyncQueueByte& output_queue);
+    Protocol(Mode initial_mode, class Scene& scene);
 
-    void execute_inputs(SyncQueueByte &input_queue);
-    void execute_outputs();
+    void        execute_inputs(std::string const& data_received);
+    std::string execute_outputs();
 
     void reset();
 

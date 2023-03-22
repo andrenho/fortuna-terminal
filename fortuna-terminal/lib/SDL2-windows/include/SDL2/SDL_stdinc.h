@@ -467,7 +467,7 @@ extern DECLSPEC void SDLCALL SDL_GetMemoryFunctions(SDL_malloc_func *malloc_func
                                                     SDL_free_func *free_func);
 
 /**
- * Replace SDL's memory allocation functions with a custom set
+ * Replace SDL's memory allocation functions with a unbuffered set
  *
  * \since This function is available since SDL 2.0.7.
  */

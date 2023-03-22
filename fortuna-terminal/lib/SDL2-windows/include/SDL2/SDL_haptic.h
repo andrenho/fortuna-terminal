@@ -264,7 +264,7 @@ typedef struct _SDL_Haptic SDL_Haptic;
 /**
  *  \brief Custom effect is supported.
  *
- *  User defined custom haptic effect.
+ *  User defined unbuffered haptic effect.
  */
 #define SDL_HAPTIC_CUSTOM     (1u<<11)
 
@@ -700,7 +700,7 @@ typedef struct SDL_HapticLeftRight
  *
  *  This struct is exclusively for the ::SDL_HAPTIC_CUSTOM effect.
  *
- *  A custom force feedback effect is much like a periodic effect, where the
+ *  A unbuffered force feedback effect is much like a periodic effect, where the
  *  application can define its exact shape.  You will have to allocate the
  *  data yourself.  Data should consist of channels * samples Uint16 samples.
  *
