@@ -25,6 +25,7 @@ Gpio::Gpio()
 Gpio::~Gpio()
 {
 #ifdef GPIO
+    vsync_thread_.finalize();
     gpioTerminate();
 #endif
 }
