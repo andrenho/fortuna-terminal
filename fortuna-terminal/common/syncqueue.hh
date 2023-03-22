@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <optional>
-#include <queue>
+#include <deque>
 #include "common/types/noncopyable.hh"
 
 template <typename T>
@@ -15,25 +15,25 @@ public:
 
     void emplace(T&& item) {
         std::unique_lock<std::mutex> lock(mutex_);
-        queue_.emplace(std::move(item));
+        deque_.emplace_back(std::move(item));
         cond_.notify_one();
     }
 
     template <typename ...Args>
     size_t emplace(Args const&... args) {
         std::unique_lock<std::mutex> lock(mutex_);
-        if (queue_.size() >= max_sz_ - 1)
+        if (deque_.size() >= max_sz_ - 1)
             return 0;
-        queue_.emplace(args...);
+        deque_.emplace_back(args...);
         cond_.notify_one();
         return 1;
     }
 
     size_t push(T item) {
         std::unique_lock<std::mutex> lock(mutex_);
-        if (queue_.size() >= max_sz_ - 1)
+        if (deque_.size() >= max_sz_ - 1)
             return 0;
-        queue_.push(item);
+        deque_.push_back(item);
         cond_.notify_one();
         return 1;
     }
@@ -42,13 +42,13 @@ public:
     size_t push_all(U const& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
 
+        size_t deque_sz = deque_.size();
         size_t collection_sz = std::size(collection);
         size_t items_to_push = collection_sz;
-        if (queue_.size() + items_to_push >= (max_sz_ - 1))
-            items_to_push = max_sz_ - queue_.size();
+        if (deque_sz + items_to_push >= (max_sz_ - 1))
+            items_to_push = max_sz_ - deque_sz;
 
-        for (size_t i = 0; i < items_to_push; ++i)
-            queue_.push(collection[i]);
+        std::copy(std::begin(collection), std::begin(collection) + items_to_push, std::back_inserter(deque_));
 
         cond_.notify_one();
 
@@ -57,10 +57,10 @@ public:
 
     T pop_block() {
         std::unique_lock<std::mutex> lock(mutex_);
-        cond_.wait(lock, [this]() { return !queue_.empty(); });
+        cond_.wait(lock, [this]() { return !deque_.empty(); });
 
-        T item = std::move(queue_.front());
-        queue_.pop();
+        T item = std::move(deque_.front());
+        deque_.pop_back();
 
         return item;
     }
@@ -68,67 +68,60 @@ public:
     template <typename U>
     void pop_all_into(U& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
-        cond_.wait(lock, [this]() { return !queue_.empty(); });
+        cond_.wait(lock, [this]() { return !deque_.empty(); });
 
-        while (!queue_.empty()) {
-            collection.push_back(queue_.front());
-            queue_.pop();
-        }
+        std::copy(std::begin(deque_), std::end(deque_), std::back_inserter(collection));
+        deque_.clear();
     }
 
     template <typename U>
     void pop_all_into_noblock(U& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
 
-        while (!queue_.empty()) {
-            collection.push_back(queue_.front());
-            queue_.pop();
-        }
+        std::copy(std::begin(deque_), std::end(deque_), std::back_inserter(collection));
+        deque_.clear();
     }
 
     template <typename U>
     void optionally_pop_all_into(U& collection) {
         std::unique_lock<std::mutex> lock(mutex_);
-        if (queue_.empty())
+        if (deque_.empty())
             return;
 
-        while (!queue_.empty()) {
-            collection.push_back(queue_.front());
-            queue_.pop();
-        }
+        std::copy(std::begin(deque_), std::end(deque_), std::back_inserter(collection));
+        deque_.clear();
     }
 
     std::optional<T> pop_nonblock() {
         std::unique_lock<std::mutex> lock(mutex_);
 
-        if (queue_.empty()) {
+        if (deque_.empty()) {
             return {};
         } else {
-            T item = std::move(queue_.front());
-            queue_.pop();
+            T item = std::move(deque_.front());
+            deque_.pop_back();
             return item;
         }
     }
 
     bool empty() {
         std::unique_lock<std::mutex> lock(mutex_);
-        return queue_.empty();
+        return deque_.empty();
     }
 
     size_t size() {
         std::unique_lock<std::mutex> lock(mutex_);
-        return queue_.size();
+        return deque_.size();
     }
 
     void clear() {
         std::unique_lock<std::mutex> lock(mutex_);
-        while (!queue_.empty())
-            queue_.pop();
+        deque_.clear();
     }
 
 private:
     size_t                  max_sz_ {};
-    std::queue<T>           queue_ {};
+    std::deque<T>           deque_ {};
     std::mutex              mutex_ {};
     std::condition_variable cond_ {};
 };

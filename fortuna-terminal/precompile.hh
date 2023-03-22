@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <chrono>
 #include <condition_variable>
+#include <deque>
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <optional>
-#include <queue>
 #include <set>
 #include <string>
 #include <utility>

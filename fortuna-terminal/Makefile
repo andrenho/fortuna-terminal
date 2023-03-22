@@ -4,6 +4,7 @@
 
 RELEASE ?= 0
 FAST ?= 0
+PROF ?= 0
 
 WINDOWS := 0
 RASPBERRY := 0
@@ -88,6 +89,11 @@ ifeq ($(RELEASE),1)
 	LDFLAGS := ${LDFLAGS} -O3 -flto
 else
 	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
+endif
+
+ifeq ($(PROF),1)
+	CPPFLAGS := ${CPPFLAGS} -pg
+	LDFLAGS := ${CPPFLAGS} -pg
 endif
 
 #
