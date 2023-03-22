@@ -6,7 +6,7 @@
 
 class UART : public FDComm {
 public:
-    explicit UART(UartOptions const& uart_options);
+    explicit UART(UartOptions const& uart_options, size_t readbuf_sz);
 
     [[nodiscard]] std::string description() const override;
 

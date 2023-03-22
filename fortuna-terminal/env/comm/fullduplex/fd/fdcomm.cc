@@ -22,15 +22,14 @@ std::vector<uint8_t> FDComm::read_for(Duration duration)
     if (fd_ == INVALID_FD)
         return {};
 
-    size_t buffer_sz = 16;
-    std::vector<uint8_t> data(buffer_sz);
-    int r = read(fd_, data.data(), (int) buffer_sz);
+    std::vector<uint8_t> data(readbuf_sz_);
+    int r = read(fd_, data.data(), (int) readbuf_sz_);
     if (r < 0) {
         on_read_error(strerror(errno));
     } else if (r == 0) {
         on_read_zero();
         std::this_thread::sleep_for(duration);
-    } else if (r < (int) buffer_sz) {
+    } else if (r < (int) readbuf_sz_) {
         data.resize(r);
     }
     return data;

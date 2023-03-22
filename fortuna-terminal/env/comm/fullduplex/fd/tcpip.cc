@@ -18,8 +18,8 @@
 
 using namespace std::string_literals;
 
-TCPIP::TCPIP(TcpIpOptions const &options)
-    : port_(options.port)
+TCPIP::TCPIP(TcpIpOptions const &options, size_t readbuf_sz)
+    : FDComm(readbuf_sz), port_(options.port)
 {
 #ifdef _WIN32
     WSADATA wsaData;

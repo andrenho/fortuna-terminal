@@ -11,8 +11,8 @@
 #include "common/exceptions/libcexception.hh"
 #include "scene/layers/textlayer.hh"
 
-PTY::PTY(PTYOptions const& pty_options)
-    : shell_(pty_options.shell)
+PTY::PTY(PTYOptions const& pty_options, size_t readbuf_sz)
+    : FDComm(readbuf_sz), shell_(pty_options.shell)
 {
     struct winsize winp = { (short unsigned int) TextLayer::Lines_80Columns, (short unsigned int) TextLayer::Columns_80Columns, 0 , 0 };
 

@@ -6,7 +6,7 @@
 
 class PTY : public FDComm {
 public:
-    explicit PTY(PTYOptions const& pty_options);
+    explicit PTY(PTYOptions const& pty_options, size_t readbuf_sz);
 
     void write(std::vector<uint8_t> const &data) override;
 

@@ -15,8 +15,8 @@
 
 using namespace std::string_literals;
 
-UART::UART(UartOptions const &uart_options)
-    : uart_options_(uart_options)
+UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
+    : FDComm(readbuf_sz), uart_options_(uart_options)
 {
     fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ < 0)

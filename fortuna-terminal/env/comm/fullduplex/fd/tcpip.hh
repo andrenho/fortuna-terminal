@@ -12,7 +12,7 @@
 
 class TCPIP : public FDComm {
 public:
-    explicit TCPIP(TcpIpOptions const& options);
+    explicit TCPIP(TcpIpOptions const& options, size_t readbuf_sz);
 
     void write(std::vector<uint8_t> const &data) override;
 

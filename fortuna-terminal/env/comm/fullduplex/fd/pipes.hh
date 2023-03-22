@@ -5,7 +5,7 @@
 
 class Pipes : public FDComm {
 public:
-    Pipes();
+    explicit Pipes(size_t readbuf_sz);
 
     [[nodiscard]] std::string description() const override;
 };

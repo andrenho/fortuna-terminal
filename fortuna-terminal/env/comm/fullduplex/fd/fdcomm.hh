@@ -8,7 +8,7 @@ public:
     ~FDComm() override;
 
 protected:
-    FDComm() = default;
+    explicit FDComm(size_t readbuf_sz) : readbuf_sz_(readbuf_sz) {}
 
 private:
     std::vector<uint8_t> read_for(Duration duration) override;
@@ -24,6 +24,8 @@ protected:
     virtual void         on_write_error(std::string const& error);
 
     virtual void         client_disconnected();
+
+    size_t readbuf_sz_;
 
     int fd_ = INVALID_FD;
     int write_fd_ = INVALID_FD;   // writes will point to fd_ if unset

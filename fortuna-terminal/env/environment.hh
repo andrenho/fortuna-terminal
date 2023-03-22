@@ -29,13 +29,12 @@ public:
     std::string    communication_module_description() const { return comm_->description(); }
 
 private:
-    std::unique_ptr<SyncQueueByte> input_queue_ = std::make_unique<SyncQueueByte>(8 * 1024);
-    std::unique_ptr<SyncQueueByte> output_queue_ = std::make_unique<SyncQueueByte>();  // TODO - set size
-
-    CommUniquePtr                 comm_;
-    Scene                         scene_;
-    Protocol                      protocol_;
-    bool                          show_fps_counter_;
+    CommUniquePtr                  comm_;
+    Scene                          scene_;
+    std::unique_ptr<SyncQueueByte> input_queue_;
+    std::unique_ptr<SyncQueueByte> output_queue_;
+    Protocol                       protocol_;
+    bool                           show_fps_counter_;
 
     void show_fps_counter(size_t fps);
 };

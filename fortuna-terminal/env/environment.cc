@@ -10,6 +10,8 @@ template class SyncQueue<uint8_t>;
 Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
+      input_queue_(std::make_unique<SyncQueueByte>(options.inputqueue_sz)),
+      output_queue_(std::make_unique<SyncQueueByte>()),
       protocol_(options.mode, scene_, *output_queue_),
       show_fps_counter_(options.terminal_options.show_fps_counter)
 {

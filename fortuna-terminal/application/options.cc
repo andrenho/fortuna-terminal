@@ -18,6 +18,8 @@ Options::Options(int argc, char* argv[])
                 { "graphics",           no_argument,       nullptr, 'g' },
                 { "debug-comm",         no_argument,       nullptr, 'd' },
                 { "welcome",            no_argument,       nullptr, 'W' },
+                { "readbuf-size",       required_argument, nullptr, 'r' },
+                { "inputqueue-size",    required_argument, nullptr, 'i' },
                 // serial
                 { "serial-port",        required_argument, nullptr, 'P' },
                 { "baud",               required_argument, nullptr, 'B' },
@@ -26,7 +28,7 @@ Options::Options(int argc, char* argv[])
                 { "spi-speed",          required_argument, nullptr, 's' },
                 { "delay",              required_argument, nullptr, 'D' },
                 // spi
-                { "address",          required_argument, nullptr, 'a' },
+                { "address",            required_argument, nullptr, 'a' },
                 // tcp/ip
                 { "tcpip-port",         required_argument, nullptr, 'R' },
                 // shell
@@ -35,7 +37,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dgfW", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwi:r:P:B:U:R:S:s:D:a:dgfW", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -75,6 +77,18 @@ Options::Options(int argc, char* argv[])
 
             case 'w':
                 terminal_options.window_mode = true;
+                break;
+
+            case 'r':
+                readbuf_sz = strtol(optarg, nullptr, 10);
+                if (errno == ERANGE || errno == EINVAL)
+                    throw LibcException("Invalid read buffer size");
+                break;
+
+            case 'i':
+                inputqueue_sz = strtol(optarg, nullptr, 10);
+                if (errno == ERANGE || errno == EINVAL)
+                    throw LibcException("Invalid input queue size");
                 break;
 
             case 'W':
@@ -150,6 +164,8 @@ Options::Options(int argc, char* argv[])
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
     printf("    -g, --graphics                  Start in graphics mode (40 columns)\n");
     printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");
+    printf("    -r, --readbuf-size              Size of the read buffer (smaller is slower, higher is choppier, default: 16)\n");
+    printf("    -i, --inputqueue-size           Size of the read buffer (smaller is slower, higher is choppier, default: 8192)\n");
 #ifdef COMM_UART
     printf("Options valid for `uart`:\n");
     printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");
