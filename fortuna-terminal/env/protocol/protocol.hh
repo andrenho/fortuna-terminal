@@ -20,6 +20,7 @@ public:
     std::string execute_outputs();
 
     void reset();
+    void reset_mode();
 
 private:
     bool        extra_active_ = false;

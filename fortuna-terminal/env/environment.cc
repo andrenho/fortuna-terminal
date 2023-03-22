@@ -64,6 +64,7 @@ void Environment::reset()
 void Environment::set_mode(Mode mode)
 {
     scene_.set_mode(mode);
+    protocol_.reset_mode();
 }
 
 std::string Environment::welcome_message() const

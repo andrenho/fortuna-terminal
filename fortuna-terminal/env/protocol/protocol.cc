@@ -61,3 +61,8 @@ void Protocol::reset()
     reset_ansi_protocol();
     reset_fortuna_protocol();
 }
+
+void Protocol::reset_mode()
+{
+    send_ansi_bytes(" \b");
+}
