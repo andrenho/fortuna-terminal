@@ -87,13 +87,11 @@ endif
 ifeq ($(RELEASE),1)
 	CPPFLAGS := ${CPPFLAGS} -O3 -flto
 	LDFLAGS := ${LDFLAGS} -O3 -flto
+else ifeq ($(PROF),1)
+	CPPFLAGS := ${CPPFLAGS} -pg -O1 -ggdb
+	LDFLAGS := ${CPPFLAGS} -pg -O1 -ggdb
 else
 	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
-endif
-
-ifeq ($(PROF),1)
-	CPPFLAGS := ${CPPFLAGS} -pg
-	LDFLAGS := ${CPPFLAGS} -pg
 endif
 
 #
