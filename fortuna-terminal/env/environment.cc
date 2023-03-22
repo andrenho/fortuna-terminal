@@ -26,20 +26,26 @@ void Environment::execute_single_step(size_t avg_fps)
 
     comm_->notify_threads();
 
-    show_fps_counter(avg_fps);
+    if (show_fps_counter_)
+        show_fps_counter(avg_fps);
+    if (comm_->is_overwhelmed())
+        show_overwhelmed();
 }
 
 void Environment::show_fps_counter(size_t fps)
 {
-    if (show_fps_counter_) {
-        if (fps > 999)
-            fps = 999;
-        scene_.text().write_text(
-                scene_.text().lines() - 1,
-                scene_.text().columns() - 9,
-                " FPS " + std::to_string(fps) + " ",
-                {COLOR_ORANGE, true, false});
-    }
+    if (fps > 999)
+        fps = 999;
+    scene_.text().write_text(
+            scene_.text().lines() - 1,
+            scene_.text().columns() - 9,
+            " FPS " + std::to_string(fps) + " ",
+            {COLOR_ORANGE, true, true});
+}
+
+void Environment::show_overwhelmed()
+{
+    scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
 }
 
 void Environment::show_error(std::exception const &e)
@@ -74,3 +80,4 @@ void Environment::finalize_threads()
 
     comm_->finalize_threads();
 }
+

@@ -7,15 +7,9 @@
 #include "common/syncqueue.hh"
 #include "common/types/noncopyable.hh"
 
-enum class Channels {
-    InputAndOutput, Exchange,
-};
-
 class CommunicationModule : NonCopyable {
 public:
     virtual ~CommunicationModule() = default;
-
-    virtual bool release_locks() { return false; }
 
     virtual void                   execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) = 0;
     virtual void                   notify_threads() {}
@@ -23,8 +17,9 @@ public:
 
     static std::unique_ptr<CommunicationModule> create(Options const& options);
 
-    [[nodiscard]] virtual Channels channels() const = 0;
     [[nodiscard]] virtual std::string description() const = 0;
+
+    [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
 
 protected:
     void debug_byte(uint8_t byte, bool is_input);

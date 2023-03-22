@@ -22,9 +22,3 @@ void Echo::write(std::vector<uint8_t> const &data)
     }
     buffer_.push_all(new_data);
 }
-
-bool Echo::release_locks()
-{
-    buffer_.push(0x0);
-    return true;
-}
