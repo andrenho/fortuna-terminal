@@ -31,7 +31,12 @@ void CommFullDuplex::input_thread(SyncQueueByte* input_queue_, bool debug_comm)
 
         size_t pos = input_queue_->push_all(bytes);
 
+        is_overwhelmed_ = false;
+
         while (pos < bytes.size()) {
+
+            is_overwhelmed_ = true;
+
             std::this_thread::sleep_for(1ms);
 
             std::vector<uint8_t> slice(bytes.begin() + (ssize_t) pos, bytes.end());

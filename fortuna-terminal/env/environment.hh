@@ -37,6 +37,7 @@ private:
     bool                           show_fps_counter_;
 
     void show_fps_counter(size_t fps);
+    void show_overwhelmed();
 };
 
 #endif //ENVIRONMENT_HH_

@@ -8,8 +8,6 @@
 
 class Echo : public CommFullDuplex {
 public:
-    bool                 release_locks() override;
-
     std::string description() const override { return "Echo (full duplex)"; }
 
 protected:
