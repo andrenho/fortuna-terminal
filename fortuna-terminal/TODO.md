@@ -16,9 +16,8 @@ Improvements:
   - [x] 32 colors
   - [x] Other text options (standout, etc)
   - [x] ACS_CHARS
-  - [ ] Review performance
-    - [ ] Limit pushes in output queue (push with wait (?))
-    - [ ] Show a marker on queue overload
+  - [x] Review performance
+    - [x] Show a marker on queue overload
   - [ ] Script language
      - [ ] Command compression
   - [ ] Change palette
