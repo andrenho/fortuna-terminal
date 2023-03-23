@@ -25,7 +25,9 @@ private:
     SDL_Renderer* renderer_;
     UniquePtrWithDeleter<SDL_Texture> font_;
 
-    void draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const;
+    void draw_cell(TextLayer const &text, size_t line, size_t column, Char const& chr, Palette const palette, uint8_t bg_color) const;
+
+    static constexpr uint8_t BLOCK_CHAR = 0xdb;
 };
 
 #endif //TEXTPAINTER_HH_

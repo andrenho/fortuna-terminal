@@ -49,7 +49,7 @@ class TextLayer : public Layer {
 public:
     explicit TextLayer(Mode mode);
 
-    void          update_char(size_t line, size_t column, Char c);
+    void          update_char(size_t row, size_t column, Char c);
     void          update_cell(std::vector<Cell> const& cells);
     void          write_text(size_t row, size_t column, std::string const& text, Char::Attrib const& attrib);
 
@@ -60,7 +60,7 @@ public:
     void          update_blink();
     void          reset() override;
 
-    [[nodiscard]] Char const&   get_char(size_t line, size_t column) const;
+    [[nodiscard]] Char const&   get_char(size_t row, size_t column) const;
     [[nodiscard]] size_t        columns() const { return columns_; }
     [[nodiscard]] size_t        lines() const   { return lines_; }
     [[nodiscard]] Mode          mode() const    { return mode_; }

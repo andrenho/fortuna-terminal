@@ -84,12 +84,12 @@ void Environment::display_timing_info(FrameControl const &frame_control)
     if (events.empty())
         return;
 
-    const size_t x = scene_.text().columns() - 23;
+    const size_t x = scene_.text().columns() - 25;
 
     auto print_event = [&](size_t y, std::string const& text, FrameControl::Event event) {
         char buf[64];
-        snprintf(buf, sizeof buf, "%-16s%5.2fms", text.c_str(), events.at(event));
-        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, false, true});
+        snprintf(buf, sizeof buf, " %-16s%5.2fms ", text.c_str(), events.at(event));
+        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, true, true});
         return y + 1;
     };
 
@@ -107,8 +107,8 @@ void Environment::display_timing_info(FrameControl const &frame_control)
 
     scene_.text().write_text(
             scene_.text().lines() - 1,
-            scene_.text().columns() - 9,
-            " FPS " + std::to_string(frame_control.avg_fps()) + " ",
+            scene_.text().columns() - 10,
+            " FPS " + std::to_string(frame_control.avg_fps()) + "  ",
             {COLOR_ORANGE, true, true});
 
     if (comm_->is_overwhelmed()) {

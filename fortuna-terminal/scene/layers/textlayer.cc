@@ -8,14 +8,14 @@ TextLayer::TextLayer(Mode mode)
     set_mode(mode);
 }
 
-Char const &TextLayer::get_char(size_t line, size_t column) const
+Char const &TextLayer::get_char(size_t row, size_t column) const
 {
-    return matrix_[line * columns_ + column];
+    return matrix_[row * columns_ + column];
 }
 
-void TextLayer::update_char(size_t line, size_t column, Char c)
+void TextLayer::update_char(size_t row, size_t column, Char c)
 {
-    matrix_[line * columns_ + column] = c;
+    matrix_[row * columns_ + column] = c;
     reset_blink();
 }
 

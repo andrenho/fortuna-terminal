@@ -1,10 +1,6 @@
 #include "framecontrol.hh"
 
-#define WAIT_VSYNC_MANUALLY 1
-
-#if WAIT_VSYNC_MANUALLY
-#  include <thread>
-#endif
+#include <thread>
 
 using namespace std::chrono_literals;
 
@@ -24,9 +20,8 @@ void FrameControl::start_frame(Event event)
 
 void FrameControl::end_frame()
 {
-#if WAIT_VSYNC_MANUALLY
     wait_for_end_of_frame(30);
-#endif
+
     if (frame_count_ % FRAMES_BETWEEN_DURATION_CALC == 0) {
         last_events_ = events_;
         for (auto& [_, duration] : events_)

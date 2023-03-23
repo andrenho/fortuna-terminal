@@ -29,14 +29,18 @@ void TextPainter::draw(Scene const& scene) const
     if (!text.enabled)
         return;
 
-    for (size_t y = 0; y < text.lines(); ++y)
-        for (size_t x = 0; x < text.columns(); ++x)
-            draw_cell(text, y, x, scene.palette, scene.bg_color);
+    for (size_t y = 0; y < text.lines(); ++y) {
+        for (size_t x = 0; x < text.columns(); ++x) {
+            Char const& chr = text.get_char(y, x);
+            if (chr.attrib.reverse)
+                draw_cell(text, y, x, Char { BLOCK_CHAR, { chr.attrib.color, false, true } }, scene.palette, 0);
+            draw_cell(text, y, x, chr, scene.palette, scene.bg_color);
+        }
+    }
 }
 
-void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const
+void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Char const& chr, Palette const palette, uint8_t bg_color) const
 {
-    Char chr = text.get_char(line, column);
     uint8_t c = chr.c;
 
     if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line) && !chr.attrib.reverse)
@@ -67,11 +71,7 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else if (chr.attrib.reverse) {
-        // reverse character
-        SDL_SetRenderDrawColor(renderer_, fg.r, fg.g, fg.b, SDL_ALPHA_OPAQUE);
-        SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
-        SDL_RenderFillRect(renderer_, &r);
-
+        // reversed character
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else {
