@@ -17,35 +17,21 @@ Environment::Environment(Options const &options)
         protocol_.execute_inputs(welcome_message());
 }
 
-void Environment::execute_single_step(size_t avg_fps)
+void Environment::execute_single_step(FrameControl& frame_control)
 {
     scene_.text().update_blink();
 
+    frame_control.start_event(FrameControl::Event::ExecuteOutputs);
     std::string data_to_send = protocol_.execute_outputs();
+
+    frame_control.start_event(FrameControl::Event::Communicate);
     std::string received_data = comm_->exchange(data_to_send);
 
+    frame_control.start_event(FrameControl::Event::ExecuteInputs);
     protocol_.execute_inputs(received_data);
 
-    if (show_fps_counter_)
-        show_fps_counter(avg_fps);
-    if (comm_->is_overwhelmed())
-        show_overwhelmed();
-}
-
-void Environment::show_fps_counter(size_t fps)
-{
-    if (fps > 999)
-        fps = 999;
-    scene_.text().write_text(
-            scene_.text().lines() - 1,
-            scene_.text().columns() - 9,
-            " FPS " + std::to_string(fps) + " ",
-            {COLOR_ORANGE, true, true});
-}
-
-void Environment::show_overwhelmed()
-{
-    scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
+    frame_control.start_event(FrameControl::Event::DebuggingInfo);
+    display_debugging_info(frame_control);
 }
 
 void Environment::show_error(std::exception const &e)
@@ -89,4 +75,43 @@ std::string Environment::welcome_message() const
     ss << "Communication module: \e[1;32m" + comm_->description() + "\e[0m\n\n\r";
 
     return ss.str();
+}
+
+void Environment::display_debugging_info(FrameControl const &frame_control)
+{
+    std::map<FrameControl::Event, double> events = frame_control.last_events();
+    if (events.empty())
+        return;
+
+    const size_t x = scene_.text().columns() - 23;
+
+    auto print_event = [&](size_t y, std::string const& text, FrameControl::Event event) {
+        char buf[64];
+        snprintf(buf, sizeof buf, "%-16s%5.2fms", text.c_str(), events.at(event));
+        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, true, true});
+        return y + 1;
+    };
+
+    size_t y = scene_.text().lines() - 12;
+    y = print_event(y, "ControlQueue", FrameControl::Event::ControlQueue);
+    y = print_event(y, "ExecuteOutputs", FrameControl::Event::ExecuteOutputs);
+    y = print_event(y, "Communicate", FrameControl::Event::Communicate);
+    y = print_event(y, "ExecuteInputs", FrameControl::Event::ExecuteInputs);
+    y = print_event(y, "DebuggingInfo", FrameControl::Event::DebuggingInfo);
+    y = print_event(y, "VSYNC", FrameControl::Event::VSYNC);
+    y = print_event(y, "UserEvents", FrameControl::Event::UserEvents);
+    y = print_event(y, "Draw", FrameControl::Event::Draw);
+    y = print_event(y, "Wait", FrameControl::Event::Wait);
+    y = print_event(y, "Interframe", FrameControl::Event::Interframe);
+
+    if (show_fps_counter_) {
+        scene_.text().write_text(
+                scene_.text().lines() - 1,
+                scene_.text().columns() - 9,
+                " FPS " + std::to_string(frame_control.avg_fps()) + " ",
+                {COLOR_ORANGE, true, true});
+    }
+    if (comm_->is_overwhelmed()) {
+        scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
+    }
 }

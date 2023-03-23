@@ -34,19 +34,22 @@ retry:
 
 ExecutionStatus Application::execute_single_step()
 {
-    frame_control_.start_frame();
+    Environment& current_environment = environments.at(current_env_idx);
 
-    Environment& currrent_environment = environments.at(current_env_idx);
-
+    frame_control_.start_frame(FrameControl::Event::ControlQueue);
     execute_control_queue();
 
     for (auto& environment: environments)
-        environment.execute_single_step(frame_control_.avg_fps());
+        environment.execute_single_step(frame_control_);
 
+    frame_control_.start_event(FrameControl::Event::VSYNC);
     gpio_.vsync();
 
-    ExecutionStatus execution_status = terminal_.process_user_events(currrent_environment.events_interface());
-    terminal_.draw(currrent_environment.scene());
+    frame_control_.start_event(FrameControl::Event::UserEvents);
+    ExecutionStatus execution_status = terminal_.process_user_events(current_environment.events_interface());
+
+    frame_control_.start_event(FrameControl::Event::Draw);
+    terminal_.draw(current_environment.scene());
 
     frame_control_.end_frame();
 

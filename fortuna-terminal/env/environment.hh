@@ -7,12 +7,13 @@
 #include "env/protocol/protocol.hh"
 #include "scene/scene.hh"
 #include "common/iterativethread.hh"
+#include "application/framecontrol.hh"
 
 class Environment {
 public:
     explicit Environment(Options const& options);
 
-    void execute_single_step(size_t avg_fps);
+    void execute_single_step(FrameControl& frame_control);
     void reset();
 
     void show_error(std::exception const &e);
@@ -22,18 +23,14 @@ public:
     [[nodiscard]] Scene const& scene() const { return scene_; }
     IEvent&                    events_interface() { return protocol_; }
 
-    std::string    communication_module_description() const { return comm_->description(); }
-
 private:
     CommUniquePtr                  comm_;
     Scene                          scene_;
     Protocol                       protocol_;
     bool                           show_fps_counter_;
 
-    void show_fps_counter(size_t fps);
-    void show_overwhelmed();
-
-    std::string welcome_message() const;
+    [[nodiscard]] std::string welcome_message() const;
+    void display_debugging_info(FrameControl const &frame_control);
 };
 
 #endif //ENVIRONMENT_HH_
