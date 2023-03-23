@@ -7,13 +7,13 @@
 #include "env/protocol/protocol.hh"
 #include "scene/scene.hh"
 #include "common/iterativethread.hh"
-#include "application/framecontrol.hh"
+#include "application/timingdebug.hh"
 
 class Environment {
 public:
     explicit Environment(Options const& options);
 
-    void execute_single_step(FrameControl& frame_control);
+    void execute_single_step(TimingDebug& timing_debug);
     void reset();
 
     void show_error(std::exception const &e);
@@ -30,7 +30,7 @@ private:
     bool                           show_timining_info_;
 
     [[nodiscard]] std::string welcome_message() const;
-    void display_timing_info(FrameControl const &frame_control);
+    void display_timing_info(TimingDebug const &timing_debug);
 };
 
 #endif //ENVIRONMENT_HH_

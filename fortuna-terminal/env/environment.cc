@@ -17,22 +17,22 @@ Environment::Environment(Options const &options)
         protocol_.execute_inputs(welcome_message());
 }
 
-void Environment::execute_single_step(FrameControl& frame_control)
+void Environment::execute_single_step(TimingDebug& timing_debug)
 {
     scene_.text().update_blink();
 
-    frame_control.start_event(FrameControl::Event::ExecuteOutputs);
+    timing_debug.start_event(TimingDebug::Event::ExecuteOutputs);
     std::string data_to_send = protocol_.execute_outputs();
 
-    frame_control.start_event(FrameControl::Event::Communicate);
+    timing_debug.start_event(TimingDebug::Event::Communicate);
     std::string received_data = comm_->exchange(data_to_send);
 
-    frame_control.start_event(FrameControl::Event::ExecuteInputs);
+    timing_debug.start_event(TimingDebug::Event::ExecuteInputs);
     protocol_.execute_inputs(received_data);
 
-    frame_control.start_event(FrameControl::Event::DebuggingInfo);
+    timing_debug.start_event(TimingDebug::Event::DebuggingInfo);
     if (show_timining_info_)
-        display_timing_info(frame_control);
+        display_timing_info(timing_debug);
 }
 
 void Environment::show_error(std::exception const &e)
@@ -78,15 +78,15 @@ std::string Environment::welcome_message() const
     return ss.str();
 }
 
-void Environment::display_timing_info(FrameControl const &frame_control)
+void Environment::display_timing_info(TimingDebug const &timing_debug)
 {
-    std::map<FrameControl::Event, double> events = frame_control.last_events();
+    std::map<TimingDebug::Event, double> events = timing_debug.last_events();
     if (events.empty())
         return;
 
     const size_t x = scene_.text().columns() - 25;
 
-    auto print_event = [&](size_t y, std::string const& text, FrameControl::Event event) {
+    auto print_event = [&](size_t y, std::string const& text, TimingDebug::Event event) {
         char buf[64];
         snprintf(buf, sizeof buf, " %-16s%5.2fms ", text.c_str(), events.at(event));
         scene_.text().write_text(y, x, buf, {COLOR_ORANGE, true, true});
@@ -94,21 +94,21 @@ void Environment::display_timing_info(FrameControl const &frame_control)
     };
 
     size_t y = scene_.text().lines() - 12;
-    y = print_event(y, "ControlQueue", FrameControl::Event::ControlQueue);
-    y = print_event(y, "ExecuteOutputs", FrameControl::Event::ExecuteOutputs);
-    y = print_event(y, "Communicate", FrameControl::Event::Communicate);
-    y = print_event(y, "ExecuteInputs", FrameControl::Event::ExecuteInputs);
-    y = print_event(y, "DebuggingInfo", FrameControl::Event::DebuggingInfo);
-    y = print_event(y, "VSYNC", FrameControl::Event::VSYNC);
-    y = print_event(y, "UserEvents", FrameControl::Event::UserEvents);
-    y = print_event(y, "Draw", FrameControl::Event::Draw);
-    y = print_event(y, "Wait", FrameControl::Event::Wait);
-    y = print_event(y, "Interframe", FrameControl::Event::Interframe);
+    y = print_event(y, "ControlQueue", TimingDebug::Event::ControlQueue);
+    y = print_event(y, "ExecuteOutputs", TimingDebug::Event::ExecuteOutputs);
+    y = print_event(y, "Communicate", TimingDebug::Event::Communicate);
+    y = print_event(y, "ExecuteInputs", TimingDebug::Event::ExecuteInputs);
+    y = print_event(y, "DebuggingInfo", TimingDebug::Event::DebuggingInfo);
+    y = print_event(y, "VSYNC", TimingDebug::Event::VSYNC);
+    y = print_event(y, "UserEvents", TimingDebug::Event::UserEvents);
+    y = print_event(y, "Draw", TimingDebug::Event::Draw);
+    y = print_event(y, "Wait", TimingDebug::Event::Wait);
+    y = print_event(y, "Interframe", TimingDebug::Event::Interframe);
 
     scene_.text().write_text(
             scene_.text().lines() - 1,
             scene_.text().columns() - 10,
-            " FPS " + std::to_string(frame_control.avg_fps()) + "  ",
+            "  FPS " + std::to_string(timing_debug.avg_fps()) + "  ",
             {COLOR_ORANGE, true, true});
 
     if (comm_->is_overwhelmed()) {

@@ -28,11 +28,15 @@ Improvements:
       - [ ] Add TCP/IP address to description
 
 Refactor-4:
-  - [ ] Fixed 30 FPS
-  - [ ] Refactor frame control (separate debugging info and frame wait)
-  - [ ] Option for automatic or manual VSYNC?
-  - [ ] Reverse is slow
-  - [ ] https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
+  - [x] Fixed 30 FPS
+  - [x] Reverse is slow
+  - [x] Refactor frame control (separate debugging info and frame wait)
+  - [ ] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
+    - [ ] Pipes
+    - [ ] PTY
+    - [ ] UART
+    - [ ] I²C, SPI
+    - [ ] TCP/IP
 
 Alternative screens:
   - [ ] Terminal (shell)

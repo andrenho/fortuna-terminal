@@ -8,7 +8,8 @@
 
 Application::Application(int argc, char* argv[])
     : options_(argc, argv),
-      terminal_(options_.terminal_options)
+      terminal_(options_.terminal_options),
+      timing_debug_(options_.debug_time)
 {
     environments.emplace_back(options_);
     current_env_idx = 0;
@@ -34,24 +35,29 @@ retry:
 
 ExecutionStatus Application::execute_single_step()
 {
+    frame_start_ = Time::now();
+
     Environment& current_environment = environments.at(current_env_idx);
 
-    frame_control_.start_frame(FrameControl::Event::ControlQueue);
+    timing_debug_.start_event(TimingDebug::Event::ControlQueue);
     execute_control_queue();
 
     for (auto& environment: environments)
-        environment.execute_single_step(frame_control_);
+        environment.execute_single_step(timing_debug_);
 
-    frame_control_.start_event(FrameControl::Event::VSYNC);
+    timing_debug_.start_event(TimingDebug::Event::VSYNC);
     gpio_.vsync();
 
-    frame_control_.start_event(FrameControl::Event::UserEvents);
+    timing_debug_.start_event(TimingDebug::Event::UserEvents);
     ExecutionStatus execution_status = terminal_.process_user_events(current_environment.events_interface());
 
-    frame_control_.start_event(FrameControl::Event::Draw);
+    timing_debug_.start_event(TimingDebug::Event::Draw);
     terminal_.draw(current_environment.scene());
 
-    frame_control_.end_frame();
+    timing_debug_.start_event(TimingDebug::Event::Wait);
+    wait_until_end_of_frame();
+
+    timing_debug_.end_frame();
 
     return execution_status;
 }
@@ -116,5 +122,20 @@ void Application::execute_control_queue()
                 break;
         }
     }
+}
+
+void Application::wait_until_end_of_frame()
+{
+    Duration frame_time = std::chrono::microseconds(1000000 / FPS);
+
+    // since the sleep is not very precise, we sleep less than we need and let SDL's VSYNC take care of the rest
+    Duration idle_wait_time = frame_time - 8ms;
+
+    auto now = Time::now();
+    if (now < (frame_start_ + idle_wait_time))
+        std::this_thread::sleep_for(frame_start_ + idle_wait_time - now);
+
+    while (Time::now() < (frame_start_ + frame_time))
+        std::this_thread::yield();
 }
 

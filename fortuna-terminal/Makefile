@@ -29,7 +29,7 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/framecontrol.o application/gpio.o \
+		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
 		env/environment.o \
         env/comm/comm.o \
         env/comm/unbuffered/echo.o \

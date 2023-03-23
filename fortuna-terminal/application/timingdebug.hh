@@ -1,5 +1,5 @@
-#ifndef FRAMECONTROL_HH_
-#define FRAMECONTROL_HH_
+#ifndef TIMINGDEBUG_HH_
+#define TIMINGDEBUG_HH_
 
 #include <map>
 
@@ -7,16 +7,15 @@
 
 using namespace std::chrono_literals;
 
-class FrameControl {
+class TimingDebug {
 public:
     enum class Event {
         ControlQueue, ExecuteOutputs, Communicate, ExecuteInputs,
         DebuggingInfo, VSYNC, UserEvents, Draw, Wait, Interframe, N_EVENTS
     };
 
-    FrameControl();
+    explicit TimingDebug(bool debug_time);
 
-    void start_frame(Event event);
     void start_event(Event event);
     void end_frame();
 
@@ -24,7 +23,8 @@ public:
     [[nodiscard]] std::map<Event, double> last_events() const;
 
 private:
-    TimePoint frame_start_;
+    bool      debug_time_;
+
     size_t    frame_count_ = 0;
 
     TimePoint last_event_time_;
@@ -33,8 +33,6 @@ private:
     std::map<Event, Duration> last_events_ {};
 
     static constexpr int FRAMES_BETWEEN_DURATION_CALC = 30;
-
-    void wait_for_end_of_frame(int fps);
 };
 
-#endif //FRAMECONTROL_HH_
+#endif //TIMINGDEBUG_HH_
