@@ -88,7 +88,7 @@ void Environment::display_debugging_info(FrameControl const &frame_control)
     auto print_event = [&](size_t y, std::string const& text, FrameControl::Event event) {
         char buf[64];
         snprintf(buf, sizeof buf, "%-16s%5.2fms", text.c_str(), events.at(event));
-        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, true, true});
+        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, false, true});
         return y + 1;
     };
 

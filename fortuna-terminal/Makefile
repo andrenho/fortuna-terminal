@@ -72,7 +72,7 @@ ifeq ($(INCLUDE_UART_PTY),1)
 endif
 
 ifeq ($(INCLUDE_SPI_I2C),1)
-	OBJ := ${OBJ} application/gpio.o env/comm/halfduplex/spi.o env/comm/halfduplex/i2c.o
+	OBJ := ${OBJ} # application/gpio.o env/comm/halfduplex/spi.o env/comm/halfduplex/i2c.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_SPI -DCOMM_I2C -DGPIO
 	LDFLAGS := ${LDFLAGS} -lpigpio -lrt -pthread
 endif

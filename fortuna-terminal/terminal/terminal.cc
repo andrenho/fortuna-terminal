@@ -21,7 +21,7 @@ Terminal::Terminal(TerminalOptions terminal_options)
                                         win_w_, win_h_,
                                         SDL_WINDOW_OPENGL);
 
-    renderer_ = SDL::get().emplace_renderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer_ = SDL::get().emplace_renderer(window_, -1, SDL_RENDERER_ACCELERATED);
 
     print_renderer_info();
 
