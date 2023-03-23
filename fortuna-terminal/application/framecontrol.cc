@@ -1,6 +1,6 @@
 #include "framecontrol.hh"
 
-#define WAIT_VSYNC_MANUALLY 0
+#define WAIT_VSYNC_MANUALLY 1
 
 #if WAIT_VSYNC_MANUALLY
 #  include <thread>
@@ -25,10 +25,7 @@ void FrameControl::start_frame(Event event)
 void FrameControl::end_frame()
 {
 #if WAIT_VSYNC_MANUALLY
-    start_event(Event::Wait);
-    auto now = Time::now();
-    if (now < (frame_start_ + 16.6ms))
-        std::this_thread::sleep_for(frame_start_ + 16.6ms - now);
+    wait_for_end_of_frame(30);
 #endif
     if (frame_count_ % FRAMES_BETWEEN_DURATION_CALC == 0) {
         last_events_ = events_;
@@ -63,4 +60,22 @@ std::map<FrameControl::Event, double> FrameControl::last_events() const
     for (auto const& [ev, duration]: last_events_)
         r[ev] = ((double) std::chrono::duration_cast<std::chrono::microseconds>(duration).count() / 1000.0) / (double) FRAMES_BETWEEN_DURATION_CALC;
     return r;
+}
+
+void FrameControl::wait_for_end_of_frame(int fps)
+{
+    start_event(Event::Wait);
+
+    Duration frame_time = std::chrono::microseconds(1000000 / fps);
+
+    // since the sleep is not very precise, we sleep for less time than needed, and after that we busy wait
+    static constexpr Duration busy_wait_time = 5ms;
+    Duration idle_wait_time = frame_time - busy_wait_time;
+
+    auto now = Time::now();
+    if (now < (frame_start_ + idle_wait_time))
+        std::this_thread::sleep_for(frame_start_ + idle_wait_time - now);
+
+    while (Time::now() < (frame_start_ + frame_time))
+        std::this_thread::yield();
 }

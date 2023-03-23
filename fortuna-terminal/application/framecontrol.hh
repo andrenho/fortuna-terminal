@@ -33,6 +33,8 @@ private:
     std::map<Event, Duration> last_events_ {};
 
     static constexpr int FRAMES_BETWEEN_DURATION_CALC = 30;
+
+    void wait_for_end_of_frame(int fps);
 };
 
 #endif //FRAMECONTROL_HH_
