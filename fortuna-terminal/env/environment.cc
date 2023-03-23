@@ -11,7 +11,7 @@ Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
       protocol_(options.mode, scene_),
-      show_fps_counter_(options.terminal_options.show_fps_counter)
+      show_timining_info_(options.debug_time)
 {
     if (options.welcome_message)
         protocol_.execute_inputs(welcome_message());
@@ -31,7 +31,8 @@ void Environment::execute_single_step(FrameControl& frame_control)
     protocol_.execute_inputs(received_data);
 
     frame_control.start_event(FrameControl::Event::DebuggingInfo);
-    display_debugging_info(frame_control);
+    if (show_timining_info_)
+        display_timing_info(frame_control);
 }
 
 void Environment::show_error(std::exception const &e)
@@ -77,7 +78,7 @@ std::string Environment::welcome_message() const
     return ss.str();
 }
 
-void Environment::display_debugging_info(FrameControl const &frame_control)
+void Environment::display_timing_info(FrameControl const &frame_control)
 {
     std::map<FrameControl::Event, double> events = frame_control.last_events();
     if (events.empty())
@@ -104,13 +105,12 @@ void Environment::display_debugging_info(FrameControl const &frame_control)
     y = print_event(y, "Wait", FrameControl::Event::Wait);
     y = print_event(y, "Interframe", FrameControl::Event::Interframe);
 
-    if (show_fps_counter_) {
-        scene_.text().write_text(
-                scene_.text().lines() - 1,
-                scene_.text().columns() - 9,
-                " FPS " + std::to_string(frame_control.avg_fps()) + " ",
-                {COLOR_ORANGE, true, true});
-    }
+    scene_.text().write_text(
+            scene_.text().lines() - 1,
+            scene_.text().columns() - 9,
+            " FPS " + std::to_string(frame_control.avg_fps()) + " ",
+            {COLOR_ORANGE, true, true});
+
     if (comm_->is_overwhelmed()) {
         scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
     }

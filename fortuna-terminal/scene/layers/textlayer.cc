@@ -76,6 +76,6 @@ void TextLayer::write_text(size_t row, size_t column, std::string const &text, C
     for (uint8_t c: text) {
         if (column > columns_)
             return;
-        update_char(row, column++, {c, attrib});
+        matrix_[(row * columns_) + (column++)] = { c, attrib };
     }
 }

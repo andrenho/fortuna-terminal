@@ -28,6 +28,9 @@ Improvements:
       - [ ] Add TCP/IP address to description
 
 Refactor-4:
+  - [ ] Refactor frame control (separate debugging info and frame wait)
+  - [ ] Option for automatic or manual VSYNC?
+  - [ ] Reverse is slow
   - [ ] https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
 
 Alternative screens:

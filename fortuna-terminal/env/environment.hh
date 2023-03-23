@@ -27,10 +27,10 @@ private:
     CommUniquePtr                  comm_;
     Scene                          scene_;
     Protocol                       protocol_;
-    bool                           show_fps_counter_;
+    bool                           show_timining_info_;
 
     [[nodiscard]] std::string welcome_message() const;
-    void display_debugging_info(FrameControl const &frame_control);
+    void display_timing_info(FrameControl const &frame_control);
 };
 
 #endif //ENVIRONMENT_HH_
