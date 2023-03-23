@@ -1,6 +1,6 @@
 #include "framecontrol.hh"
 
-#define WAIT_VSYNC_MANUALLY 1
+#define WAIT_VSYNC_MANUALLY 0
 
 #if WAIT_VSYNC_MANUALLY
 #  include <thread>
@@ -28,7 +28,7 @@ void FrameControl::end_frame()
     start_event(Event::Wait);
     auto now = Time::now();
     if (now < (frame_start_ + 16.6ms))
-        std::this_thread::sleep_for(frame_start_ + 33.3ms - now);
+        std::this_thread::sleep_for(frame_start_ + 16.6ms - now);
 #endif
     if (frame_count_ % FRAMES_BETWEEN_DURATION_CALC == 0) {
         last_events_ = events_;
