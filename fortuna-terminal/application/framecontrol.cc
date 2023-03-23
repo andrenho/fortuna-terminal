@@ -68,9 +68,8 @@ void FrameControl::wait_for_end_of_frame(int fps)
 
     Duration frame_time = std::chrono::microseconds(1000000 / fps);
 
-    // since the sleep is not very precise, we sleep for less time than needed, and after that we busy wait
-    static constexpr Duration busy_wait_time = 5ms;
-    Duration idle_wait_time = frame_time - busy_wait_time;
+    // since the sleep is not very precise, we sleep less than we need and let SDL's VSYNC take care of the rest
+    Duration idle_wait_time = frame_time - 8ms;
 
     auto now = Time::now();
     if (now < (frame_start_ + idle_wait_time))

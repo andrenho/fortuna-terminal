@@ -54,15 +54,20 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
     Color fg = palette[chr.attrib.color];
     Color bg = palette[bg_color];
 
+    SDL_Rect r_orig = {(int) orig_x, (int) orig_y, TextChar_W, TextChar_H };
+    SDL_Rect r_dest = {(int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
+
     if (text.cursor().x == column && text.cursor().y == line && text.cursor().attrib.visible && text.cursor().blink_state) {
-        Color cg = palette[text.cursor().attrib.color];
-        SDL_SetRenderDrawColor(renderer_, cg.r, cg.g, cg.b, SDL_ALPHA_OPAQUE);
+        // character inverted due to cursor
+        Color ch_color = palette[text.cursor().attrib.color];
+        SDL_SetRenderDrawColor(renderer_, ch_color.r, ch_color.g, ch_color.b, SDL_ALPHA_OPAQUE);
         SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
         SDL_RenderFillRect(renderer_, &r);
 
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else if (chr.attrib.reverse) {
+        // reverse character
         SDL_SetRenderDrawColor(renderer_, fg.r, fg.g, fg.b, SDL_ALPHA_OPAQUE);
         SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
         SDL_RenderFillRect(renderer_, &r);
@@ -70,12 +75,10 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else {
+        // regular character
         SDL_SetTextureColorMod(font_.get(), fg.r, fg.g, fg.b);
     }
 
-    if (c != 0 && c != 32) {
-        SDL_Rect r1 = { (int) orig_x, (int) orig_y, TextChar_W, TextChar_H };
-        SDL_Rect r2 = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
-        SDL_RenderCopy(renderer_, font_.get(), &r1, &r2);
-    }
+    if (c != 0 && c != 32)
+        SDL_RenderCopy(renderer_, font_.get(), &r_orig, &r_dest);
 }

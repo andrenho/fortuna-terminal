@@ -28,6 +28,7 @@ Improvements:
       - [ ] Add TCP/IP address to description
 
 Refactor-4:
+  - [ ] Fixed 30 FPS
   - [ ] Refactor frame control (separate debugging info and frame wait)
   - [ ] Option for automatic or manual VSYNC?
   - [ ] Reverse is slow
