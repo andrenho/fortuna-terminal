@@ -1,11 +1,10 @@
 #include "comm.hh"
 
 #include "common/exceptions/fortunaexception.hh"
-#include "env/comm/unbuffered/echo.hh"
+#include "comm/unbuffered/echo.hh"
+#include "comm/buffered/pipes.hh"
 
 /*
-#include "env/comm/fullduplex/fd/tcpip.hh"
-#include "env/comm/fullduplex/fd/pipes.hh"
 #ifdef COMM_UART
 #  include "env/comm/fullduplex/fd/uart.hh"
 #endif
@@ -18,8 +17,6 @@
 #ifdef COMM_I2C
 #  include "env/comm/halfduplex/i2c.hh"
 #endif
-#include "env/comm/halfduplex/echoxchg.hh"
-#include "fullduplex/echo.hh"
  */
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
@@ -27,13 +24,13 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
     switch (options.comm_type) {
         case CommType::Echo:
             return std::make_unique<Echo>();
+        case CommType::Pipes:
+            return std::make_unique<Pipes>();
             /*
         case CommType::TcpIp:
             return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
         case CommType::EchoXchg:
             return std::make_unique<EchoXchg>();
-        case CommType::Pipes:
-            return std::make_unique<Pipes>(options.readbuf_sz);
         case CommType::Uart:
 #ifdef COMM_UART
             return std::make_unique<UART>(options.uart_options, options.readbuf_sz);

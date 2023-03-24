@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../comm.hh"
+#include "comm/comm.hh"
 #include "common/iterativethread.hh"
 
 class CommHalfDuplex : public CommunicationModule {

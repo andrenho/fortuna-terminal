@@ -13,7 +13,7 @@ public:
     virtual ~CommunicationModule() = default;
 
     // this request must return immediately
-    [[nodiscard]] virtual std::string exchange(std::string_view data_to_send) const = 0;
+    [[nodiscard]] virtual std::string exchange(std::string_view data_to_send) = 0;
 
     [[nodiscard]] virtual std::string description() const = 0;
 

@@ -3,7 +3,7 @@
 
 #include "application/options.hh"
 #include "common/syncqueue.hh"
-#include "env/comm/comm.hh"
+#include "comm/comm.hh"
 #include "env/protocol/protocol.hh"
 #include "scene/scene.hh"
 #include "common/iterativethread.hh"

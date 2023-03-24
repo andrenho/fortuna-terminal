@@ -1,7 +1,7 @@
 #ifndef COMM_FULLDUPLEX_HH_
 #define COMM_FULLDUPLEX_HH_
 
-#include "env/comm/comm.hh"
+#include "comm/comm.hh"
 #include "common/iterativethread.hh"
 
 #include <atomic>

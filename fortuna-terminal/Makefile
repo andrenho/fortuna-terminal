@@ -30,9 +30,10 @@ endif
 
 OBJ =   main.o \
 		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
+        comm/comm.o \
+        comm/buffered/commbuffered.o comm/buffered/pipes.o \
+        comm/unbuffered/echo.o \
 		env/environment.o \
-        env/comm/comm.o \
-        env/comm/unbuffered/echo.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
  		scene/scene.o scene/palette/palette.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
