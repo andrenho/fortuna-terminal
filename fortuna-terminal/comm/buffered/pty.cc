@@ -33,6 +33,7 @@ PTY::PTY(PTYOptions const& pty_options, size_t readbuf_sz)
     // make read non-blocking
     int flags = fcntl(fd_, F_GETFL);
     flags |= O_NONBLOCK;
+    flags |= FNDELAY;
     if (fcntl(fd_, F_SETFL, flags) == -1)
         throw LibcException("Could not update_char file descriptor as blocking.");
 }
