@@ -40,7 +40,7 @@ std::string CommBuffered::exchange(std::string_view data_to_send)
         if (errno == EAGAIN)
             r = 0;
         else
-            throw LibcException("read");
+            on_read_error();
     }
 
     rd.resize(r);
@@ -57,4 +57,9 @@ void CommBuffered::client_disconnected()
 {
     fd_ = INVALID_FILE;
     write_fd_ = {};
+}
+
+void CommBuffered::on_read_error()
+{
+    throw LibcException("read");
 }

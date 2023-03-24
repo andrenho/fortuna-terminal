@@ -11,6 +11,7 @@ public:
     [[nodiscard]] std::string description() const override;
 
 protected:
+    void on_read_error() override;
     void client_disconnected() override;
 
 private:

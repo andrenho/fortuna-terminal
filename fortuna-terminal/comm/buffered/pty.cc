@@ -47,3 +47,8 @@ void PTY::client_disconnected()
 {
     exit(0);
 }
+
+void PTY::on_read_error()
+{
+    exit(0);
+}
