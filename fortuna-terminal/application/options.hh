@@ -27,8 +27,8 @@ struct PTYOptions {
 };
 
 struct SPIOptions {
-    size_t   speed = 1000000;
-    Duration delay;
+    size_t   speed = 500000;
+    Duration delay = 0ms;
 };
 
 struct I2COptions {

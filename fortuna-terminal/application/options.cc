@@ -166,8 +166,8 @@ Options::Options(int argc, char* argv[])
 #endif
 #ifdef COMM_SPI
     printf("Options valid for `spi`:\n");
-    printf("    -s, --spi-speed                 SPI speed in hz (default: 1000000)\n");
-    printf("    -D, --delay                     Delay between bytes, in microseconds (default: 10)");
+    printf("    -s, --spi-speed                 SPI speed in hz (default: 500000)\n");
+    printf("    -D, --delay                     Delay between bytes, in microseconds (default: 0)");
 #endif
 #ifdef COMM_SPI
     printf("Options valid for `i2c`:\n");
