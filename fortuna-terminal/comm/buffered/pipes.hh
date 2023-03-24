@@ -5,7 +5,7 @@
 
 class Pipes : public CommBuffered {
 public:
-    Pipes();
+    Pipes(size_t readbuf_sz);
 
     [[nodiscard]] std::string description() const override { return "Pipes (stdin/stdout)"; }
 };

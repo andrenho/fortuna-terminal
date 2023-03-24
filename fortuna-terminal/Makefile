@@ -68,7 +68,7 @@ ifeq ($(RASPBERRY),1)
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ := ${OBJ} # env/comm/fullduplex/fd/pty.o env/comm/fullduplex/fd/uart.o
+	OBJ := ${OBJ} comm/buffered/pty.o # env/comm/fullduplex/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 

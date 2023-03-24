@@ -25,7 +25,7 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
         case CommType::Echo:
             return std::make_unique<Echo>();
         case CommType::Pipes:
-            return std::make_unique<Pipes>();
+            return std::make_unique<Pipes>(options.readbuf_sz);
             /*
         case CommType::TcpIp:
             return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
@@ -37,12 +37,14 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
 #else
             throw FortunaException("Communication mode not supported on Windows");
 #endif
+             */
         case CommType::PTY:
 #ifdef COMM_PTY
             return std::make_unique<PTY>(options.pty_options, options.readbuf_sz);
 #else
             throw FortunaException("Communication mode not supported on Windows");
 #endif
+            /*
         case CommType::SPI:
 #ifdef COMM_SPI
             return std::make_unique<SPI>(options.spi_options);

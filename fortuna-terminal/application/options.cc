@@ -18,6 +18,7 @@ Options::Options(int argc, char* argv[])
                 { "debug-comm",         no_argument,       nullptr, 'd' },
                 { "debug-time",         no_argument,       nullptr, 't' },
                 { "welcome",            no_argument,       nullptr, 'W' },
+                { "readbuf-sz",         required_argument, nullptr, 'b' },
                 // serial
                 { "serial-port",        required_argument, nullptr, 'P' },
                 { "baud",               required_argument, nullptr, 'B' },
@@ -91,6 +92,12 @@ Options::Options(int argc, char* argv[])
 
             case 'g':
                 mode = Mode::Graphics;
+                break;
+
+            case 'b':
+                readbuf_sz = strtol(optarg, nullptr, 10);
+                if (errno == ERANGE || errno == EINVAL)
+                    throw LibcException("Invalid baud value");
                 break;
 
             case 'B':

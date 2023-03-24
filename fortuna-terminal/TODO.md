@@ -32,7 +32,7 @@ Refactor-4:
   - [x] Reverse is slow
   - [x] Refactor frame control (separate debugging info and frame wait)
   - [ ] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
-    - [ ] Pipes
+    - [x] Pipes
     - [ ] PTY
     - [ ] UART
     - [ ] I²C, SPI

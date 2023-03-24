@@ -9,7 +9,7 @@
 
 class CommBuffered : public CommunicationModule {
 public:
-    CommBuffered();
+    CommBuffered(size_t readbuf_sz);
 
     [[nodiscard]] std::string exchange(std::string_view data_to_send) override;
 
@@ -22,6 +22,7 @@ private:
     SyncQueueByte   output_queue_ {};
 
     static constexpr int INVALID_FILE = -1;
+    size_t readbuf_sz_;
 };
 
 #endif //COMMBUFFERED_HH_

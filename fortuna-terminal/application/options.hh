@@ -44,6 +44,7 @@ public:
     bool            debug_time = false;
     Mode            mode = Mode::Text;
     bool            welcome_message = true;
+    size_t          readbuf_sz = 2048;
 
     TerminalOptions terminal_options {};
     UartOptions     uart_options {};
