@@ -34,7 +34,7 @@ Refactor-4:
   - [ ] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
     - [x] Pipes
     - [x] PTY
-    - [ ] UART
+    - [x] UART
     - [ ] I²C, SPI
     - [ ] TCP/IP
 
