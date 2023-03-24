@@ -44,8 +44,6 @@ ExecutionStatus Application::execute_single_step()
 
     for (auto& environment: environments)
         environment.execute_single_step(timing_debug_);
-    for (auto& environment: environments)
-        environment.notify_comm();
 
     timing_debug_.start_event(TimingDebug::Event::VSYNC);
     gpio_.vsync();
