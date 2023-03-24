@@ -12,6 +12,8 @@
 #  include <netdb.h>
 #  include <unistd.h>
 #  include <ifaddrs.h>
+#  include <net/if.h>
+#  include <arpa/inet.h>
 #  define INVALID_SOCKET -1
 #endif
 
@@ -138,8 +140,9 @@ std::string TCPIP::find_listen_ipv4_addr()
                 if (strncmp(ipstr, "10.", 3) == 0 ||
                     strncmp(ipstr, "192.168.", 8) == 0 ||
                     strncmp(ipstr, "172.", 4) == 0) {
-                    printf("ocal network address: %s\n", ipstr);
-                break;
+                    address = ipstr;
+                    break;
+                }
             }
         }
     }

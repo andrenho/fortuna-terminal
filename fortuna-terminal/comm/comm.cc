@@ -6,16 +6,16 @@
 #include "comm/fd/tcpip.hh"
 
 #ifdef COMM_UART
-#  include "comm/buffered/uart.hh"
+#  include "comm/fd/uart.hh"
 #endif
 #ifdef COMM_PTY
-#  include "comm/buffered/pty.hh"
+#  include "comm/fd/pty.hh"
 #endif
 #ifdef COMM_SPI
-#  include "comm/unbuffered/spi.hh"
+#  include "comm/custom/spi.hh"
 #endif
 #ifdef COMM_I2C
-#  include "comm/unbuffered/i2c.hh"
+#  include "comm/custom/i2c.hh"
 #endif
 
 std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
