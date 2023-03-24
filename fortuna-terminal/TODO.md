@@ -31,12 +31,12 @@ Refactor-4:
   - [x] Fixed 30 FPS
   - [x] Reverse is slow
   - [x] Refactor frame control (separate debugging info and frame wait)
-  - [ ] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
+  - [x] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
     - [x] Pipes
     - [x] PTY
     - [x] UART
-    - [ ] I²C, SPI
-    - [ ] TCP/IP
+    - [x] I²C, SPI
+    - [x] TCP/IP
 
 Alternative screens:
   - [ ] Terminal (shell)
