@@ -7,8 +7,7 @@ using namespace std::string_literals;
 
 void Events::event_text_input(std::string const &text)
 {
-    std::vector<uint8_t> v(text.begin(), text.end());
-    output_queue_.push_all(v);
+    output_queue_ << text;
 }
 
 void Events::event_key(uint8_t key, bool is_down, KeyMod mod)
@@ -16,7 +15,7 @@ void Events::event_key(uint8_t key, bool is_down, KeyMod mod)
     if (is_down) {
         if (mod.control) {
             if (key >= 'a' && key <= 'z')
-                output_queue_.push(key - 96);
+                output_queue_ << (char) (key - 96);
         }
     }
 }
@@ -26,27 +25,25 @@ void Events::event_key(SpecialKey key, bool is_down, KeyMod mod)
     if (is_down) {
         auto ostr = translate_special_key(key, mod);
         if (ostr.has_value()) {
-            std::vector<uint8_t> v(ostr.value().begin(), ostr.value().end());
-            output_queue_.push_all(v);
+            output_queue_ << *ostr;
         }
     }
 }
 
 void Events::event_mouse_button(int button, int x, int y, bool is_down)
 {
-    std::string s = "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) +
+    output_queue_ << "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) +
                     ";" + (is_down ? "B" : "R");
-    output_queue_.push_all(s);
 }
 
 void Events::event_mouse_move(int button, int x, int y)
 {
-    output_queue_.push_all("\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) + "M");
+    output_queue_ << "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) + "M";
 }
 
 void Events::event_joystick(size_t joystick_number, size_t button, bool is_down)
 {
-    output_queue_.push_all("\e#"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' ));
+    output_queue_ << "\e#"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' );
 }
 
 void Events::event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value)
@@ -63,13 +60,13 @@ void Events::event_joystick_directional(size_t joystick_number, int8_t axis, int
     }
 
     if (state.up != new_state.up)
-        output_queue_.push_all("\e#"s + std::to_string(joystick_number) + ";18" + (new_state.up ? 'J' : 'K'));
+        output_queue_ << "e#"s + std::to_string(joystick_number) + ";18" + (new_state.up ? 'J' : 'K');
     if (state.down != new_state.down)
-        output_queue_.push_all("\e#"s + std::to_string(joystick_number) + ";19" + (new_state.down ? 'J' : 'K'));
+        output_queue_ << "\e#"s + std::to_string(joystick_number) + ";19" + (new_state.down ? 'J' : 'K');
     if (state.left != new_state.left)
-        output_queue_.push_all("\e#"s + std::to_string(joystick_number) + ";16" + (new_state.left ? 'J' : 'K'));
+        output_queue_ << "\e#"s + std::to_string(joystick_number) + ";16" + (new_state.left ? 'J' : 'K');
     if (state.right != new_state.right)
-        output_queue_.push_all("\e#"s + std::to_string(joystick_number) + ";17" + (new_state.right ? 'J' : 'K'));
+        output_queue_ << "\e#"s + std::to_string(joystick_number) + ";17" + (new_state.right ? 'J' : 'K');
 
     joy_state_[joystick_number] = new_state;
 }
@@ -112,4 +109,11 @@ std::optional<std::string> Events::translate_special_key(SpecialKey special_key,
             break;
     }
     return {};
+}
+
+std::string Events::get_lastest_events()
+{
+    std::string events = output_queue_.str();
+    output_queue_.str("");
+    return events;
 }

@@ -27,6 +27,17 @@ Improvements:
   - [ ] Fix TCP/IP
       - [ ] Add TCP/IP address to description
 
+Refactor-4:
+  - [x] Fixed 30 FPS
+  - [x] Reverse is slow
+  - [x] Refactor frame control (separate debugging info and frame wait)
+  - [x] Rewrite comms: https://www.linuxtoday.com/blog/blocking-and-non-blocking-i-0/
+    - [x] Pipes
+    - [x] PTY
+    - [x] UART
+    - [x] I²C, SPI
+    - [x] TCP/IP
+
 Alternative screens:
   - [ ] Terminal (shell)
   - [ ] Additional info

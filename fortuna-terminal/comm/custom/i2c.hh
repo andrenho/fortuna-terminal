@@ -1,19 +1,18 @@
 #ifndef I2C_HH_
 #define I2C_HH_
 
-#include "comm_halfduplex.hh"
-#include "../../../application/options.hh"
+#include "application/options.hh"
+#include "../comm.hh"
 
-#define I2C_BUS 1
-
-class I2C : public CommHalfDuplex {
+class I2C : public CommunicationModule {
 public:
     explicit I2C(I2COptions i2c_options);
     ~I2C() override;
 
-    std::vector<uint8_t> exchange(std::vector<uint8_t> const &data) override;
-
     [[nodiscard]] std::string description() const override;
+
+protected:
+    std::string exchange(std::string_view data_to_send) override;
 
 private:
     int handle_;

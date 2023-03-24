@@ -10,7 +10,7 @@ volatile uint8_t data = 0;
 
 int main(void)
 {
-    c_init(C_UART);
+    c_init(C_I2C);
     sei();
 
     c_print_P(PSTR("Welcome to Fortuna Terminal test device!\e[0m\n\r\n\r"));

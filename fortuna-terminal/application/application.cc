@@ -2,26 +2,19 @@
 
 #include <cstdio>
 #include <optional>
+#include <sstream>
 
 #include "control.hh"
-#include "welcome.hh"
 
 Application::Application(int argc, char* argv[])
     : options_(argc, argv),
-      terminal_(options_.terminal_options)
+      terminal_(options_.terminal_options),
+      timing_debug_(options_.debug_time)
 {
     environments.emplace_back(options_);
     current_env_idx = 0;
 
-    for (auto& environment: environments)
-        environment.run_threads(options_.debug_comm);
-
     control_queue.emplace(ControlCommand::SetMode, options_.mode);
-
-    if (options_.welcome_message) {
-        auto& env = environments.at(current_env_idx);
-        welcome_message(env.input_queue(), env.communication_module_description());
-    }
 
     gpio_.reset();  // restart computer
 }
@@ -38,28 +31,33 @@ retry:
         if (on_error(exception) == ExecutionStatus::Continue)
             goto retry;
     }
-
-    for (auto& environment: environments)
-        environment.finalize_threads();
 }
 
 ExecutionStatus Application::execute_single_step()
 {
-    frame_control_.start_frame();
+    frame_start_ = Time::now();
 
-    Environment& currrent_environment = environments.at(current_env_idx);
+    Environment& current_environment = environments.at(current_env_idx);
 
+    timing_debug_.start_event(TimingDebug::Event::ControlQueue);
     execute_control_queue();
 
     for (auto& environment: environments)
-        environment.execute_single_step(frame_control_.avg_fps());
+        environment.execute_single_step(timing_debug_);
 
+    timing_debug_.start_event(TimingDebug::Event::VSYNC);
     gpio_.vsync();
 
-    ExecutionStatus execution_status = terminal_.process_user_events(currrent_environment.events_interface());
-    terminal_.draw(currrent_environment.scene());
+    timing_debug_.start_event(TimingDebug::Event::UserEvents);
+    ExecutionStatus execution_status = terminal_.process_user_events(current_environment.events_interface());
 
-    frame_control_.end_frame();
+    timing_debug_.start_event(TimingDebug::Event::Draw);
+    terminal_.draw(current_environment.scene());
+
+    timing_debug_.start_event(TimingDebug::Event::Wait);
+    wait_until_end_of_frame();
+
+    timing_debug_.end_frame();
 
     return execution_status;
 }
@@ -124,5 +122,20 @@ void Application::execute_control_queue()
                 break;
         }
     }
+}
+
+void Application::wait_until_end_of_frame()
+{
+    Duration frame_time = std::chrono::microseconds(1000000 / FPS);
+
+    // since the sleep is not very precise, we sleep less than we need and let SDL's VSYNC take care of the rest
+    Duration idle_wait_time = frame_time - 8ms;
+
+    auto now = Time::now();
+    if (now < (frame_start_ + idle_wait_time))
+        std::this_thread::sleep_for(frame_start_ + idle_wait_time - now);
+
+    while (Time::now() < (frame_start_ + frame_time))
+        std::this_thread::yield();
 }
 

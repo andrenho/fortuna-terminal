@@ -9,7 +9,6 @@ enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXc
 
 struct TerminalOptions {
     bool window_mode = false;
-    bool show_fps_counter = false;
 };
 
 struct UartOptions {
@@ -28,8 +27,8 @@ struct PTYOptions {
 };
 
 struct SPIOptions {
-    size_t   speed = 1000000;
-    Duration delay;
+    size_t   speed = 500000;
+    Duration delay = 0ms;
 };
 
 struct I2COptions {
@@ -42,10 +41,10 @@ public:
 
     CommType        comm_type   = CommType::NotChosen;
     bool            debug_comm = false;
+    bool            debug_time = false;
     Mode            mode = Mode::Text;
     bool            welcome_message = true;
-    size_t          readbuf_sz = 16;
-    size_t          inputqueue_sz = 8192;
+    size_t          readbuf_sz = 2048;
 
     TerminalOptions terminal_options {};
     UartOptions     uart_options {};

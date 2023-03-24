@@ -24,6 +24,7 @@ public:
 
     void     reset_ansi_protocol();
 
+
 private:
     Scene& scene_;
     Mode current_mode_;
@@ -31,12 +32,13 @@ private:
     Cache cache_ {};
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
 
-    void              resize_text_terminal(Mode mode);
+    void                resize_text_terminal(Mode mode);
 
-    static Cache        initialize_cache(size_t w, size_t h);
     static Char::Attrib translate_attrib(TMTATTRS tmtattrs);
     static void         tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
     static bool         tmtchar_not_equals(TMTCHAR const &c1, TMTCHAR const &c2);
+
+    void     initialize_cache();
 };
 
 #endif //ANSI_HH_

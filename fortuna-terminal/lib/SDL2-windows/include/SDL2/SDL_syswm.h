@@ -22,7 +22,7 @@
 /**
  *  \file SDL_syswm.h
  *
- *  Include file for SDL custom system window_ manager hooks.
+ *  Include file for SDL unbuffered system window_ manager hooks.
  */
 
 #ifndef SDL_syswm_h_
@@ -152,7 +152,7 @@ typedef enum
 } SDL_SYSWM_TYPE;
 
 /**
- *  The custom event structure.
+ *  The unbuffered event structure.
  */
 struct SDL_SysWMmsg
 {
@@ -218,7 +218,7 @@ struct SDL_SysWMmsg
 };
 
 /**
- *  The custom window_ manager information structure.
+ *  The unbuffered window_ manager information structure.
  *
  *  When this structure is returned, it holds information about which
  *  low level system it is using, and will be one of SDL_SYSWM_TYPE.

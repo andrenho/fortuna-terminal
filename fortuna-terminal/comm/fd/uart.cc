@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <termios.h>
 #include <unistd.h>
+#include <string>
 
 #include "common/exceptions/libcexception.hh"
 #include "application/options.hh"
@@ -16,7 +17,7 @@
 using namespace std::string_literals;
 
 UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
-    : FDComm(readbuf_sz), uart_options_(uart_options)
+        : CommFileDescriptor(readbuf_sz), uart_options_(uart_options)
 {
     fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ < 0)
@@ -58,6 +59,10 @@ UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
     opt.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     opt.c_oflag &= ~OPOST;
 
+    // make read non-blocking
+    opt.c_cc[VTIME] = 0;
+    opt.c_cc[VMIN] = 0;
+
     if (tcsetattr(fd_, TCSANOW, &opt) != 0)
         throw LibcException("Error setting serial attributes");
 }
@@ -65,5 +70,5 @@ UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
 std::string UART::description() const
 {
     return "UART (port: "s + uart_options_.port + ", baud: " + std::to_string(uart_options_.baud) +
-        ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
+           ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
 }

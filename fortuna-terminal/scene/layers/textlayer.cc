@@ -8,14 +8,14 @@ TextLayer::TextLayer(Mode mode)
     set_mode(mode);
 }
 
-Char const &TextLayer::get_char(size_t line, size_t column) const
+Char const &TextLayer::get_char(size_t row, size_t column) const
 {
-    return matrix_[line * columns_ + column];
+    return matrix_[row * columns_ + column];
 }
 
-void TextLayer::update_char(size_t line, size_t column, Char c)
+void TextLayer::update_char(size_t row, size_t column, Char c)
 {
-    matrix_[line * columns_ + column] = c;
+    matrix_[row * columns_ + column] = c;
     reset_blink();
 }
 
@@ -66,10 +66,6 @@ void TextLayer::set_mode(Mode mode)
     }
 
     matrix_ = std::make_unique<Char[]>(columns_ * lines_);
-
-    for (size_t i = 0; i < (columns_ * lines_); ++i)
-        matrix_[i] = { ' ', { COLOR_WHITE, false, true, } };
-    // matrix_[i] = { (uint8_t) i, { (uint8_t) (i % 15),  i % 20 == 0 } };
 }
 
 void TextLayer::write_text(size_t row, size_t column, std::string const &text, Char::Attrib const& attrib)
@@ -80,6 +76,6 @@ void TextLayer::write_text(size_t row, size_t column, std::string const &text, C
     for (uint8_t c: text) {
         if (column > columns_)
             return;
-        update_char(row, column++, {c, attrib});
+        matrix_[(row * columns_) + (column++)] = { c, attrib };
     }
 }

@@ -29,14 +29,18 @@ void TextPainter::draw(Scene const& scene) const
     if (!text.enabled)
         return;
 
-    for (size_t y = 0; y < text.lines(); ++y)
-        for (size_t x = 0; x < text.columns(); ++x)
-            draw_cell(text, y, x, scene.palette, scene.bg_color);
+    for (size_t y = 0; y < text.lines(); ++y) {
+        for (size_t x = 0; x < text.columns(); ++x) {
+            Char const& chr = text.get_char(y, x);
+            if (chr.attrib.reverse)
+                draw_cell(text, y, x, Char { BLOCK_CHAR, { chr.attrib.color, false, true } }, scene.palette, 0);
+            draw_cell(text, y, x, chr, scene.palette, scene.bg_color);
+        }
+    }
 }
 
-void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Palette const palette, uint8_t bg_color) const
+void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, Char const& chr, Palette const palette, uint8_t bg_color) const
 {
-    Char chr = text.get_char(line, column);
     uint8_t c = chr.c;
 
     if (c == ' ' && !(text.cursor().x == column && text.cursor().y == line) && !chr.attrib.reverse)
@@ -54,28 +58,27 @@ void TextPainter::draw_cell(TextLayer const &text, size_t line, size_t column, P
     Color fg = palette[chr.attrib.color];
     Color bg = palette[bg_color];
 
+    SDL_Rect r_orig = {(int) orig_x, (int) orig_y, TextChar_W, TextChar_H };
+    SDL_Rect r_dest = {(int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
+
     if (text.cursor().x == column && text.cursor().y == line && text.cursor().attrib.visible && text.cursor().blink_state) {
-        Color cg = palette[text.cursor().attrib.color];
-        SDL_SetRenderDrawColor(renderer_, cg.r, cg.g, cg.b, SDL_ALPHA_OPAQUE);
+        // character inverted due to cursor
+        Color ch_color = palette[text.cursor().attrib.color];
+        SDL_SetRenderDrawColor(renderer_, ch_color.r, ch_color.g, ch_color.b, SDL_ALPHA_OPAQUE);
         SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
         SDL_RenderFillRect(renderer_, &r);
 
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else if (chr.attrib.reverse) {
-        SDL_SetRenderDrawColor(renderer_, fg.r, fg.g, fg.b, SDL_ALPHA_OPAQUE);
-        SDL_Rect r = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
-        SDL_RenderFillRect(renderer_, &r);
-
+        // reversed character
         SDL_SetTextureColorMod(font_.get(), bg.r, bg.g, bg.b);
 
     } else {
+        // regular character
         SDL_SetTextureColorMod(font_.get(), fg.r, fg.g, fg.b);
     }
 
-    if (c != 0 && c != 32) {
-        SDL_Rect r1 = { (int) orig_x, (int) orig_y, TextChar_W, TextChar_H };
-        SDL_Rect r2 = { (int) dest_x, (int) dest_y, TextChar_W, TextChar_H };
-        SDL_RenderCopy(renderer_, font_.get(), &r1, &r2);
-    }
+    if (c != 0 && c != 32)
+        SDL_RenderCopy(renderer_, font_.get(), &r_orig, &r_dest);
 }

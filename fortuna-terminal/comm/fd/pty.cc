@@ -12,7 +12,7 @@
 #include "scene/layers/textlayer.hh"
 
 PTY::PTY(PTYOptions const& pty_options, size_t readbuf_sz)
-    : FDComm(readbuf_sz), shell_(pty_options.shell)
+    : CommFileDescriptor(readbuf_sz), shell_(pty_options.shell)
 {
     struct winsize winp = { (short unsigned int) TextLayer::Lines_80Columns, (short unsigned int) TextLayer::Columns_80Columns, 0 , 0 };
 
@@ -29,29 +29,26 @@ PTY::PTY(PTYOptions const& pty_options, size_t readbuf_sz)
     }
 
     name_ = name;
-    printf("Initializing terminal %s.\n", name);
 
-    // make read blocking
+    // make read non-blocking
     int flags = fcntl(fd_, F_GETFL);
-    flags &= ~O_NONBLOCK;
+    flags |= O_NONBLOCK;
+    flags |= FNDELAY;
     if (fcntl(fd_, F_SETFL, flags) == -1)
         throw LibcException("Could not update_char file descriptor as blocking.");
-}
-
-void PTY::client_disconnected()
-{
-    FDComm::client_disconnected();
-    exit(EXIT_SUCCESS);
-}
-
-void PTY::write(std::vector<uint8_t> const &data)
-{
-    int n = ::write(fd_, data.data(), data.size());
-    if (n <= 0)
-        client_disconnected();
 }
 
 std::string PTY::description() const
 {
     return "PTY (shell: " + shell_ + ", name: " + name_ + ")";
+}
+
+void PTY::client_disconnected()
+{
+    exit(0);
+}
+
+void PTY::on_read_error()
+{
+    exit(0);
 }

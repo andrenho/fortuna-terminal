@@ -29,13 +29,11 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/framecontrol.o \
-		application/gpio.o application/welcome.o \
+		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
+        comm/comm.o \
+        comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip.o \
+        comm/custom/echo.o \
 		env/environment.o \
-        env/comm/comm.o \
-        env/comm/fullduplex/comm_fullduplex.o env/comm/fullduplex/echo.o \
-        env/comm/fullduplex/fd/fdcomm.o env/comm/fullduplex/fd/pipes.o env/comm/fullduplex/fd/tcpip.o \
-        env/comm/halfduplex/comm_halfduplex.o env/comm/halfduplex/echoxchg.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
  		scene/scene.o scene/palette/palette.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
@@ -70,12 +68,12 @@ ifeq ($(RASPBERRY),1)
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ := ${OBJ} env/comm/fullduplex/fd/pty.o env/comm/fullduplex/fd/uart.o
+	OBJ := ${OBJ} comm/fd/pty.o comm/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 
 ifeq ($(INCLUDE_SPI_I2C),1)
-	OBJ := ${OBJ} application/gpio.o env/comm/halfduplex/spi.o env/comm/halfduplex/i2c.o
+	OBJ := ${OBJ} application/gpio.o comm/custom/i2c.o comm/custom/spi.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_SPI -DCOMM_I2C -DGPIO
 	LDFLAGS := ${LDFLAGS} -lpigpio -lrt -pthread
 endif
@@ -91,7 +89,7 @@ else ifeq ($(PROF),1)
 	CPPFLAGS := ${CPPFLAGS} -pg -O1 -ggdb -UGPIO
 	LDFLAGS := ${LDFLAGS} -pg -O1 -ggdb
 else
-	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb
+	CPPFLAGS := ${CPPFLAGS} -O0 -ggdb -D_GLIBCXX_DEBUG
 endif
 
 #

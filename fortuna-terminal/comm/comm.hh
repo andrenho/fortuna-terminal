@@ -2,6 +2,7 @@
 #define COMM_HH_
 
 #include <memory>
+#include <vector>
 
 #include "application/options.hh"
 #include "common/syncqueue.hh"
@@ -11,17 +12,18 @@ class CommunicationModule : NonCopyable {
 public:
     virtual ~CommunicationModule() = default;
 
-    virtual void                   execute_threads(SyncQueueByte* input_queue_, SyncQueueByte* output_queue_, bool debug_comm) = 0;
-    virtual void                   notify_threads() {}
-    virtual void                   finalize_threads() = 0;
+    // this request must return immediately
+    [[nodiscard]] virtual std::string exchange(std::string_view data_to_send) = 0;
+
+    [[nodiscard]] virtual std::string description() const = 0;
+    [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
+    virtual void notify() {}
 
     static std::unique_ptr<CommunicationModule> create(Options const& options);
 
-    [[nodiscard]] virtual std::string description() const = 0;
-
-    [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
-
 protected:
+    CommunicationModule() = default;
+
     void debug_byte(uint8_t byte, bool is_input);
 
 private:

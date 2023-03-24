@@ -40,16 +40,16 @@ static constexpr const wchar_t acs_charset[] = {
 
 ANSI::ANSI(Mode initial_mode, Scene &scene)
     : scene_(scene),
-      current_mode_(initial_mode),
-      cache_(initialize_cache(TextLayer::Columns_80Columns, std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns))),
-        vt_(decltype(vt_)(
-                tmt_open(
-                        initial_mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
-                        initial_mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
-                        ANSI::tmt_callback, this, acs_charset),
-                [](TMT* vt) { tmt_close(vt); }
-        ))
+      current_mode_(initial_mode)
 {
+    initialize_cache();
+    vt_ = decltype(vt_)(
+            tmt_open(
+                    initial_mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
+                    initial_mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
+                    ANSI::tmt_callback, this, acs_charset),
+            [](TMT* vt) { tmt_close(vt); }
+    );
     if (!vt_)
         throw FortunaException("Could not allocate terminal");
 }
@@ -75,13 +75,6 @@ void ANSI::resize_text_terminal(Mode mode)
     tmt_resize(vt_.get(),
                mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
                mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns);
-}
-
-ANSI::Cache ANSI::initialize_cache(size_t w, size_t h)
-{
-    Cache k(w * h);
-    std::fill(k.begin(), k.end(), TMTCHAR { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } });
-    return k;
 }
 
 void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, [[maybe_unused]] void const *a, void *p)
@@ -191,3 +184,8 @@ bool ANSI::tmtchar_not_equals(TMTCHAR const& c1, TMTCHAR const& c2)
         c1.a.bg != c2.a.bg;
 }
 
+void ANSI::initialize_cache()
+{
+    cache_ = Cache(TextLayer::Columns_80Columns * std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns),
+                   { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } });
+}
