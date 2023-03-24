@@ -59,6 +59,10 @@ UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
     opt.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     opt.c_oflag &= ~OPOST;
 
+    // make read non-blocking
+    opt.c_cc[VTIME] = 0;
+    opt.c_cc[VMIN] = 0;
+
     if (tcsetattr(fd_, TCSANOW, &opt) != 0)
         throw LibcException("Error setting serial attributes");
 }
