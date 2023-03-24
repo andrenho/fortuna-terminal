@@ -29,13 +29,6 @@ PTY::PTY(PTYOptions const& pty_options, size_t readbuf_sz)
     }
 
     name_ = name;
-    printf("Initializing terminal %s.\n", name);
-
-    // make read blocking
-    int flags = fcntl(fd_, F_GETFL);
-    flags &= ~O_NONBLOCK;
-    if (fcntl(fd_, F_SETFL, flags) == -1)
-        throw LibcException("Could not update_char file descriptor as blocking.");
 }
 
 std::string PTY::description() const
