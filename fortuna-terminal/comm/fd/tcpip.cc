@@ -6,14 +6,15 @@
 #  include <winsock2.h>
 #  include <wspiapi.h>
 #else
+#  include <arpa/inet.h>
+#  include <ifaddrs.h>
+#  include <fcntl.h>
+#  include <net/if.h>
+#  include <netdb.h>
 #  include <sys/socket.h>
 #  include <sys/types.h>
 #  include <sys/socket.h>
-#  include <netdb.h>
 #  include <unistd.h>
-#  include <ifaddrs.h>
-#  include <net/if.h>
-#  include <arpa/inet.h>
 #  define INVALID_SOCKET -1
 #endif
 
@@ -82,7 +83,7 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
     ioctlsocket(sock_fd, FIONBIO, &mode);
 #else
     int flags = fcntl(sock_fd, F_GETFL, 0);
-    fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+    fcntl(sock_fd, F_SETFL, flags | O_NONBLOCK);
 #endif
 }
 
@@ -96,7 +97,7 @@ std::string TCPIP::read()
 #ifdef _WIN32
             if (WSAGetLastError() == WSAEWOULDBLOCK) {
 #else
-            if (errno == EAGAIN  || errno == EWOULDBLOCK) {
+            if (errno == EAGAIN) {
 #endif
                 return {};
             }
@@ -115,7 +116,7 @@ std::string TCPIP::read()
 #ifdef _WIN32
             if (WSAGetLastError() == WSAEWOULDBLOCK) {
 #else
-            if (errno == EAGAIN  || errno == EWOULDBLOCK) {
+            if (errno == EAGAIN) {
 #endif
                 r = 0;
             } else {

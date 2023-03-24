@@ -15,7 +15,7 @@ Application::Application(int argc, char* argv[])
     current_env_idx = 0;
 
 #ifdef COMM_PTY
-    environments.emplace_back(options_, CommType::PTY, Mode::Text);
+    // environments.emplace_back(options_, CommType::PTY, Mode::Text);
 #endif
 
     control_queue.emplace(ControlCommand::SetMode, options_.mode);
