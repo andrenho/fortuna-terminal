@@ -15,7 +15,9 @@ public:
 
 protected:
     int                fd_ = INVALID_FILE;
-    std::optional<int> write_fd_ = INVALID_FILE;
+    std::optional<int> write_fd_ {};
+
+    virtual void client_disconnected();
 
 private:
     IterativeThread output_thread_ {};

@@ -8,9 +8,11 @@
 #ifdef COMM_UART
 #  include "env/comm/fullduplex/fd/uart.hh"
 #endif
+*/
 #ifdef COMM_PTY
-#  include "env/comm/fullduplex/fd/pty.hh"
+#  include "comm/buffered/pty.hh"
 #endif
+/*
 #ifdef COMM_SPI
 #  include "env/comm/halfduplex/spi.hh"
 #endif
