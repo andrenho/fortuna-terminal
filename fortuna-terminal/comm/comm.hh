@@ -19,7 +19,7 @@ public:
     [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
     virtual void notify() {}
 
-    static std::unique_ptr<CommunicationModule> create(Options const& options);
+    static std::unique_ptr<CommunicationModule> create(CommType comm_type, Options const& options);
 
 protected:
     CommunicationModule() = default;

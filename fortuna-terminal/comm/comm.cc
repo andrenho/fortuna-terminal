@@ -18,9 +18,9 @@
 #  include "comm/custom/i2c.hh"
 #endif
 
-std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &options)
+std::unique_ptr<CommunicationModule> CommunicationModule::create(CommType comm_type, Options const &options)
 {
-    switch (options.comm_type) {
+    switch (comm_type) {
         case CommType::Echo:
             return std::make_unique<Echo>();
         case CommType::Pipes:
