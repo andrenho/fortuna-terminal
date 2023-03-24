@@ -40,6 +40,8 @@ ExecutionStatus Application::execute_single_step()
     Environment& current_environment = environments.at(current_env_idx);
 
     timing_debug_.start_event(TimingDebug::Event::ControlQueue);
+    for (auto& environment: environments)
+        environment.notify_comm();
     execute_control_queue();
 
     for (auto& environment: environments)

@@ -129,7 +129,7 @@ void Environment::debug_bytes(std::string_view received, std::string_view sent) 
 #else
             printf("%s ", direction);
 #endif
-            for (uint8_t c : received) {
+            for (uint8_t c : str) {
                 if (c < 32 || c > 127)
                     printf("[%02X]", c);
                 else

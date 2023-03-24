@@ -18,7 +18,7 @@ protected:
     std::optional<int> write_fd_ {};
 
     virtual void client_disconnected();
-    virtual void on_read_error();
+    [[noreturn]] virtual void on_read_error();
 
 private:
     IterativeThread output_thread_ {};

@@ -2,13 +2,14 @@
 #define ECHO_HH_
 
 #include <string_view>
-#include "comm/comm.hh"
+#include "communbuffered.hh"
 
-class Echo : public CommunicationModule {
+class Echo : public CommUnbuffered {
 public:
-    [[nodiscard]] std::string exchange(std::string_view data_to_send) override;
-
     [[nodiscard]] std::string description() const override { return "Echo"; }
+
+protected:
+    std::string thread_exchange(std::string_view data_to_send) override;
 };
 
 #endif //ECHO_HH_

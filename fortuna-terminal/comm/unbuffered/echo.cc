@@ -1,6 +1,6 @@
 #include "echo.hh"
 
-std::string Echo::exchange(std::string_view data_to_send)
+std::string Echo::thread_exchange(std::string_view data_to_send)
 {
     std::string r;
     r.reserve(data_to_send.length());

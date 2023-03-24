@@ -16,8 +16,8 @@ public:
     [[nodiscard]] virtual std::string exchange(std::string_view data_to_send) = 0;
 
     [[nodiscard]] virtual std::string description() const = 0;
-
     [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
+    virtual void notify() {}
 
     static std::unique_ptr<CommunicationModule> create(Options const& options);
 

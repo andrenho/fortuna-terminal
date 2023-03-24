@@ -59,7 +59,7 @@ void CommBuffered::client_disconnected()
     write_fd_ = {};
 }
 
-void CommBuffered::on_read_error()
+[[noreturn]] void CommBuffered::on_read_error()
 {
     throw LibcException("read");
 }
