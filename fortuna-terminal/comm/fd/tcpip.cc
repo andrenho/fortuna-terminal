@@ -121,6 +121,8 @@ std::string TCPIP::read()
             } else {
                 on_read_error();
             }
+        } else if (r == 0) {
+            client_disconnected();
         }
 
         rd.resize(r);
@@ -138,7 +140,7 @@ void TCPIP::write(std::string_view data_to_send)
             if (r == -1) {
                 throw LibcException("write");
             } else if (r == 0) {
-                this->client_disconnected();
+                client_disconnected();
             } else {
                 left -= r;
             }
