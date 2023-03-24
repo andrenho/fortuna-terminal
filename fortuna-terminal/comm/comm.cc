@@ -4,11 +4,9 @@
 #include "comm/unbuffered/echo.hh"
 #include "comm/buffered/pipes.hh"
 
-/*
 #ifdef COMM_UART
-#  include "env/comm/fullduplex/fd/uart.hh"
+#  include "/comm/buffered//uart.hh"
 #endif
-*/
 #ifdef COMM_PTY
 #  include "comm/buffered/pty.hh"
 #endif
@@ -31,15 +29,13 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
             /*
         case CommType::TcpIp:
             return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
-        case CommType::EchoXchg:
-            return std::make_unique<EchoXchg>();
+             */
         case CommType::Uart:
 #ifdef COMM_UART
             return std::make_unique<UART>(options.uart_options, options.readbuf_sz);
 #else
             throw FortunaException("Communication mode not supported on Windows");
 #endif
-             */
         case CommType::PTY:
 #ifdef COMM_PTY
             return std::make_unique<PTY>(options.pty_options, options.readbuf_sz);

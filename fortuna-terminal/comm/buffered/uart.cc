@@ -17,7 +17,7 @@
 using namespace std::string_literals;
 
 UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
-    : FDComm(readbuf_sz), uart_options_(uart_options)
+        : CommBuffered(readbuf_sz), uart_options_(uart_options)
 {
     fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd_ < 0)
@@ -66,5 +66,5 @@ UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
 std::string UART::description() const
 {
     return "UART (port: "s + uart_options_.port + ", baud: " + std::to_string(uart_options_.baud) +
-        ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
+           ", mode: 8" + uart_options_.parity + std::to_string(uart_options_.stop_bits) + ")";
 }
