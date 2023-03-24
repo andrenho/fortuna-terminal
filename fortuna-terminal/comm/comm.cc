@@ -10,11 +10,9 @@
 #ifdef COMM_PTY
 #  include "comm/buffered/pty.hh"
 #endif
-/*
 #ifdef COMM_SPI
-#  include "env/comm/halfduplex/spi.hh"
+#  include "comm/unbuffered/spi.hh"
 #endif
- */
 #ifdef COMM_I2C
 #  include "comm/unbuffered/i2c.hh"
 #endif
@@ -42,14 +40,12 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
 #else
             throw FortunaException("Communication mode not supported on Windows");
 #endif
-            /*
         case CommType::SPI:
 #ifdef COMM_SPI
             return std::make_unique<SPI>(options.spi_options);
 #else
             throw FortunaException("Communication mode not supported except for Raspberry Pi");
 #endif
-             */
         case CommType::I2C:
 #ifdef COMM_I2C
             return std::make_unique<I2C>(options.i2c_options);
