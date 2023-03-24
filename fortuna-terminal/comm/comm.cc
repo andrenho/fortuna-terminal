@@ -5,7 +5,7 @@
 #include "comm/buffered/pipes.hh"
 
 #ifdef COMM_UART
-#  include "/comm/buffered//uart.hh"
+#  include "comm/buffered/uart.hh"
 #endif
 #ifdef COMM_PTY
 #  include "comm/buffered/pty.hh"
