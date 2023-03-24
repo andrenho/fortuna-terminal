@@ -1,16 +1,18 @@
 #ifndef I2C_HH_
 #define I2C_HH_
 
-#include "../comm.hh"
-#include "../../application/options.hh"
+#include "communbuffered.hh"
+#include "application/options.hh"
 
-class I2C : public CommunicationModule {
+class I2C : public CommUnbuffered {
 public:
     explicit I2C(I2COptions i2c_options);
     ~I2C() override;
 
-    std::string exchange(std::string_view data_to_send) override;
     [[nodiscard]] std::string description() const override;
+
+protected:
+    std::string thread_exchange(std::string_view data_to_send) override;
 
 private:
     int handle_;
