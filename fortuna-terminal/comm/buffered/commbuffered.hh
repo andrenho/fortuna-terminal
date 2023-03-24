@@ -9,7 +9,7 @@
 
 class CommBuffered : public CommunicationModule {
 public:
-    CommBuffered(size_t readbuf_sz);
+    explicit CommBuffered(size_t readbuf_sz): readbuf_sz_(readbuf_sz) {}
 
     [[nodiscard]] std::string exchange(std::string_view data_to_send) override;
 
@@ -17,13 +17,13 @@ protected:
     int                fd_ = INVALID_FILE;
     std::optional<int> write_fd_ {};
 
+    virtual void        write(std::string_view data_to_send);
+    virtual std::string read();
+
     virtual void client_disconnected();
     [[noreturn]] virtual void on_read_error();
 
 private:
-    IterativeThread output_thread_ {};
-    SyncQueueByte   output_queue_ {};
-
     static constexpr int INVALID_FILE = -1;
     size_t readbuf_sz_;
 };

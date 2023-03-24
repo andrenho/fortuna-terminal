@@ -3,54 +3,51 @@
 
 #include <unistd.h>
 
-CommBuffered::CommBuffered(size_t readbuf_sz)
-    : readbuf_sz_(readbuf_sz)
+std::string CommBuffered::exchange(std::string_view data_to_send)
 {
-    output_thread_.run_with_wait([this] {
+    std::string received = read();
 
-        int fd = write_fd_.value_or(fd_);
-        if (fd == INVALID_FILE)
-            return;
+    if (!data_to_send.empty())
+        write(data_to_send);
 
-        std::vector<uint8_t> v;
-        output_queue_.pop_all_into_noblock(v);
-        size_t left = v.size();
+    return received;
+}
 
+std::string CommBuffered::read()
+{
+    if (fd_ != INVALID_FILE) {
+        std::string rd(readbuf_sz_, 0);
+        int r = ::read(fd_, rd.data(), readbuf_sz_);
+        if (r == -1) {
+            if (errno == EAGAIN)
+                r = 0;
+            else
+                on_read_error();
+        }
+
+        rd.resize(r);
+        return rd;
+    }
+
+    return {};
+}
+
+void CommBuffered::write(std::string_view data_to_send)
+{
+    int fd = this->write_fd_.value_or(this->fd_);
+    if (fd != INVALID_FILE) {
+        size_t left = data_to_send.size();
         do {
-            int r = write(fd, v.data(), v.size());
+            int r = ::write(fd, data_to_send.data(), data_to_send.size());
             if (r == -1) {
                 throw LibcException("write");
             } else if (r == 0) {
-                client_disconnected();
+                this->client_disconnected();
             } else {
                 left -= r;
             }
         } while (left > 0);
-    });
-}
-
-std::string CommBuffered::exchange(std::string_view data_to_send)
-{
-    if (fd_ == INVALID_FILE)
-        return "";
-
-    std::string rd(readbuf_sz_, 0);
-    int r = read(fd_, rd.data(), readbuf_sz_);
-    if (r == -1) {
-        if (errno == EAGAIN)
-            r = 0;
-        else
-            on_read_error();
     }
-
-    rd.resize(r);
-
-    if (!data_to_send.empty()) {
-        output_queue_.push_all(data_to_send);
-        output_thread_.notify();
-    }
-
-    return rd;
 }
 
 void CommBuffered::client_disconnected()
