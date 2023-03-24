@@ -11,7 +11,8 @@ Environment::Environment(Options const &options)
     : comm_(CommunicationModule::create(options)),
       scene_(options.mode),
       protocol_(options.mode, scene_),
-      show_timining_info_(options.debug_time)
+      show_timining_info_(options.debug_time),
+      debug_comm_(options.debug_comm)
 {
     if (options.welcome_message)
         protocol_.execute_inputs(welcome_message());
@@ -33,9 +34,11 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
     timing_debug.start_event(TimingDebug::Event::DebuggingInfo);
     if (show_timining_info_)
         display_timing_info(timing_debug);
+    if (debug_comm_)
+        debug_bytes(received_data, data_to_send);
 }
 
-void Environment::show_error(std::exception const &e)
+void Environment::show_error(std::exception const &e) const
 {
     static std::string press_enter = "-- Press ENTER to continue or Ctrl+F12 to quit --";
     scene_.text().write_text(scene_.text().lines() - 2, 0, e.what(), {COLOR_RED, true, false});
@@ -78,7 +81,7 @@ std::string Environment::welcome_message() const
     return ss.str();
 }
 
-void Environment::display_timing_info(TimingDebug const &timing_debug)
+void Environment::display_timing_info(TimingDebug const &timing_debug) const
 {
     std::map<TimingDebug::Event, double> events = timing_debug.last_events();
     if (events.empty())
@@ -114,4 +117,21 @@ void Environment::display_timing_info(TimingDebug const &timing_debug)
     if (comm_->is_overwhelmed()) {
         scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
     }
+}
+
+void Environment::debug_bytes(std::string_view received, std::string_view sent) const
+{
+    for (auto const& [str, color] : std::map<std::string_view, int> { { received, 31 }, { sent, 32 } }) {
+        if (!str.empty()) {
+            printf("\e[0;%dm", color);
+            for (uint8_t c : received) {
+                if (c < 32 || c > 127)
+                    printf("[%02X]", c);
+                else
+                    printf("%c", c);
+            }
+            printf("\e[0m\n");
+        }
+    }
+    fflush(stdout);
 }
