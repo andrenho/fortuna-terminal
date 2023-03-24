@@ -23,7 +23,6 @@ protected:
     virtual void client_disconnected();
     [[noreturn]] virtual void on_read_error();
 
-private:
     static constexpr int INVALID_FILE = -1;
     size_t readbuf_sz_;
 };

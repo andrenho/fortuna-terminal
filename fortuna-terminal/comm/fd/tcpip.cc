@@ -75,19 +75,86 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
 
     if (listen(sock_fd, BACKLOG) == -1)
         throw LibcException("Error on listening");
+
+    // set socket as non-blocking
+#ifdef _WIN32
+    u_long mode = 1; // 1 for non-blocking mode, 0 for blocking mode
+    ioctlsocket(sock_fd, FIONBIO, &mode);
+#else
+    int flags = fcntl(sock_fd, F_GETFL, 0);
+    fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+#endif
+}
+
+std::string TCPIP::read()
+{
+    if (fd_ == INVALID_FILE) {   // client disconnected
+        struct sockaddr_storage client_addr;
+        socklen_t sin_size = sizeof client_addr;
+        SOCKET fd = accept(sock_fd, (struct sockaddr *) &client_addr, &sin_size);
+        if (fd == INVALID_SOCKET) {
+#ifdef _WIN32
+            if (WSAGetLastError() == WSAEWOULDBLOCK) {
+#else
+            if (errno == EAGAIN  || errno == EWOULDBLOCK) {
+#endif
+                return {};
+            }
+            throw LibcException("accept");
+        }
+
+        fd_ = fd;
+
+        printf("Client connected.\n");
+
+        return {};
+    } else {
+        std::string rd(readbuf_sz_, 0);
+        int r = ::recv(fd_, rd.data(), readbuf_sz_, 0);
+        if (r == -1) {
+#ifdef _WIN32
+            if (WSAGetLastError() == WSAEWOULDBLOCK) {
+#else
+            if (errno == EAGAIN  || errno == EWOULDBLOCK) {
+#endif
+                r = 0;
+            } else {
+                on_read_error();
+            }
+        }
+
+        rd.resize(r);
+        return rd;
+    }
+}
+
+void TCPIP::write(std::string_view data_to_send)
+{
+    int fd = this->write_fd_.value_or(this->fd_);
+    if (fd != INVALID_FILE) {
+        size_t left = data_to_send.size();
+        do {
+            int r = ::send(fd, data_to_send.data(), data_to_send.size(), 0);
+            if (r == -1) {
+                throw LibcException("write");
+            } else if (r == 0) {
+                this->client_disconnected();
+            } else {
+                left -= r;
+            }
+        } while (left > 0);
+    }
 }
 
 std::string TCPIP::description() const
 {
-    // TODO - add address
     return "TCP/IP (listening on " + listen_address_ + ":" + std::to_string(port_) + ")";
 }
 
 std::string TCPIP::find_listen_ipv4_addr()
 {
-    std::string address = "127.0.0.1";
-
     char ipstr[INET_ADDRSTRLEN];
+    strcpy(ipstr, "127.0.0.1");
 
 #ifdef _WIN32
     // Get local host name
@@ -118,7 +185,6 @@ std::string TCPIP::find_listen_ipv4_addr()
             if (strncmp(ipstr, "10.", 3) == 0 ||
                 strncmp(ipstr, "192.168.", 8) == 0 ||
                 strncmp(ipstr, "172.", 4) == 0) {
-                address = ipstr;
                 break;
             }
         }
@@ -140,7 +206,6 @@ std::string TCPIP::find_listen_ipv4_addr()
                 if (strncmp(ipstr, "10.", 3) == 0 ||
                     strncmp(ipstr, "192.168.", 8) == 0 ||
                     strncmp(ipstr, "172.", 4) == 0) {
-                    address = ipstr;
                     break;
                 }
             }

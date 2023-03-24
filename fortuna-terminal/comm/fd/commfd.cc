@@ -52,7 +52,10 @@ void CommFileDescriptor::write(std::string_view data_to_send)
 
 void CommFileDescriptor::client_disconnected()
 {
+    close(fd_);
     fd_ = INVALID_FILE;
+    if (write_fd_)
+        close(*write_fd_);
     write_fd_ = {};
 }
 
