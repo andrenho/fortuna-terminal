@@ -138,8 +138,9 @@ void Environment::debug_bytes(std::string_view received, std::string_view sent) 
 #if COLOR_TERMINAL
             printf("\e[0m");
 #endif
-            printf("\n");
         }
     }
+    if((received.empty() && sent.empty()) == false)
+        printf("\n");
     fflush(stdout);
 }
