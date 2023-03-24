@@ -121,16 +121,24 @@ void Environment::display_timing_info(TimingDebug const &timing_debug) const
 
 void Environment::debug_bytes(std::string_view received, std::string_view sent) const
 {
-    for (auto const& [str, color] : std::map<std::string_view, int> { { received, 31 }, { sent, 32 } }) {
+    std::vector<std::tuple<std::string_view, int, const char*>> blocks { { received, 33, "<<" }, { sent, 32, ">>" } };
+    for (auto const& [str, color, direction] : blocks) {
         if (!str.empty()) {
+#if COLOR_TERMINAL
             printf("\e[0;%dm", color);
+#else
+            printf("%s ", direction);
+#endif
             for (uint8_t c : received) {
                 if (c < 32 || c > 127)
                     printf("[%02X]", c);
                 else
                     printf("%c", c);
             }
-            printf("\e[0m\n");
+#if COLOR_TERMINAL
+            printf("\e[0m");
+#endif
+            printf("\n");
         }
     }
     fflush(stdout);
