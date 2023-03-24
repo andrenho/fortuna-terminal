@@ -1,6 +1,7 @@
 #include "pipes.hh"
 
 #include <cstdio>
+#include <unistd.h>
 
 Pipes::Pipes(size_t readbuf_sz)
     : CommBuffered(readbuf_sz)
