@@ -42,3 +42,8 @@ std::string PTY::description() const
 {
     return "PTY (shell: " + shell_ + ", name: " + name_ + ")";
 }
+
+void PTY::client_disconnected()
+{
+    exit(0);
+}

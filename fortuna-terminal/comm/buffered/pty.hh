@@ -8,7 +8,10 @@ class PTY : public CommBuffered {
 public:
     PTY(PTYOptions const& pty_options, size_t readbuf_sz);
 
-    std::string description() const override;
+    [[nodiscard]] std::string description() const override;
+
+protected:
+    void client_disconnected() override;
 
 private:
     std::string shell_;
