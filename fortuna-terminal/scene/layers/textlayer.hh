@@ -47,7 +47,7 @@ struct Cell {
 
 class TextLayer : public Layer {
 public:
-    explicit TextLayer(Mode mode);
+    TextLayer();
 
     void          update_char(size_t row, size_t column, Char c);
     void          update_cell(std::vector<Cell> const& cells);
@@ -78,7 +78,7 @@ private:
     size_t                  columns_ = 0;
     size_t                  lines_ = 0;
 
-    Mode                    mode_;
+    Mode                    mode_ = Mode::Text;
 
     void reset_blink();
 };

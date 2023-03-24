@@ -1,7 +1,7 @@
 #include "protocol.hh"
 
-Protocol::Protocol(Mode initial_mode, class Scene& scene)
-    : ANSI(initial_mode, scene),
+Protocol::Protocol(class Scene& scene)
+    : ANSI(scene),
       FortunaProtocol(scene),
       Events()
 {

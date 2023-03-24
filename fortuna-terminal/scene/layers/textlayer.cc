@@ -2,10 +2,9 @@
 
 using namespace std::chrono_literals;
 
-TextLayer::TextLayer(Mode mode)
-    : mode_(mode)
+TextLayer::TextLayer()
 {
-    set_mode(mode);
+    set_mode(Mode::Text);
 }
 
 Char const &TextLayer::get_char(size_t row, size_t column) const

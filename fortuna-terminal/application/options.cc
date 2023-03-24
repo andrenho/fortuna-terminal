@@ -14,7 +14,6 @@ Options::Options(int argc, char* argv[])
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "window",             no_argument,       nullptr, 'w' },
-                { "graphics",           no_argument,       nullptr, 'g' },
                 { "debug-comm",         no_argument,       nullptr, 'd' },
                 { "debug-time",         no_argument,       nullptr, 't' },
                 { "welcome",            no_argument,       nullptr, 'W' },
@@ -36,7 +35,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dgtW", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dtW", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -88,10 +87,6 @@ Options::Options(int argc, char* argv[])
 
             case 'd':
                 debug_comm = true;
-                break;
-
-            case 'g':
-                mode = Mode::Graphics;
                 break;
 
             case 'b':
@@ -155,7 +150,6 @@ Options::Options(int argc, char* argv[])
 {
     printf("    -c, --communication-mode        One of \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\", \"echo\", \"echo-xchg\"\n");
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
-    printf("    -g, --graphics                  Start in graphics mode (40 columns)\n");
     printf("    -t, --debug-time                Show timing information on the screen\n");
     printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");
 #ifdef COMM_UART

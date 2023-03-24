@@ -2,7 +2,6 @@
 #define OPTIONS_HH_
 
 #include <string>
-#include "common/enums/mode.hh"
 #include "common/types/time.hh"
 
 enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXchg };
@@ -42,7 +41,6 @@ public:
     CommType        comm_type   = CommType::NotChosen;
     bool            debug_comm = false;
     bool            debug_time = false;
-    Mode            mode = Mode::Text;
     bool            welcome_message = true;
     size_t          readbuf_sz = 2048;
 

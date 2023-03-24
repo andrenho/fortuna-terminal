@@ -1,5 +1,5 @@
 Improvements:
-- [ ] Text mode should be default, and graphics mode should be applied later
+- [x] Text mode should be default, and graphics mode should be applied later
 - [ ] Script language
     - [ ] Command compression
 - [ ] Reduce CPU usage (?)

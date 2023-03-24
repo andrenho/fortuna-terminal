@@ -12,7 +12,7 @@
 class Environment {
 public:
     explicit Environment(Options const& options);
-    Environment(Options const& options, CommType comm_type, Mode initial_mode);
+    Environment(Options const& options, CommType comm_type);
 
     void execute_single_step(TimingDebug& timing_debug);
     void reset();

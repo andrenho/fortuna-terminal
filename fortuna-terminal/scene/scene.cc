@@ -5,19 +5,18 @@
 
 size_t Scene::unique_id_counter = 0;
 
-Scene::Scene(Mode mode)
-    : mode_(mode),
-      unique_id_(unique_id_counter++)
+Scene::Scene()
+    : unique_id_(unique_id_counter++)
 {
     layers_.emplace(LAYER_TILEMAP_BG, std::make_unique<TilemapLayer>());
     layers_.emplace(LAYER_TILEMAP_OBSTACLES, std::make_unique<TilemapLayer>());
     layers_.emplace(LAYER_SPRITES, std::make_unique<SpriteLayer>());
     layers_.emplace(LAYER_TILEMAP_FG, std::make_unique<TilemapLayer>());
     layers_.emplace(LAYER_TILEMAP_UI, std::make_unique<TilemapLayer>());
-    layers_.emplace(LAYER_TILEMAP_TEXT, std::make_unique<TextLayer>(mode));
+    layers_.emplace(LAYER_TILEMAP_TEXT, std::make_unique<TextLayer>());
 
     palette_init(palette);
-    set_mode(mode);
+    set_mode(Mode::Text);
 }
 
 void Scene::reset()

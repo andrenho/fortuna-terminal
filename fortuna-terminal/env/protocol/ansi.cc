@@ -38,16 +38,12 @@ static constexpr const wchar_t acs_charset[] = {
         0xfe,  // bullet
 };
 
-ANSI::ANSI(Mode initial_mode, Scene &scene)
-    : scene_(scene),
-      current_mode_(initial_mode)
+ANSI::ANSI(Scene &scene)
+    : scene_(scene)
 {
     initialize_cache();
     vt_ = decltype(vt_)(
-            tmt_open(
-                    initial_mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
-                    initial_mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns,
-                    ANSI::tmt_callback, this, acs_charset),
+            tmt_open(TextLayer::Lines_80Columns, TextLayer::Columns_80Columns, ANSI::tmt_callback, this, acs_charset),
             [](TMT* vt) { tmt_close(vt); }
     );
     if (!vt_)
@@ -73,7 +69,7 @@ void ANSI::send_ansi_bytes(std::string const &bytes)
 void ANSI::resize_text_terminal(Mode mode)
 {
     tmt_resize(vt_.get(),
-               mode == Mode::Text ? TextLayer::Lines_80Columns : TextLayer::Lines_40Columns,
+               mode == Mode::Text ? TextLayer::Lines_80Columns: TextLayer::Lines_40Columns,
                mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns);
 }
 

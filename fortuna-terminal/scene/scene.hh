@@ -25,7 +25,7 @@ enum LayerIdentifier : uint8_t {
 };
 
 struct Scene : NonCopyable {
-    explicit Scene(Mode mode);
+    Scene();
 
     Tilemap                           tilemaps[Tilemap::MAX_TILEMAPS] {};
     Palette                           palette {};
@@ -56,7 +56,7 @@ struct Scene : NonCopyable {
     static size_t constexpr MAX_IMAGES = 1024;
 
 private:
-    Mode                mode_;
+    Mode                mode_ = Mode::Text;
     std::pair<int, int> size_in_pixels_;
     const size_t        unique_id_;
 

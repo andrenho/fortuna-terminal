@@ -18,7 +18,7 @@ class ANSI : public NonCopyable {
     using Cache = std::vector<TMTCHAR>;
 
 public:
-    explicit ANSI(Mode initial_mode, Scene& scene);
+    explicit ANSI(Scene& scene);
 
     void     send_ansi_bytes(std::string const& bytes);
 
@@ -27,7 +27,7 @@ public:
 
 private:
     Scene& scene_;
-    Mode current_mode_;
+    Mode current_mode_ = Mode::Text;
 
     Cache cache_ {};
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;

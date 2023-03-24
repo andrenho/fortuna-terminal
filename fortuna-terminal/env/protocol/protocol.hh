@@ -14,7 +14,7 @@ class Protocol :
         private FortunaProtocol,
         public Events {
 public:
-    Protocol(Mode initial_mode, class Scene& scene);
+    Protocol(class Scene& scene);
 
     void        execute_inputs(std::string const& data_received);
     std::string execute_outputs();

@@ -8,15 +8,15 @@ using namespace std::chrono_literals;
 template class SyncQueue<uint8_t>;
 
 Environment::Environment(Options const &options)
-    : Environment(options, options.comm_type, options.mode)
+    : Environment(options, options.comm_type)
 {
 }
 
 
-Environment::Environment(Options const &options, CommType comm_type, Mode initial_mode)
+Environment::Environment(Options const &options, CommType comm_type)
         : comm_(CommunicationModule::create(comm_type, options)),
-          scene_(initial_mode),
-          protocol_(initial_mode, scene_),
+          scene_(),
+          protocol_(scene_),
           show_timining_info_(options.debug_time),
           debug_comm_(options.debug_comm)
 {
