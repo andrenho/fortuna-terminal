@@ -19,8 +19,8 @@ I2C::~I2C()
 std::string I2C::exchange(std::string_view data_to_send)
 {
     // write output buffer
-    if (data.size() > 0)
-        i2cWriteDevice(handle_, (char *) data.data(), data.size());
+    if (data_to_send.size() > 0)
+        i2cWriteDevice(handle_, (char *) data_to_send.data(), data_to_send.size());
 
     // read input buffer - first the size (16-bit), then the content
     uint8_t szb[2];
