@@ -1,9 +1,9 @@
-#include "commbuffered.hh"
+#include "commfd.hh"
 #include "common/exceptions/libcexception.hh"
 
 #include <unistd.h>
 
-std::string CommBuffered::exchange(std::string_view data_to_send)
+std::string CommFileDescriptor::exchange(std::string_view data_to_send)
 {
     std::string received = read();
 
@@ -13,7 +13,7 @@ std::string CommBuffered::exchange(std::string_view data_to_send)
     return received;
 }
 
-std::string CommBuffered::read()
+std::string CommFileDescriptor::read()
 {
     if (fd_ != INVALID_FILE) {
         std::string rd(readbuf_sz_, 0);
@@ -32,7 +32,7 @@ std::string CommBuffered::read()
     return {};
 }
 
-void CommBuffered::write(std::string_view data_to_send)
+void CommFileDescriptor::write(std::string_view data_to_send)
 {
     int fd = this->write_fd_.value_or(this->fd_);
     if (fd != INVALID_FILE) {
@@ -50,13 +50,13 @@ void CommBuffered::write(std::string_view data_to_send)
     }
 }
 
-void CommBuffered::client_disconnected()
+void CommFileDescriptor::client_disconnected()
 {
     fd_ = INVALID_FILE;
     write_fd_ = {};
 }
 
-[[noreturn]] void CommBuffered::on_read_error()
+[[noreturn]] void CommFileDescriptor::on_read_error()
 {
     throw LibcException("read");
 }

@@ -1,10 +1,10 @@
 #ifndef UART_HH_
 #define UART_HH_
 
-#include "commbuffered.hh"
+#include "commfd.hh"
 #include "application/options.hh"
 
-class UART : public CommBuffered {
+class UART : public CommFileDescriptor {
 public:
     UART(UartOptions const& uart_options, size_t readbuf_sz);
 

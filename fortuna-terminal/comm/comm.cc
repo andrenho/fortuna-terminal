@@ -1,8 +1,9 @@
 #include "comm.hh"
 
 #include "common/exceptions/fortunaexception.hh"
-#include "comm/unbuffered/echo.hh"
-#include "comm/buffered/pipes.hh"
+#include "comm/custom/echo.hh"
+#include "comm/fd/pipes.hh"
+#include "comm/fd/tcpip.hh"
 
 #ifdef COMM_UART
 #  include "comm/buffered/uart.hh"
@@ -24,10 +25,8 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(Options const &
             return std::make_unique<Echo>();
         case CommType::Pipes:
             return std::make_unique<Pipes>(options.readbuf_sz);
-            /*
         case CommType::TcpIp:
             return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
-             */
         case CommType::Uart:
 #ifdef COMM_UART
             return std::make_unique<UART>(options.uart_options, options.readbuf_sz);

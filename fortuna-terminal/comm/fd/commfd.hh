@@ -1,5 +1,5 @@
-#ifndef COMMBUFFERED_HH_
-#define COMMBUFFERED_HH_
+#ifndef COMMFD_HH_
+#define COMMFD_HH_
 
 #include <optional>
 #include <queue>
@@ -7,9 +7,9 @@
 #include "../comm.hh"
 #include "common/iterativethread.hh"
 
-class CommBuffered : public CommunicationModule {
+class CommFileDescriptor : public CommunicationModule {
 public:
-    explicit CommBuffered(size_t readbuf_sz): readbuf_sz_(readbuf_sz) {}
+    explicit CommFileDescriptor(size_t readbuf_sz): readbuf_sz_(readbuf_sz) {}
 
     [[nodiscard]] std::string exchange(std::string_view data_to_send) override;
 
@@ -28,4 +28,4 @@ private:
     size_t readbuf_sz_;
 };
 
-#endif //COMMBUFFERED_HH_
+#endif //COMMFD_HH_

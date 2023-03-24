@@ -16,3 +16,7 @@
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
+
+#if _WIN32
+#  include <winsock2.h>
+#endif

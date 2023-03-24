@@ -31,8 +31,8 @@ endif
 OBJ =   main.o \
 		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
         comm/comm.o \
-        comm/buffered/commbuffered.o comm/buffered/pipes.o \
-        comm/unbuffered/echo.o \
+        comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip.o \
+        comm/custom/echo.o \
 		env/environment.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
  		scene/scene.o scene/palette/palette.o \
@@ -68,12 +68,12 @@ ifeq ($(RASPBERRY),1)
 endif
 
 ifeq ($(INCLUDE_UART_PTY),1)
-	OBJ := ${OBJ} comm/buffered/pty.o comm/buffered/uart.o
+	OBJ := ${OBJ} comm/fd/pty.o comm/fd/uart.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_UART -DCOMM_PTY
 endif
 
 ifeq ($(INCLUDE_SPI_I2C),1)
-	OBJ := ${OBJ} application/gpio.o comm/unbuffered/i2c.o comm/unbuffered/spi.o
+	OBJ := ${OBJ} application/gpio.o comm/custom/i2c.o comm/custom/spi.o
 	CPPFLAGS := ${CPPFLAGS} -DCOMM_SPI -DCOMM_I2C -DGPIO
 	LDFLAGS := ${LDFLAGS} -lpigpio -lrt -pthread
 endif

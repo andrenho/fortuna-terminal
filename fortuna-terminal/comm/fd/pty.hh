@@ -2,9 +2,9 @@
 #define PTY_HH_
 
 #include "application/options.hh"
-#include "commbuffered.hh"
+#include "commfd.hh"
 
-class PTY : public CommBuffered {
+class PTY : public CommFileDescriptor {
 public:
     PTY(PTYOptions const& pty_options, size_t readbuf_sz);
 

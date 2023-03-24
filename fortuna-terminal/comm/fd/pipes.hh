@@ -1,9 +1,9 @@
 #ifndef PIPES_HH_
 #define PIPES_HH_
 
-#include "commbuffered.hh"
+#include "commfd.hh"
 
-class Pipes : public CommBuffered {
+class Pipes : public CommFileDescriptor {
 public:
     Pipes(size_t readbuf_sz);
 
