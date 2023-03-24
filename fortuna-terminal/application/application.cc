@@ -44,6 +44,8 @@ ExecutionStatus Application::execute_single_step()
 
     for (auto& environment: environments)
         environment.execute_single_step(timing_debug_);
+    for (auto& environment: environments)
+        environment.notify_comm();
 
     timing_debug_.start_event(TimingDebug::Event::VSYNC);
     gpio_.vsync();
@@ -55,8 +57,6 @@ ExecutionStatus Application::execute_single_step()
     terminal_.draw(current_environment.scene());
 
     timing_debug_.start_event(TimingDebug::Event::Wait);
-    for (auto& environment: environments)
-        environment.notify_comm();
     wait_until_end_of_frame();
 
     timing_debug_.end_frame();
