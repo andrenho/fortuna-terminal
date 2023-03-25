@@ -1,1 +1,5 @@
+-- reset_terminal()
+graphics()
+text("PACMAN!")
 image("test.png")
+sprite(0, 30, 30, true, false, false, 0, 0)

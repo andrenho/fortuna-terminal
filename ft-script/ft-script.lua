@@ -1188,6 +1188,10 @@ local function output_list_cmd(tbl, cmd)
     io.write("\027*" .. join_numbers(tbl) .. cmd)
 end
 
+function text(str)
+    io.write(str)
+end
+
 function reset_terminal()
     io.write("\027*r")
 end
