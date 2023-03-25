@@ -3,7 +3,7 @@ Improvements:
 - [x] Script language
     - [x] Command compression
     - [x] Fix palette
-    - [ ] Documentation
+    - [x] Documentation
 - [ ] Fix bug where only image 0 is showing up
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
