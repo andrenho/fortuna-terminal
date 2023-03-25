@@ -1,7 +1,9 @@
 Improvements:
 - [x] Text mode should be default, and graphics mode should be applied later
 - [x] Script language
-    - [ ] Command compression
+    - [x] Command compression
+    - [ ] Fix bug where only image 0 is showing up
+    - [ ] Fix palette
     - [ ] Documentation
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)

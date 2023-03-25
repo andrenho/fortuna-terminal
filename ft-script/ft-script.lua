@@ -1176,12 +1176,34 @@ end
 
 local pngImage = setup_png()
 
-local function join_numbers(tbl)
-    local t = {}
-    for _, n in ipairs(tbl) do
-        t[#t+1] = tostring(n)
+local function join_numbers(input)
+    local output = {}
+
+    local function compress(input, i)
+        local original_value = input[i]
+        local count = 0
+        while input[i + count] == original_value do
+            count = count+1
+        end
+        return count
     end
-    return table.concat(t, ";")
+
+    local i = 1
+    while i <= #input do
+        local value = input[i]
+
+        -- try to compress
+        if input[i+1] == value and input[i+2] == value then
+            local count = compress(input, i)
+            output[#output+1] = "$" .. tostring(count) .. "," .. tostring(value)
+            i = i + count
+        else
+            output[#output+1] = tostring(value)
+            i = i+1
+        end
+    end
+
+    return table.concat(output, ";")
 end
 
 local function output_list_cmd(tbl, cmd)
@@ -1274,14 +1296,14 @@ function sprite(sprite_n, pos_x, pos_y, visible, mirrored_h, mirrored_v, z_order
     assert(type(sprite_n) == "number", "invalid type, sprite_n should be a number")
     local t = { sprite_n }
 
-    function add_number(n, name)
+    local function add_number(n, name)
         if n ~= nil then
             assert(type(n) == "number", "invalid type, " .. name .. " (if present) should be a number")
             t[#t+1] = n
         end
     end
 
-    function add_boolean(n, name)
+    local function add_boolean(n, name)
         if n ~= nil then
             assert(type(n) == "boolean", "invalid type, " .. name .. " (if present) should be a boolean")
             t[#t+1] = n and 1 or 0

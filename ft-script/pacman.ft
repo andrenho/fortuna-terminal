@@ -1,4 +1,3 @@
--- reset_terminal()
 graphics()
 text("PACMAN!")
 image("test.png")
