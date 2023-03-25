@@ -1306,7 +1306,8 @@ function image(image_path)
     img = pngImage(image_path, nil, false, false)
     assert(img.height % 16 == 0 and img.width % 16 == 0, "Image need to contain a set of 16x16 subimages.")
     assert(img.depth == 8 and img.colorType == 3, "Image needs to be 8-bit palette indexed.")
-    local transparent_idx = img.pixels[1][1].I
+
+    local transparent_idx = -1
     local num_images = (img.height // 16) * (img.width // 16)
     for n = 1, num_images do
         local t = { n - 1, transparent_idx }
@@ -1314,9 +1315,12 @@ function image(image_path)
         local px = ((n - 1) * 16) % img.width
         for x = 1, 16 do
             for y = 1, 16 do
-                t[#t+1] = img.pixels[px + x][py + y].I - 1
+                local p = img.pixels[px + x][py + y]
+                if transparent_idx == -1 and p.A == 0 then transparent_idx = 0 end
+                t[#t+1] = p.I - 1
             end
         end
+        t[2] = transparent_idx
         output_list_cmd(t, "i")
     end
 end
