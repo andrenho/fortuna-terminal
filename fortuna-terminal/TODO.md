@@ -1,7 +1,8 @@
 Improvements:
 - [x] Text mode should be default, and graphics mode should be applied later
-- [ ] Script language
+- [x] Script language
     - [ ] Command compression
+- [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
 - [ ] Change palette
 - [ ] Write client library (?)
