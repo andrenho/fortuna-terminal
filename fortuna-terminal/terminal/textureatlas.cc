@@ -6,9 +6,9 @@
 
 #include <cstring>
 
-void TextureAtlas::emplace_from_image(size_t index, size_t image_idx, Image const &image, Palette const& palette)
+void TextureAtlas::emplace_from_image(size_t scene_id, size_t image_idx, Image const &image, Palette const& palette)
 {
-    SDL_Texture* scene_texture = get_or_create_texture(index);
+    SDL_Texture* scene_texture = get_or_create_texture(scene_id);
 
     UniquePtrWithDeleter<SDL_Surface> sf = {
             SDL_CreateRGBSurface(0, Image::IMAGE_W, Image::IMAGE_H, 8, 0, 0, 0, 0),

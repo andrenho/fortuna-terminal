@@ -98,7 +98,7 @@ public:
         if (deque_.empty()) {
             return {};
         } else {
-            T item = std::move(deque_.front());
+            T item = std::move(deque_.back());
             deque_.pop_back();
             return item;
         }

@@ -4,7 +4,7 @@ Improvements:
     - [x] Command compression
     - [x] Fix palette
     - [x] Documentation
-- [ ] Fix bug where only image 0 is showing up
+- [x] Fix bug where only image 0 is showing up
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
 - [ ] Change palette
