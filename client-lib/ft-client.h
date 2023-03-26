@@ -15,9 +15,11 @@ typedef struct FTClient {
 
 int ftclient_init(FTClient* ft_client,
                   int (*write_cb)(const char* buf, size_t bufsz, void* data),
-                  int (*read_cb)(char* buf, size_t bufsz, void* data),  // nullable
-                  void* data,                                           // nullable
-                  size_t bufsz);                                        // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
+                  int (*read_cb)(char* buf, size_t bufsz, void* data),
+                  void* data,
+                  size_t bufsz);  // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
+
+int ft_print(FTClient* ft, const char* fmt, ...);
 
 int ft_reset_terminal(FTClient* ft);
 int ft_reset_computer(FTClient* ft);

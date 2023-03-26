@@ -1,5 +1,6 @@
 #include "ft-client.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -40,6 +41,21 @@ static int write_request(FTClient* ft, char cmd, int* array, size_t array_sz)
 
     buf[i++] = cmd;
     return ft->write_cb(buf, i, ft->data);
+}
+
+int ft_print(FTClient* ft, const char* fmt, ...)
+{
+    char buf[ft->bufsz];
+
+    va_list ap;
+    va_start(ap, fmt);
+    int sz = vsnprintf(buf, ft->bufsz, fmt, ap);
+    va_end(ap);
+
+    if (sz < 0)
+        return -1;
+
+    return ft->write_cb(buf, sz, ft->data);
 }
 
 int ft_reset_terminal(FTClient* ft)
