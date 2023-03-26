@@ -26,4 +26,8 @@ int ft_reset_computer(FTClient* ft);
 int ft_enable_vsync(FTClient* ft, bool enable);
 int ft_request_version(FTClient* ft);
 
+int ft_mouse_enable(FTClient* ft, bool enable);
+int ft_mouse_move_enable(FTClient* ft, bool enable);
+int ft_joystick_emulation(FTClient* ft, bool enable);
+
 #endif //FT_CLIENT_H_

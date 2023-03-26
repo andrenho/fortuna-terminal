@@ -78,3 +78,21 @@ int ft_request_version(FTClient* ft)
 {
     return write_request(ft, 'v', NULL, 0);
 }
+
+int ft_mouse_enable(FTClient* ft, bool enable)
+{
+    int array = { enable };
+    return write_request(ft, 'm', &array, 1);
+}
+
+int ft_mouse_move_enable(FTClient* ft, bool enable)
+{
+    int array = { enable };
+    return write_request(ft, 'n', &array, 1);
+}
+
+int ft_joystick_emulation(FTClient* ft, bool enable)
+{
+    int array = { enable };
+    return write_request(ft, 'j', &array, 1);
+}
