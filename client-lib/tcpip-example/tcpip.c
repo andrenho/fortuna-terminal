@@ -80,5 +80,10 @@ int main(int argc, char* argv[])
     ftclient_init(&ft, write_cb, NULL, (void *) fd, FT_RECOMMENDED_BUFSZ);
     ft_print(&ft, "Hello world!");
 
+    FTColor color[32];
+    for (int i = 0; i < 32; ++i)
+        color[i] = (FTColor) { i * 3, i * 3 + 1, i * 3 + 2 };
+    ft_palette(&ft, color);
+
     sleep(2);
 }

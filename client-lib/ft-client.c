@@ -35,8 +35,10 @@ static int write_request(FTClient* ft, char cmd, int* array, size_t array_sz)
         }
         strcat(&buf[i], buf2);
         i += sz;
-        if (j != (array_sz - 1))
+        if (j != (array_sz - 1)) {
             buf[i++] = ';';
+            buf[i] = '\0';
+        }
     }
 
     buf[i++] = cmd;
@@ -95,4 +97,21 @@ int ft_joystick_emulation(FTClient* ft, bool enable)
 {
     int array = { enable };
     return write_request(ft, 'j', &array, 1);
+}
+
+int ft_graphics(FTClient* ft, bool enable)
+{
+    int array = { enable };
+    return write_request(ft, 'g', &array, 1);
+}
+
+int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS])
+{
+    int array[FT_N_COLORS * 3];
+    for (size_t i = 0; i < FT_N_COLORS; ++i) {
+        array[i * 3 + 0] = colors[i].r;
+        array[i * 3 + 1] = colors[i].g;
+        array[i * 3 + 2] = colors[i].b;
+    }
+    return write_request(ft, 'P', array, FT_N_COLORS * 3);
 }

@@ -4,12 +4,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define FT_N_COLORS 32
+
 typedef struct FTClient {
     int    (*write_cb)(const char* buf, size_t bufsz, void* data);
     int    (*read_cb)(char* buf, size_t bufsz, void* data);
     void*  data;
     size_t bufsz;
 } FTClient;
+
+typedef struct FTColor {
+    int r, g, b;
+} FTColor;
 
 #define FT_RECOMMENDED_BUFSZ 1024
 
@@ -29,5 +35,8 @@ int ft_request_version(FTClient* ft);
 int ft_mouse_enable(FTClient* ft, bool enable);
 int ft_mouse_move_enable(FTClient* ft, bool enable);
 int ft_joystick_emulation(FTClient* ft, bool enable);
+
+int ft_graphics(FTClient* ft, bool enable);
+int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS]);
 
 #endif //FT_CLIENT_H_
