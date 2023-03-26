@@ -32,6 +32,7 @@ static int write_request(FTClient* ft, char cmd, int* array, size_t array_sz)
             if (r < 0)
                 return r;
             i = 0;
+            buf[0] = '\0';
         }
         strcat(&buf[i], buf2);
         i += sz;

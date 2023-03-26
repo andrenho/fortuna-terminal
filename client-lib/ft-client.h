@@ -14,7 +14,7 @@ typedef struct FTClient {
 } FTClient;
 
 typedef struct FTColor {
-    int r, g, b;
+    uint8_t r, g, b;
 } FTColor;
 
 #define FT_RECOMMENDED_BUFSZ 1024
@@ -38,5 +38,6 @@ int ft_joystick_emulation(FTClient* ft, bool enable);
 
 int ft_graphics(FTClient* ft, bool enable);
 int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS]);
+int ft_image(FTClient* ft, int index, int transparent_color, uint8_t bytes[256]);
 
 #endif //FT_CLIENT_H_

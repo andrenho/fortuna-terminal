@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     SOCKET fd = connect_to_terminal(argv[1]);
 
     FTClient ft;
-    ftclient_init(&ft, write_cb, NULL, (void *) fd, FT_RECOMMENDED_BUFSZ);
+    ftclient_init(&ft, write_cb, NULL, (void *) fd, 16); //FT_RECOMMENDED_BUFSZ);
     ft_print(&ft, "Hello world!");
 
     FTColor color[32];
