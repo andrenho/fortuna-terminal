@@ -46,7 +46,11 @@ ExecutionStatus Application::execute_single_step()
         environment.execute_single_step(timing_debug_);
 
     timing_debug_.start_event(TimingDebug::Event::VSYNC);
-    gpio_.vsync();
+    if (vsync_enabled_) {
+        gpio_.vsync();
+        for (auto& environment: environments)
+            environment.vsync();
+    }
 
     timing_debug_.start_event(TimingDebug::Event::UserEvents);
     ExecutionStatus execution_status = terminal_.process_user_events(current_environment.events_interface());
@@ -119,6 +123,10 @@ void Application::execute_control_queue()
 
             case ControlCommand::ResetComputer:
                 gpio_.reset();
+                break;
+
+            case ControlCommand::EnableVSYNC:
+                vsync_enabled_ = cc->active;
                 break;
         }
     }

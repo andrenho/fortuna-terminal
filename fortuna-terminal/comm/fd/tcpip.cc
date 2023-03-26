@@ -220,3 +220,8 @@ std::string TCPIP::find_listen_ipv4_addr()
 
     return ipstr;
 }
+
+void TCPIP::vsync()
+{
+    write("\xfe");
+}

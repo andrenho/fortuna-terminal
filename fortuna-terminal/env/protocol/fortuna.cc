@@ -40,6 +40,10 @@ void FortunaProtocol::execute_escape_sequence()
                     control_queue.emplace(ControlCommand::SetMode, Mode::Graphics);
             }
             break;
+        case 'V':
+            if (!p.empty())
+                control_queue.emplace(ControlCommand::EnableVSYNC, p.at(0));
+            break;
         case 'v': {
                 std::string version = VERSION;
                 std::replace(version.begin(), version.end(), '.', ';');

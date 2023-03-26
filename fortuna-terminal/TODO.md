@@ -5,10 +5,11 @@ Improvements:
     - [x] Fix palette
     - [x] Documentation
 - [x] Fix bug where only image 0 is showing up
+- [x] Enable VSYNC
+- [ ] Write client library (?)
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
 - [ ] Change palette
-- [ ] Write client library (?)
 
 Alternative screens:
   - [ ] Terminal (shell)

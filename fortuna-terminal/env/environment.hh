@@ -24,7 +24,7 @@ public:
     [[nodiscard]] Scene const& scene() const { return scene_; }
     IEvent&                    events_interface() { return protocol_; }
 
-    void notify_comm() { comm_->notify(); }
+    void vsync()       { comm_->vsync();  }
 
 private:
     CommUniquePtr                  comm_;

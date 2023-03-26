@@ -17,7 +17,8 @@ public:
 
     [[nodiscard]] virtual std::string description() const = 0;
     [[nodiscard]] virtual bool is_overwhelmed() const { return false; }
-    virtual void notify() {}
+
+    virtual void vsync() {}
 
     static std::unique_ptr<CommunicationModule> create(CommType comm_type, Options const& options);
 

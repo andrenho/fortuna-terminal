@@ -5,7 +5,7 @@
 #include "common/enums/mode.hh"
 
 enum class ControlCommand {
-    Reset, ResetProtocol, ResetComputer, SetMode, SetMouseActive, SetMouseMoveReport, SetJoystickEmulation
+    Reset, ResetProtocol, ResetComputer, SetMode, SetMouseActive, SetMouseMoveReport, SetJoystickEmulation, EnableVSYNC,
 };
 
 struct Control {

@@ -14,13 +14,13 @@ class TCPIP : public CommFileDescriptor {
 public:
     TCPIP(TcpIpOptions const& options, size_t readbuf_sz);
 
+    [[nodiscard]] std::string description() const override;
+
+    void vsync() override;
+
 protected:
     std::string read() override;
     void write(std::string_view data_to_send) override;
-
-public:
-
-    std::string description() const override;
 
 private:
     SOCKET sock_fd = 0;

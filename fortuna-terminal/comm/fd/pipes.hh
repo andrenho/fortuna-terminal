@@ -7,6 +7,8 @@ class Pipes : public CommFileDescriptor {
 public:
     Pipes(size_t readbuf_sz);
 
+    void vsync() override;
+
     [[nodiscard]] std::string description() const override { return "Pipes (stdin/stdout)"; }
 };
 

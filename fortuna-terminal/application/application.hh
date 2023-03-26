@@ -24,6 +24,7 @@ private:
     std::vector<Environment> environments {};
     int                      current_env_idx;
     TimePoint                frame_start_;
+    bool                     vsync_enabled_ = false;
 
     ExecutionStatus execute_single_step();
     ExecutionStatus on_error(std::exception const& exception);
