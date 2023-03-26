@@ -11,7 +11,7 @@ endif
 all: ${EXE}
 
 ${EXE}: ${OBJ}
-	gcc -o $@ $< $(LDFLAGS)
+	gcc -o $@ ${OBJ} $(LDFLAGS)
 
 .PHONY: clean
 clean:

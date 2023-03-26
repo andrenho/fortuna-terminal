@@ -22,7 +22,7 @@ static int write_request(FTClient* ft, char cmd, int* array, size_t array_sz)
     return ft->write_cb(buf, 3, ft->data);
 }
 
-int reset_terminal(FTClient* ft)
+int ft_reset_terminal(FTClient* ft)
 {
     return write_request(ft, 'r', NULL, 0);
 }

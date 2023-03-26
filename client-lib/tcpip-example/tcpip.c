@@ -4,6 +4,8 @@
 #ifdef _WIN32
 #  include <winsock2.h>
 #  include <wspiapi.h>
+#include <unistd.h>
+
 #  define ISVALIDSOCKET(s) ((s) != INVALID_SOCKET)
 #  define CLOSESOCKET(s) closesocket(s)
 #  define GETSOCKETERRNO()(WSAGetLastError())
@@ -60,6 +62,11 @@ static SOCKET connect_to_terminal(const char* address)
     return fd;
 }
 
+int write_cb(const char* buf, size_t bufsz, void* data)
+{
+    return send((SOCKET) data, buf, (int) bufsz, 0);
+}
+
 int main(int argc, char* argv[])
 {
     if (argc != 2) {
@@ -70,6 +77,8 @@ int main(int argc, char* argv[])
     SOCKET fd = connect_to_terminal(argv[1]);
 
     FTClient ft;
-    ftclient_init(&ft, NULL, NULL, (void *) fd, FT_RECOMMENDED_BUFSZ);
-    reset_terminal(&ft);
+    ftclient_init(&ft, write_cb, NULL, (void *) fd, FT_RECOMMENDED_BUFSZ);
+    ft_reset_terminal(&ft);
+
+    sleep(2);
 }

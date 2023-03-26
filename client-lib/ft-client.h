@@ -19,6 +19,6 @@ int ftclient_init(FTClient* ft_client,
                   void* data,                                           // nullable
                   size_t bufsz);                                        // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
 
-int reset_terminal(FTClient* ft);
+int ft_reset_terminal(FTClient* ft);
 
 #endif //FT_CLIENT_H_
