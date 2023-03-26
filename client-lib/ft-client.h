@@ -20,5 +20,8 @@ int ftclient_init(FTClient* ft_client,
                   size_t bufsz);                                        // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
 
 int ft_reset_terminal(FTClient* ft);
+int ft_reset_computer(FTClient* ft);
+int ft_enable_vsync(FTClient* ft, bool enable);
+int ft_request_version(FTClient* ft);
 
 #endif //FT_CLIENT_H_

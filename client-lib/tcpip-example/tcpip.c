@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
     FTClient ft;
     ftclient_init(&ft, write_cb, NULL, (void *) fd, FT_RECOMMENDED_BUFSZ);
     ft_reset_terminal(&ft);
+    ft_enable_vsync(&ft, 1);
 
     sleep(2);
 }
