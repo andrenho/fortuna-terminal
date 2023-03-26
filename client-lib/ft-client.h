@@ -45,4 +45,14 @@ int ft_bg_color(FTClient* ft, int16_t color);
 int ft_enable_layer(FTClient* ft, int16_t layer, bool enable);
 int ft_map_pos(FTClient* ft, int16_t layer, int16_t map, int16_t pos_x, int16_t pos_y);
 
+int ft_sprite_0(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y);
+int ft_sprite_1(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible);
+int ft_sprite_2(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible, bool mirrored_h, bool mirrored_v);
+int ft_sprite_3(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible, bool mirrored_h, bool mirrored_v, int16_t z_order);
+int ft_sprite_4(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible, bool mirrored_h, bool mirrored_v, int16_t z_order, int16_t image_idx);
+
+int ft_subscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
+int ft_unsubscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
+int ft_unsubscribe_all_collisions(FTClient* ft);
+
 #endif //FT_CLIENT_H_
