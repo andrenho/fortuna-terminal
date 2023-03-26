@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 int ftclient_init(FTClient* ft,
                   int (*write_cb)(const char* buf, size_t bufsz, void* data),
@@ -17,7 +18,7 @@ int ftclient_init(FTClient* ft,
     return 0;
 }
 
-static int write_request(FTClient* ft, char cmd, int* array, size_t array_sz)
+static int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz)
 {
     char buf[ft->bufsz];
     buf[0] = '\e';
@@ -73,7 +74,7 @@ int ft_reset_computer(FTClient* ft)
 
 int ft_enable_vsync(FTClient* ft, bool enable)
 {
-    int array = { enable };
+    int16_t array = { enable };
     return write_request(ft, 'V', &array, 1);
 }
 
@@ -84,35 +85,62 @@ int ft_request_version(FTClient* ft)
 
 int ft_mouse_enable(FTClient* ft, bool enable)
 {
-    int array = { enable };
+    int16_t array = { enable };
     return write_request(ft, 'm', &array, 1);
 }
 
 int ft_mouse_move_enable(FTClient* ft, bool enable)
 {
-    int array = { enable };
+    int16_t array = { enable };
     return write_request(ft, 'n', &array, 1);
 }
 
 int ft_joystick_emulation(FTClient* ft, bool enable)
 {
-    int array = { enable };
+    int16_t array = { enable };
     return write_request(ft, 'j', &array, 1);
 }
 
 int ft_graphics(FTClient* ft, bool enable)
 {
-    int array = { enable };
+    int16_t array = { enable };
     return write_request(ft, 'g', &array, 1);
 }
 
 int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS])
 {
-    int array[FT_N_COLORS * 3];
+    int16_t array[FT_N_COLORS * 3];
     for (size_t i = 0; i < FT_N_COLORS; ++i) {
         array[i * 3 + 0] = colors[i].r;
         array[i * 3 + 1] = colors[i].g;
         array[i * 3 + 2] = colors[i].b;
     }
     return write_request(ft, 'P', array, FT_N_COLORS * 3);
+}
+
+int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8_t bytes[256])
+{
+    int16_t array[258];
+    array[0] = index;
+    array[1] = transparent_color;
+    for (size_t i = 0; i < 256; ++i)
+        array[i+2] = bytes[i];
+    return write_request(ft, 'i', array, 258);
+}
+
+int ft_bg_color(FTClient* ft, int16_t color)
+{
+    return write_request(ft, 'B', &color, 1);
+}
+
+int ft_enable_layer(FTClient* ft, int16_t layer, bool enable)
+{
+    int16_t array[2] = { layer, enable };
+    return write_request(ft, 'L', array, 2);
+}
+
+int ft_map_pos(FTClient* ft, int16_t layer, int16_t map, int16_t pos_x, int16_t pos_y)
+{
+    int16_t array[4] = { layer, map, pos_x, pos_y };
+    return write_request(ft, 'M', array, 4);
 }
