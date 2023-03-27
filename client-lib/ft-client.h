@@ -17,6 +17,45 @@ typedef struct FTColor {
     uint8_t r, g, b;
 } FTColor;
 
+typedef enum FT_EventType {
+    FTE_KEY_PRESS, FTE_MOUSE_PRESS, FTE_MOUSE_RELEASE, FTE_MOUSE_MOVE,
+    FTE_JOY_PRESS, FTE_JOY_RELEASE, FTE_VERSION, FTE_COLLISION, FTE_VSYNC,
+    FTE_INVALID_ESCAPE,
+} FT_EventType;
+
+typedef struct FTE_Mouse {
+    int16_t button;
+    int16_t pos_x;
+    int16_t pos_y;
+} FTE_Mouse;
+
+typedef struct FTE_Version {
+    int16_t major;
+    int16_t minor;
+    int16_t patch;
+} FTE_Version;
+
+typedef enum FTE_CollisionType {
+    FTEC_COLLISION, FTEC_SEPARATION,
+} FTE_CollisionType;
+
+typedef struct FTE_Collision {
+    FTE_CollisionType type;
+    int16_t           sprite_a;
+    int16_t           sprite_b;
+} FTE_Collision;
+
+typedef struct FT_Event {
+    FT_EventType type;
+    union {
+        char          key;
+        FTE_Mouse     mouse;
+        FTE_Version   version;
+        int16_t       joy;
+        FTE_Collision collision;
+    };
+} FT_Event;
+
 #define FT_RECOMMENDED_BUFSZ 1024
 
 int ftclient_init(FTClient* ft_client,
@@ -54,5 +93,7 @@ int ft_sprite_4(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bo
 int ft_subscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
 int ft_unsubscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
 int ft_unsubscribe_all_collisions(FTClient* ft);
+
+int ft_poll_event(FTClient* ft, FT_Event* event);
 
 #endif //FT_CLIENT_H_

@@ -1,5 +1,6 @@
 #include "ft-client.h"
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -35,7 +36,7 @@ static int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz
             i = 0;
             buf[0] = '\0';
         }
-        strcat(&buf[i], buf2);
+        strcpy(&buf[i], buf2);
         i += sz;
         if (j != (array_sz - 1)) {
             buf[i++] = ';';
@@ -190,4 +191,104 @@ int ft_unsubscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b)
 int ft_unsubscribe_all_collisions(FTClient* ft)
 {
     return write_request(ft, 'C', NULL, 0);
+}
+
+void parse_event(char cmd, const int16_t arr[], int arr_sz, FT_Event *event)
+{
+    switch (cmd) {
+        case 'v':
+            event->type = FTE_VERSION;
+            event->version.major = arr[0];
+            event->version.minor = arr[1];
+            event->version.patch = arr[2];
+            break;
+        case 'B':
+            event->type = FTE_MOUSE_PRESS;
+            event->mouse.button = arr[0];
+            event->mouse.pos_x = arr[1];
+            event->mouse.pos_y = arr[2];
+            break;
+        case 'R':
+            event->type = FTE_MOUSE_RELEASE;
+            event->mouse.button = arr[0];
+            event->mouse.pos_x = arr[1];
+            event->mouse.pos_y = arr[2];
+            break;
+        case 'M':
+            event->type = FTE_MOUSE_MOVE;
+            event->mouse.button = arr[0];
+            event->mouse.pos_x = arr[1];
+            event->mouse.pos_y = arr[2];
+            break;
+        case 'J':
+            event->type = FTE_JOY_PRESS;
+            event->joy = arr[0];
+            break;
+        case 'K':
+            event->type = FTE_JOY_RELEASE;
+            event->joy = arr[0];
+            break;
+        case 'c':
+            event->type = FTE_COLLISION;
+            event->collision.type = arr[0] == 0 ? FTEC_COLLISION : FTEC_SEPARATION;
+            event->collision.sprite_a = arr[1];
+            event->collision.sprite_b = arr[2];
+            break;
+        default:
+            event->type = FTE_INVALID_ESCAPE;
+    }
+}
+
+int ft_poll_event(FTClient* ft, FT_Event* event)
+{
+#define GETCHAR { if (ft->read_cb(&c, 1, ft->data) <= 0) return 0; }
+
+    int16_t arr[ft->bufsz / sizeof(int16_t)];
+    char cmd;
+
+    int i = 0;
+    char c;
+    if (ft->read_cb(&c, 1, ft->data) <= 0)
+        return 0;
+
+    if (c == (char) 0xfe) {
+        event->type = FTE_VSYNC;
+        return 1;
+    } else if (c != '\e') {
+        event->type = FTE_KEY_PRESS;
+        event->key = c;
+        return 1;
+    }
+
+    if (ft->read_cb(&c, 1, ft->data) <= 0)
+        return 0;
+    if (c != '#')
+        return 0;
+
+    int16_t num = 0;
+    size_t count = 0;
+
+    if (ft->read_cb(&c, 1, ft->data) <= 0)
+        return 0;
+
+    while (true) {
+        if (c == ';') {
+            arr[i++] = num;
+            num = 0;
+        } else if (isdigit(c)) {
+            num = num * 10 + (c - '0');
+        } else if (isalpha(c)) {
+            cmd = c;
+            arr[i] = num;
+            break;
+        }
+        if (ft->read_cb(&c, 1, ft->data) <= 0)
+            return 0;
+        ++count;
+        if (count >= 16)
+            return 0;
+    }
+
+    parse_event(cmd, arr, i, event);
+    return 1;
 }

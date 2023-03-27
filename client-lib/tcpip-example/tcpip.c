@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #ifdef _WIN32
+#  include <fcntl.h>
+#  include <sys/types.h>
 #  include <winsock2.h>
 #  include <wspiapi.h>
 #include <unistd.h>
@@ -59,12 +61,27 @@ static SOCKET connect_to_terminal(const char* address)
 
     freeaddrinfo(peer_address);
 
+    /*
+#ifdef _WIN32
+    u_long iMode = 1;
+    ioctlsocket(fd, FIONBIO, &iMode);
+#else
+    int flags = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+#endif
+     */
+
     return fd;
 }
 
 int write_cb(const char* buf, size_t bufsz, void* data)
 {
     return send((SOCKET) data, buf, (int) bufsz, 0);
+}
+
+int read_cb(char* buf, size_t bufsz, void* data)
+{
+    return recv((SOCKET) data, buf, (int) bufsz, 0);
 }
 
 int main(int argc, char* argv[])
@@ -77,13 +94,26 @@ int main(int argc, char* argv[])
     SOCKET fd = connect_to_terminal(argv[1]);
 
     FTClient ft;
-    ftclient_init(&ft, write_cb, NULL, (void *) fd, 16); //FT_RECOMMENDED_BUFSZ);
+    ftclient_init(&ft, write_cb, read_cb, (void *) fd, FT_RECOMMENDED_BUFSZ);
     ft_print(&ft, "Hello world!");
 
+    /*
     FTColor color[32];
     for (int i = 0; i < 32; ++i)
         color[i] = (FTColor) { i * 3, i * 3 + 1, i * 3 + 2 };
     ft_palette(&ft, color);
+     */
 
-    sleep(2);
+    ft_mouse_enable(&ft, true);
+
+    FT_Event e;
+    while (true) {
+        while (ft_poll_event(&ft, &e)) {
+            if (e.type == FTE_KEY_PRESS)
+                printf(">> %c <<\n", e.key);
+            else if (e.type == FTE_MOUSE_PRESS)
+                printf("%d %d %d\n", e.mouse.button, e.mouse.pos_x, e.mouse.pos_y);
+            usleep(16);
+        }
+    }
 }
