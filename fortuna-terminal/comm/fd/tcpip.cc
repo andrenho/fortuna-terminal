@@ -23,6 +23,9 @@
 
 using namespace std::string_literals;
 
+static constexpr const char* CLIENT_CONNECTED = "\e[0;32mClient connected.\e[0m\r\n\r\n";
+static constexpr const char* CLIENT_DISCONNECTED = "\r\n\e[0;31mClient disconnected.\e[0m\r\n";
+
 TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
     : CommFileDescriptor(readbuf_sz), port_(options.port)
 {
@@ -106,7 +109,7 @@ std::string TCPIP::read()
 
         fd_ = fd;
 
-        return "\e[0;32mClient connected.\e[0m\r\n\r\n";
+        return CLIENT_CONNECTED;
     } else {
         std::string rd(readbuf_sz_, 0);
         int r = ::recv(fd_, rd.data(), readbuf_sz_, 0);
@@ -119,10 +122,11 @@ std::string TCPIP::read()
                 r = 0;
             } else {
                 client_disconnected();
-                return "\r\n\e[0;31mClient disconnected.\e[0m\r\n";
+                return CLIENT_DISCONNECTED;
             }
         } else if (r == 0) {
             client_disconnected();
+            return CLIENT_DISCONNECTED;
         }
 
         rd.resize(r);
