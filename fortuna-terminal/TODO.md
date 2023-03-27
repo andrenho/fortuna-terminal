@@ -6,7 +6,7 @@ Improvements:
     - [x] Documentation
 - [x] Fix bug where only image 0 is showing up
 - [x] Enable VSYNC
-- [ ] Write client library (?)
+- [x] Write client library (?)
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
 - [ ] Change palette

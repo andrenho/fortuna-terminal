@@ -106,9 +106,7 @@ std::string TCPIP::read()
 
         fd_ = fd;
 
-        printf("Client connected.\n");
-
-        return {};
+        return "\e[0;32mClient connected.\e[0m\r\n\r\n";
     } else {
         std::string rd(readbuf_sz_, 0);
         int r = ::recv(fd_, rd.data(), readbuf_sz_, 0);
@@ -120,7 +118,8 @@ std::string TCPIP::read()
 #endif
                 r = 0;
             } else {
-                on_read_error();
+                client_disconnected();
+                return "\r\n\e[0;31mClient disconnected.\e[0m\r\n";
             }
         } else if (r == 0) {
             client_disconnected();
