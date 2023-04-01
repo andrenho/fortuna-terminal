@@ -131,6 +131,7 @@ int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8
 
 #ifdef FT_PNG_SUPPORT
 #include <png.h>
+#include <stdlib.h>
 #include <setjmp.h>
 
 int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz)
@@ -147,7 +148,30 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
     png_init_io(png_ptr, fp);
     png_read_info(png_ptr, info_ptr);
 
+    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_PALETTE) {
+        fprintf(stderr, "Error: only 8-bit color indexing is supported\n");
+        return 1;
+    }
 
+    png_bytep row_pointers[png_get_image_height(png_ptr, info_ptr)];
+    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
+        row_pointers[y] = malloc(png_get_rowbytes(png_ptr, info_ptr));
+    }
+    png_read_image(png_ptr, row_pointers);
+
+    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
+        for (int x = 0; x < png_get_image_width(png_ptr, info_ptr); ++x) {
+            printf("%d", row_pointers[y][x]);
+            if (x != png_get_image_width(png_ptr, info_ptr) - 1 || y != png_get_image_height(png_ptr, info_ptr) - 1) {
+                printf(";");
+            }
+        }
+    }
+
+    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
+        free(row_pointers[y]);
+    }
+    fclose(fp);
 }
 #endif
 
