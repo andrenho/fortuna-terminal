@@ -1,16 +1,20 @@
 EXE=tcpip-example
 OBJ=tcpip.o ../ft-client.o
 
-CFLAGS=-Wall -Wextra -ggdb -O0
+CFLAGS=-Wall -Wextra -ggdb -O0 -DFT_PNG_SUPPORT
 
 ifeq ($(OS),Windows_NT)
-	LDFLAGS := -lws2_32
+	CFLAGS += -I../win32/include
+	LDFLAGS := -L../win32/lib -lws2_32
 else
 endif
+
+LDFLAGS+=-lpng
 
 all: ${EXE}
 
 ${EXE}: ${OBJ}
+	gcc -dumpmachine
 	gcc -o $@ ${OBJ} $(LDFLAGS)
 
 .PHONY: clean

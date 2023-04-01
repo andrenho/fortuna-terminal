@@ -129,6 +129,28 @@ int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8
     return write_request(ft, 'i', array, 258);
 }
 
+#ifdef FT_PNG_SUPPORT
+#include <png.h>
+#include <setjmp.h>
+
+int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz)
+{
+    FILE* fp = fopen(filename, "rb");
+    if (!fp) {
+        snprintf(error, err_sz, "Error opening PNG file.");
+        return -1;
+    }
+
+    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+    setjmp(png_jmpbuf(png_ptr));
+    png_init_io(png_ptr, fp);
+    png_read_info(png_ptr, info_ptr);
+
+
+}
+#endif
+
 int ft_bg_color(FTClient* ft, int16_t color)
 {
     return write_request(ft, 'B', &color, 1);

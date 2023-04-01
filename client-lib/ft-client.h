@@ -77,8 +77,12 @@ int ft_joystick_emulation(FTClient* ft, bool enable);
 
 int ft_graphics(FTClient* ft, bool enable);
 int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS]);
-int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8_t bytes[256]);
 int ft_map(FTClient* ft, int16_t map_n, int16_t width, int16_t height, int16_t const* indexes);
+
+int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8_t bytes[256]);
+#ifdef FT_PNG_SUPPORT
+    int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz);
+#endif
 
 int ft_bg_color(FTClient* ft, int16_t color);
 int ft_enable_layer(FTClient* ft, int16_t layer, bool enable);
