@@ -299,8 +299,6 @@ void parse_event(char cmd, const int16_t arr[], int arr_sz, FT_Event *event)
 
 int ft_poll_event(FTClient* ft, FT_Event* event)
 {
-#define GETCHAR { if (ft->read_cb(&c, 1, ft->data) <= 0) return 0; }
-
     int16_t arr[ft->bufsz / sizeof(int16_t)];
     char cmd;
 
@@ -329,15 +327,19 @@ int ft_poll_event(FTClient* ft, FT_Event* event)
     if (ft->read_cb(&c, 1, ft->data) <= 0)
         return 0;
 
+    int sign = 1;
     while (true) {
         if (c == ';') {
             arr[i++] = num;
             num = 0;
+        } else if (c == '-') {
+            sign = -1;
         } else if (isdigit(c)) {
             num = num * 10 + (c - '0');
         } else if (isalpha(c)) {
             cmd = c;
-            arr[i] = num;
+            arr[i] = num * sign;
+            sign = 1;
             break;
         }
         if (ft->read_cb(&c, 1, ft->data) <= 0)

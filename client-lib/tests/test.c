@@ -6,6 +6,9 @@
 static char buffers[16][17] = { 0 };
 static size_t cbuf = 0;
 
+static char read_poll[256];
+static size_t rbuf = 0;
+
 void* my_data = &cbuf;
 
 static int write_cb(const char* buf, size_t bufsz, void* data)
@@ -19,12 +22,27 @@ static int write_cb(const char* buf, size_t bufsz, void* data)
     return 0;
 }
 
+static int read_cb(char* buf, size_t bufsz, void* data)
+{
+    assert(bufsz <= 16);
+    assert(data == my_data);
+
+    memcpy(buf, &read_poll[rbuf], bufsz);
+    rbuf += bufsz;
+
+    if (strlen(buf) == 0)
+        return 0;
+
+    return bufsz;
+}
+
 int main()
 {
     FTClient ft;
-    assert(ftclient_init(&ft, write_cb, NULL, my_data, 16) == 0);
+    assert(ftclient_init(&ft, write_cb, read_cb, my_data, 16) == 0);
 
-#if 0
+    // test writes
+
     cbuf = 0;
     assert(ft_reset_terminal(&ft) == 0);
     assert(strcmp("\e*r", buffers[0]) == 0);
@@ -32,7 +50,6 @@ int main()
     cbuf = 0;
     assert(ft_enable_vsync(&ft, true) == 0);
     assert(strcmp("\e*1V", buffers[0]) == 0);
-#endif
 
     cbuf = 0;
     assert(ft_sprite_4(&ft, 10000, -50, 30, true, false, true, 8, 0) == 0);
@@ -42,4 +59,19 @@ int main()
     cbuf = 0;
     assert(ft_sprite_4(&ft, 8, 1, 1, true, true, true, 1, 8) == 0);
     assert(strcmp("\e*8;$6,1;8S", buffers[0]) == 0);
+
+    // test reads
+
+    FT_Event e;
+    strcpy(read_poll, "\e#1;2;3v\e#0;50;-33B");
+
+    assert(ft_poll_event(&ft, &e) != 0);
+    assert(e.type == FTE_VERSION);
+    assert(e.version.major == 1 && e.version.minor == 2 && e.version.patch == 3);
+
+    assert(ft_poll_event(&ft, &e) != 0);
+    assert(e.type == FTE_MOUSE_PRESS);
+    assert(e.mouse.button == 0 && e.mouse.pos_x == 50 && e.mouse.pos_y == -33);
+
+    assert(ft_poll_event(&ft, &e) == 0);
 }

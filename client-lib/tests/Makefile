@@ -1,5 +1,5 @@
 EXE := tests
-OBJ := main.o ../ft-client.o
+OBJ := test.o ../ft-client.o
 
 CFLAGS=-Wall -Wextra -ggdb -O0 -I..
 
