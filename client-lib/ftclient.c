@@ -19,7 +19,7 @@ int ftclient_init(FTClient* ft,
     return 0;
 }
 
-static int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz)
+int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz)
 {
     char buf[ft->bufsz];
     buf[0] = '\e';
