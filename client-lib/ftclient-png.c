@@ -54,6 +54,15 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
 
     png_read_image(png, pixels);
 
+    int16_t transparent_index = -1;
+    {
+        png_color_16p trans_color;
+        int num_trans;
+        png_get_tRNS(png, info, NULL, &num_trans, &trans_color);
+        if (trans_color && num_trans > 0)
+            transparent_index = trans_color->index;
+    }
+
     int16_t image_n = 0;
 
     for (size_t xx = 0; xx < w; xx += 16) {
@@ -62,7 +71,7 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
             int16_t array[258];
             size_t i = 0;
             array[i++] = image_n++;
-            array[i++] = 0;  // TODO - transparent color
+            array[i++] = transparent_index;
 
             for (size_t x = 0; x < 16; ++x)
                 for (size_t y = 0; y < 16; ++y)
