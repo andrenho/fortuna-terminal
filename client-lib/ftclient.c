@@ -1,4 +1,4 @@
-#include "ft-client.h"
+#include "ftclient.h"
 
 #include <ctype.h>
 #include <stdarg.h>
@@ -140,52 +140,6 @@ int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8
         array[i+2] = bytes[i];
     return write_request(ft, 'i', array, 258);
 }
-
-#ifdef FT_PNG_SUPPORT
-#include <png.h>
-#include <stdlib.h>
-#include <setjmp.h>
-
-int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz)
-{
-    FILE* fp = fopen(filename, "rb");
-    if (!fp) {
-        snprintf(error, err_sz, "Error opening PNG file.");
-        return -1;
-    }
-
-    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    setjmp(png_jmpbuf(png_ptr));
-    png_init_io(png_ptr, fp);
-    png_read_info(png_ptr, info_ptr);
-
-    if (png_get_color_type(png_ptr, info_ptr) != PNG_COLOR_TYPE_PALETTE) {
-        fprintf(stderr, "Error: only 8-bit color indexing is supported\n");
-        return 1;
-    }
-
-    png_bytep row_pointers[png_get_image_height(png_ptr, info_ptr)];
-    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
-        row_pointers[y] = malloc(png_get_rowbytes(png_ptr, info_ptr));
-    }
-    png_read_image(png_ptr, row_pointers);
-
-    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
-        for (int x = 0; x < png_get_image_width(png_ptr, info_ptr); ++x) {
-            printf("%d", row_pointers[y][x]);
-            if (x != png_get_image_width(png_ptr, info_ptr) - 1 || y != png_get_image_height(png_ptr, info_ptr) - 1) {
-                printf(";");
-            }
-        }
-    }
-
-    for (int y = 0; y < png_get_image_height(png_ptr, info_ptr); ++y) {
-        free(row_pointers[y]);
-    }
-    fclose(fp);
-}
-#endif
 
 int ft_bg_color(FTClient* ft, int16_t color)
 {

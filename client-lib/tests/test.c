@@ -1,7 +1,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ft-client.h>
+#include <ftclient.h>
+#include <ftclient-png.h>
 
 static char buffers[16][17] = { 0 };
 static size_t cbuf = 0;
@@ -74,4 +75,8 @@ int main()
     assert(e.mouse.button == 0 && e.mouse.pos_x == 50 && e.mouse.pos_y == -33);
 
     assert(ft_poll_event(&ft, &e) == 0);
+
+    // test PNG
+
+    assert(ft_image_load(&ft, "test.png", NULL, 0) == 0);
 }

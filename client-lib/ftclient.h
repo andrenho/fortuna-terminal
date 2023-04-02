@@ -1,5 +1,5 @@
-#ifndef FT_CLIENT_H_
-#define FT_CLIENT_H_
+#ifndef FTCLIENT_H_
+#define FTCLIENT_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -79,11 +79,6 @@ int ft_graphics(FTClient* ft, bool enable);
 int ft_palette(FTClient* ft, FTColor colors[FT_N_COLORS]);
 int ft_map(FTClient* ft, int16_t map_n, int16_t width, int16_t height, int16_t const* indexes);
 
-int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8_t bytes[256]);
-#ifdef FT_PNG_SUPPORT
-    int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz);
-#endif
-
 int ft_bg_color(FTClient* ft, int16_t color);
 int ft_enable_layer(FTClient* ft, int16_t layer, bool enable);
 int ft_map_pos(FTClient* ft, int16_t layer, int16_t map, int16_t pos_x, int16_t pos_y);
@@ -100,4 +95,4 @@ int ft_unsubscribe_all_collisions(FTClient* ft);
 
 int ft_poll_event(FTClient* ft, FT_Event* event);
 
-#endif //FT_CLIENT_H_
+#endif //FTCLIENT_H_

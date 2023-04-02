@@ -27,7 +27,7 @@
 #  define SOCKET int
 #endif
 
-#include "../ft-client.h"
+#include "../ftclient.h"
 
 static SOCKET connect_to_terminal(const char* address)
 {
