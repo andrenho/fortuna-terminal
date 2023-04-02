@@ -27,9 +27,20 @@ static int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz
     size_t i = 2;
 
     for (size_t j = 0; j < array_sz; ++j) {
-        char buf2[8];
-        int sz = snprintf(buf2, sizeof buf2, "%d", array[j]);
-        if (i + sz > ft->bufsz) {
+        int sz;
+        char buf2[14];
+        if ((j + 2) < array_sz && (array[j] == array[j+1]) && (array[j+1] == array[j+2])) {
+            int count = 1;
+            ++j;
+            while (j < array_sz && array[j-1] == array[j]) {
+                ++count;
+                ++j;
+            }
+            sz = snprintf(buf2, sizeof buf2, "$%d,%d", count, array[--j]);
+        } else {
+            sz = snprintf(buf2, sizeof buf2, "%d", array[j]);
+        }
+        if (i + sz >= ft->bufsz) {
             int r = ft->write_cb(buf, i, ft->data);
             if (r < 0)
                 return r;
@@ -45,6 +56,7 @@ static int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz
     }
 
     buf[i++] = cmd;
+    buf[i] = cmd;
     return ft->write_cb(buf, i, ft->data);
 }
 

@@ -36,6 +36,10 @@ int main()
 
     cbuf = 0;
     assert(ft_sprite_4(&ft, 10000, -50, 30, true, false, true, 8, 0) == 0);
-    assert(strcmp("\e*10000;-50;30;1", buffers[0]) == 0);
-    assert(strcmp("0;1;8;0", buffers[1]) == 0);
+    assert(strcmp("\e*10000;-50;30;", buffers[0]) == 0);
+    assert(strcmp("1;0;1;8;0S", buffers[1]) == 0);
+
+    cbuf = 0;
+    assert(ft_sprite_4(&ft, 8, 1, 1, true, true, true, 1, 8) == 0);
+    assert(strcmp("\e*8;$6,1;8S", buffers[0]) == 0);
 }
