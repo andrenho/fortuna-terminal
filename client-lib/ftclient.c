@@ -152,6 +152,16 @@ int ft_enable_layer(FTClient* ft, int16_t layer, bool enable)
     return write_request(ft, 'L', array, 2);
 }
 
+int ft_map(FTClient* ft, int16_t map_n, int16_t width, int16_t height, int16_t const* indexes)
+{
+    int16_t array[width * height + 3];
+    array[0] = map_n;
+    array[1] = width;
+    array[2] = height;
+    memcpy(&array[3], indexes, width * height * sizeof(int16_t));
+    return write_request(ft, 't', array, 4);
+}
+
 int ft_map_pos(FTClient* ft, int16_t layer, int16_t map, int16_t pos_x, int16_t pos_y)
 {
     int16_t array[4] = { layer, map, pos_x, pos_y };
@@ -207,6 +217,8 @@ int ft_unsubscribe_all_collisions(FTClient* ft)
 
 void parse_event(char cmd, const int16_t arr[], int arr_sz, FT_Event *event)
 {
+    (void) arr_sz;
+
     switch (cmd) {
         case 'v':
             event->type = FTE_VERSION;

@@ -89,6 +89,8 @@ int ft_sprite_2(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bo
 int ft_sprite_3(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible, bool mirrored_h, bool mirrored_v, int16_t z_order);
 int ft_sprite_4(FTClient* ft, int16_t sprite_n, int16_t pos_x, int16_t pos_y, bool visible, bool mirrored_h, bool mirrored_v, int16_t z_order, int16_t image_idx);
 
+int ft_image(FTClient* ft, int16_t index, int16_t transparent_color, const uint8_t bytes[256]);
+
 int ft_subscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
 int ft_unsubscribe_collisions(FTClient* ft, int16_t sprite_a, int16_t sprite_b);
 int ft_unsubscribe_all_collisions(FTClient* ft);

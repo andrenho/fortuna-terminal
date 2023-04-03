@@ -13,24 +13,24 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
     FILE* fp = fopen(filename, "rb");
     if (!fp) {
         snprintf(error, err_sz, "Error opening PNG file.");
-        return 1;
+        return -1;
     }
 
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!png) {
         snprintf(error, err_sz, "Failed to create read struct.");
-        return 1;
+        return -1;
     }
 
     png_infop info = png_create_info_struct(png);
     if (!info) {
         snprintf(error, err_sz, "Failed to create info struct.");
-        return 1;
+        return -1;
     }
 
     if (setjmp(png_jmpbuf(png))) {
         snprintf(error, err_sz, "Error during PNG read.");
-        return 1;
+        return -1;
     }
 
     png_init_io(png, fp);
@@ -38,14 +38,14 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
 
     if (png_get_color_type(png, info) != PNG_COLOR_TYPE_PALETTE || png_get_bit_depth(png, info) != 8) {
         snprintf(error, err_sz, "Error: only 8-bit color indexing is supported\n");
-        return 1;
+        return -1;
     }
 
     size_t w = png_get_image_width(png, info);
     size_t h = png_get_image_height(png, info);
     if (w % 16 != 0 || h % 16 != 0) {
         snprintf(error, err_sz, "Image width and height need to be a multiple of 16.");
-        return 1;
+        return -1;
     }
 
     uint8_t* pixels[h];
