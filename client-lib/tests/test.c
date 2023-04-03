@@ -4,7 +4,7 @@
 #include <ftclient.h>
 #include <ftclient-png.h>
 
-static char buffers[16][17] = { 0 };
+static char buffers[16][FT_RECOMMENDED_BUFSZ] = { 0 };
 static size_t cbuf = 0;
 
 static char read_poll[256];
@@ -14,7 +14,6 @@ void* my_data = &cbuf;
 
 static int write_cb(const char* buf, size_t bufsz, void* data)
 {
-    assert(bufsz <= 16);
     assert(data == my_data);
 
     memset(buffers[cbuf], 0, sizeof(buffers[cbuf]));
@@ -34,7 +33,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
     if (strlen(buf) == 0)
         return 0;
 
-    return bufsz;
+    return (int) bufsz;
 }
 
 int main()
@@ -78,5 +77,9 @@ int main()
 
     // test PNG
 
+    assert(ftclient_init(&ft, write_cb, read_cb, my_data, FT_RECOMMENDED_BUFSZ) == 0);
+    cbuf = 0;
     assert(ft_image_load(&ft, "test.png", NULL, 0) == 0);
+    assert(strcmp("\e*0;7;$17,0;19;$238,0i", buffers[0]) == 0);
+    assert(strcmp("\e*1;7;$238,0;21;$17,0i", buffers[1]) == 0);
 }

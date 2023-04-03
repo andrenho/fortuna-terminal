@@ -56,11 +56,22 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
 
     int16_t transparent_index = -1;
     {
-        png_color_16p trans_color;
+        png_colorp palette;
+        int num_palette;
+        png_get_PLTE(png, info, &palette, &num_palette);
+
+        png_bytep trans;
         int num_trans;
-        png_get_tRNS(png, info, NULL, &num_trans, &trans_color);
-        if (trans_color && num_trans > 0)
-            transparent_index = trans_color->index;
+        png_get_tRNS(png, info, &trans, &num_trans, NULL);
+
+        if (num_trans > 0) {
+            for (int16_t i = 0; i < num_palette; ++i) {
+                if (trans[i] == 0) {
+                    transparent_index = i;
+                    break;
+                }
+            }
+        }
     }
 
     int16_t image_n = 0;
@@ -81,20 +92,6 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
         }
     }
 
-    /*
-    for (int y = 0; y < png_get_image_height(png, info); ++y) {
-        for (int x = 0; x < png_get_image_width(png, info); ++x) {
-            printf("%d", row_pointers[y][x]);
-            if (x != png_get_image_width(png, info) - 1 || y != png_get_image_height(png, info) - 1) {
-                printf(";");
-            }
-        }
-    }
-
-    for (int y = 0; y < png_get_image_height(png, info); ++y) {
-        free(row_pointers[y]);
-    }
-     */
     fclose(fp);
 
     return 0;
