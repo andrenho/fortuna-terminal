@@ -1,5 +1,5 @@
 LIB := ftclient.so
-OBJ := ftclient-lua.o ../ftclient.o ../ftclient-png.o
+OBJ := ftclient-lua.o ../ftclient.o ../ftclient-png.o ../ftclient-tcpip.o
 
 CFLAGS=-Wall -Wextra -ggdb -O0 -I..
 

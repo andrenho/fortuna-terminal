@@ -9,13 +9,22 @@
 int ftclient_init(FTClient* ft,
                   int (*write_cb)(const char* buf, size_t bufsz, void* data),
                   int (*read_cb)(char* buf, size_t bufsz, void* data),
+                  int (*finalize)(struct FTClient* ft, void* data),
                   void*  data,
                   size_t bufsz)
 {
     ft->write_cb = write_cb;
     ft->read_cb = read_cb;
+    ft->finalize = finalize;
     ft->data = data;
     ft->bufsz = bufsz;
+    return 0;
+}
+
+int ftclient_finalize(FTClient* ft)
+{
+    if (ft->finalize)
+        return ft->finalize(ft, ft->data);
     return 0;
 }
 

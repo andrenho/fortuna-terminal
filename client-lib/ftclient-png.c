@@ -92,6 +92,7 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
         }
     }
 
+    png_destroy_read_struct(&png, NULL, NULL);
     fclose(fp);
 
     return 0;

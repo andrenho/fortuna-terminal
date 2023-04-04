@@ -39,7 +39,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
 int main()
 {
     FTClient ft;
-    assert(ftclient_init(&ft, write_cb, read_cb, my_data, 16) == 0);
+    assert(ftclient_init(&ft, lua_write_cb, read_cb, my_data, 16) == 0);
 
     // test writes
 
@@ -77,7 +77,7 @@ int main()
 
     // test PNG
 
-    assert(ftclient_init(&ft, write_cb, read_cb, my_data, FT_RECOMMENDED_BUFSZ) == 0);
+    assert(ftclient_init(&ft, lua_write_cb, read_cb, my_data, FT_RECOMMENDED_BUFSZ) == 0);
     cbuf = 0;
     assert(ft_image_load(&ft, "test.png", NULL, 0) == 0);
     assert(strcmp("\e*0;7;$17,0;19;$238,0i", buffers[0]) == 0);

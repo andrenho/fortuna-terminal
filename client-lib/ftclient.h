@@ -9,6 +9,7 @@
 typedef struct FTClient {
     int    (*write_cb)(const char* buf, size_t bufsz, void* data);
     int    (*read_cb)(char* buf, size_t bufsz, void* data);
+    int    (*finalize)(struct FTClient* ft, void* data);
     void*  data;
     size_t bufsz;
 } FTClient;
@@ -61,8 +62,10 @@ typedef struct FT_Event {
 int ftclient_init(FTClient* ft_client,
                   int (*write_cb)(const char* buf, size_t bufsz, void* data),
                   int (*read_cb)(char* buf, size_t bufsz, void* data),
+                  int (*finalize)(struct FTClient* ft, void* data),
                   void* data,
                   size_t bufsz);  // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
+int ftclient_finalize(FTClient* ft);
 
 int ft_print(FTClient* ft, const char* fmt, ...);
 

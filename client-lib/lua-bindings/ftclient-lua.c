@@ -5,18 +5,21 @@
 
 #include <ftclient.h>
 #include <ftclient-png.h>
+#include <ftclient-tcpip.h>
 
 #define FT_MT "FTClient.metadata"
 
 static int ft_destroy(lua_State* L)
 {
+    FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
+    ftclient_finalize(ft);
     return 0;
 }
 
 static int palette(lua_State* L)
 {
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer;
+    lua_pushstring(L, "");
 
     FTColor colors[FT_N_COLORS];
     memset(colors, 0, sizeof(colors));
@@ -35,14 +38,13 @@ static int palette(lua_State* L)
 
     ft_palette(ft, colors);
 
-    luaL_pushresult(&buffer);
     return 1;
 }
 
 static int map(lua_State* L)
 {
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer;
+    lua_pushstring(L, "");
 
     int16_t map_n = (int16_t) luaL_checkinteger(L, 2);
     int16_t w = (int16_t) luaL_checkinteger(L, 3);
@@ -60,14 +62,13 @@ static int map(lua_State* L)
 
     ft_map(ft, map_n, w, h, indexes);
 
-    luaL_pushresult(&buffer);
     return 1;
 }
 
 static int sprite(lua_State* L)
 {
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer;
+    lua_pushstring(L, "");
 
     size_t n_pars = lua_gettop(L);
 
@@ -97,14 +98,13 @@ static int sprite(lua_State* L)
         }
     }
 
-    luaL_pushresult(&buffer);
     return 1;
 }
 
 static int image(lua_State* L)
 {
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer;
+    lua_pushstring(L, "");
 
     luaL_checktype(L, 4, LUA_TTABLE);
     if (lua_rawlen(L, 4) != 256)
@@ -119,25 +119,24 @@ static int image(lua_State* L)
 
     ft_image(ft, (int16_t) luaL_checkinteger(L, 2), (int16_t) luaL_checkinteger(L, 3), image);
 
-    luaL_pushresult(&buffer);
     return 1;
 }
 
 static int image_load(lua_State* L)
 {
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer;
+    lua_pushstring(L, "");
 
     char err_buf[1024];
     int r = ft_image_load(ft, luaL_checkstring(L, 2), err_buf, sizeof(err_buf));
     if (r < 0)
         luaL_error(L, "image_load: %s", err_buf);
 
-    luaL_pushresult(&buffer);
     return 1;
 }
 
 #define FUNCTIONS \
+    X(print,              { ft_print(ft, luaL_checkstring(L, 2)); }) \
     X(reset_terminal,     { ft_reset_terminal(ft); }) \
     X(reset_computer,     { ft_reset_computer(ft); }) \
     X(enable_vsync,       { ft_enable_vsync(ft, lua_toboolean(L, 2)); }) \
@@ -157,9 +156,8 @@ static int image_load(lua_State* L)
 #define X(name, code) \
 static int name(lua_State* L) { \
     FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT); \
-    luaL_Buffer buffer; luaL_buffinit(L, &buffer); ft->data = &buffer; \
+    lua_pushstring(L, ""); \
     code \
-    luaL_pushresult(&buffer); \
     return 1;\
 }
     FUNCTIONS
@@ -178,22 +176,47 @@ static const struct luaL_Reg ft_meta[] = {
     {NULL, NULL}
 };
 
-int write_cb(const char* buf, size_t bufsz, void* data)
+static int lua_write_cb(const char* buf, size_t bufsz, void* data)
 {
-    luaL_Buffer* buffer = (luaL_Buffer *) data;
-    luaL_addlstring(buffer, buf, bufsz);
+    lua_State* L = (lua_State *) data;
+    lua_pushlstring(L, buf, bufsz);
+    lua_concat(L, 2);
     return 0;
 }
 
 static int ft_new(lua_State* L)
 {
     FTClient* ft = (FTClient *) lua_newuserdatauv(L, sizeof(FTClient), 0);
-    ftclient_init(ft, write_cb, NULL, L, FT_RECOMMENDED_BUFSZ);
+    ftclient_init(ft, lua_write_cb, NULL, NULL, L, FT_RECOMMENDED_BUFSZ);
 
     luaL_setmetatable(L, FT_MT);
 
     return 1;
 }
+
+static int ft_tcpip(lua_State* L)
+{
+    FTClient* ft = (FTClient *) lua_newuserdatauv(L, sizeof(FTClient), 0);
+    char error[1024];
+
+    int port = 8076;
+    if (lua_gettop(L) > 2)
+        port = (int) luaL_checkinteger(L, 2);
+
+    int r = ftclient_tcpip_init(ft, luaL_checkstring(L, 1), port, error, sizeof(error));
+    if (r < 0)
+        luaL_error(L, "tcpip: %s", error);
+
+    luaL_setmetatable(L, FT_MT);
+
+    return 1;
+}
+
+static const struct luaL_Reg ft_static[] = {
+        {"new", ft_new},
+        {"tcpip", ft_tcpip},
+        {NULL, NULL}
+};
 
 int luaopen_ftclient(lua_State *L)
 {
@@ -203,10 +226,7 @@ int luaopen_ftclient(lua_State *L)
     lua_setfield(L, -1, "__index");
 
     // create library with only the `new` function
-    lua_newtable(L);
-    lua_pushstring(L, "new");
-    lua_pushcfunction(L, ft_new);
-    lua_settable(L, -3);
+    luaL_newlib(L, ft_static);
 
     return 1;
 }
