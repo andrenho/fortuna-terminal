@@ -135,6 +135,72 @@ static int image_load(lua_State* L)
     return 1;
 }
 
+static int poll_event(lua_State* L)
+{
+    FTClient* ft = (FTClient *) luaL_checkudata(L, 1, FT_MT);
+
+    FT_Event e;
+    int r = ft_poll_event(ft, &e);
+
+    if (r == 0)
+        return 0;
+
+    lua_newtable(L);
+    const char* type;
+    switch (e.type) {
+        case FTE_KEY_PRESS:
+            type = "keypress";
+            lua_pushfstring(L, "%c", e.key); lua_setfield(L, -2, "key");
+            lua_pushinteger(L, e.key); lua_setfield(L, -2, "ascii");
+            break;
+        case FTE_VERSION:
+            type = "version";
+            lua_pushinteger(L, e.version.major); lua_setfield(L, -2, "major");
+            lua_pushinteger(L, e.version.minor); lua_setfield(L, -2, "minor");
+            lua_pushinteger(L, e.version.patch); lua_setfield(L, -2, "patch");
+            break;
+        case FTE_COLLISION:
+            type = (e.collision.type == FTEC_COLLISION) ? "collision" : "separation";
+            lua_pushinteger(L, e.collision.sprite_a); lua_setfield(L, -2, "sprite_a");
+            lua_pushinteger(L, e.collision.sprite_b); lua_setfield(L, -2, "sprite_b");
+            break;
+        case FTE_MOUSE_PRESS:
+            type = "mousepress";
+            break;
+        case FTE_MOUSE_RELEASE:
+            type = "mouserelease";
+            break;
+        case FTE_MOUSE_MOVE:
+            type = "mousemove";
+            break;
+        case FTE_JOY_PRESS:
+            type = "joypress";
+            break;
+        case FTE_JOY_RELEASE:
+            type = "joyrelease";
+            break;
+        case FTE_VSYNC:
+            type = "vsync";
+            break;
+        case FTE_INVALID_ESCAPE:
+            type = "invalidescape";
+            break;
+    }
+
+    if (e.type == FTE_MOUSE_MOVE || e.type == FTE_MOUSE_PRESS || e.type == FTE_MOUSE_RELEASE) {
+        lua_pushinteger(L, e.mouse.button); lua_setfield(L, -2, "button");
+        lua_pushinteger(L, e.mouse.pos_x); lua_setfield(L, -2, "pos_x");
+        lua_pushinteger(L, e.mouse.pos_y); lua_setfield(L, -2, "pos_y");
+    } else if (e.type == FTE_JOY_PRESS || e.type == FTE_JOY_RELEASE) {
+        lua_pushinteger(L, e.joy); lua_setfield(L, -2, "joy");
+    }
+
+    lua_pushstring(L, type);
+    lua_setfield(L, -2, "type");
+
+    return 1;
+}
+
 #define FUNCTIONS \
     X(print,              { ft_print(ft, luaL_checkstring(L, 2)); }) \
     X(reset_terminal,     { ft_reset_terminal(ft); }) \
@@ -172,6 +238,7 @@ static const struct luaL_Reg ft_meta[] = {
     {"sprite", sprite},
     {"image", image},
     {"image_load", image_load},
+    {"poll_event", poll_event},
     {"__gc", ft_destroy},
     {NULL, NULL}
 };
