@@ -22,6 +22,11 @@ Alternative screens:
 Emulator support
   - [ ] Emulator
 
+Autobuild
+  - [ ] Windows
+  - [ ] RPI
+  - [ ] Javascript
+
 Audio:
   - [ ] Design audio
   - [ ] Implement audio

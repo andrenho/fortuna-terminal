@@ -9,8 +9,8 @@ ft:print("\27[1;1H\27[2J")
 ft:image_load("heavy.png")
 
 for i = 1,N_SPRITES do
-    local x = math.random(0, 255)
-    local y = math.random(0, 255)
+    local x = math.random(0, 256 - 16)
+    local y = math.random(0, 256 - 16)
     ft:sprite(i - 1, x, y, true, false, false, 0, (i - 1) % 16)
     sprites[i] = { x=x, y=y, dir_x=math.random(-1,1), dir_y=math.random(-1, 1) }
 end
@@ -21,8 +21,11 @@ while true do
     local e = ft:poll_event()
     if e.type == 'vsync' then
         for i = 1,N_SPRITES do
-            sprites[i].x = sprites[i].x + sprites[i].dir_x
-            sprites[i].y = sprites[i].y + sprites[i].dir_y
+            local s = sprites[i]
+            s.x = s.x + s.dir_x
+            s.y = s.y + s.dir_y
+            if s.x < 0 or s.x >= 256 - 16 then s.dir_x = s.dir_x * -1 end
+            if s.y < 0 or s.y >= 256 - 16 then s.dir_y = s.dir_y * -1 end
             ft:sprite(i-1, sprites[i].x, sprites[i].y)
         end
     end
