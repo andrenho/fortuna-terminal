@@ -86,7 +86,7 @@ int ft_image_load(FTClient* ft, const char* filename, char* error, size_t err_sz
 
             for (size_t x = 0; x < 16; ++x)
                 for (size_t y = 0; y < 16; ++y)
-                    array[i++] = pixels[yy + y][xx + x];
+                    array[i++] = pixels[xx + x][yy + y];
 
             write_request(ft, 'i', array, 258);
         }

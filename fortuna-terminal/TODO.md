@@ -8,6 +8,8 @@ Improvements:
 - [x] Enable VSYNC
 - [x] Write client library (?)
   - [x] Documentation
+  - [ ] Connect to IP
+  - [ ] Connect to raspberry remotely
 - [ ] Create demanding sample to test performance
 - [ ] Reduce CPU usage (?)
 - [ ] Change palette
