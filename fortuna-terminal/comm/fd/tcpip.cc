@@ -10,6 +10,7 @@
 #  include <ifaddrs.h>
 #  include <fcntl.h>
 #  include <net/if.h>
+#  include <signal.h>
 #  include <netdb.h>
 #  include <sys/socket.h>
 #  include <sys/types.h>
@@ -63,6 +64,13 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
 #ifndef _WIN32
         int flags = fcntl(sock_fd, F_GETFL, 0);
         fcntl(sock_fd, F_SETFL, flags | O_NONBLOCK);
+        
+		// set write timeout to be 1 second
+		struct timeval tv;
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		if (setsockopt(sock_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+            throw LibcException("Error setting socket options");
 #endif
 
         if (bind(sock_fd, p->ai_addr, (int) p->ai_addrlen) == -1) {
@@ -154,7 +162,11 @@ void TCPIP::write(std::string_view data_to_send)
     if (fd != INVALID_FILE) {
         size_t left = data_to_send.size();
         do {
-            int r = ::send(fd, data_to_send.data(), data_to_send.size(), 0);
+            int flags = 0;
+#ifndef _WIN32
+            flags = MSG_NOSIGNAL;
+#endif
+            int r = ::send(fd, data_to_send.data(), data_to_send.size(), flags);
             if (r == -1) {
                 client_disconnected();
             } else if (r == 0) {
