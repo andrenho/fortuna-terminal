@@ -11,9 +11,9 @@ Improvements:
   - [x] Connect to IP
   - [x] Connect to raspberry remotely
 - [ ] Create demanding sample to test performance
-  - [ ] Data is not being sent back on TCP/IP (?)
-  - [ ] Screen is stretched
-  - [ ] First TCP/IP connection doesn't seem to work
+  - [x] Data is not being sent back on TCP/IP (?)
+  - [x] Screen is stretched
+  - [x] First TCP/IP connection doesn't seem to work
   - [ ] Disconnecting for the second time is causing "Connection reset by peer"
   - [ ] Performance is low when using multiple sprites (due to time lost Executing Inputs)
 - [ ] Reduce CPU usage (?)
