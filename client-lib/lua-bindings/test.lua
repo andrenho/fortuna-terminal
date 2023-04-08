@@ -1,7 +1,11 @@
+#!/usr/bin/env lua5.4
+
 local ftclient = require "ftclient"
 
-local ft = ftclient.tcpip("localhost")
+-- local ft = ftclient.tcpip("localhost")
+local ft = ftclient.tcpip("127.0.0.1")
 ft:print("Hello world!")
+
 ft:mouse_enable(true)
 
 while true do
