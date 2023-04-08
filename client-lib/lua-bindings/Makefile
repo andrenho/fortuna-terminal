@@ -6,11 +6,11 @@ CFLAGS=-Wall -Wextra -ggdb -O0 -I..
 ifeq ($(OS),Windows_NT)
 	LIB := ftclient.dll
 	CFLAGS += -I../win32/include
-	LDFLAGS := -L../win32/lib -lws2_32
+	LDFLAGS := -L../win32/lib -lws2_32 -llua -lpng
 else
+	CFLAGS += `pkg-config --cflags lua5.4 libpng`
+	LDFLAGS := `pkg-config --libs lua5.4 libpng`
 endif
-
-LDFLAGS += -llua -lpng
 
 all: ${LIB}
 

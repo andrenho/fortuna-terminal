@@ -60,6 +60,11 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
         if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (const char *) &yes, sizeof(int)) == -1)
             throw LibcException("Error setting socket options_");
 
+#ifndef _WIN32
+        int flags = fcntl(sock_fd, F_GETFL, 0);
+        fcntl(sock_fd, F_SETFL, flags | O_NONBLOCK);
+#endif
+
         if (bind(sock_fd, p->ai_addr, (int) p->ai_addrlen) == -1) {
 #ifdef _WIN32
             closesocket(sock_fd);
@@ -84,9 +89,6 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
 #ifdef _WIN32
     u_long mode = 1; // 1 for non-blocking mode, 0 for blocking mode
     ioctlsocket(sock_fd, FIONBIO, &mode);
-#else
-    int flags = fcntl(sock_fd, F_GETFL, 0);
-    fcntl(sock_fd, F_SETFL, flags | O_NONBLOCK);
 #endif
 }
 
@@ -107,6 +109,10 @@ std::string TCPIP::read()
             throw LibcException("accept");
         }
 
+#ifndef _WIN32
+        int flags = fcntl(fd, F_GETFL, 0);
+        fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+#endif
         fd_ = fd;
 
         return CLIENT_CONNECTED;

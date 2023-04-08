@@ -1,30 +1,32 @@
 #include "ftclient-tcpip.h"
 
 #ifdef _WIN32
-#  include <fcntl.h>
 #  include <sys/types.h>
 #  include <winsock2.h>
 #  include <wspiapi.h>
-#include <unistd.h>
-
 #  define ISVALIDSOCKET(s) ((s) != INVALID_SOCKET)
 #  define CLOSESOCKET(s) closesocket(s)
 #  define GETSOCKETERRNO()(WSAGetLastError())
 #else
 #  include <arpa/inet.h>
 #  include <ifaddrs.h>
-#  include <fcntl.h>
 #  include <net/if.h>
 #  include <netdb.h>
 #  include <sys/socket.h>
 #  include <sys/types.h>
 #  include <sys/socket.h>
-#  include <unistd.h>
+#  define INVALID_SOCKET -1
 #  define ISVALIDSOCKET(s) ((s) >= 0)
 #  define CLOSESOCKET(s) close(s)
 #  define GETSOCKETERRNO()(errno)
 #  define SOCKET int
 #endif
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
 
 static SOCKET connect_to_terminal(const char* address, int port, char* error, size_t err_sz)
 {
