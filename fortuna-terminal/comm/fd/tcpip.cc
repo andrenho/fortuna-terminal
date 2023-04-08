@@ -148,7 +148,7 @@ void TCPIP::write(std::string_view data_to_send)
         do {
             int r = ::send(fd, data_to_send.data(), data_to_send.size(), 0);
             if (r == -1) {
-                throw LibcException("write");
+                client_disconnected();
             } else if (r == 0) {
                 client_disconnected();
             } else {
