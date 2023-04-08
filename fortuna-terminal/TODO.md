@@ -11,6 +11,7 @@ Improvements:
   - [x] Connect to IP
   - [x] Connect to raspberry remotely
 - [ ] Create demanding sample to test performance
+  - [ ] Data is not being sent back on TCP/IP (?)
   - [ ] Screen is stretched
   - [ ] First TCP/IP connection doesn't seem to work
   - [ ] Disconnecting for the second time is causing "Connection reset by peer"
@@ -34,3 +35,7 @@ Audio:
   - [ ] Design audio
   - [ ] Implement audio
   - [ ] Beep
+
+Raspberry pi
+  - [ ] Fast boot
+  - [ ] Loading screen
