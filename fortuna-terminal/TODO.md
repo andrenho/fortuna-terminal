@@ -17,6 +17,7 @@ Improvements:
   - [ ] Disconnecting for the second time is causing "Connection reset by peer"
   - [ ] Performance is low when using multiple sprites (due to time lost Executing Inputs)
 - [ ] Reduce CPU usage (?)
+- [ ] Remove window option in Raspberry Pi
 
 Alternative screens:
   - [ ] Terminal (shell)
