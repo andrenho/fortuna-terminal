@@ -169,8 +169,10 @@ void TCPIP::write(std::string_view data_to_send)
             int r = ::send(fd, data_to_send.data(), data_to_send.size(), flags);
             if (r == -1) {
                 client_disconnected();
+                return;
             } else if (r == 0) {
                 client_disconnected();
+                return;
             } else {
                 left -= r;
             }
