@@ -1,6 +1,8 @@
+#!/usr/bin/env lua5.4
+
 local ftclient = require "ftclient"
 
-N_SPRITES = 96
+N_SPRITES = 64
 local sprites = {}
 
 -- local ft = ftclient.tcpip("::1")
