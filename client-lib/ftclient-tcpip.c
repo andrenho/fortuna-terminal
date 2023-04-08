@@ -41,12 +41,20 @@ static SOCKET connect_to_terminal(const char* address, int port, char* error, si
 
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     struct addrinfo *peer_address;
     if (getaddrinfo(address, s_port, &hints, &peer_address)){
         snprintf(error, err_sz, "getaddrinfo() failed. (%d)\n", GETSOCKETERRNO());
         return INVALID_SOCKET;
     }
+
+    /*
+    struct sockaddr_in *ipv4 = (struct sockaddr_in *) peer_address->ai_addr;
+    char ip_address[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(ipv4->sin_addr), ip_address, INET_ADDRSTRLEN);
+    printf("IP address: %s\n", ip_address);
+    */
 
     SOCKET fd = socket(peer_address->ai_family, peer_address->ai_socktype, peer_address->ai_protocol);
     if (!ISVALIDSOCKET(fd)){
