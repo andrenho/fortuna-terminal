@@ -1,11 +1,12 @@
 local ftclient = require "ftclient"
 
-N_SPRITES = 128
+N_SPRITES = 96
 local sprites = {}
 
 -- local ft = ftclient.tcpip("::1")
-local ft = ftclient.tcpip("127.0.0.1")
+-- local ft = ftclient.tcpip("127.0.0.1")
 -- local ft = ftclient.tcpip("localhost")
+local ft = ftclient.tcpip("192.168.4.46")
 ft:graphics(true)
 ft:print("\27[1;1H\27[2J")
 ft:image_load("heavy.png")

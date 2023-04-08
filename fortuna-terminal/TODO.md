@@ -8,11 +8,14 @@ Improvements:
 - [x] Enable VSYNC
 - [x] Write client library (?)
   - [x] Documentation
-  - [ ] Connect to IP
-  - [ ] Connect to raspberry remotely
+  - [x] Connect to IP
+  - [x] Connect to raspberry remotely
 - [ ] Create demanding sample to test performance
+  - [ ] Screen is stretched
+  - [ ] First TCP/IP connection doesn't seem to work
+  - [ ] Disconnecting for the second time is causing "Connection reset by peer"
+  - [ ] Performance is low when using multiple sprites (due to time lost Executing Inputs)
 - [ ] Reduce CPU usage (?)
-- [ ] Change palette
 
 Alternative screens:
   - [ ] Terminal (shell)
