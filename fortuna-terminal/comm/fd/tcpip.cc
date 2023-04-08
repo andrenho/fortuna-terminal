@@ -58,7 +58,7 @@ TCPIP::TCPIP(TcpIpOptions const& options, size_t readbuf_sz)
 
         int yes = 1;
         if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (const char *) &yes, sizeof(int)) == -1)
-            throw LibcException("Error setting socket options_");
+            throw LibcException("Error setting socket options");
 
 #ifndef _WIN32
         int flags = fcntl(sock_fd, F_GETFL, 0);
@@ -110,8 +110,16 @@ std::string TCPIP::read()
         }
 
 #ifndef _WIN32
+        // set socket to be non-blocking
         int flags = fcntl(fd, F_GETFL, 0);
         fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+
+		// set write timeout to be 1 second
+		struct timeval tv;
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		if (setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+            throw LibcException("Error setting socket options");
 #endif
         fd_ = fd;
 
