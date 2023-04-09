@@ -1,6 +1,7 @@
 #include "fortuna.hh"
 
 #include <algorithm>
+#include <cstdio>
 #include <sstream>
 #include <stdexcept>
 
@@ -24,6 +25,8 @@ void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
 void FortunaProtocol::execute_escape_sequence()
 {
     std::vector<ssize_t> p;
+    p.reserve(258);
+
     char command = parse_escape_sequence(p);
     switch (command) {
         case 'r':
@@ -161,19 +164,34 @@ void FortunaProtocol::execute_escape_sequence()
 
 char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) const
 {
-    std::stringstream ss(current_escape_sequence_.substr(2, current_escape_sequence_.size() - 3));
-    std::string item;
-    while (std::getline(ss, item, ';')) {
-        if (item.starts_with("$")) {
-            int pos = item.find_first_of(',', 0);
-            ssize_t count = std::stoll(item.substr(1, pos - 1));
-            ssize_t value = std::stoll(item.substr(pos + 1));
-            for (ssize_t i = 0; i < count ; ++i)
-                parameters.push_back(value);
+    size_t i = 2;  // skip ESC and "*"
+
+    while (true) {
+
+        size_t next_semicolon = current_escape_sequence_.find(';', i);
+        if (next_semicolon == std::string::npos)
+            next_semicolon = current_escape_sequence_.length() - 1;
+
+        if (i > next_semicolon)
+            break;
+
+        std::string_view token(&current_escape_sequence_.c_str()[i], next_semicolon - i);
+
+        if (token[0] == '$') {  // compressed command
+            size_t next_comma = token.find(',');
+            if (next_comma != std::string_view::npos) {  // if comma not found, bail out
+                ssize_t count = std::stoll(std::string(token.substr(1, next_comma - 1)));
+                ssize_t value = std::stoll(std::string(token.substr(next_comma + 1)));
+                for (ssize_t j = 0; j < count ; ++j)
+                    parameters.push_back(value);
+            }
+
         } else {
-            ssize_t value = std::stoll(item);
+            ssize_t value = std::stoll(std::string(token));
             parameters.push_back(value);
         }
+
+        i = next_semicolon + 1;
     }
 
     return current_escape_sequence_.back();
