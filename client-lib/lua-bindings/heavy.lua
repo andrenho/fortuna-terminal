@@ -17,7 +17,7 @@ for i = 1,N_SPRITES do
     local x = math.random(0, 256 - 16)
     local y = math.random(0, 256 - 16)
     ft:sprite(i - 1, x, y, true, false, false, 0, (i - 1) % 16)
-    sprites[i] = { x=x, y=y, dir_x=math.random(-2,2), dir_y=math.random(-2, 2) }
+    sprites[i] = { x=x, y=y, dir_x=math.random(-3,3), dir_y=math.random(-3, 3) }
 end
 
 ft:enable_vsync(true)
