@@ -15,6 +15,7 @@ Improvements:
   - [x] Screen is stretched
   - [x] First TCP/IP connection doesn't seem to work
   - [x] Disconnecting for the second time is causing "Connection reset by peer"
+  - [ ] Application not exiting cleanly
   - [ ] Performance is low when using multiple sprites (due to time lost Executing Inputs)
 - [ ] Create tech-demo-1 for UART, I²C and SPI
 - [ ] Remove window option in Raspberry Pi
@@ -40,3 +41,6 @@ Audio:
 Raspberry pi
   - [ ] Fast boot
   - [ ] Loading screen
+
+Case
+  - [ ] Create case, rethink circuit
