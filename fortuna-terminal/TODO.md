@@ -10,15 +10,15 @@ Improvements:
   - [x] Documentation
   - [x] Connect to IP
   - [x] Connect to raspberry remotely
-- [ ] Create demanding sample to test performance
+- [x] Create demanding sample to test performance
   - [x] Data is not being sent back on TCP/IP (?)
   - [x] Screen is stretched
   - [x] First TCP/IP connection doesn't seem to work
   - [x] Disconnecting for the second time is causing "Connection reset by peer"
   - [x] Application not exiting cleanly
   - [x] Performance is low when using multiple sprites (due to time lost Executing Inputs)
-  - [ ] Can't connect on linux using hostname (?)
-- [ ] Rename to tech-demo-1
+  - [x] Can't connect on linux using hostname (?)
+- [x] Rename to tech-demo-1
 - [ ] Create tech-demo-1 for UART, I²C and SPI
 - [ ] Remove window option in Raspberry Pi
 
