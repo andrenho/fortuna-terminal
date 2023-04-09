@@ -3,7 +3,13 @@
 #include "common/exceptions/fortunaexception.hh"
 #include "comm/custom/echo.hh"
 #include "comm/fd/pipes.hh"
-#include "comm/fd/tcpip.hh"
+#include "comm/fd/tcpip/tcpip.hh"
+
+#ifdef _WIN32
+#  include "comm/fd/tcpip/tcpipwindows.hh"
+#else
+#  include "comm/fd/tcpip/tcpipunix.hh"
+#endif
 
 #ifdef COMM_UART
 #  include "comm/fd/uart.hh"
@@ -25,8 +31,15 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(CommType comm_t
             return std::make_unique<Echo>();
         case CommType::Pipes:
             return std::make_unique<Pipes>(options.readbuf_sz);
-        case CommType::TcpIp:
-            return std::make_unique<TCPIP>(options.tcpip_options, options.readbuf_sz);
+        case CommType::TcpIp: {
+#ifdef _WIN32
+            auto comm = std::make_unique<TCPIP_Windows>(options.tcpip_options, options.readbuf_sz);
+#else
+            auto comm = std::make_unique<TCPIP_Unix>(options.tcpip_options, options.readbuf_sz);
+#endif
+            comm->initialize();
+            return comm;
+        }
         case CommType::Uart:
 #ifdef COMM_UART
             return std::make_unique<UART>(options.uart_options, options.readbuf_sz);

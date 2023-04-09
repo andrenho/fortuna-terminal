@@ -31,7 +31,7 @@ endif
 OBJ =   main.o \
 		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
         comm/comm.o \
-        comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip.o \
+        comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip/tcpip.o \
         comm/custom/echo.o \
 		env/environment.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
@@ -53,10 +53,12 @@ LDFLAGS=-pthread
 GCH_HEADER=precompile.hh
 
 ifeq ($(WINDOWS),1)
+    OBJ += comm/fd/tcpip/tcpipwindows.o
 	EXE := ${EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include
 	LDFLAGS := ${LDFLAGS} -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
 else
+    OBJ += comm/fd/tcpip/tcpipunix.o
 	CPPFLAGS := ${CPPFLAGS} `sdl2-config --cflags`
 	LDFLAGS := ${LDFLAGS} `sdl2-config --libs` -lpthread -lutil
 	GCH_HEADER_BIN=${GCH_HEADER}.gch

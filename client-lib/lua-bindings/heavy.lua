@@ -6,8 +6,8 @@ N_SPRITES = 64
 local sprites = {}
 
 -- local ft = ftclient.tcpip("::1")
-local ft = ftclient.tcpip("127.0.0.1")
--- local ft = ftclient.tcpip("localhost")
+-- local ft = ftclient.tcpip("127.0.0.1")
+local ft = ftclient.tcpip("localhost")
 -- local ft = ftclient.tcpip("192.168.4.46")
 ft:graphics(true)
 ft:print("\27[1;1H\27[2J")
@@ -17,7 +17,7 @@ for i = 1,N_SPRITES do
     local x = math.random(0, 256 - 16)
     local y = math.random(0, 256 - 16)
     ft:sprite(i - 1, x, y, true, false, false, 0, (i - 1) % 16)
-    sprites[i] = { x=x, y=y, dir_x=math.random(-1,1), dir_y=math.random(-1, 1) }
+    sprites[i] = { x=x, y=y, dir_x=math.random(-3,3), dir_y=math.random(-3, 3) }
 end
 
 ft:enable_vsync(true)
