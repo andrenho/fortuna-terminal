@@ -8,12 +8,12 @@ size_t Scene::unique_id_counter = 0;
 Scene::Scene()
     : unique_id_(unique_id_counter++)
 {
-    layers_.emplace(LAYER_TILEMAP_BG, std::make_unique<TilemapLayer>());
-    layers_.emplace(LAYER_TILEMAP_OBSTACLES, std::make_unique<TilemapLayer>());
-    layers_.emplace(LAYER_SPRITES, std::make_unique<SpriteLayer>());
-    layers_.emplace(LAYER_TILEMAP_FG, std::make_unique<TilemapLayer>());
-    layers_.emplace(LAYER_TILEMAP_UI, std::make_unique<TilemapLayer>());
-    layers_.emplace(LAYER_TILEMAP_TEXT, std::make_unique<TextLayer>());
+    layers_[LAYER_TILEMAP_BG] = std::make_unique<TilemapLayer>();
+    layers_[LAYER_TILEMAP_OBSTACLES] = std::make_unique<TilemapLayer>();
+    layers_[LAYER_SPRITES] = std::make_unique<SpriteLayer>();
+    layers_[LAYER_TILEMAP_FG] = std::make_unique<TilemapLayer>();
+    layers_[LAYER_TILEMAP_UI] = std::make_unique<TilemapLayer>();
+    layers_[LAYER_TILEMAP_TEXT] = std::make_unique<TextLayer>();
 
     palette_init(palette);
     set_mode(Mode::Text);
@@ -21,7 +21,9 @@ Scene::Scene()
 
 void Scene::reset()
 {
-    std::for_each(layers_.begin(), layers_.end(), [](auto& i) { i.second->reset(); });
+    for (size_t i = 0; i < MAX_LAYERS; ++i)
+        if (layers_[i])
+            layers_[i]->reset();
     set_mode(Mode::Text);
     images_.clear();
     pending_images_->clear();
@@ -48,31 +50,31 @@ void Scene::set_mode(Mode mode)
 
 TextLayer &Scene::text() const
 {
-    return *reinterpret_cast<TextLayer*>(layers_.at(LAYER_TILEMAP_TEXT).get());
+    return *reinterpret_cast<TextLayer*>(layers_[LAYER_TILEMAP_TEXT].get());
 }
 
 SpriteLayer &Scene::sprites() const
 {
-    return *reinterpret_cast<SpriteLayer*>(layers_.at(LAYER_SPRITES).get());
+    return *reinterpret_cast<SpriteLayer*>(layers_[LAYER_SPRITES].get());
 }
 
 ImageLayer const *Scene::image_layer_unsafe(LayerIdentifier layer_id) const
 {
-    return reinterpret_cast<ImageLayer const *>(layers_.at(layer_id).get());
+    return reinterpret_cast<ImageLayer const *>(layers_[layer_id].get());
 }
 
 TilemapLayer* Scene::tilemap_layer(LayerIdentifier layer_id) const
 {
-    return dynamic_cast<TilemapLayer*>(layers_.at(layer_id).get());
+    return dynamic_cast<TilemapLayer*>(layers_[layer_id].get());
 }
 
 Layer* Scene::layer(LayerIdentifier id) const
 {
-    try {
-        return layers_.at(id).get();
-    } catch (std::out_of_range&) {
+    auto& layer = layers_[id];
+    if (layer)
+        return layer.get();
+    else
         return nullptr;
-    }
 }
 
 void Scene::add_image(size_t index, Image &&image)

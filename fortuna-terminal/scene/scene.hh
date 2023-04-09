@@ -22,6 +22,7 @@ enum LayerIdentifier : uint8_t {
     LAYER_TILEMAP_FG        = 16,
     LAYER_TILEMAP_UI        = 20,
     LAYER_TILEMAP_TEXT      = 24,
+    MAX_LAYERS              = 25,
 };
 
 struct Scene : NonCopyable {
@@ -60,7 +61,7 @@ private:
     std::pair<int, int> size_in_pixels_;
     const size_t        unique_id_;
 
-    std::unordered_map<LayerIdentifier, std::unique_ptr<Layer>> layers_ {};
+    std::unique_ptr<Layer> layers_[MAX_LAYERS] { nullptr };
     std::unordered_map<size_t, Image> images_ {};
 
     mutable SyncQueueUniqPtr<size_t> pending_images_ = std::make_unique<SyncQueue<size_t>>(1024);
