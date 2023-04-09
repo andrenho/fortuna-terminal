@@ -2,7 +2,7 @@
 
 local ftclient = require "ftclient"
 
-N_SPRITES = 64
+N_SPRITES = 128
 local sprites = {}
 
 -- local ft = ftclient.tcpip("::1")
