@@ -19,7 +19,7 @@
 #  define INVALID_SOCKET -1
 #endif
 
-#define BACKLOG 1
+#define BACKLOG 10
 
 using namespace std::string_literals;
 
@@ -32,7 +32,7 @@ void TCPIP::initialize()
 
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 
@@ -47,8 +47,13 @@ void TCPIP::initialize()
     // loop through all the results and bind to the first we can
     struct addrinfo* p;
     for (p = servinfo; p != nullptr; p = p->ai_next) {
+
         if ((sock_fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == INVALID_SOCKET)
             throw LibcException("Error opening socket");
+
+        int no = 0;
+        if (setsockopt(sock_fd, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&no, sizeof(no)) != 0)
+            throw LibcException("Error setting socket options");
 
         int yes = 1;
         if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (const char *) &yes, sizeof(int)) == -1)
