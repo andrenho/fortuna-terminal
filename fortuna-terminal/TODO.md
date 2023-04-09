@@ -17,6 +17,7 @@ Improvements:
   - [x] Disconnecting for the second time is causing "Connection reset by peer"
   - [x] Application not exiting cleanly
   - [x] Performance is low when using multiple sprites (due to time lost Executing Inputs)
+- [ ] Rename to tech-demo-1
 - [ ] Create tech-demo-1 for UART, I²C and SPI
 - [ ] Remove window option in Raspberry Pi
 
