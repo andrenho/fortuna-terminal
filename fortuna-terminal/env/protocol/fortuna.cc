@@ -23,8 +23,7 @@ void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
 
 void FortunaProtocol::execute_escape_sequence()
 {
-    static std::vector<ssize_t> p;
-    p.resize(0);
+    std::vector<ssize_t> p;
     char command = parse_escape_sequence(p);
     switch (command) {
         case 'r':
