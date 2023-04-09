@@ -52,7 +52,7 @@ void TCPIP::initialize()
             throw LibcException("Error opening socket");
 
         int no = 0;
-        if (setsockopt(sock_fd, IPPROTO_IPV6, IPV6_V6ONLY, (void *)&no, sizeof(no)) != 0)
+        if (setsockopt(sock_fd, IPPROTO_IPV6, IPV6_V6ONLY, (const char *)&no, sizeof(no)) != 0)
             throw LibcException("Error setting socket options");
 
         int yes = 1;
