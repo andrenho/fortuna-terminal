@@ -155,7 +155,7 @@ Options::Options(int argc, char* argv[])
 #ifdef COMM_UART
     printf("Options valid for `uart`:\n");
     printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");
-    printf("    -B, --baud                      Baud speed for UART (default: 57600)\n");
+    printf("    -B, --baud                      Baud speed for UART (default: 500000)\n");
     printf("    -U, --uart-settings             Data bits, parity, stop bits (default: 8N1)\n");
 #endif
 #ifdef COMM_SPI
