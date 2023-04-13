@@ -221,14 +221,14 @@ char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) co
         if (token[0] == '$') {  // compressed command
             size_t next_comma = token.find(',');
             if (next_comma != std::string_view::npos) {  // if comma not found, bail out
-                ssize_t count = std::stoll(std::string(token.substr(1, next_comma - 1)));
-                ssize_t value = std::stoll(std::string(token.substr(next_comma + 1)));
+                ssize_t count = stoll(std::string(token.substr(1, next_comma - 1)));
+                ssize_t value = stoll(std::string(token.substr(next_comma + 1)));
                 for (ssize_t j = 0; j < count ; ++j)
                     parameters.push_back(value);
             }
 
         } else {
-            ssize_t value = std::stoll(std::string(token));
+            ssize_t value = stoll(std::string(token));
             parameters.push_back(value);
         }
 
