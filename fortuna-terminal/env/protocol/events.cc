@@ -1,21 +1,25 @@
 #include "events.hh"
 
 #include <optional>
-#include <vector>
+
+#include "application/debug.hh"
 
 using namespace std::string_literals;
 
 void Events::event_text_input(std::string const &text)
 {
     output_queue_ << text;
+    debug().info("Text input: \"%s\"", text.c_str());
 }
 
 void Events::event_key(uint8_t key, bool is_down, KeyMod mod)
 {
     if (is_down) {
         if (mod.control) {
-            if (key >= 'a' && key <= 'z')
+            if (key >= 'a' && key <= 'z') {
+                debug().info("Key pressed: CTRL + %c", key);
                 output_queue_ << (char) (key - 96);
+            }
         }
     }
 }
@@ -26,6 +30,7 @@ void Events::event_key(SpecialKey key, bool is_down, KeyMod mod)
         auto ostr = translate_special_key(key, mod);
         if (ostr.has_value()) {
             output_queue_ << *ostr;
+            debug().info("Special key pressed: \"%s\"", ostr->c_str());
         }
     }
 }
@@ -34,16 +39,19 @@ void Events::event_mouse_button(int button, int x, int y, bool is_down)
 {
     output_queue_ << "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) +
                     ";" + (is_down ? "B" : "R");
+    debug().info("Mouse button %d %s at %d, %d\n", button, is_down ? "pressed" : "released", x, y);
 }
 
 void Events::event_mouse_move(int button, int x, int y)
 {
     output_queue_ << "\e#"s + std::to_string(button) + ";" + std::to_string(x) + ";" + std::to_string(y) + "M";
+    debug().info("Mouse moved to %d, %d while pressing button %d\n", x, y, button);
 }
 
 void Events::event_joystick(size_t joystick_number, size_t button, bool is_down)
 {
     output_queue_ << "\e#"s + std::to_string(joystick_number) + ";" + std::to_string(button) + (is_down ? 'J' : 'K' );
+    debug().info("Joystick button %d %s at joystick %d\n", button, is_down ? "pressed" : "released", joystick_number);
 }
 
 void Events::event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value)
@@ -59,14 +67,22 @@ void Events::event_joystick_directional(size_t joystick_number, int8_t axis, int
         new_state.right = (value == 1);
     }
 
-    if (state.up != new_state.up)
+    if (state.up != new_state.up) {
         output_queue_ << "e#"s + std::to_string(joystick_number) + ";18" + (new_state.up ? 'J' : 'K');
-    if (state.down != new_state.down)
+        debug().info("Joystick up %s.", new_state.up ? "pressed" : "released");
+    }
+    if (state.down != new_state.down) {
         output_queue_ << "\e#"s + std::to_string(joystick_number) + ";19" + (new_state.down ? 'J' : 'K');
-    if (state.left != new_state.left)
+        debug().info("Joystick down %s.", new_state.down ? "pressed" : "released");
+    }
+    if (state.left != new_state.left) {
         output_queue_ << "\e#"s + std::to_string(joystick_number) + ";16" + (new_state.left ? 'J' : 'K');
-    if (state.right != new_state.right)
+        debug().info("Joystick left %s.", new_state.left ? "pressed" : "released");
+    }
+    if (state.right != new_state.right) {
         output_queue_ << "\e#"s + std::to_string(joystick_number) + ";17" + (new_state.right ? 'J' : 'K');
+        debug().info("Joystick right %s.", new_state.right ? "pressed" : "released");
+    }
 
     joy_state_[joystick_number] = new_state;
 }

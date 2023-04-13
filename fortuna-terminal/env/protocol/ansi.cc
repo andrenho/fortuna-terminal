@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "common/exceptions/fortunaexception.hh"
+#include "application/debug.hh"
 
 static constexpr const wchar_t acs_charset[] = {
         0xa,   // right arrow
@@ -68,9 +69,10 @@ void ANSI::send_ansi_bytes(std::string const &bytes)
 
 void ANSI::resize_text_terminal(Mode mode)
 {
-    tmt_resize(vt_.get(),
-               mode == Mode::Text ? TextLayer::Lines_80Columns: TextLayer::Lines_40Columns,
-               mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns);
+    size_t nline = mode == Mode::Text ? TextLayer::Lines_80Columns: TextLayer::Lines_40Columns;
+    size_t ncols = mode == Mode::Text ? TextLayer::Columns_80Columns : TextLayer::Columns_40Columns;
+    tmt_resize(vt_.get(), nline, ncols);
+    debug().info("Text terminal resized to %d x %d.", nline, ncols);
 }
 
 void ANSI::tmt_callback(tmt_msg_t m, TMT *vt, [[maybe_unused]] void const *a, void *p)

@@ -63,4 +63,6 @@ void Debug::log_(DebugVerbosity verbosity, char const *fmt, ...)
         va_end(args);
         printf("\n");
     }
+    if (debug_verbosity_ >= V_DEBUG)
+        fflush(stdout);
 }
