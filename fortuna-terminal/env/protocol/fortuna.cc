@@ -7,10 +7,22 @@
 
 #include "application/control.hh"
 #include "application/debug.hh"
+#include "common/exceptions/fortunaexception.hh"
 
 // protocol described at https://github.com/andrenho/fortuna-terminal/wiki/ANSI-protocol-extension-for-Fortuna-Terminal
 
 using namespace std::string_literals;
+
+static ssize_t to_ssize(std::string const& str)
+{
+    try {
+        return std::stoll(str);
+    } catch (std::invalid_argument& e) {
+        throw FortunaException("Could not convert the string \"" + str + "\" to number: " + e.what());
+    } catch (std::out_of_range& e) {
+        throw FortunaException("Integer conversion out of range for the string string \"" + str + "\" to number: " + e.what());
+    }
+}
 
 void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
 {
@@ -221,14 +233,14 @@ char FortunaProtocol::parse_escape_sequence(std::vector<ssize_t> &parameters) co
         if (token[0] == '$') {  // compressed command
             size_t next_comma = token.find(',');
             if (next_comma != std::string_view::npos) {  // if comma not found, bail out
-                ssize_t count = stoll(std::string(token.substr(1, next_comma - 1)));
-                ssize_t value = stoll(std::string(token.substr(next_comma + 1)));
+                ssize_t count = to_ssize(std::string(token.substr(1, next_comma - 1)));
+                ssize_t value = to_ssize(std::string(token.substr(next_comma + 1)));
                 for (ssize_t j = 0; j < count ; ++j)
                     parameters.push_back(value);
             }
 
         } else {
-            ssize_t value = stoll(std::string(token));
+            ssize_t value = to_ssize(std::string(token));
             parameters.push_back(value);
         }
 
