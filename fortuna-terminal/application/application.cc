@@ -68,7 +68,7 @@ ExecutionStatus Application::execute_single_step()
 
 ExecutionStatus Application::on_error(std::exception const& e)
 {
-    fprintf(stderr, "\e[1;31m%s\e0m\n", e.what());
+    fprintf(stderr, "\e[1;31m%s\e[0m\n", e.what());
 
     for (auto& environment: environments)
         environment.show_error(e);
