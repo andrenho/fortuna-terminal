@@ -97,36 +97,44 @@ void Application::execute_control_queue()
                     terminal_.reset(environment.scene().unique_id());
                     environment.reset();
                 }
+                debug().info("Event: reset all environments");
                 break;
 
             case ControlCommand::ResetProtocol:
                 terminal_.reset(currrent_env.scene().unique_id());
                 currrent_env.reset();
+                debug().info("Event: reset single environment");
                 break;
 
             case ControlCommand::SetMode:
                 currrent_env.set_mode(cc->mode);
                 terminal_.resize_window(currrent_env.scene());
+                debug().info("Event: mode set to %s.", cc->mode == Mode::Graphics ? "graphics" : "text");
                 break;
 
             case ControlCommand::SetMouseActive:
                 terminal_.set_mouse_active(cc->active);
+                debug().info("Event: mouse %sabled.", cc->active ? "en" : "di");
                 break;
 
             case ControlCommand::SetMouseMoveReport:
                 terminal_.set_mouse_register_move(cc->active);
+                debug().info("Event: mouse move %sabled.", cc->active ? "en" : "di");
                 break;
 
             case ControlCommand::SetJoystickEmulation:
                 terminal_.set_joystick_emulation(cc->active);
+                debug().info("Event: joystick emulation %sabled.", cc->active ? "en" : "di");
                 break;
 
             case ControlCommand::ResetComputer:
                 gpio_.reset();
+                debug().info("Event: reset computer");
                 break;
 
             case ControlCommand::EnableVSYNC:
                 vsync_enabled_ = cc->active;
+                debug().info("Event: VSYNC %sabled.", cc->active ? "en" : "di");
                 break;
         }
     }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include "common/types/time.hh"
+#include "debug.hh"
 
 enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXchg };
 
@@ -39,10 +40,10 @@ public:
     Options(int argc, char* argv[]);
 
     CommType        comm_type   = CommType::NotChosen;
-    bool            debug_comm = false;
     bool            debug_time = false;
     bool            welcome_message = true;
     size_t          readbuf_sz = 2048;
+    DebugVerbosity  debug_verbosity = V_NORMAL;
 
     TerminalOptions terminal_options {};
     UartOptions     uart_options {};

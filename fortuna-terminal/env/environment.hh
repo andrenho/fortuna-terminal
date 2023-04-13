@@ -31,11 +31,9 @@ private:
     Scene                          scene_;
     Protocol                       protocol_;
     bool                           show_timining_info_;
-    bool                           debug_comm_;
 
     [[nodiscard]] std::string welcome_message() const;
     void display_timing_info(TimingDebug const &timing_debug) const;
-    void debug_bytes(std::string_view received, std::string_view sent) const;
 };
 
 #endif //ENVIRONMENT_HH_

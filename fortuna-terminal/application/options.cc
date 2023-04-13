@@ -5,6 +5,8 @@
 #include <cstring>
 #include <getopt.h>
 
+using namespace std::string_literals;
+
 Options::Options(int argc, char* argv[])
 {
     int c;
@@ -14,7 +16,7 @@ Options::Options(int argc, char* argv[])
         static struct option long_options[] = {
                 { "communication-mode", required_argument, nullptr, 'c' },
                 { "window",             no_argument,       nullptr, 'w' },
-                { "debug-comm",         no_argument,       nullptr, 'd' },
+                { "debug",              required_argument, nullptr, 'd' },
                 { "debug-time",         no_argument,       nullptr, 't' },
                 { "welcome",            no_argument,       nullptr, 'W' },
                 { "readbuf-sz",         required_argument, nullptr, 'b' },
@@ -35,7 +37,7 @@ Options::Options(int argc, char* argv[])
                 { nullptr, 0, nullptr, 0 },
         };
 
-        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:dtW", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hwP:B:U:R:S:s:D:a:d:tW", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -86,7 +88,9 @@ Options::Options(int argc, char* argv[])
                 break;
 
             case 'd':
-                debug_comm = true;
+                debug_verbosity = static_cast<DebugVerbosity>(strtol(optarg, nullptr, 10));
+                if (debug_verbosity < 1 || debug_verbosity >= MAX_DEBUG_VERBOSITY)
+                    throw FortunaException("Debug verbosity must be between 1 and "s + std::to_string(MAX_DEBUG_VERBOSITY));
                 break;
 
             case 'b':
@@ -144,6 +148,8 @@ Options::Options(int argc, char* argv[])
         if (optind > argc)
             print_help(EXIT_FAILURE);
     }
+
+    Debug::initialize(debug_verbosity);
 }
 
 [[ noreturn ]] void Options::print_help(int exit_status)
@@ -151,7 +157,7 @@ Options::Options(int argc, char* argv[])
     printf("    -c, --communication-mode        One of \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\", \"echo\", \"echo-xchg\"\n");
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
     printf("    -t, --debug-time                Show timing information on the screen\n");
-    printf("    -d, --debug-comm                Print all bytes that entered or exited the terminal\n");
+    printf("    -d, --debug                     Show debugging information (1: normal (default), 2: info, 3: debug, 4: all communication bytes)\n");
 #ifdef COMM_UART
     printf("Options valid for `uart`:\n");
     printf("    -P, --serial-port               Serial port (default: /dev/serial0)\n");

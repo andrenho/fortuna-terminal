@@ -1,5 +1,6 @@
 #include "gpio.hh"
 #include "common/exceptions/fortunaexception.hh"
+#include "debug.hh"
 
 #ifdef GPIO
 #  include <pigpio.h>
@@ -19,6 +20,8 @@ Gpio::Gpio()
     gpioSetMode(PIN_RESET, PI_INPUT);
 
     vsync_thread_.run_with_wait([this]{ gpioTrigger(PIN_VSYNC, 100, 0); });
+
+    debug().info("GPIO initialized.");
 #endif
 }
 
@@ -37,6 +40,7 @@ void Gpio::reset()
     gpioWrite(PIN_RESET, 0);
     std::this_thread::sleep_for(200ms);
     gpioSetMode(PIN_RESET, PI_INPUT);
+    debug().info("GPIO debug pulse!");
 #endif
 }
 

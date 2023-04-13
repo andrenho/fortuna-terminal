@@ -29,7 +29,8 @@ endif
 #
 
 OBJ =   main.o \
-		application/application.o application/options.o application/control.o application/timingdebug.o application/gpio.o \
+		application/application.o application/options.o application/control.o application/timingdebug.o \
+		application/debug.o application/gpio.o \
         comm/comm.o \
         comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip/tcpip.o \
         comm/custom/echo.o \

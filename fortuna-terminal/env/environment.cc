@@ -12,14 +12,14 @@ Environment::Environment(Options const &options)
 {
 }
 
-
 Environment::Environment(Options const &options, CommType comm_type)
         : comm_(CommunicationModule::create(comm_type, options)),
           scene_(),
           protocol_(scene_),
-          show_timining_info_(options.debug_time),
-          debug_comm_(options.debug_comm)
+          show_timining_info_(options.debug_time)
 {
+    debug().info("Environment created for %s.", comm_->description().c_str());
+
     if (options.welcome_message)
         protocol_.execute_inputs(welcome_message());
 }
@@ -40,8 +40,7 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
     timing_debug.start_event(TimingDebug::Event::DebuggingInfo);
     if (show_timining_info_)
         display_timing_info(timing_debug);
-    if (debug_comm_)
-        debug_bytes(received_data, data_to_send);
+    debug().bytes(received_data, data_to_send);
 }
 
 void Environment::show_error(std::exception const &e) const
@@ -123,30 +122,4 @@ void Environment::display_timing_info(TimingDebug const &timing_debug) const
     if (comm_->is_overwhelmed()) {
         scene_.text().write_text(0, scene_.text().columns() - 3, "OVH", { COLOR_RED, true, true });
     }
-}
-
-void Environment::debug_bytes(std::string_view received, std::string_view sent) const
-{
-    std::vector<std::tuple<std::string_view, int, const char*>> blocks { { received, 33, "<<" }, { sent, 32, ">>" } };
-    for (auto const& [str, color, direction] : blocks) {
-        if (!str.empty()) {
-#if COLOR_TERMINAL
-            printf("\e[0;%dm", color);
-#else
-            printf("%s ", direction);
-#endif
-            for (uint8_t c : str) {
-                if (c < 32 || c > 127)
-                    printf("[%02X]", c);
-                else
-                    printf("%c", c);
-            }
-#if COLOR_TERMINAL
-            printf("\e[0m");
-#endif
-        }
-    }
-    if((received.empty() && sent.empty()) == false)
-        printf("\n");
-    fflush(stdout);
 }

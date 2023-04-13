@@ -8,20 +8,24 @@ Terminal::Terminal(TerminalOptions terminal_options)
     : window_mode_(terminal_options.window_mode)
 {
     SDL::init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
+    debug().info("SDL initialized.");
 
     if (!terminal_options.window_mode) {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
         win_w_ = mode.w;
         win_h_ = mode.h;
+        debug().info("Desktop size: %dx%d", win_w_, win_h_);
     }
 
     window_ = SDL::get().emplace_window("Fortuna Terminal " VERSION,
                                         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                         win_w_, win_h_,
                                         SDL_WINDOW_OPENGL);
+    debug().info("SDL window created.");
 
     renderer_ = SDL::get().emplace_renderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    debug().info("SDL renderer created.");
 
     print_renderer_info();
 
@@ -67,6 +71,8 @@ void Terminal::resize_window(Scene const& scene)
         win_w_ = w * zoom;
         win_h_ = h * zoom;
 
+        debug().info("Window resized! New window size: %d x %d", win_w_, win_h_);
+
         SDL_SetWindowSize(window_, win_w_, win_h_);
         SDL_SetWindowPosition(window_, (mode.w - win_w_) / 2, (mode.h - win_h_) / 2);
     }
@@ -81,23 +87,24 @@ void Terminal::beep()
 
 void Terminal::print_renderer_info()
 {
-    SDL_RendererInfo info;
-    SDL_GetRendererInfo(renderer_, &info);
-    printf("Renderer:\n");
-    printf("  Name: %s\n", info.name);
-    printf("  Flags: ");
-    if (info.flags & SDL_RENDERER_SOFTWARE)
-        printf("software ");
-    if (info.flags & SDL_RENDERER_ACCELERATED)
-        printf("accelerated ");
-    if (info.flags & SDL_RENDERER_PRESENTVSYNC)
-        printf("vsync ");
-    if (info.flags & SDL_RENDERER_TARGETTEXTURE)
-        printf("target_texture ");
-    printf("\n");
-    printf("  Max texture width: %d\n", info.max_texture_width);
-    printf("  Max texture height: %d\n", info.max_texture_height);
-    printf("  Texture formats:\n");
-    for (size_t i = 0; i < info.num_texture_formats; ++i)
-        printf("    %s\n", SDL_GetPixelFormatName(info.texture_formats[i]));
+    if (debug().debug_verbosity() >= V_DEBUG) {
+        SDL_RendererInfo info;
+        SDL_GetRendererInfo(renderer_, &info);
+        debug().debug("Renderer:");
+        debug().debug("  Name: %s", info.name);
+        debug().debug("  Flags: ");
+        if (info.flags & SDL_RENDERER_SOFTWARE)
+            debug().debug("    software ");
+        if (info.flags & SDL_RENDERER_ACCELERATED)
+            debug().debug("    accelerated ");
+        if (info.flags & SDL_RENDERER_PRESENTVSYNC)
+            debug().debug("    vsync ");
+        if (info.flags & SDL_RENDERER_TARGETTEXTURE)
+            debug().debug("    target_texture ");
+        debug().debug("  Max texture width: %d", info.max_texture_width);
+        debug().debug("  Max texture height: %d", info.max_texture_height);
+        debug().debug("  Texture formats:");
+        for (size_t i = 0; i < info.num_texture_formats; ++i)
+            debug().debug("    %s", SDL_GetPixelFormatName(info.texture_formats[i]));
+    }
 }
