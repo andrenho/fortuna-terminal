@@ -27,7 +27,7 @@ struct PTYOptions {
 };
 
 struct SPIOptions {
-    size_t   speed = 500000;
+    size_t   speed = 400000;
     Duration delay = 0ms;
 };
 
