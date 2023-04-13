@@ -40,7 +40,7 @@ void Gpio::reset()
     gpioWrite(PIN_RESET, 0);
     std::this_thread::sleep_for(200ms);
     gpioSetMode(PIN_RESET, PI_INPUT);
-    debug().info("GPIO debug pulse!");
+    debug().info("GPIO reset pulse!");
 #endif
 }
 
