@@ -33,6 +33,7 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
 
     timing_debug.start_event(TimingDebug::Event::Communicate);
     std::string received_data = comm_->exchange(data_to_send);
+    debug().bytes(received_data, data_to_send);
 
     timing_debug.start_event(TimingDebug::Event::ExecuteInputs);
     protocol_.execute_inputs(received_data);
@@ -40,7 +41,6 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
     timing_debug.start_event(TimingDebug::Event::DebuggingInfo);
     if (show_timining_info_)
         display_timing_info(timing_debug);
-    debug().bytes(received_data, data_to_send);
 }
 
 void Environment::show_error(std::exception const &e) const
