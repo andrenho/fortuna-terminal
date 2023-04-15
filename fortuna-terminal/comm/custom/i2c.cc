@@ -24,17 +24,22 @@ std::string I2C::exchange(std::string_view data_to_send)
 
     // read input buffer - first the size (16-bit), then the content
     uint8_t szb[2];
-    i2cReadDevice(handle_, (char *) szb, 2);
-    uint16_t sz = ((uint16_t) szb[1] << 8) | szb[0];
+    int count = i2cReadDevice(handle_, (char *) szb, 2);
+    if (count == 2) {
+        uint16_t sz = ((uint16_t) szb[1] << 8) | szb[0];
 
-    if (sz > 0)
-        printf(">>> %d <<<\n", sz);
+        if (sz > 0)
+            printf(">>> %d <<<\n", sz);
 
-    std::string rx(sz, 0);
-    if (sz > 0)
-        i2cReadDevice(handle_, (char *) rx.data(), sz);
+        std::string rx(sz, 0);
+        if (sz > 0)
+            i2cReadDevice(handle_, (char *) rx.data(), sz);
+        return rx;
 
-    return rx;
+    } else {
+        return "";
+    }
+
 }
 
 std::string I2C::description() const
