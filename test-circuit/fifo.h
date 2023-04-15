@@ -34,6 +34,11 @@ inline bool fifo_pop(fifo_t *fifo, uint8_t *data)
     return true;
 }
 
+inline uint16_t fifo_size(fifo_t *fifo)
+{
+    return fifo->head - fifo->tail;
+}
+
 extern fifo_t in_fifo;
 extern fifo_t out_fifo;
 

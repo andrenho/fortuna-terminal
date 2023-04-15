@@ -13,7 +13,8 @@ int main(void)
     FTClient ft;
 
     // uart_init(&ft);
-    spi_init(&ft);
+    // spi_init(&ft);
+    i2c_init(&ft);
 
     ft_print(&ft, "Hello world!\n");
 
