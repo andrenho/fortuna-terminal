@@ -5,9 +5,6 @@
 
 #include "fifo.h"
 
-static fifo_t in_fifo;
-static fifo_t out_fifo;
-
 static int write_cb(const char* buf, size_t bufsz, void* data)
 {
     for (size_t i = 0; i < bufsz; ++i)

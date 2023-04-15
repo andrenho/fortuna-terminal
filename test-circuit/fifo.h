@@ -12,11 +12,7 @@ typedef struct {
     uint16_t tail;
 } fifo_t;
 
-inline void fifo_init(fifo_t *fifo)
-{
-    fifo->head = 0;
-    fifo->tail = 0;
-}
+void fifo_init(fifo_t *fifo);
 
 inline bool fifo_push(fifo_t *fifo, uint8_t data)
 {
@@ -37,5 +33,8 @@ inline bool fifo_pop(fifo_t *fifo, uint8_t *data)
     fifo->tail = (fifo->tail + 1) % FIFO_SIZE;
     return true;
 }
+
+extern fifo_t in_fifo;
+extern fifo_t out_fifo;
 
 #endif

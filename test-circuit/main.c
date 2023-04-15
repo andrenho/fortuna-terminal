@@ -2,6 +2,7 @@
 
 #include <avr/interrupt.h>
 
+#include "i2c.h"
 #include "spi.h"
 #include "uart.h"
 
