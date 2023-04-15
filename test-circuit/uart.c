@@ -4,8 +4,6 @@
 #include <util/delay.h>
 #include <util/setbaud.h>
 
-#include "buffer.h"
-
 static int write_cb(const char* buf, size_t bufsz, void* data)
 {
     for (size_t i = 0; i < bufsz; ++i) {
@@ -24,6 +22,7 @@ static int write_cb(const char* buf, size_t bufsz, void* data)
 
 static int read_cb(char* buf, size_t bufsz, void* data)
 {
+    // TODO - non blocking
     for (size_t i = 0; i < bufsz; ++i) {
         loop_until_bit_is_set(UCSR0A, RXC0);
         buf[i] = UDR0;
@@ -50,5 +49,5 @@ void uart_init(FTClient* ft)
     _delay_ms(100);
 
     // initialize ftclient
-    ftclient_init(ft, write_cb, read_cb, NULL, NULL, BUFSZ);
+    ftclient_init(ft, write_cb, read_cb, NULL, NULL, 512);
 }

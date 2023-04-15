@@ -3,7 +3,6 @@
 
 #include <ftclient.h>
 
-
 void uart_init(FTClient* ft);
 
 #endif

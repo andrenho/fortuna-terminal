@@ -1,12 +1,18 @@
 #include <ftclient.h>
 
+#include <avr/interrupt.h>
+
+#include "spi.h"
 #include "uart.h"
 
 int main(void)
 {
+    sei();
+
     FTClient ft;
 
-    uart_init(&ft);
+    // uart_init(&ft);
+    spi_init(&ft);
 
     ft_print(&ft, "Hello world!\n");
 
