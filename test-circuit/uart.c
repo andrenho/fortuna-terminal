@@ -1,40 +1,45 @@
 #include "uart.h"
 
-#include <stdio.h>
-
-#include <avr/pgmspace.h>
+#include <avr/io.h>
 #include <util/delay.h>
 #include <util/setbaud.h>
 
-void uart_printchar(uint8_t c)
+#include "buffer.h"
+
+static int write_cb(const char* buf, size_t bufsz, void* data)
 {
-    loop_until_bit_is_set(UCSR0A, UDRE0);
-    UDR0 = c;
+    for (size_t i = 0; i < bufsz; ++i) {
+        loop_until_bit_is_set(UCSR0A, UDRE0);
+        UDR0 = buf[i];
+        if (buf[i] == 10) {
+            loop_until_bit_is_set(UCSR0A, UDRE0);
+            UDR0 = 13;
+        } else if (buf[i] == 13) {
+            loop_until_bit_is_set(UCSR0A, UDRE0);
+            UDR0 = 10;
+        }
+    }
+    return 0;
 }
 
-uint8_t uart_getchar_blocking(void)
+static int read_cb(char* buf, size_t bufsz, void* data)
 {
-    loop_until_bit_is_set(UCSR0A, RXC0);
-    return UDR0;
+    for (size_t i = 0; i < bufsz; ++i) {
+        loop_until_bit_is_set(UCSR0A, RXC0);
+        buf[i] = UDR0;
+    }
+    return bufsz;
 }
 
-uint8_t uart_getchar_nonblocking(void)
-{
-    if ((UCSR0A) & (1<<RXC0))
-        return UDR0;
-    else
-        return 0;
-}
-
-void uart_init(void)
+void uart_init(FTClient* ft)
 {
     // set speed
     UBRR0H = UBRRH_VALUE;
     UBRR0L = UBRRL_VALUE;
 
     // set config
-    UCSR0C = (1<<UCSZ01) | (1<<UCSZ00);   // Async-mode 
-    UCSR0B = (1 << RXEN0) | (1<<TXEN0);   // Enable Receiver and Transmitter
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);   // Async-mode 
+    UCSR0B = (1 << RXEN0) | (1 << TXEN0);   // Enable Receiver and Transmitter
 
 #if USE_2X
     UCSR0A |= (1 << U2X0);
@@ -43,6 +48,7 @@ void uart_init(void)
 #endif
 
     _delay_ms(100);
-}
 
-// vim:ts=4:sts=4:sw=4:expandtab
+    // initialize ftclient
+    ftclient_init(ft, write_cb, read_cb, NULL, NULL, BUFSZ);
+}
