@@ -27,6 +27,9 @@ std::string I2C::exchange(std::string_view data_to_send)
     i2cReadDevice(handle_, (char *) szb, 2);
     uint16_t sz = ((uint16_t) szb[1] << 8) | szb[0];
 
+    if (sz > 0)
+        printf(">>> %d <<<\n", sz);
+
     std::string rx(sz, 0);
     if (sz > 0)
         i2cReadDevice(handle_, (char *) rx.data(), sz);
