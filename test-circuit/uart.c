@@ -56,7 +56,7 @@ static int uart_getchar(FILE* f)
 
 #endif
 
-void uart_init(FTClient* ft)
+void uart_init(void)
 {
     // set speed
     UBRR0H = UBRRH_VALUE;
@@ -78,7 +78,10 @@ void uart_init(FTClient* ft)
 	static FILE uart = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
     stdin = stdout = &uart;
 #endif
+}
 
+void uart_ft_init(FTClient* ft)
+{
     // initialize ftclient
     ftclient_init(ft, write_cb, read_cb, NULL, NULL, 512);
 }

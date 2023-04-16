@@ -36,7 +36,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
     return i;
 }
 
-void i2c_init(FTClient* ft)
+void i2c_ft_init(FTClient* ft)
 {
     TWAR = (I2C_SLAVE_ADDRESS << 1);           // set address
     TWSR &= ~(_BV(TWPS0) | ~_BV(TWPS1));       // set prescaler 1
@@ -66,8 +66,6 @@ void i2c_init(FTClient* ft)
 		       (1<<TWEA)|(0<<TWSTA)|(1<<TWSTO)| \
 		       (0<<TWWC); \
 	} while (0)
-
-#include <stdio.h>
 
 ISR(TWI_vect)
 {
@@ -99,11 +97,9 @@ ISR(TWI_vect)
                 size_t out_fifo_sz = fifo_size(&out_fifo);
                 if (size_idx == 0) {
                     TWDR = out_fifo_sz & 0xff;
-                    if (out_fifo_sz > 0) printf("\ns0: %02X ", out_fifo_sz & 0xff);
                     ++size_idx;
                 } else if (size_idx == 1) {
                     TWDR = (out_fifo_sz >> 8) & 0xff;  // end of size transmission
-					if (out_fifo_sz > 0) printf("s1: %02X ", (out_fifo_sz >> 8) & 0xff);
                     size_idx = 0;
                     if (out_fifo_sz != 0)
                         currently_sending = CS_CONTENT;
@@ -112,7 +108,6 @@ ISR(TWI_vect)
                 uint8_t data;
                 if (fifo_pop(&out_fifo, &data)) {
                     TWDR = data;
-					printf("|%02X ", data);
                 } else {
                     currently_sending = CS_SIZE;
                     size_idx = 0;

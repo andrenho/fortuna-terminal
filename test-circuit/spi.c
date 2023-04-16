@@ -26,7 +26,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
     return i;
 }
 
-void spi_init(FTClient* ft)
+void spi_ft_init(FTClient* ft)
 {
     DDRB |= _BV(PB4);  // MOSI
 

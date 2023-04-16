@@ -35,11 +35,10 @@ std::string I2C::exchange(std::string_view data_to_send)
         // from the microcontroller as well.
         // Maybe a pigpio bug?
 
-        if (sz == 119 || sz >= 26000)
-            return "";
-
+        /*
         if (sz > 0)
             printf(">>> %d <<<\n", sz);
+        */
         
         std::string rx(sz, 0);
         if (sz > 0)

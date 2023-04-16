@@ -9,15 +9,15 @@
 int main(void)
 {
     sei();
+    uart_init();
 
     FTClient ft;
 
-    uart_init(&ft);
-    printf("Hello.\n");
-    // spi_init(&ft);
-    i2c_init(&ft);
+    uart_ft_init(&ft);
+    // spi_ft_init(&ft);
+    // i2c_init(&ft);
 
-    ft_print(&ft, "Hello morld!\n");
+    ft_print(&ft, "Hello world!\n");
 
     while (1) {
         FT_Event e;
