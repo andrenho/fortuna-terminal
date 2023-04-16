@@ -4,6 +4,9 @@
 #include <util/delay.h>
 #include <util/setbaud.h>
 
+#include <stdio.h>
+#define USE_STDIO 1
+
 static int write_cb(const char* buf, size_t bufsz, void* data)
 {
     for (size_t i = 0; i < bufsz; ++i) {
@@ -30,6 +33,29 @@ static int read_cb(char* buf, size_t bufsz, void* data)
     return bufsz;
 }
 
+#if USE_STDIO
+
+static int uart_putchar(char c, FILE* f)
+{
+    (void) f;
+
+    if (c == '\n')
+        uart_putchar('\r', f);
+	loop_until_bit_is_set(UCSR0A, UDRE0);
+    UDR0 = c;
+    return 0;
+}
+
+static int uart_getchar(FILE* f)
+{
+    (void) f;
+
+	loop_until_bit_is_set(UCSR0A, RXC0);
+    return UDR0;
+}
+
+#endif
+
 void uart_init(FTClient* ft)
 {
     // set speed
@@ -47,6 +73,11 @@ void uart_init(FTClient* ft)
 #endif
 
     _delay_ms(100);
+
+#if USE_STDIO
+	static FILE uart = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
+    stdin = stdout = &uart;
+#endif
 
     // initialize ftclient
     ftclient_init(ft, write_cb, read_cb, NULL, NULL, 512);

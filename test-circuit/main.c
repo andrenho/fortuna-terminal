@@ -12,11 +12,12 @@ int main(void)
 
     FTClient ft;
 
-    // uart_init(&ft);
+    uart_init(&ft);
+    printf("Hello.\n");
     // spi_init(&ft);
     i2c_init(&ft);
 
-    ft_print(&ft, "Hello world!\n");
+    ft_print(&ft, "Hello morld!\n");
 
     while (1) {
         FT_Event e;

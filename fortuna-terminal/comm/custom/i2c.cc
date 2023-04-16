@@ -23,14 +23,24 @@ std::string I2C::exchange(std::string_view data_to_send)
         i2cWriteDevice(handle_, (char *) data_to_send.data(), data_to_send.size());
 
     // read input buffer - first the size (16-bit), then the content
-    uint8_t szb[2];
+    uint8_t szb[2] = {0};
     int count = i2cReadDevice(handle_, (char *) szb, 2);
     if (count == 2) {
         uint16_t sz = ((uint16_t) szb[1] << 8) | szb[0];
 
+        // TODO - for some reason, sometimes szb[0] will be 0x77 for no reason.
+        // I checked the microcontroller code and it's not responding
+        // that. I don't know why this is happening. Upon requesting the
+        // 119 bytes, they are all zeroes. There's record of response
+        // from the microcontroller as well.
+        // Maybe a pigpio bug?
+
+        if (sz == 119 || sz >= 26000)
+            return "";
+
         if (sz > 0)
             printf(">>> %d <<<\n", sz);
-
+        
         std::string rx(sz, 0);
         if (sz > 0)
             i2cReadDevice(handle_, (char *) rx.data(), sz);
