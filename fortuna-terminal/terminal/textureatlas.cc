@@ -39,7 +39,7 @@ void TextureAtlas::emplace_from_image(size_t scene_id, size_t image_idx, Image c
     auto [x, y] = index_location_in_texture(image_idx);
     SDL_Rect src = { 0, 0, Image::IMAGE_W, Image::IMAGE_H };
     SDL_Rect dest = { x, y, Image::IMAGE_W, Image::IMAGE_H };
-    if (SDL_RenderCopy(renderer_, texture.get(), &src, &dest) < 0)
+    if (SDL_RenderCopyEx(renderer_, texture.get(), &src, &dest, 90.0f, NULL, SDL_FLIP_NONE) < 0)
         throw SDLException("Error rendering target");
     SDL_SetRenderTarget(renderer_, nullptr);
 }
