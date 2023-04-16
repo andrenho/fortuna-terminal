@@ -12,13 +12,6 @@ static int write_cb(const char* buf, size_t bufsz, void* data)
     for (size_t i = 0; i < bufsz; ++i) {
         loop_until_bit_is_set(UCSR0A, UDRE0);
         UDR0 = buf[i];
-        if (buf[i] == 10) {
-            loop_until_bit_is_set(UCSR0A, UDRE0);
-            UDR0 = 13;
-        } else if (buf[i] == 13) {
-            loop_until_bit_is_set(UCSR0A, UDRE0);
-            UDR0 = 10;
-        }
     }
     return 0;
 }

@@ -17,7 +17,8 @@ int main(void)
     // spi_ft_init(&ft);
     // i2c_init(&ft);
 
-    ft_print(&ft, "Hello world!\n");
+    ft_graphics(&ft, true);
+    ft_print(&ft, "\e[1;1H\e[2J");
 
     while (1) {
         FT_Event e;
