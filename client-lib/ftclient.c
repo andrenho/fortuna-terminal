@@ -69,7 +69,23 @@ int write_request(FTClient* ft, char cmd, int16_t* array, size_t array_sz)
     return ft->write_cb(buf, i, ft->data);
 }
 
-int ft_print(FTClient* ft, const char* fmt, ...)
+int ft_print(FTClient* ft, const char* str)
+{
+    size_t len = strlen(str);
+    size_t i = 0;
+
+    while (i < len) {
+        size_t bytes_to_write = ((i + ft->bufsz) > len) ? len - i : ft->bufsz;
+        int r = ft->write_cb(&str[i], bytes_to_write, ft->data);
+        if (r < 0)
+            return r;
+        i += ft->bufsz;
+    }
+
+    return 0;
+}
+
+int ft_printf(FTClient* ft, const char* fmt, ...)
 {
     char buf[ft->bufsz];
 

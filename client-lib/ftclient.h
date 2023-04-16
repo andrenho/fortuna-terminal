@@ -62,13 +62,14 @@ typedef struct FT_Event {
 
 int ftclient_init(FTClient* ft_client,
                   int (*write_cb)(const char* buf, size_t bufsz, void* data),
-                  int (*read_cb)(char* buf, size_t bufsz, void* data),
+                  int (*read_cb)(char* buf, size_t bufsz, void* data),  // returns number of bytes read
                   int (*finalize)(struct FTClient* ft, void* data),
                   void* data,
                   size_t bufsz);  // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
 int ftclient_finalize(FTClient* ft);
 
-int ft_print(FTClient* ft, const char* fmt, ...);
+int ft_print(FTClient* ft, const char* str);
+int ft_printf(FTClient* ft, const char* fmt, ...);  // caveat: it will not break in multiple requests
 
 int ft_reset_terminal(FTClient* ft);
 int ft_reset_computer(FTClient* ft);

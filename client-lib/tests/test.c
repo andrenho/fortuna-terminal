@@ -39,7 +39,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
 int main()
 {
     FTClient ft;
-    assert(ftclient_init(&ft, lua_write_cb, read_cb, my_data, 16) == 0);
+    assert(ftclient_init(&ft, write_cb, read_cb, NULL, my_data, 16) == 0);
 
     // test writes
 
@@ -60,6 +60,11 @@ int main()
     assert(ft_sprite_4(&ft, 8, 1, 1, true, true, true, 1, 8) == 0);
     assert(strcmp("\e*8;$6,1;8S", buffers[0]) == 0);
 
+    cbuf = 0;
+    assert(ft_print(&ft, "0123456789ABCDEFGHIJKL") == 0);
+    assert(strcmp("0123456789ABCDEF", buffers[0]) == 0);
+    assert(strcmp("GHIJKL", buffers[1]) == 0);
+
     // test reads
 
     FT_Event e;
@@ -77,7 +82,7 @@ int main()
 
     // test PNG
 
-    assert(ftclient_init(&ft, lua_write_cb, read_cb, my_data, FT_RECOMMENDED_BUFSZ) == 0);
+    assert(ftclient_init(&ft, write_cb, read_cb, NULL, my_data, FT_RECOMMENDED_BUFSZ) == 0);
     cbuf = 0;
     assert(ft_image_load(&ft, "test.png", NULL, 0) == 0);
     assert(strcmp("\e*0;7;$17,0;19;$238,0i", buffers[0]) == 0);
