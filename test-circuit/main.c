@@ -11,7 +11,7 @@
 #define N_SPRITES 128
 
 typedef struct {
-    uint8_t x, y;
+    int16_t x, y;
     int8_t dir_x, dir_y;
 } Sprite;
 
@@ -48,17 +48,34 @@ int main(void)
     ft_print_P(&ft, PSTR("\e*14;$38,0;$5,31;$9,0;$9,31;$6,0;$11,31;$5,0;$11,31;$4,0;$4,31;0;0;31;0;0;$4,31;$3,0;$4,31;0;0;31;0;0;$4,31;$3,0;$13,31;$3,0;$3,31;0;$5,31;0;$3,31;$3,0;$3,31;0;$5,31;0;$3,31;$4,0;$3,31;$5,0;$3,31;$5,0;$11,31;$6,0;$9,31;$9,0;$5,31;$22,0i"));
     ft_print_P(&ft, PSTR("\e*15;$38,0;$5,15;$9,0;$9,15;$6,0;$11,15;$5,0;$11,15;$4,0;$4,15;0;0;15;0;0;$4,15;$3,0;$4,15;0;0;15;0;0;$4,15;$3,0;$13,15;$3,0;$3,15;0;$5,15;0;$3,15;$3,0;$3,15;0;$5,15;0;$3,15;$4,0;$3,15;$5,0;$3,15;$5,0;$11,15;$6,0;$9,15;$9,0;$5,15;$22,0i"));
 
+    Sprite sprite[N_SPRITES] = {0};
     for (size_t i = 0; i < N_SPRITES; ++i) {
-        uint8_t x = rand() % (256 - 16);
-        uint8_t y = rand() % (256 - 16);
+        int16_t x = rand() % (256 - 16);
+        int16_t y = rand() % (256 - 16);
+        int8_t dir_x = ((int8_t) rand() % 8) - 4;
+        int8_t dir_y = ((int8_t) rand() % 8) - 4;
         ft_sprite_4(&ft, i, x, y, true, false, false, 0, i % 16);
+        sprite[i] = (Sprite) { .x = x, .y = y, .dir_x = dir_x, .dir_y = dir_y };
     }
+
+    ft_enable_vsync(&ft, true);
 
     while (1) {
         FT_Event e;
         while (ft_poll_event(&ft, &e)) {
             if (e.type == FTE_KEY_PRESS) {
                 ft_printf(&ft, "%c", e.key);
+            } else if (e.type == FTE_VSYNC) {
+                for (size_t i = 0; i < N_SPRITES; ++i) {
+                    Sprite* s = &sprite[i];
+                    s->x += s->x + s->dir_x;
+                    s->y += s->y + s->dir_y;
+                    if (s->x < 0 || s->x > (256-16))
+                        s->dir_x *= -1;
+                    if (s->y < 0 || s->y > (256-16))
+                        s->dir_y *= -1;
+                    ft_sprite_0(&ft, i, s->x, s->y);
+                }
             }
         }
     }
