@@ -109,5 +109,12 @@ int ftclient_tcpip_init(FTClient* ft_client, const char* address, int port, char
     SOCKET fd = connect_to_terminal(address, port, error, err_sz);
     if (fd == INVALID_SOCKET)
         return -1;
-    return ftclient_init(ft_client, write_cb, read_cb, ftclient_tcpip_finalize, (void *) fd, FT_RECOMMENDED_BUFSZ);
+    return ftclient_init(ft_client, (FTClientSetup) {
+        .write_cb = write_cb,
+        .read_cb = read_cb,
+        .finalize = ftclient_tcpip_finalize,
+        .data = (void *) fd,
+        .vsync = NULL,
+        .bufsz = FT_RECOMMENDED_BUFSZ
+    });
 }

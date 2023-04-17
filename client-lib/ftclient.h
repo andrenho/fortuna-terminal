@@ -8,11 +8,12 @@
 #define FT_N_COLORS 32
 
 typedef struct FTClient {
-    int    (*write_cb)(const char* buf, size_t bufsz, void* data);
-    int    (*read_cb)(char* buf, size_t bufsz, void* data);
-    int    (*finalize)(struct FTClient* ft, void* data);
-    void*  data;
-    size_t bufsz;
+    int            (*write_cb)(const char* buf, size_t bufsz, void* data);
+    int            (*read_cb)(char* buf, size_t bufsz, void* data);
+    int            (*finalize)(struct FTClient* ft, void* data);
+    void*          data;
+    volatile bool* vsync;
+    size_t         bufsz;
 } FTClient;
 
 typedef struct FTColor {
@@ -58,14 +59,18 @@ typedef struct FT_Event {
     };
 } FT_Event;
 
+typedef struct FTClientSetup {
+    int            (*write_cb)(const char* buf, size_t bufsz, void* data);
+    int            (*read_cb)(char* buf, size_t bufsz, void* data); // returns number of bytes read
+    int            (*finalize)(struct FTClient* ft, void* data);    // optional
+    void*          data;                                            // optional
+    volatile bool* vsync;                                           // set this ptr to true on vsync
+    size_t         bufsz;                                           // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
+} FTClientSetup;
+
 #define FT_RECOMMENDED_BUFSZ 1024
 
-int ftclient_init(FTClient* ft_client,
-                  int (*write_cb)(const char* buf, size_t bufsz, void* data),
-                  int (*read_cb)(char* buf, size_t bufsz, void* data),  // returns number of bytes read
-                  int (*finalize)(struct FTClient* ft, void* data),
-                  void* data,
-                  size_t bufsz);  // use FT_RECOMMENDED_BUFSZ, except for microcontrollers
+int ftclient_init(FTClient* ft_client, FTClientSetup setup);
 int ftclient_finalize(FTClient* ft);
 
 int ft_print(FTClient* ft, const char* str);

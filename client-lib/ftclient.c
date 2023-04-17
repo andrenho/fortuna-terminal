@@ -6,18 +6,14 @@
 #include <string.h>
 #include <stdint.h>
 
-int ftclient_init(FTClient* ft,
-                  int (*write_cb)(const char* buf, size_t bufsz, void* data),
-                  int (*read_cb)(char* buf, size_t bufsz, void* data),
-                  int (*finalize)(struct FTClient* ft, void* data),
-                  void*  data,
-                  size_t bufsz)
+int ftclient_init(FTClient* ft, FTClientSetup setup)
 {
-    ft->write_cb = write_cb;
-    ft->read_cb = read_cb;
-    ft->finalize = finalize;
-    ft->data = data;
-    ft->bufsz = bufsz;
+    ft->write_cb = setup.write_cb;
+    ft->read_cb = setup.read_cb;
+    ft->finalize = setup.finalize;
+    ft->data = setup.data;
+    ft->vsync = setup.vsync;
+    ft->bufsz = setup.bufsz;
     return 0;
 }
 
@@ -290,6 +286,12 @@ void parse_event(char cmd, const int16_t arr[], int arr_sz, FT_Event *event)
 
 int ft_poll_event(FTClient* ft, FT_Event* event)
 {
+    if (ft->vsync && *ft->vsync) {
+        event->type = FTE_VSYNC;
+        *ft->vsync = false;
+        return 1;
+    }
+
     int16_t arr[ft->bufsz / sizeof(int16_t)];
     char cmd;
 

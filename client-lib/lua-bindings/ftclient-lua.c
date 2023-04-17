@@ -254,7 +254,14 @@ static int lua_write_cb(const char* buf, size_t bufsz, void* data)
 static int ft_new(lua_State* L)
 {
     FTClient* ft = (FTClient *) lua_newuserdatauv(L, sizeof(FTClient), 0);
-    ftclient_init(ft, lua_write_cb, NULL, NULL, L, FT_RECOMMENDED_BUFSZ);
+    ftclient_init(ft, (FTClientSetup) {
+        .write_cb = lua_write_cb,
+        .read_cb = NULL,
+        .finalize = NULL,
+        .data = L,
+        .vsync = NULL,   // TODO
+        .bufsz = FT_RECOMMENDED_BUFSZ,
+    });
 
     luaL_setmetatable(L, FT_MT);
 

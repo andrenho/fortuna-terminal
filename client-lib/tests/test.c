@@ -39,7 +39,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
 int main()
 {
     FTClient ft;
-    assert(ftclient_init(&ft, write_cb, read_cb, NULL, my_data, 16) == 0);
+    assert(ftclient_init(&ft, (FTClientSetup) { write_cb, read_cb, NULL, my_data, NULL, 16 }) == 0);
 
     // test writes
 
