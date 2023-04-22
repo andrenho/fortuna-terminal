@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 #include <ftclient.h>
 #include <ftclient-avr.h>
@@ -8,12 +9,14 @@
 #include "spi.h"
 #include "uart.h"
 
-#define N_SPRITES 128
+#define N_SPRITES 4
 
 typedef struct {
     int16_t x, y;
     int8_t dir_x, dir_y;
 } Sprite;
+
+static volatile bool vsync = false;
 
 int main(void)
 {
@@ -23,7 +26,7 @@ int main(void)
 
     FTClient ft;
 
-    uart_ft_init(&ft);
+    uart_ft_init(&ft, &vsync);
     // spi_ft_init(&ft);
 
     ft_graphics(&ft, true);
@@ -60,6 +63,7 @@ int main(void)
 
     ft_enable_vsync(&ft, true);
 
+    /*
     while (1) {
         FT_Event e;
         while (ft_poll_event(&ft, &e)) {
@@ -68,8 +72,8 @@ int main(void)
             } else if (e.type == FTE_VSYNC) {
                 for (size_t i = 0; i < N_SPRITES; ++i) {
                     Sprite* s = &sprite[i];
-                    s->x += s->x + s->dir_x;
-                    s->y += s->y + s->dir_y;
+                    s->x += s->dir_x;
+                    s->y += s->dir_y;
                     if (s->x < 0 || s->x > (256-16))
                         s->dir_x *= -1;
                     if (s->y < 0 || s->y > (256-16))
@@ -77,6 +81,22 @@ int main(void)
                     ft_sprite_0(&ft, i, s->x, s->y);
                 }
             }
+        }
+    }
+    */
+
+    while (1) {
+        _delay_ms(16);
+
+        for (size_t i = 0; i < N_SPRITES; ++i) {
+            Sprite* s = &sprite[i];
+            s->x += s->dir_x;
+            s->y += s->dir_y;
+            if (s->x < 0 || s->x > (256-16))
+                s->dir_x *= -1;
+            if (s->y < 0 || s->y > (256-16))
+                s->dir_y *= -1;
+            ft_sprite_0(&ft, i, s->x, s->y);
         }
     }
 }

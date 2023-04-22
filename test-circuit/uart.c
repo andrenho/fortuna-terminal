@@ -73,8 +73,15 @@ void uart_init(void)
 #endif
 }
 
-void uart_ft_init(FTClient* ft)
+void uart_ft_init(FTClient* ft, volatile bool* vsync)
 {
     // initialize ftclient
-    ftclient_init(ft, write_cb, read_cb, NULL, NULL, 512);
+    ftclient_init(ft, (FTClientSetup) {
+        .write_cb = write_cb,
+        .read_cb = read_cb,
+        .finalize = NULL,
+        .data = NULL,
+        .vsync = vsync,
+        .bufsz = 512
+    });
 }

@@ -26,7 +26,7 @@ static int read_cb(char* buf, size_t bufsz, void* data)
     return i;
 }
 
-void spi_ft_init(FTClient* ft)
+void spi_ft_init(FTClient* ft, volatile bool* vsync)
 {
     DDRB |= _BV(PB4);  // MOSI
 
@@ -39,7 +39,14 @@ void spi_ft_init(FTClient* ft)
     fifo_init(&out_fifo);
 
     // initialize ftclient
-    ftclient_init(ft, write_cb, read_cb, NULL, NULL, 512);
+    ftclient_init(ft, (FTClientSetup) {
+        .write_cb = write_cb,
+        .read_cb = read_cb,
+        .finalize = NULL,
+        .data = NULL,
+        .vsync = vsync,
+        .bufsz = 512
+    });
 }
 
 ISR (SPI_STC_vect)

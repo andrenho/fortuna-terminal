@@ -20,7 +20,8 @@ MCU_LD=avr6
 F_CPU=16000000UL
 
 # Serial speed, in baud. Used by avr-libc for UART speed calculation.
-BAUD=500000
+# BAUD=500000
+BAUD=115200
 
 CFLAGS=-I.
 

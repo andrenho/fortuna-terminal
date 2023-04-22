@@ -3,6 +3,6 @@
 
 #include <ftclient.h>
 
-void i2c_ft_init(FTClient* ft);
+void i2c_ft_init(FTClient* ft, volatile bool* vsync);
 
 #endif

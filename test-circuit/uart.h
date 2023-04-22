@@ -4,6 +4,6 @@
 #include <ftclient.h>
 
 void uart_init(void);
-void uart_ft_init(FTClient* ft);
+void uart_ft_init(FTClient* ft, volatile bool* vsync);
 
 #endif

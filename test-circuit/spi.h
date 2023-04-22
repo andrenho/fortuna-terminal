@@ -3,6 +3,6 @@
 
 #include <ftclient.h>
 
-void spi_ft_init(FTClient* ft);
+void spi_ft_init(FTClient* ft, volatile bool* vsync);
 
 #endif
