@@ -21,18 +21,18 @@ static volatile bool vsync = false;
 int main(void)
 {
     // vsync interrupt
-    DDRD &= ~(1 << PD3);
-    EICRA |= (0 << ISC11) | (1 << ISC10);
+    EICRA = (1 << ISC11);
+    EIMSK = (1 << INT1);
 
     srand(0);
     sei();
     uart_init();
 
     FTClient ft;
-
     uart_ft_init(&ft, NULL);
     // spi_ft_init(&ft);
 
+    /*
     ft_graphics(&ft, true);
     ft_print_P(&ft, PSTR("\e[1;1H\e[2J"));
 
@@ -64,6 +64,7 @@ int main(void)
         ft_sprite_4(&ft, i, x, y, true, false, false, 0, i % 16);
         sprite[i] = (Sprite) { .x = x, .y = y, .dir_x = dir_x, .dir_y = dir_y };
     }
+    */
 
     ft_enable_vsync(&ft, true);
 
@@ -91,6 +92,8 @@ int main(void)
 
     while (1) {
         if (vsync) {
+            ft_print(&ft, "x");
+            /*
             for (size_t i = 0; i < N_SPRITES; ++i) {
                 Sprite* s = &sprite[i];
                 s->x += s->dir_x;
@@ -101,6 +104,7 @@ int main(void)
                     s->dir_y *= -1;
                 ft_sprite_0(&ft, i, s->x, s->y);
             }
+            */
             vsync = false;
         }
     }
