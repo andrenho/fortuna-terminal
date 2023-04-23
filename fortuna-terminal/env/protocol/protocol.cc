@@ -14,6 +14,9 @@ std::string Protocol::execute_outputs()
 
 void Protocol::execute_inputs(std::string const& data_received)
 {
+    if (data_received.empty())
+        return;
+
     received_bytes_ += data_received;
 
     bool last_is_esc = received_bytes_.ends_with('\e');
