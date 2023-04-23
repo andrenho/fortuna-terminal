@@ -19,7 +19,7 @@ using namespace std::string_literals;
 UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
         : CommFileDescriptor(readbuf_sz), uart_options_(uart_options)
 {
-    fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+    fd_ = open(uart_options.port.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd_ < 0)
         throw LibcException("Error opening serial port");
     printf("Serial port initialized.\n");
@@ -59,12 +59,16 @@ UART::UART(UartOptions const &uart_options, size_t readbuf_sz)
     opt.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
     opt.c_oflag &= ~OPOST;
 
+    /*
     // make read non-blocking
     opt.c_cc[VTIME] = 0;
     opt.c_cc[VMIN] = 0;
+     */
 
     if (tcsetattr(fd_, TCSANOW, &opt) != 0)
         throw LibcException("Error setting serial attributes");
+
+    fcntl(fd_, F_SETFL, O_NONBLOCK);
 }
 
 std::string UART::description() const
