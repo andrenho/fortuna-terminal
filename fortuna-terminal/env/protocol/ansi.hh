@@ -20,9 +20,9 @@ class ANSI : public NonCopyable {
 public:
     explicit ANSI(Scene& scene);
 
-    void     send_ansi_bytes(std::string const& bytes);
+    void     send_bytes(std::string const& bytes);
 
-    void     reset_ansi_protocol();
+    void     reset_protocol();
 
 
 private:
@@ -38,7 +38,7 @@ private:
     static void         tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
     static bool         tmtchar_not_equals(TMTCHAR const &c1, TMTCHAR const &c2);
 
-    void     initialize_cache();
+    void                initialize_cache();
 };
 
 #endif //ANSI_HH_

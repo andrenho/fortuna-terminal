@@ -9,10 +9,7 @@
 #include "fortuna.hh"
 #include "events.hh"
 
-class Protocol :
-        private ANSI,
-        private FortunaProtocol,
-        public Events {
+class Protocol {
 public:
     explicit Protocol(class Scene& scene);
 
@@ -22,9 +19,11 @@ public:
     void reset();
     void reset_mode();
 
+    Events& events() { return events_; }
+
 private:
-    bool        extra_active_ = false;
-    std::string received_bytes_;
+    ANSI        ansi_;
+    Events      events_;
 };
 
 #endif //PROTOCOL_HH_

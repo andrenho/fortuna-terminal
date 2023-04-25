@@ -51,14 +51,14 @@ ANSI::ANSI(Scene &scene)
         throw FortunaException("Could not allocate terminal");
 }
 
-void ANSI::reset_ansi_protocol()
+void ANSI::reset_protocol()
 {
     std::string clrscr = "\033[2J\033[H";
     tmt_write(vt_.get(), clrscr.data(), clrscr.size());
     current_mode_ = scene_.mode();
 }
 
-void ANSI::send_ansi_bytes(std::string const &bytes)
+void ANSI::send_bytes(std::string const &bytes)
 {
     tmt_write(vt_.get(), bytes.data(), bytes.size());
     if (scene_.mode() != current_mode_) {
