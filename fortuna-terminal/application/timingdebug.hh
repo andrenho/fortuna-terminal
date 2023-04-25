@@ -19,6 +19,9 @@ public:
     void start_event(Event event);
     void end_frame();
 
+    size_t bytes_sent = 0;
+    size_t bytes_received = 0;
+
     [[nodiscard]] size_t avg_fps() const;
     [[nodiscard]] std::map<Event, double> last_events() const;
 

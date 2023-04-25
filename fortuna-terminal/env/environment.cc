@@ -35,6 +35,9 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
     std::string received_data = comm_->exchange(data_to_send);
     debug().bytes(received_data, data_to_send);
 
+    timing_debug.bytes_sent = data_to_send.length();
+    timing_debug.bytes_received = received_data.length();
+
     timing_debug.start_event(TimingDebug::Event::ExecuteInputs);
     protocol_.execute_inputs(received_data);
 
@@ -101,7 +104,14 @@ void Environment::display_timing_info(TimingDebug const &timing_debug) const
         return y + 1;
     };
 
-    size_t y = scene_.text().lines() - 12;
+    auto print_int = [&](size_t y, std::string const& text, size_t bytes) {
+        char buf[64];
+        snprintf(buf, sizeof buf, " %-16s%6zu ", text.c_str(), bytes);
+        scene_.text().write_text(y, x, buf, {COLOR_ORANGE, true, true});
+        return y + 1;
+    };
+
+    size_t y = scene_.text().lines() - 15;
     y = print_event(y, "ControlQueue", TimingDebug::Event::ControlQueue);
     y = print_event(y, "ExecuteOutputs", TimingDebug::Event::ExecuteOutputs);
     y = print_event(y, "Communicate", TimingDebug::Event::Communicate);
@@ -112,6 +122,8 @@ void Environment::display_timing_info(TimingDebug const &timing_debug) const
     y = print_event(y, "Draw", TimingDebug::Event::Draw);
     y = print_event(y, "Wait", TimingDebug::Event::Wait);
     y = print_event(y, "Interframe", TimingDebug::Event::Interframe);
+    y = print_int(y + 1, "Bytes received", timing_debug.bytes_received);
+    y = print_int(y, "Bytes sent", timing_debug.bytes_sent);
 
     scene_.text().write_text(
             scene_.text().lines() - 1,
