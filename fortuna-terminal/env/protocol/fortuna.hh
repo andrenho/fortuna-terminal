@@ -12,13 +12,12 @@ class FortunaProtocol {
 public:
     explicit FortunaProtocol(Scene& scene) : scene_(scene) {}
 
-    void send_fortuna_bytes(std::string const &bytes);
+    std::string send_bytes(std::string const &bytes);
 
-    std::string output_collisions();
-
-    void reset_fortuna_protocol();
+    void reset_protocol();
 
     std::string get_lastest_fortuna_outputs();
+    std::string output_collisions();
 
 private:
     Scene& scene_;

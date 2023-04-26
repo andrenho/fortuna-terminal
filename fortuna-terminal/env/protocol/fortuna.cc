@@ -24,7 +24,7 @@ static ssize_t to_ssize(std::string const& str)
     }
 }
 
-void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
+std::string FortunaProtocol::send_bytes(std::string const &bytes)
 {
     for (char c : bytes) {
         current_escape_sequence_ += c;
@@ -33,6 +33,8 @@ void FortunaProtocol::send_fortuna_bytes(std::string const &bytes)
             current_escape_sequence_.clear();
         }
     }
+
+    return "";
 }
 
 void FortunaProtocol::execute_escape_sequence()
@@ -264,7 +266,7 @@ std::string FortunaProtocol::output_collisions()
     return ss.str();
 }
 
-void FortunaProtocol::reset_fortuna_protocol()
+void FortunaProtocol::reset_protocol()
 {
     current_escape_sequence_.clear();
 }

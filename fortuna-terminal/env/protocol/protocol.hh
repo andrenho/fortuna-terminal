@@ -22,8 +22,10 @@ public:
     Events& events() { return events_; }
 
 private:
-    ANSI        ansi_;
-    Events      events_;
+    ANSI            ansi_;
+    FortunaProtocol fortuna_;
+    Events          events_;
+    Scene const&    scene_;
 };
 
 #endif //PROTOCOL_HH_

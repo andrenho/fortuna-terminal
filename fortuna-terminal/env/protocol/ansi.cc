@@ -60,6 +60,9 @@ void ANSI::reset_protocol()
 
 void ANSI::send_bytes(std::string const &bytes)
 {
+    if (bytes.empty())
+        return;
+
     tmt_write(vt_.get(), bytes.data(), bytes.size());
     if (scene_.mode() != current_mode_) {
         current_mode_ = scene_.mode();
