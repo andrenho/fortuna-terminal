@@ -9,6 +9,7 @@
 #include <mutex>
 #include <optional>
 #include <set>
+#include <span>
 #include <sstream>
 #include <string>
 #include <string_view>
