@@ -12,7 +12,7 @@ class FortunaProtocol {
 public:
     explicit FortunaProtocol(Scene& scene) : scene_(scene) {}
 
-    std::string send_bytes(std::string const &bytes);
+    void send_bytes(std::string const &bytes);
 
     void reset_protocol();
 
@@ -22,12 +22,17 @@ public:
 private:
     Scene& scene_;
 
-    std::string current_escape_sequence_ {};
-
-    void execute_escape_sequence();
-    char parse_escape_sequence(std::vector<ssize_t>& parameters) const;
+    std::string current_str_ {};
 
     std::stringstream fortuna_output_queue_;
+
+    enum Event : uint8_t {
+        C_COLLISION_EVT  = 0x11,
+        C_SEPARATION_EVT = 0x12,
+    };
+
+    static std::string to_fortuna(uint8_t cmd, std::vector<int> const& pars);
+    static std::pair<bool, int> from_fortuna(std::string_view str);
 };
 
 #endif //FORTUNA_HH_

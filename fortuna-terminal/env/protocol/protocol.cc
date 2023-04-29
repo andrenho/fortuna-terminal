@@ -27,9 +27,7 @@ void Protocol::execute_inputs(std::string const& data_received)
         }
 
     } else {
-        std::string leftover_bytes = fortuna_.send_bytes(data_received);
-        if (!leftover_bytes.empty())
-            ansi_.send_bytes(leftover_bytes);
+        fortuna_.send_bytes(data_received);
     }
 }
 

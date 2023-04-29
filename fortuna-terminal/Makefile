@@ -43,9 +43,17 @@ OBJ =   main.o \
  		terminal/painters/textpainter.o terminal/painters/graphicspainter.o \
 		lib/tmt/tmt.o
 
+TESTS_OBJ = tests/tests.cc \
+			application/debug.o application/control.o \
+		    env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
+			scene/scene.o scene/palette/palette.o \
+			scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
+		    lib/tmt/tmt.o
+
 DEPS := $(OBJ:.o=.d)
 
 EXE = fortuna-terminal
+TESTS_EXE = fortuna-terminal-tests
 
 CPPFLAGS=-I. -D_GNU_SOURCE -pthread -DVERSION=\"$(file < VERSION)\" -DCOLOR_TERMINAL=${COLOR_TERMINAL}
 CXXFLAGS=-std=c++20
@@ -56,6 +64,7 @@ GCH_HEADER=precompile.hh
 ifeq ($(WINDOWS),1)
     OBJ += comm/fd/tcpip/tcpipwindows.o
 	EXE := ${EXE}.exe
+	TESTS_EXE := ${TESTS_EXE}.exe
 	CPPFLAGS := ${CPPFLAGS} -Ilib/SDL2-windows/include
 	LDFLAGS := ${LDFLAGS} -lws2_32 -Llib/SDL2-windows/lib -lssp -lmingw32 -lSDL2main -lSDL2
 else
@@ -112,6 +121,9 @@ ${GCH_HEADER}.gch: ${GCH_HEADER}
 
 ${EXE}: ${OBJ}
 	${CXX} -o $@ $^ ${LDFLAGS}
+
+${TESTS_EXE}: ${TESTS_OBJ}
+	${CXX} -o $@ $^
 
 -include ${DEPS}
 
