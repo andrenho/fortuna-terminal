@@ -30,9 +30,6 @@ private:
         C_COLLISION_EVT  = 0x11,
         C_SEPARATION_EVT = 0x12,
     };
-
-    static std::string to_fortuna(uint8_t cmd, std::vector<int> const& pars);
-    static std::pair<bool, int> from_fortuna(std::string_view str);
 };
 
 #endif //FORTUNA_HH_

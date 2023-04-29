@@ -35,7 +35,7 @@ OBJ =   main.o \
         comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip/tcpip.o \
         comm/custom/echo.o \
 		env/environment.o \
-		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
+		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o env/protocol/varint.o \
  		scene/scene.o scene/palette/palette.o \
  		scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
  		terminal/sdl/sdl.o \
@@ -45,7 +45,7 @@ OBJ =   main.o \
 
 TESTS_OBJ = tests/tests.cc \
 			application/debug.o application/control.o \
-		    env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o \
+		    env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o env/protocol/varint.o \
 			scene/scene.o scene/palette/palette.o \
 			scene/layers/spritelayer.o scene/layers/textlayer.o scene/layers/tilemaplayer.o \
 		    lib/tmt/tmt.o
