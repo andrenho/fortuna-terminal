@@ -21,7 +21,7 @@ std::vector<uint8_t> to_varint(std::vector<int> const& pars)
             r.push_back(b1);
             r.push_back(abs(par) & 0xff);
         } else {
-            throw std::runtime_error("Integer outside of bounds");
+            throw std::out_of_range("Integer outside of bounds");
         }
     }
 
@@ -34,17 +34,25 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
 
     std::vector<int> r;
 
-    if (!array.empty() && array[0] == RLE) {
+    for (size_t i = 0; i < count; ++i) {
 
-        auto [n_bytes, values] = from_varint(array.subspan(1), 2);
-        pos = n_bytes + 1;
-        std::fill_n(std::back_inserter(r), values[0], values[1]);
+        if (!array.empty() && array[0] == RLE) {
 
-    } else {
+            auto [n_bytes, values] = from_varint(array.subspan(1), 2);
+            if (n_bytes == 0)
+                return { 0, {} };
+            pos = n_bytes + 1;
+            std::fill_n(std::back_inserter(r), values[0], values[1]);
+            i += values[0];
 
-        for (size_t i = 0; i < count; ++i) {
+        } else {
+
+            if (pos >= array.size())
+                return { 0, {} };
             uint8_t b1 = array[pos++];
             if (b1 & (1 << 7)) {
+                if (pos >= array.size())
+                    return { 0, {} };
                 int value = ((b1 & 0x3f) << 8) | array[pos++];
                 if (b1 & (1 << 6))
                     value *= -1;
@@ -53,6 +61,7 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
                 r.push_back(b1);
             }
         }
+
     }
 
     return { pos, r };

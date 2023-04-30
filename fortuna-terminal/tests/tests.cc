@@ -27,11 +27,8 @@ static void compare_from_varint(std::vector<uint8_t> const& bytes, std::vector<i
     ASSERT(std::equal(result.begin(), result.end(), expected.begin()))
 }
 
-int main()
+static void test_varint()
 {
-#if 0
-#endif
-
     // varint
     validate_varint({0}, 1);
     validate_varint({200}, 2);
@@ -43,7 +40,7 @@ int main()
         try {
             validate_varint({ 20000 }, 2);
             FAIL()
-        } catch (std::runtime_error&) {}
+        } catch (std::out_of_range&) {}
     }
 
     // RLE
@@ -55,7 +52,35 @@ int main()
         compare_from_varint(req, expected);
     }
 
+    // incomplete request
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xf0 } }, 1);
+        ASSERT(count == 0)
+    }
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0x12 } }, 2);
+        ASSERT(count == 0)
+    }
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff } }, 5);
+        ASSERT(count == 0)
+    }
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff, 0x5 } }, 5);
+        ASSERT(count == 0)
+    }
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff, 0x5, 0x5 } }, 6);
+        ASSERT(count == 0)
+    }
+
     // TODO: incomplete request
+
+}
+
+int main()
+{
+    test_varint();
 
     return EXIT_SUCCESS;
 }
