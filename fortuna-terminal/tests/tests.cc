@@ -48,6 +48,12 @@ int main()
 
     // RLE
     compare_from_varint({ 0xff, 0x05, 0x12 }, { 0x12, 0x12, 0x12, 0x12, 0x12 });
+    {
+        auto req = to_varint({ 300, 400 });  // 300 times the number 400
+        req.insert(req.begin(), 0xff);
+        std::vector<int> expected(300, 400);
+        compare_from_varint(req, expected);
+    }
 
     // TODO: incomplete request
 
