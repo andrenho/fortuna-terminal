@@ -1,10 +1,24 @@
 #include "fortuna.hh"
 #include "application/debug.hh"
 #include "varint.hh"
+#include "application/control.hh"
 
-void FortunaProtocol::send_bytes(std::string const &bytes)
+void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
 {
     size_t pos = 0;
+    auto [count, command] = from_varint(bytes, 1);
+    if (count == 0)
+        return;
+
+    switch (command.at(0)) {
+        case 0:
+            control_queue.emplace(ControlCommand::ResetProtocol);
+            debug().info("fortuna: reset protocol");
+            break;
+        default:
+            fprintf(stderr, "fortuna: invalid command '%d'", command.at(0));
+            break;
+    }
 }
 
 void FortunaProtocol::reset_protocol()

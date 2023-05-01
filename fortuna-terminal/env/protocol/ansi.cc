@@ -58,7 +58,7 @@ void ANSI::reset_protocol()
     current_mode_ = scene_.mode();
 }
 
-void ANSI::send_bytes(std::string const &bytes)
+void ANSI::process_input(std::string const &bytes)
 {
     if (bytes.empty())
         return;

@@ -12,7 +12,7 @@ class FortunaProtocol {
 public:
     explicit FortunaProtocol(Scene& scene) : scene_(scene) {}
 
-    void send_bytes(std::string const &bytes);
+    void process_inputs(std::vector<uint8_t> const &bytes);
 
     void reset_protocol();
 

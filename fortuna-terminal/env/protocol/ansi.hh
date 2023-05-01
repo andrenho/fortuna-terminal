@@ -20,7 +20,7 @@ class ANSI : public NonCopyable {
 public:
     explicit ANSI(Scene& scene);
 
-    void     send_bytes(std::string const& bytes);
+    void     process_input(std::string const& bytes);
 
     void     reset_protocol();
 

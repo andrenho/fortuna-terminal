@@ -13,22 +13,25 @@ std::string Protocol::execute_outputs()
 
 void Protocol::execute_inputs(std::string const& data_received)
 {
+#warning TODO - write Protocol::execute_inputs
+#if 0
     if (data_received.empty())
         return;
 
     if (scene_.mode() == Mode::Text) {
         size_t pos = data_received.find("\xfd\x03");
         if (pos == std::string::npos) {
-            ansi_.send_bytes(data_received);
+            ansi_.process_input(data_received);
         } else {
-            ansi_.send_bytes(data_received.substr(0, pos));
-            fortuna_.send_bytes(data_received.substr(pos + 2));
+            ansi_.process_input(data_received.substr(0, pos));
+            fortuna_.process_inputs(data_received.substr(pos + 2));
             control_queue.emplace(ControlCommand::SetMode, Mode::Graphics);
         }
 
     } else {
-        fortuna_.send_bytes(data_received);
+        fortuna_.process_inputs(data_received);
     }
+#endif
 }
 
 void Protocol::reset()
@@ -39,5 +42,5 @@ void Protocol::reset()
 
 void Protocol::reset_mode()
 {
-    ansi_.send_bytes(" \b");
+    ansi_.process_input(" \b");
 }

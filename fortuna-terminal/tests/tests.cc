@@ -5,6 +5,10 @@
 #include <vector>
 
 #include "../env/protocol/varint.hh"
+#include "../scene/scene.hh"
+#include "../env/protocol/fortuna.hh"
+#include "../application/control.hh"
+#include "../application/debug.hh"
 
 #define FAIL() {exit(EXIT_FAILURE);}
 #define ASSERT(a) {if(!(a))FAIL()}
@@ -83,9 +87,22 @@ static void test_varint()
     }
 }
 
+static void test_fortuna_protocol()
+{
+    // test full commands
+    {
+        Scene scene; FortunaProtocol fp(scene);
+        fp.process_inputs(to_varint({ 0x0 }));
+        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
+    }
+}
+
 int main()
 {
+    Debug::initialize(DebugVerbosity::V_NORMAL);
+
     test_varint();
+    test_fortuna_protocol();
 
     return EXIT_SUCCESS;
 }
