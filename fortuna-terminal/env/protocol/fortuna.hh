@@ -25,11 +25,6 @@ private:
     std::string current_str_ {};
 
     std::stringstream fortuna_output_queue_;
-
-    enum Event : uint8_t {
-        C_COLLISION_EVT  = 0x11,
-        C_SEPARATION_EVT = 0x12,
-    };
 };
 
 #endif //FORTUNA_HH_

@@ -2,22 +2,52 @@
 #include "application/debug.hh"
 #include "varint.hh"
 #include "application/control.hh"
+#include "fortuna_commands.hh"
 
 void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
 {
     size_t pos = 0;
-    auto [count, command] = from_varint(bytes, 1);
-    if (count == 0)
-        return;
 
-    switch (command.at(0)) {
-        case 0:
-            control_queue.emplace(ControlCommand::ResetProtocol);
-            debug().info("fortuna: reset protocol");
-            break;
-        default:
-            fprintf(stderr, "fortuna: invalid command '%d'", command.at(0));
-            break;
+    /*
+    auto get_parameters = [&](size_t n_params) -> std::vector<int> {
+        auto [pcount, pars] = from_varint(bytes, pos, 4);
+        if (pcount == 0)
+            return {};  // TODO - use exception
+        pos += pcount;
+        return pars;
+    };
+     */
+
+    while (pos < bytes.size()) {
+
+        auto [count, command] = from_varint(bytes, pos, 1);
+        if (count == 0)
+            return;
+
+        ++pos;
+
+        switch (static_cast<InputCommand>(command.at(0))) {
+
+            case I_RESET_TERMINAL:
+                control_queue.emplace(ControlCommand::ResetProtocol);
+                debug().info("fortuna: reset protocol");
+                break;
+
+            case I_CHANGE_PALETTE: {
+                auto [pcount, pars] = from_varint(bytes, pos, 4);
+                if (pcount == 0)
+                    return;
+                pos += pcount;
+                scene_.palette[pars[0]] = { (uint8_t) pars[1], (uint8_t) pars[2], (uint8_t) pars[3] };
+                debug().info("fortuna: palette set");
+                break;
+            }
+
+            default:
+                fprintf(stderr, "fortuna: invalid command '%d'", command.at(0));
+                break;
+        }
+
     }
 }
 

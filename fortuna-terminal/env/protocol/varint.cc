@@ -40,7 +40,7 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
 
             auto [n_bytes, values] = from_varint(array.subspan(pos + 1), 2);
             if (n_bytes == 0)
-                return { 0, {} };
+                throw VarintInputTooShortException();
             int n_repetitions = values[0];
             int value = values[1];
             pos += n_bytes + 1;
@@ -49,11 +49,11 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
         } else {
 
             if (pos >= array.size())
-                return { 0, {} };
+                throw VarintInputTooShortException();
             uint8_t b1 = array[pos++];
             if (b1 & (1 << 7)) {
                 if (pos >= array.size())
-                    return { 0, {} };
+                    throw VarintInputTooShortException();
                 int value = ((b1 & 0x3f) << 8) | array[pos++];
                 if (b1 & (1 << 6))
                     value *= -1;
@@ -66,4 +66,10 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
     }
 
     return { pos, r };
+}
+
+std::pair<size_t, std::vector<int>> from_varint(std::vector<uint8_t> const& array, size_t position_in_array, size_t number_of_ints_expected)
+{
+    std::span<const uint8_t> sp(array.begin() + position_in_array, array.end());
+    return from_varint(sp, number_of_ints_expected);
 }

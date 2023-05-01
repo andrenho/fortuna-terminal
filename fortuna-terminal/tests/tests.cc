@@ -7,6 +7,7 @@
 #include "../env/protocol/varint.hh"
 #include "../scene/scene.hh"
 #include "../env/protocol/fortuna.hh"
+#include "../env/protocol/fortuna_commands.hh"
 #include "../application/control.hh"
 #include "../application/debug.hh"
 
@@ -57,34 +58,34 @@ static void test_varint()
     }
 
     // incomplete requests
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xf0 } }, 1);
-        ASSERT(count == 0)
-    }
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0x12 } }, 2);
-        ASSERT(count == 0)
-    }
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff } }, 5);
-        ASSERT(count == 0)
-    }
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff, 0x5 } }, 5);
-        ASSERT(count == 0)
-    }
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0xff, 0x5, 0x5 } }, 6);
-        ASSERT(count == 0)
-    }
+    try {
+        from_varint(std::span<const uint8_t> { { 0xf0 } }, 1);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
+    try {
+        from_varint(std::span<const uint8_t> { { 0x12 } }, 2);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
+    try {
+        from_varint(std::span<const uint8_t> { { 0xff } }, 5);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
+    try {
+        from_varint(std::span<const uint8_t> { { 0xff, 0x5 } }, 5);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
+    try {
+        from_varint(std::span<const uint8_t> { { 0xff, 0x5, 0x5 } }, 6);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
 
     // multiple requests in the same call
     validate_varint({20, -2000}, 3);
     compare_from_varint({ 0x38, 0xff, 0x5, 0x12, 0x1a }, { 0x38, 0x12, 0x12, 0x12, 0x12, 0x12, 0x1a });
-    {
-        auto [count, _] = from_varint(std::span<const uint8_t> { { 0x38, 0xff, 0x5 } }, 6);
-        ASSERT(count == 0)
-    }
+    try {
+        from_varint(std::span<const uint8_t> { { 0x38, 0xff, 0x5 } }, 6);
+        FAIL();
+    } catch (VarintInputTooShortException&) {}
 }
 
 static void test_fortuna_protocol()
@@ -92,11 +93,29 @@ static void test_fortuna_protocol()
     // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
-        fp.process_inputs(to_varint({ 0x0 }));
+        fp.process_inputs(to_varint({ I_RESET_TERMINAL }));
         ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
     }
 
-    // TODO - test commands with parameters
+    // test commands with parameters
+    {
+        Scene scene; FortunaProtocol fp(scene);
+        fp.process_inputs(to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 }));
+        ASSERT(scene.palette[1].r == 255);
+        ASSERT(scene.palette[1].g == 255);
+        ASSERT(scene.palette[1].b == 128);
+    }
+
+    // test multiple commands
+    {
+        Scene scene; FortunaProtocol fp(scene);
+        fp.process_inputs(to_varint({ I_RESET_TERMINAL, I_CHANGE_PALETTE, 1, 255, 255, 128 }));
+        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
+        ASSERT(scene.palette[1].r == 255);
+        ASSERT(scene.palette[1].g == 255);
+        ASSERT(scene.palette[1].b == 128);
+    }
+
     // TODO - test very long commands
     // TODO - test broken commands
     // TODO - test end of frame

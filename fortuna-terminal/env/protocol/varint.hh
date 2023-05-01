@@ -2,8 +2,11 @@
 #define VARINT_HH_
 
 #include <cstdint>
+#include <stdexcept>
 #include <span>
 #include <vector>
+
+class VarintInputTooShortException : public std::exception {};
 
 // Convert to varint bytes.
 //   - pars: list of integers to be converted
@@ -17,5 +20,7 @@ std::vector<uint8_t> to_varint(std::vector<int> const& pars);
 //      - the number of bytes used in the conversion, or 0 if there were not enough bytes
 //      - the array of ints
 std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& array, size_t number_of_ints_expected);
+
+std::pair<size_t, std::vector<int>> from_varint(std::vector<uint8_t> const& array, size_t position_in_array, size_t number_of_ints_expected);
 
 #endif //VARINT_HH_
