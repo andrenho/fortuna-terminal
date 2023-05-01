@@ -89,12 +89,19 @@ static void test_varint()
 
 static void test_fortuna_protocol()
 {
-    // test full commands
+    // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
         fp.process_inputs(to_varint({ 0x0 }));
         ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
     }
+
+    // TODO - test commands with parameters
+    // TODO - test very long commands
+    // TODO - test broken commands
+    // TODO - test end of frame
+    // TODO - test end of frame in the middle of the communication
+    // TODO - test message responses
 }
 
 int main()
