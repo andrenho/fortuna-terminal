@@ -74,7 +74,7 @@ static void test_varint()
         ASSERT(count == 0)
     }
 
-    // TODO: incomplete request
+    // TODO: multiple requests
 
 }
 

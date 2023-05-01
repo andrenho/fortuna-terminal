@@ -28,22 +28,23 @@ std::vector<uint8_t> to_varint(std::vector<int> const& pars)
     return r;
 }
 
-std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& array, size_t count)
+std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& array, size_t number_of_ints_expected)
 {
     size_t pos = 0;
 
     std::vector<int> r;
 
-    for (size_t i = 0; i < count; ++i) {
+    while (r.size() < number_of_ints_expected) {
 
-        if (!array.empty() && array[0] == RLE) {
+        if ((pos + 2) < array.size()  && array[pos] == RLE) {
 
-            auto [n_bytes, values] = from_varint(array.subspan(1), 2);
+            auto [n_bytes, values] = from_varint(array.subspan(pos + 1), 2);
             if (n_bytes == 0)
                 return { 0, {} };
+            int n_repetitions = values[0];
+            int value = values[1];
             pos = n_bytes + 1;
-            std::fill_n(std::back_inserter(r), values[0], values[1]);
-            i += values[0];
+            std::fill_n(std::back_inserter(r), n_repetitions, value);
 
         } else {
 
