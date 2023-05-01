@@ -9,13 +9,13 @@
 #define FAIL() {exit(EXIT_FAILURE);}
 #define ASSERT(a) {if(!(a))FAIL()}
 
-static void validate_varint(std::vector<int> const &values, size_t expected_count)
+static void validate_varint(std::vector<int> const &values, size_t expected_n_bytes)
 {
     std::vector<uint8_t> str = to_varint(values);
-    auto [count, result] = from_varint(str, values.size());
+    auto [n_bytes, result] = from_varint(str, values.size());
     if (values.size() != result.size() || !std::equal(values.begin(), values.end(), result.begin()))
         FAIL();
-    if (count != expected_count)
+    if (n_bytes != expected_n_bytes)
         FAIL();
 }
 
@@ -52,7 +52,7 @@ static void test_varint()
         compare_from_varint(req, expected);
     }
 
-    // incomplete request
+    // incomplete requests
     {
         auto [count, _] = from_varint(std::span<const uint8_t> { { 0xf0 } }, 1);
         ASSERT(count == 0)
@@ -74,8 +74,13 @@ static void test_varint()
         ASSERT(count == 0)
     }
 
-    // TODO: multiple requests
-
+    // multiple requests in the same call
+    validate_varint({20, -2000}, 3);
+    compare_from_varint({ 0x38, 0xff, 0x5, 0x12, 0x1a }, { 0x38, 0x12, 0x12, 0x12, 0x12, 0x12, 0x1a });
+    {
+        auto [count, _] = from_varint(std::span<const uint8_t> { { 0x38, 0xff, 0x5 } }, 6);
+        ASSERT(count == 0)
+    }
 }
 
 int main()

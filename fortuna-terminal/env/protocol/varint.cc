@@ -43,7 +43,7 @@ std::pair<size_t, std::vector<int>> from_varint(std::span<const uint8_t> const& 
                 return { 0, {} };
             int n_repetitions = values[0];
             int value = values[1];
-            pos = n_bytes + 1;
+            pos += n_bytes + 1;
             std::fill_n(std::back_inserter(r), n_repetitions, value);
 
         } else {
