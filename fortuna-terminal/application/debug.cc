@@ -66,3 +66,22 @@ void Debug::log_(DebugVerbosity verbosity, char const *fmt, ...)
     if (debug_verbosity_ >= V_DEBUG)
         fflush(stdout);
 }
+
+void Debug::log_(std::string const& color, DebugVerbosity verbosity, char const *fmt, ...)
+{
+    if (verbosity <= debug_verbosity_) {
+        va_list args;
+        va_start(args, fmt);
+#if COLOR_TERMINAL
+        printf("\e[%sm", color.c_str());
+#endif
+        vprintf(fmt, args);
+#if COLOR_TERMINAL
+        printf("\e[0m");
+#endif
+        va_end(args);
+        printf("\n");
+    }
+    if (debug_verbosity_ >= V_DEBUG)
+        fflush(stdout);
+}

@@ -159,7 +159,6 @@ static void test_fortuna_protocol()
     }
 
     // test end of frame
-#if 0
     {
         std::vector<uint8_t> request { I_RESET_TERMINAL, 0x54, 0xEE, 0xC2, 0x28 };
         auto change_palette = to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 });
@@ -175,7 +174,6 @@ static void test_fortuna_protocol()
         fp.process_inputs({});
         ASSERT(scene.palette[1].r == 255);
     }
-#endif
 
     // TODO - test end of frame with incomplete request
     // TODO - test message responses

@@ -81,7 +81,7 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                 }
 
                 default:
-                    fprintf(stderr, "fortuna: invalid command '%d'", command.at(0));
+                    debug().warning("fortuna: invalid command '%d'\n", command.at(0));
                     break;
             }
 
