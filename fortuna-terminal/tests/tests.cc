@@ -158,8 +158,24 @@ static void test_fortuna_protocol()
         ASSERT(std::equal(expected.begin(), expected.end(), scene.image(4).pixels));
     }
 
-    // TODO - test end of frame
-    // TODO - test end of frame in the middle of the communication
+    // test end of frame
+    {
+        std::vector<uint8_t> request { I_RESET_TERMINAL, 0x54, 0xEE, 0xC2, 0x28 };
+        auto change_palette = to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 });
+        request.insert(request.end(), change_palette.begin(), change_palette.end());
+
+        Scene scene; FortunaProtocol fp(scene);
+        uint8_t initial_r = scene.palette[1].r;
+
+        fp.process_inputs(request);
+        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
+        ASSERT(scene.palette[1].r == initial_r);
+
+        fp.process_inputs({});
+        ASSERT(scene.palette[1].r == 255);
+    }
+
+    // TODO - test end of frame with incomplete request
     // TODO - test message responses
 }
 
