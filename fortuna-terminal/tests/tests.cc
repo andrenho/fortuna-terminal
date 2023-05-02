@@ -143,7 +143,21 @@ static void test_fortuna_protocol()
         ASSERT(scene.palette[1].r == 255);
     }
 
-    // TODO - test very long commands
+    // test very long commands
+    {
+        std::vector<int> values { I_UPLOAD_IMAGE, 4, 16 };
+        std::vector<uint8_t> expected;
+        for (size_t i = 0; i < 256; ++i) {
+            values.push_back(i);
+            expected.push_back(i);
+        }
+
+        Scene scene; FortunaProtocol fp(scene);
+        fp.process_inputs(to_varint(values));
+        ASSERT(scene.image(4).transparent_color == 16);
+        ASSERT(std::equal(expected.begin(), expected.end(), scene.image(4).pixels));
+    }
+
     // TODO - test end of frame
     // TODO - test end of frame in the middle of the communication
     // TODO - test message responses

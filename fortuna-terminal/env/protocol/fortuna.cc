@@ -44,6 +44,19 @@ void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
                     break;
                 }
 
+                case I_UPLOAD_IMAGE: {
+                    auto pars = get_parameters(258);
+                    Image image = {
+                            .transparent_color = (uint8_t) pars[1],
+                            .pixels = {0}
+                    };
+                    std::transform(pars.begin() + 2, pars.end(), std::begin(image.pixels),
+                                   [](int color) { return (uint8_t) color; });
+                    scene_.add_image(pars[0], std::move(image));
+                    debug().info("fortuna: image index %d created (transparent color is %d)", pars[0], image.transparent_color);
+                    break;
+                }
+
                 default:
                     fprintf(stderr, "fortuna: invalid command '%d'", command.at(0));
                     break;
