@@ -12,23 +12,46 @@ FortunaProtocol::FortunaProtocol(Scene& scene)
 
 void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
 {
-    size_t pos = 0;
+    /*
+    auto frame_end = std::search(current_input_.begin(), current_input_.end(), std::begin(FRAME_END), std::end(FRAME_END));
+    if (frame_end != current_input_.end()) {
+
+    }
+     */
+
+    // add received string to the queue
     current_input_.insert(current_input_.end(), bytes.begin(), bytes.end());
 
+    // process input
+    std::span<const uint8_t> data_to_process(current_input_.data(), current_input_.size());
+    size_t bytes_processed = process_input_vector(data_to_process);
+
+    // remove processed data from the queue
+    current_input_.erase(current_input_.begin(), current_input_.begin() + (ssize_t) bytes_processed);
+}
+
+size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &bytes)
+{
+    size_t pos = 0;
+
     auto get_parameters = [&](size_t n_params) -> std::vector<int> {
-        auto [pcount, pars] = from_varint(current_input_, pos, n_params);
+        auto [pcount, pars] = from_varint(bytes.subspan(pos), n_params);
         pos += pcount;
         return pars;
     };
 
     try {
-        while (pos < current_input_.size()) {
+        while (pos < bytes.size()) {
 
-            auto [count, command] = from_varint(current_input_, pos, 1);
+            // get command
+
+            auto [count, command] = from_varint(bytes.subspan(pos), 1);
             if (count == 0)
-                return;
+                return pos;
 
             ++pos;
+
+            // parse command
 
             switch (static_cast<InputCommand>(command.at(0))) {
 
@@ -65,9 +88,11 @@ void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
         }
 
     } catch (VarintInputTooShortException&) {
-        current_input_.erase(current_input_.begin(), current_input_.begin() + pos - 1);
+        return pos - 1;  // stop execution
 
     }
+
+    return pos;
 }
 
 void FortunaProtocol::reset_protocol()
@@ -101,3 +126,4 @@ std::string FortunaProtocol::output_collisions()
     }
     return str;
 }
+

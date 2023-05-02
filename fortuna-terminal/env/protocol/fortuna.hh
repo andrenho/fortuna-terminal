@@ -1,6 +1,7 @@
 #ifndef FORTUNA_HH_
 #define FORTUNA_HH_
 
+#include <span>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -20,11 +21,13 @@ public:
     std::string output_collisions();
 
 private:
-    Scene& scene_;
-
+    Scene&               scene_;
     std::vector<uint8_t> current_input_;
+    std::stringstream    fortuna_output_queue_;
 
-    std::stringstream fortuna_output_queue_;
+    size_t process_input_vector(std::span<const uint8_t> const &bytes);
+
+    static constexpr uint8_t FRAME_END[] = { 0x54, 0xee, 0xc2, 0x28 };
 };
 
 #endif //FORTUNA_HH_
