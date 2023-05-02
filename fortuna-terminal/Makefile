@@ -130,8 +130,8 @@ ${TESTS_EXE}: ${TESTS_OBJ}
 .PHONY: clean
 clean:
 ifeq ($(WINDOWS),1)
-	del /Q /F $(subst /,\,${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS})
+	del /Q /F $(subst /,\,${OBJ} ${TESTS_OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS})
 else
-	rm -f ${OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS}
+	rm -f ${OBJ} ${TESTS_OBJ} ${EXE} ${GCH_HEADER_BIN} ${DEPS}
 endif
 

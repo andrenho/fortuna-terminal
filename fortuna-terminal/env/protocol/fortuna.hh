@@ -10,7 +10,7 @@
 
 class FortunaProtocol {
 public:
-    explicit FortunaProtocol(Scene& scene) : scene_(scene) {}
+    explicit FortunaProtocol(Scene& scene);
 
     void process_inputs(std::vector<uint8_t> const &bytes);
 
@@ -22,7 +22,7 @@ public:
 private:
     Scene& scene_;
 
-    std::string current_str_ {};
+    std::vector<uint8_t> current_input_;
 
     std::stringstream fortuna_output_queue_;
 };

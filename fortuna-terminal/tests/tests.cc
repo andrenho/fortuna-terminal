@@ -116,8 +116,34 @@ static void test_fortuna_protocol()
         ASSERT(scene.palette[1].b == 128);
     }
 
+    // test broken commands
+    {
+        Scene scene; FortunaProtocol fp(scene);
+        uint8_t initial_r = scene.palette[1].r;
+
+        fp.process_inputs(to_varint({ I_RESET_TERMINAL, I_CHANGE_PALETTE, 1, 255, 255 }));
+        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
+        ASSERT(scene.palette[1].r == initial_r);
+
+        fp.process_inputs(to_varint({ 128 }));
+        ASSERT(scene.palette[1].r == 255);
+        ASSERT(scene.palette[1].g == 255);
+        ASSERT(scene.palette[1].b == 128);
+    }
+
+    {
+        Scene scene; FortunaProtocol fp(scene);
+        uint8_t initial_r = scene.palette[1].r;
+
+        fp.process_inputs(to_varint({ I_CHANGE_PALETTE, 1 }));
+        ASSERT(scene.palette[1].r == initial_r);
+        fp.process_inputs(to_varint({ 255 }));
+        ASSERT(scene.palette[1].r == initial_r);
+        fp.process_inputs(to_varint({ 255, 128 }));
+        ASSERT(scene.palette[1].r == 255);
+    }
+
     // TODO - test very long commands
-    // TODO - test broken commands
     // TODO - test end of frame
     // TODO - test end of frame in the middle of the communication
     // TODO - test message responses
