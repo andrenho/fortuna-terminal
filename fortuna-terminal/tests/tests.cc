@@ -158,7 +158,6 @@ static void test_fortuna_protocol()
         ASSERT(scene.image(4).transparent_color == 16);
         ASSERT(std::equal(expected.begin(), expected.end(), scene.image(4).pixels));
     }
-#endif
 
     // test end of frame
     {
@@ -176,6 +175,7 @@ static void test_fortuna_protocol()
         fp.process_inputs({});
         ASSERT(scene.palette[1].r == 255);
     }
+#endif
 
     // test end of frame with incomplete request
     {
@@ -194,7 +194,6 @@ static void test_fortuna_protocol()
         ASSERT(scene.palette[1].r == 255);
     }
 
-    // TODO - test end of frame with incomplete request
     // TODO - test message responses
 }
 
