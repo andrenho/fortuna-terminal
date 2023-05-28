@@ -27,6 +27,7 @@ private:
     std::stringstream    fortuna_output_queue_;
 
     size_t process_input_vector(std::span<const uint8_t> const &bytes);
+    uint8_t checksum(std::vector<uint8_t> const& bytes) const;
 
     static constexpr uint8_t FRAME_END[] = { 0x54, 0xee, 0xc2, 0x28 };
 };

@@ -136,3 +136,10 @@ std::string FortunaProtocol::output_collisions()
     return str;
 }
 
+uint8_t FortunaProtocol::checksum(std::vector<uint8_t> const& bytes) const
+{
+    uint8_t checksum = 0;
+    for (uint8_t byte: bytes)
+        checksum ^= byte;
+    return checksum;
+}
