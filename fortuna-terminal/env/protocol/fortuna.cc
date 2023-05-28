@@ -10,28 +10,33 @@ FortunaProtocol::FortunaProtocol(Scene& scene)
     current_input_.reserve(512);
 }
 
-void FortunaProtocol::process_inputs(std::vector<uint8_t> const &bytes)
+void FortunaProtocol::process_inputs(std::span<const uint8_t> const &bytes)
 {
+    // try to find end-of-frame
+    auto frame_end = std::search(bytes.begin(), bytes.end(), std::begin(FRAME_END), std::end(FRAME_END));
+    if (frame_end != bytes.end()) {
+        // if end-of-frame found, split the input in two and execute them
+        process_inputs(std::span<const uint8_t> { bytes.begin(), frame_end });
+        current_input_.clear();
+        process_inputs(std::span<const uint8_t> { frame_end + 4, bytes.end() });
+        return;
+    }
+
     // add received string to the queue
     current_input_.insert(current_input_.end(), bytes.begin(), bytes.end());
     size_t input_size = current_input_.size();
-
-    // check for end-of-frame in current input, if found then put whatever is after and standby
-    bool end_of_frame_found = false;
-    auto frame_end = std::search(current_input_.begin(), current_input_.end(), std::begin(FRAME_END), std::end(FRAME_END));
-    if (frame_end != current_input_.end()) {
-        input_size = frame_end - current_input_.begin();
-        end_of_frame_found = true;
-    }
 
     // process input
     std::span<const uint8_t> data_to_process(current_input_.data(), input_size);
     size_t bytes_processed = process_input_vector(data_to_process);
 
     // remove processed data from the queue
-    if (end_of_frame_found)
-        bytes_processed += 4;
     current_input_.erase(current_input_.begin(), current_input_.begin() + (ssize_t) bytes_processed);
+}
+
+void FortunaProtocol::process_inputs(std::vector<uint8_t> const& bytes)
+{
+    process_inputs(std::span<const uint8_t>(bytes.begin(), bytes.end()));
 }
 
 size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &bytes)

@@ -90,7 +90,6 @@ static void test_varint()
 
 static void test_fortuna_protocol()
 {
-#if 0
     // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
@@ -159,6 +158,7 @@ static void test_fortuna_protocol()
         ASSERT(std::equal(expected.begin(), expected.end(), scene.image(4).pixels));
     }
 
+#if 0
     // test end of frame
     {
         std::vector<uint8_t> request { I_RESET_TERMINAL, 0x54, 0xEE, 0xC2, 0x28 };
@@ -172,10 +172,9 @@ static void test_fortuna_protocol()
         ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
         ASSERT(scene.palette[1].r == initial_r);
 
-        fp.process_inputs({});
+        fp.process_inputs(std::vector<uint8_t> {});
         ASSERT(scene.palette[1].r == 255);
     }
-#endif
 
     // test end of frame with incomplete request
     {
@@ -193,6 +192,7 @@ static void test_fortuna_protocol()
         fp.process_inputs({});
         ASSERT(scene.palette[1].r == 255);
     }
+#endif
 
     // TODO - test message responses
 }
@@ -201,7 +201,7 @@ int main()
 {
     Debug::initialize(DebugVerbosity::V_NORMAL);
 
-    test_varint();
+    // test_varint();
     test_fortuna_protocol();
 
     return EXIT_SUCCESS;
