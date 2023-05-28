@@ -203,8 +203,6 @@ static void test_fortuna_protocol()
         ASSERT(response[1] == 0x3f);
         ASSERT(response[2] == 0x74);
     }
-
-    // TODO - test events
 }
 
 int main()
