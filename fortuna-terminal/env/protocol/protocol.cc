@@ -6,9 +6,10 @@ Protocol::Protocol(class Scene& scene)
 {
 }
 
-std::string Protocol::execute_outputs()
+std::vector<uint8_t> Protocol::execute_outputs()
 {
-    return events_.get_lastest_events() + fortuna_.get_lastest_fortuna_outputs() + fortuna_.output_collisions();
+    // return events_.get_lastest_events() + fortuna_.get_lastest_fortuna_outputs() + fortuna_.output_collisions();
+    return fortuna_.get_lastest_fortuna_outputs();
 }
 
 void Protocol::execute_inputs(std::string const& data_received)

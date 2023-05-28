@@ -86,6 +86,11 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                                    [](int color) { return (uint8_t) color; });
                     scene_.add_image(pars[0], std::move(image));
                     debug().info("fortuna: image index %d created (transparent color is %d)", pars[0], image.transparent_color);
+
+                    auto [v1, v2] = checksum({ pars.begin() + 2, pars.end() });
+                    fortuna_output_queue_.push_back(E_IMAGE_CHECKSUM);
+                    fortuna_output_queue_.push_back(v1);
+                    fortuna_output_queue_.push_back(v2);
                     break;
                 }
 
@@ -136,10 +141,15 @@ std::string FortunaProtocol::output_collisions()
     return str;
 }
 
-uint8_t FortunaProtocol::checksum(std::vector<uint8_t> const& bytes) const
+std::pair<uint8_t, uint8_t> FortunaProtocol::checksum(std::vector<uint8_t> const& bytes) const
 {
-    uint8_t checksum = 0;
-    for (uint8_t byte: bytes)
-        checksum ^= byte;
-    return checksum;
+    uint16_t sum1 = 0;
+    uint16_t sum2 = 0;
+
+    for (uint8_t byte: bytes) {
+        sum1 = (sum1 + byte) % 255;
+        sum2 = (sum2 + sum1) % 255;
+    }
+
+    return { (uint8_t)(~sum1), (uint8_t)(~sum2) };
 }

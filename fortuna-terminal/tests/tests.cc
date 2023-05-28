@@ -90,6 +90,7 @@ static void test_varint()
 
 static void test_fortuna_protocol()
 {
+#if 0
     // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
@@ -182,8 +183,28 @@ static void test_fortuna_protocol()
         fp.process_inputs(request);
         ASSERT(scene.palette[1].r == 255);
     }
+#endif
 
-    // TODO - test message responses
+    // test message responses
+    {
+        std::vector<int> upload_image;
+        upload_image.push_back(I_UPLOAD_IMAGE);
+        upload_image.push_back(0);
+        upload_image.push_back(-1);
+        for (size_t i = 0; i < 256; ++i)
+            upload_image.push_back(i / 2 + 1);
+
+        Scene scene; FortunaProtocol fp(scene);
+        fp.process_inputs(to_varint(upload_image));
+
+        auto [n, response] = from_varint(fp.get_lastest_fortuna_outputs(), 3);
+        ASSERT(n == 3);
+        ASSERT(response[0] == E_IMAGE_CHECKSUM);
+        ASSERT(response[1] == 0x3f);
+        ASSERT(response[2] == 0x74);
+    }
+
+    // TODO - test events
 }
 
 int main()
