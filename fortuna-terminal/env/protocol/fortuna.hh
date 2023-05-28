@@ -18,13 +18,13 @@ public:
 
     void reset_protocol();
 
-    std::string get_lastest_fortuna_outputs();
+    std::vector<uint8_t> get_lastest_fortuna_outputs();
     std::string output_collisions();
 
 private:
     Scene&               scene_;
     std::vector<uint8_t> current_input_;
-    std::stringstream    fortuna_output_queue_;
+    std::vector<int>     fortuna_output_queue_;
 
     size_t process_input_vector(std::span<const uint8_t> const &bytes);
     uint8_t checksum(std::vector<uint8_t> const& bytes) const;

@@ -109,11 +109,11 @@ void FortunaProtocol::reset_protocol()
     current_input_.clear();
 }
 
-std::string FortunaProtocol::get_lastest_fortuna_outputs()
+std::vector<uint8_t> FortunaProtocol::get_lastest_fortuna_outputs()
 {
-    std::string events = fortuna_output_queue_.str();
-    fortuna_output_queue_.str("");
-    return events;
+    std::vector<uint8_t> output = to_varint(fortuna_output_queue_);
+    fortuna_output_queue_.clear();
+    return output;
 }
 
 std::string FortunaProtocol::output_collisions()
