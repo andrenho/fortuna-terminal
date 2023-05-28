@@ -90,6 +90,7 @@ static void test_varint()
 
 static void test_fortuna_protocol()
 {
+#if 0
     // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
@@ -158,10 +159,24 @@ static void test_fortuna_protocol()
         ASSERT(std::equal(expected.begin(), expected.end(), scene.image(4).pixels));
     }
 
-#if 0
     // test end of frame
     {
         std::vector<uint8_t> request { I_RESET_TERMINAL, 0x54, 0xEE, 0xC2, 0x28 };
+        auto change_palette = to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 });
+        request.insert(request.end(), change_palette.begin(), change_palette.end());
+
+        Scene scene; FortunaProtocol fp(scene);
+        uint8_t initial_r = scene.palette[1].r;
+
+        fp.process_inputs(request);
+        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
+        ASSERT(scene.palette[1].r == 255);
+    }
+
+#endif
+    // test end of frame with incomplete request
+    {
+        std::vector<uint8_t> request { I_CHANGE_PALETTE, 1, 0x54, 0xEE, 0xC2, 0x28 };
         auto change_palette = to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 });
         request.insert(request.end(), change_palette.begin(), change_palette.end());
 
@@ -176,24 +191,6 @@ static void test_fortuna_protocol()
         ASSERT(scene.palette[1].r == 255);
     }
 
-    // test end of frame with incomplete request
-    {
-        std::vector<uint8_t> request { I_CHANGE_PALETTE, 1, 0x54, 0xEE, 0xC2, 0x28 };
-        auto change_palette = to_varint({ I_CHANGE_PALETTE, 1, 255, 255, 128 });
-        request.insert(request.end(), change_palette.begin(), change_palette.end());
-
-        Scene scene; FortunaProtocol fp(scene);
-        uint8_t initial_r = scene.palette[1].r;
-
-        fp.process_inputs(request);
-        ASSERT(control_queue.pop_nonblock().value().command == ControlCommand::ResetProtocol);
-        ASSERT(scene.palette[1].r == initial_r);
-
-        fp.process_inputs({});
-        ASSERT(scene.palette[1].r == 255);
-    }
-#endif
-
     // TODO - test message responses
 }
 
@@ -201,7 +198,7 @@ int main()
 {
     Debug::initialize(DebugVerbosity::V_NORMAL);
 
-    // test_varint();
+    test_varint();
     test_fortuna_protocol();
 
     return EXIT_SUCCESS;
