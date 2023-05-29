@@ -12,5 +12,5 @@ Pipes::Pipes(size_t readbuf_sz)
 
 void Pipes::vsync()
 {
-    write("\xfe");
+    write({ 0xfe });
 }

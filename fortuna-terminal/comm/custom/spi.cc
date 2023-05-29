@@ -18,9 +18,9 @@ SPI::~SPI()
     spiClose(handle_);
 }
 
-std::string SPI::exchange(std::string_view data_to_send)
+std::vector<uint8_t> SPI::exchange(std::vector<uint8_t> data_to_send)
 {
-    std::string rx_str;
+    std::vector<uint8_t> rx_str;
     uint8_t tx, rx;
 
     size_t i = 0;

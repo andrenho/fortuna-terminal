@@ -16,7 +16,7 @@ I2C::~I2C()
     i2cClose(handle_);
 }
 
-std::string I2C::exchange(std::string_view data_to_send)
+std::vector<uint8_t> I2C::exchange(std::vector<uint8_t> data_to_send)
 {
     // write output buffer
     if (data_to_send.size() > 0)
@@ -46,7 +46,7 @@ std::string I2C::exchange(std::string_view data_to_send)
         return rx;
 
     } else {
-        return "";
+        return {};
     }
 
 }

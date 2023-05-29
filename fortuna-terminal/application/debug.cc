@@ -19,12 +19,12 @@ void Debug::initialize(DebugVerbosity debug_verbosity)
     debug_ = std::unique_ptr<Debug>(new Debug(debug_verbosity));
 }
 
-void Debug::bytes(std::string_view received, std::string_view sent)
+void Debug::bytes(std::vector<uint8_t> const& received, std::vector<uint8_t> const& sent)
 {
     if (debug_verbosity_ < V_COMM)
         return;
 
-    std::vector<std::tuple<std::string_view, int, const char*>> blocks { { received, 33, "<<" }, { sent, 32, ">>" } };
+    std::vector<std::tuple<std::vector<uint8_t>, int, const char*>> blocks { { received, 33, "<<" }, { sent, 32, ">>" } };
     for (auto const& [str, color, direction] : blocks) {
         if (!str.empty()) {
 #if COLOR_TERMINAL
@@ -69,6 +69,8 @@ void Debug::log_(DebugVerbosity verbosity, char const *fmt, ...)
 
 void Debug::log_(std::string const& color, DebugVerbosity verbosity, char const *fmt, ...)
 {
+    (void) color;
+
     if (verbosity <= debug_verbosity_) {
         va_list args;
         va_start(args, fmt);

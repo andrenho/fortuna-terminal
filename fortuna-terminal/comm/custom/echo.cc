@@ -1,9 +1,9 @@
 #include "echo.hh"
 
-std::string Echo::exchange(std::string_view data_to_send)
+std::vector<uint8_t> Echo::exchange(std::vector<uint8_t> data_to_send)
 {
-    std::string r;
-    r.reserve(data_to_send.length());
+    std::vector<uint8_t> r;
+    r.reserve(data_to_send.size());
 
     for (char c : data_to_send) {
         if (c == 13) {

@@ -11,14 +11,14 @@ class CommFileDescriptor : public CommunicationModule {
 public:
     explicit CommFileDescriptor(size_t readbuf_sz): readbuf_sz_(readbuf_sz) {}
 
-    [[nodiscard]] std::string exchange(std::string_view data_to_send) override;
+    [[nodiscard]] std::vector<uint8_t> exchange(std::vector<uint8_t> data_to_send) override;
 
 protected:
     int                fd_ = INVALID_FILE;
     std::optional<int> write_fd_ {};
 
-    virtual void        write(std::string_view data_to_send);
-    virtual std::string read();
+    virtual void                 write(std::vector<uint8_t> const& data_to_send);
+    virtual std::vector<uint8_t> read();
 
     virtual void client_disconnected();
     [[noreturn]] virtual void on_read_error();

@@ -13,7 +13,7 @@ class Protocol {
 public:
     explicit Protocol(class Scene& scene);
 
-    void                 execute_inputs(std::string const& data_received);
+    void                 execute_inputs(std::vector<uint8_t> const& data_received);
     std::vector<uint8_t> execute_outputs();
 
     void reset();

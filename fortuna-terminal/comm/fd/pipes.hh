@@ -5,7 +5,7 @@
 
 class Pipes : public CommFileDescriptor {
 public:
-    Pipes(size_t readbuf_sz);
+    explicit Pipes(size_t readbuf_sz);
 
     void vsync() override;
 

@@ -12,7 +12,7 @@ public:
     [[nodiscard]] std::string description() const override;
 
 protected:
-    std::string exchange(std::string_view data_to_send) override;
+    [[nodiscard]] virtual std::vector<uint8_t> exchange(std::vector<uint8_t> data_to_send) override;
 
 private:
     int handle_;

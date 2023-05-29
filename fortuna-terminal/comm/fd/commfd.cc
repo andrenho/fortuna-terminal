@@ -3,9 +3,9 @@
 
 #include <unistd.h>
 
-std::string CommFileDescriptor::exchange(std::string_view data_to_send)
+std::vector<uint8_t> CommFileDescriptor::exchange(std::vector<uint8_t> data_to_send)
 {
-    std::string received = read();
+    auto received = read();
 
     if (!data_to_send.empty())
         write(data_to_send);
@@ -13,10 +13,10 @@ std::string CommFileDescriptor::exchange(std::string_view data_to_send)
     return received;
 }
 
-std::string CommFileDescriptor::read()
+std::vector<uint8_t> CommFileDescriptor::read()
 {
     if (fd_ != INVALID_FILE) {
-        std::string rd(readbuf_sz_, 0);
+        std::vector<uint8_t> rd(readbuf_sz_, 0);
         int r = ::read(fd_, rd.data(), readbuf_sz_);
         if (r == -1) {
             if (errno == EAGAIN)
@@ -32,7 +32,7 @@ std::string CommFileDescriptor::read()
     return {};
 }
 
-void CommFileDescriptor::write(std::string_view data_to_send)
+void CommFileDescriptor::write(std::vector<uint8_t> const& data_to_send)
 {
     int fd = this->write_fd_.value_or(this->fd_);
     if (fd != INVALID_FILE) {

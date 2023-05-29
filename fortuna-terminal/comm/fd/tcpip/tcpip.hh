@@ -28,8 +28,8 @@ protected:
     virtual bool        error_is_try_again() const = 0;
     virtual int         write_flags() const = 0;
 
-    std::string read() override;
-    void write(std::string_view data_to_send) override;
+    std::vector<uint8_t> read() override;
+    void write(std::vector<uint8_t> const& data_to_send) override;
 
 private:
     SOCKET sock_fd = 0;

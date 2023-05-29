@@ -29,14 +29,14 @@ void Environment::execute_single_step(TimingDebug& timing_debug)
     scene_.text().update_blink();
 
     timing_debug.start_event(TimingDebug::Event::ExecuteOutputs);
-    std::string data_to_send = protocol_.execute_outputs();
+    std::vector<uint8_t> data_to_send = protocol_.execute_outputs();
 
     timing_debug.start_event(TimingDebug::Event::Communicate);
-    std::string received_data = comm_->exchange(data_to_send);
+    std::vector<uint8_t> received_data = comm_->exchange(data_to_send);
     debug().bytes(received_data, data_to_send);
 
-    timing_debug.bytes_sent = data_to_send.length();
-    timing_debug.bytes_received = received_data.length();
+    timing_debug.bytes_sent = data_to_send.size();
+    timing_debug.bytes_received = received_data.size();
 
     timing_debug.start_event(TimingDebug::Event::ExecuteInputs);
     protocol_.execute_inputs(received_data);
@@ -65,7 +65,7 @@ void Environment::set_mode(Mode mode)
     protocol_.reset_mode();
 }
 
-std::string Environment::welcome_message() const
+std::vector<uint8_t> Environment::welcome_message() const
 {
     std::stringstream ss;
 
@@ -86,7 +86,8 @@ std::string Environment::welcome_message() const
     // communication module
     ss << "Communication module: \e[1;32m" + comm_->description() + "\e[0m\n\n\r";
 
-    return ss.str();
+    std::string str = ss.str();
+    return { str.begin(), str.end() };
 }
 
 void Environment::display_timing_info(TimingDebug const &timing_debug) const

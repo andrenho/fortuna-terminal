@@ -1,7 +1,9 @@
 #ifndef DEBUG_HH_
 #define DEBUG_HH_
 
-#include <string_view>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 enum DebugVerbosity { V_NORMAL = 1, V_INFO = 2, V_DEBUG = 3, V_COMM = 4, MAX_DEBUG_VERBOSITY = 5 };
 
@@ -19,7 +21,7 @@ public:
     template <typename ...Args>
     void debug(const char* fmt, Args&&... args) { log_(V_DEBUG, fmt, std::forward<Args>(args)...); }
 
-    void bytes(std::string_view received, std::string_view sent);
+    void bytes(std::vector<uint8_t> const& received, std::vector<uint8_t> const& sent);
 
     [[nodiscard]] DebugVerbosity debug_verbosity() const { return debug_verbosity_; }
 

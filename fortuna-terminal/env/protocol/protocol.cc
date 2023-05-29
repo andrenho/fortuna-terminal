@@ -12,7 +12,7 @@ std::vector<uint8_t> Protocol::execute_outputs()
     return fortuna_.get_lastest_fortuna_outputs();
 }
 
-void Protocol::execute_inputs(std::string const& data_received)
+void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
 {
 #warning TODO - write Protocol::execute_inputs
 #if 0

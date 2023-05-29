@@ -32,7 +32,7 @@ private:
     Protocol                       protocol_;
     bool                           show_timining_info_;
 
-    [[nodiscard]] std::string welcome_message() const;
+    [[nodiscard]] std::vector<uint8_t> welcome_message() const;
     void display_timing_info(TimingDebug const &timing_debug) const;
 };
 

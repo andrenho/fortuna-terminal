@@ -23,8 +23,8 @@
 
 using namespace std::string_literals;
 
-static constexpr const char* CLIENT_CONNECTED = "\e[0;32mClient connected.\e[0m\r\n\r\n";
-static constexpr const char* CLIENT_DISCONNECTED = "\r\n\e[0;31mClient disconnected.\e[0m\r\n";
+static const std::string CLIENT_CONNECTED = "\e[0;32mClient connected.\e[0m\r\n\r\n";
+static const std::string CLIENT_DISCONNECTED = "\r\n\e[0;31mClient disconnected.\e[0m\r\n";
 
 void TCPIP::initialize()
 {
@@ -78,7 +78,7 @@ void TCPIP::initialize()
         throw LibcException("Error on listening");
 }
 
-std::string TCPIP::read()
+std::vector<uint8_t> TCPIP::read()
 {
     if (fd_ == INVALID_FILE) {   // client disconnected
         struct sockaddr_storage client_addr;
@@ -93,20 +93,20 @@ std::string TCPIP::read()
         configure_socket(fd);
         fd_ = fd;
 
-        return CLIENT_CONNECTED;
+        return { CLIENT_CONNECTED.begin(), CLIENT_CONNECTED.end() };
     } else {
-        std::string rd(readbuf_sz_, 0);
-        int r = ::recv(fd_, rd.data(), readbuf_sz_, 0);
+        std::vector<uint8_t> rd(readbuf_sz_, 0);
+        int r = ::recv(fd_, (char *) rd.data(), readbuf_sz_, 0);
         if (r == -1) {
             if (error_is_try_again()) {
                 r = 0;
             } else {
                 client_disconnected();
-                return CLIENT_DISCONNECTED;
+                return { CLIENT_DISCONNECTED.begin(), CLIENT_DISCONNECTED.end() };
             }
         } else if (r == 0) {
             client_disconnected();
-            return CLIENT_DISCONNECTED;
+            return { CLIENT_DISCONNECTED.begin(), CLIENT_DISCONNECTED.end() };
         }
 
         rd.resize(r);
@@ -114,13 +114,13 @@ std::string TCPIP::read()
     }
 }
 
-void TCPIP::write(std::string_view data_to_send)
+void TCPIP::write(std::vector<uint8_t> const& data_to_send)
 {
     int fd = this->write_fd_.value_or(this->fd_);
     if (fd != INVALID_FILE) {
         size_t left = data_to_send.size();
         do {
-            int r = ::send(fd, data_to_send.data(), data_to_send.size(), write_flags());
+            int r = ::send(fd, (char*) data_to_send.data(), data_to_send.size(), write_flags());
             if (r == -1) {
                 client_disconnected();
                 return;
@@ -141,5 +141,5 @@ std::string TCPIP::description() const
 
 void TCPIP::vsync()
 {
-    write("\xfe");
+    write({ 0xfe });
 }

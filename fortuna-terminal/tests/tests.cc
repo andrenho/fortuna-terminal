@@ -90,7 +90,6 @@ static void test_varint()
 
 static void test_fortuna_protocol()
 {
-#if 0
     // test full command
     {
         Scene scene; FortunaProtocol fp(scene);
@@ -183,7 +182,6 @@ static void test_fortuna_protocol()
         fp.process_inputs(request);
         ASSERT(scene.palette[1].r == 255);
     }
-#endif
 
     // test message responses
     {
