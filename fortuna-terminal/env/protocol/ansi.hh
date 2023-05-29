@@ -6,6 +6,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 #include "scene/scene.hh"
@@ -20,7 +21,7 @@ class ANSI : public NonCopyable {
 public:
     explicit ANSI(Scene& scene);
 
-    void     process_input(std::string const& bytes);
+    void     process_input(std::vector<uint8_t> const& bytes);
 
     void     reset_protocol();
 

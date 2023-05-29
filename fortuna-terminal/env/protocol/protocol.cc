@@ -14,6 +14,13 @@ std::vector<uint8_t> Protocol::execute_outputs()
 
 void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
 {
+    if (data_received.empty())
+        return;
+
+    if (scene_.mode() == Mode::Text) {
+        ansi_.process_input(data_received);
+    }
+
 #warning TODO - write Protocol::execute_inputs
 #if 0
     if (data_received.empty())
@@ -43,5 +50,5 @@ void Protocol::reset()
 
 void Protocol::reset_mode()
 {
-    ansi_.process_input(" \b");
+    ansi_.process_input({ ' ', '\b' });
 }

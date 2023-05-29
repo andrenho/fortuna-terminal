@@ -58,12 +58,12 @@ void ANSI::reset_protocol()
     current_mode_ = scene_.mode();
 }
 
-void ANSI::process_input(std::string const &bytes)
+void ANSI::process_input(std::vector<uint8_t> const &bytes)
 {
     if (bytes.empty())
         return;
 
-    tmt_write(vt_.get(), bytes.data(), bytes.size());
+    tmt_write(vt_.get(), (const char *) bytes.data(), bytes.size());
     if (scene_.mode() != current_mode_) {
         current_mode_ = scene_.mode();
         resize_text_terminal(current_mode_);
