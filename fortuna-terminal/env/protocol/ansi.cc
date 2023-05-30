@@ -206,3 +206,10 @@ void ANSI::event_key(SpecialKey key, bool is_down, KeyMod mod)
 
 }
 
+std::vector<uint8_t> ANSI::output()
+{
+    std::vector<uint8_t> out = output_;
+    output_.clear();
+    return out;
+}
+

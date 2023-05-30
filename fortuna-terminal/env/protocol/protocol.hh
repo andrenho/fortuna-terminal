@@ -2,6 +2,7 @@
 #define PROTOCOL_HH_
 
 #include <string>
+#include <vector>
 
 #include "ansi.hh"
 #include "common/enums/mode.hh"

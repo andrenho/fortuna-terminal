@@ -26,13 +26,16 @@ public:
 
     void     reset_protocol();
 
-    void event_text_input(std::string const& text);
-    void event_key(uint8_t key, bool is_down, KeyMod mod);
-    void event_key(SpecialKey key, bool is_down, KeyMod mod);
+    void     event_text_input(std::string const& text);
+    void     event_key(uint8_t key, bool is_down, KeyMod mod);
+    void     event_key(SpecialKey key, bool is_down, KeyMod mod);
+
+    std::vector<uint8_t> output();
 
 private:
     Scene& scene_;
     Mode current_mode_ = Mode::Text;
+    std::vector<uint8_t> output_;
 
     Cache cache_ {};
     std::unique_ptr<TMT, std::function<void(TMT*)>> vt_ = nullptr;
