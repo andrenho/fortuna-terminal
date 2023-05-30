@@ -22,7 +22,7 @@ public:
     void set_mode(Mode mode);
 
     [[nodiscard]] Scene const& scene() const      { return scene_; }
-    IEvent&                    events_interface() { return protocol_.events(); }
+    IEvent&                    events_interface() { return protocol_; }
 
     void vsync()                                  { comm_->vsync();  }
 

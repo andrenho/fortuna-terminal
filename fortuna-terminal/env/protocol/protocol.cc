@@ -52,3 +52,51 @@ void Protocol::reset_mode()
 {
     ansi_.process_input({ ' ', '\b' });
 }
+
+void Protocol::event_text_input(std::string const &text)
+{
+    if (scene_.mode() == Mode::Text)
+        ansi_.event_text_input(text);
+    else
+        fortuna_.event_text_input(text);
+}
+
+void Protocol::event_key(uint8_t key, bool is_down, KeyMod mod)
+{
+    if (scene_.mode() == Mode::Text)
+        ansi_.event_key(key, is_down, mod);
+    else
+        fortuna_.event_key(key, is_down, mod);
+}
+
+void Protocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
+{
+    if (scene_.mode() == Mode::Text)
+        ansi_.event_key(key, is_down, mod);
+    else
+        fortuna_.event_key(key, is_down, mod);
+}
+
+void Protocol::event_mouse_button(int button, int x, int y, bool is_down)
+{
+    if (scene_.mode() == Mode::Graphics)
+        fortuna_.event_mouse_button(button, x, y, is_down);
+}
+
+void Protocol::event_mouse_move(int button, int x, int y)
+{
+    if (scene_.mode() == Mode::Graphics)
+        fortuna_.event_mouse_move(button, x, y);
+}
+
+void Protocol::event_joystick(size_t joystick_number, size_t button, bool is_down)
+{
+    if (scene_.mode() == Mode::Graphics)
+        fortuna_.event_joystick(joystick_number, button, is_down);
+}
+
+void Protocol::event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value)
+{
+    if (scene_.mode() == Mode::Graphics)
+        fortuna_.event_joystick_directional(joystick_number, axis, value);
+}

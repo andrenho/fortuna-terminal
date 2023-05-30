@@ -190,3 +190,19 @@ void ANSI::initialize_cache()
     cache_ = Cache(TextLayer::Columns_80Columns * std::max(TextLayer::Lines_40Columns, TextLayer::Lines_80Columns),
                    { ' ', { false, false, false, false, false, false, tmt_color_t::TMT_COLOR_DEFAULT, tmt_color_t::TMT_COLOR_DEFAULT } });
 }
+
+void ANSI::event_text_input(std::string const &text)
+{
+
+}
+
+void ANSI::event_key(uint8_t key, bool is_down, KeyMod mod)
+{
+
+}
+
+void ANSI::event_key(SpecialKey key, bool is_down, KeyMod mod)
+{
+
+}
+

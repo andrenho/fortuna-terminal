@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 #include "scene/scene.hh"
+#include "scene/ievent.hh"
 
 extern "C" {
 #include "lib/tmt/tmt.h"
@@ -25,6 +26,9 @@ public:
 
     void     reset_protocol();
 
+    void event_text_input(std::string const& text);
+    void event_key(uint8_t key, bool is_down, KeyMod mod);
+    void event_key(SpecialKey key, bool is_down, KeyMod mod);
 
 private:
     Scene& scene_;

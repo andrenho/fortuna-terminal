@@ -153,3 +153,38 @@ std::pair<uint8_t, uint8_t> FortunaProtocol::checksum(std::vector<uint8_t> const
 
     return { (uint8_t)(~sum1), (uint8_t)(~sum2) };
 }
+
+void FortunaProtocol::event_text_input(std::string const &text)
+{
+
+}
+
+void FortunaProtocol::event_key(uint8_t key, bool is_down, KeyMod mod)
+{
+
+}
+
+void FortunaProtocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
+{
+
+}
+
+void FortunaProtocol::event_mouse_button(int button, int x, int y, bool is_down)
+{
+
+}
+
+void FortunaProtocol::event_mouse_move(int button, int x, int y)
+{
+
+}
+
+void FortunaProtocol::event_joystick(size_t joystick_number, size_t button, bool is_down)
+{
+
+}
+
+void FortunaProtocol::event_joystick_directional(size_t joystick_number, int8_t axis, int8_t value)
+{
+
+}
