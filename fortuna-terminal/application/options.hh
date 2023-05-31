@@ -5,7 +5,7 @@
 #include "common/types/time.hh"
 #include "debug.hh"
 
-enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoXchg };
+enum class CommType { NotChosen, Uart, I2C, SPI, TcpIp, Pipes, PTY, Echo, EchoNumeric };
 
 struct TerminalOptions {
     bool window_mode = false;

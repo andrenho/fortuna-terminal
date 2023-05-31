@@ -2,6 +2,7 @@
 
 #include "common/exceptions/fortunaexception.hh"
 #include "comm/custom/echo.hh"
+#include "comm/custom/echonumeric.hh"
 #include "comm/fd/pipes.hh"
 #include "comm/fd/tcpip/tcpip.hh"
 
@@ -29,6 +30,8 @@ std::unique_ptr<CommunicationModule> CommunicationModule::create(CommType comm_t
     switch (comm_type) {
         case CommType::Echo:
             return std::make_unique<Echo>();
+        case CommType::EchoNumeric:
+            return std::make_unique<EchoNumeric>();
         case CommType::Pipes:
             return std::make_unique<Pipes>(options.readbuf_sz);
         case CommType::TcpIp: {

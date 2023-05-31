@@ -56,8 +56,8 @@ Options::Options(int argc, char* argv[])
             case 'c': {
                 if (strcmp(optarg, "echo") == 0)
                     comm_type = CommType::Echo;
-                else if (strcmp(optarg, "echo-xchg") == 0)
-                    comm_type = CommType::EchoXchg;
+                else if (strcmp(optarg, "echo-num") == 0)
+                    comm_type = CommType::EchoNumeric;
                 else if (strcmp(optarg, "uart") == 0)
                     comm_type = CommType::Uart;
                 else if (strcmp(optarg, "i2c") == 0)
@@ -154,7 +154,7 @@ Options::Options(int argc, char* argv[])
 
 [[ noreturn ]] void Options::print_help(int exit_status)
 {
-    printf("    -c, --communication-mode        One of \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\", \"echo\", \"echo-xchg\"\n");
+    printf("    -c, --communication-mode        One of \"uart\", \"i2c\", \"spi\", \"tcpip\", \"pty\", \"debug\", \"echo\", \"echo-num\"\n");
     printf("    -w, --window                    Window mode (as opposed to the default, which is full screen)\n");
     printf("    -t, --debug-time                Show timing information on the screen\n");
     printf("    -d, --debug                     Show debugging information (1: normal (default), 2: info, 3: debug, 4: all communication bytes)\n");

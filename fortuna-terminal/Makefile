@@ -33,7 +33,7 @@ OBJ =   main.o \
 		application/debug.o application/gpio.o \
         comm/comm.o \
         comm/fd/commfd.o comm/fd/pipes.o comm/fd/tcpip/tcpip.o \
-        comm/custom/echo.o \
+        comm/custom/echo.o comm/custom/echonumeric.o \
 		env/environment.o \
 		env/protocol/protocol.o env/protocol/ansi.o env/protocol/fortuna.o env/protocol/events.o env/protocol/varint.o \
  		scene/scene.o scene/palette/palette.o \
