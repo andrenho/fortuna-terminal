@@ -40,7 +40,7 @@ std::vector<uint8_t> I2C::exchange(std::vector<uint8_t> data_to_send)
             printf(">>> %d <<<\n", sz);
         */
         
-        std::string rx(sz, 0);
+        std::vector<uint8_t> rx(sz, 0);
         if (sz > 0)
             i2cReadDevice(handle_, (char *) rx.data(), sz);
         return rx;
