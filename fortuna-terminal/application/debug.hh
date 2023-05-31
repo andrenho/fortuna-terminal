@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "scene/ievent.hh"
+
 enum DebugVerbosity { V_NORMAL = 1, V_INFO = 2, V_DEBUG = 3, V_COMM = 4, MAX_DEBUG_VERBOSITY = 5 };
 
 class Debug {
@@ -26,6 +28,9 @@ public:
     [[nodiscard]] DebugVerbosity debug_verbosity() const { return debug_verbosity_; }
 
     static void initialize(DebugVerbosity debug_verbosity);
+
+    static std::string key_name(uint8_t key, KeyMod mod);
+    static std::string key_name(SpecialKey key, KeyMod mod);
 
 private:
     explicit Debug(DebugVerbosity debug_verbosity);

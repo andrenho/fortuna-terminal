@@ -120,7 +120,7 @@ void TCPIP::write(std::vector<uint8_t> const& data_to_send)
     if (fd != INVALID_FILE) {
         size_t left = data_to_send.size();
         do {
-            int r = ::send(fd, (char*) data_to_send.data(), data_to_send.size(), write_flags());
+            int r = ::send(fd, (const char*) data_to_send.data(), data_to_send.size(), write_flags());
             if (r == -1) {
                 client_disconnected();
                 return;

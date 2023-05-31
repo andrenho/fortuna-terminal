@@ -195,7 +195,7 @@ static void test_fortuna_protocol()
         Scene scene; FortunaProtocol fp(scene);
         fp.process_inputs(to_varint(upload_image));
 
-        auto [n, response] = from_varint(fp.get_lastest_fortuna_outputs(), 3);
+        auto [n, response] = from_varint(fp.output(), 3);
         ASSERT(n == 3);
         ASSERT(response[0] == E_IMAGE_CHECKSUM);
         ASSERT(response[1] == 0x3f);

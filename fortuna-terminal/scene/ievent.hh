@@ -15,7 +15,6 @@ struct KeyMod {
     bool alt;
 };
 
-
 class IEvent {
 public:
     virtual void event_text_input(std::string const& text) = 0;

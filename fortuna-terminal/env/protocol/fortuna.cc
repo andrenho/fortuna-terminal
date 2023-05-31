@@ -114,7 +114,7 @@ void FortunaProtocol::reset_protocol()
     current_input_.clear();
 }
 
-std::vector<uint8_t> FortunaProtocol::get_lastest_fortuna_outputs()
+std::vector<uint8_t> FortunaProtocol::output()
 {
     std::vector<uint8_t> output = to_varint(fortuna_output_queue_);
     fortuna_output_queue_.clear();

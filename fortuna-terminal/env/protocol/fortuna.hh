@@ -19,7 +19,7 @@ public:
 
     void reset_protocol();
 
-    std::vector<uint8_t> get_lastest_fortuna_outputs();
+    std::vector<uint8_t> output();
     std::string output_collisions();
 
     void event_text_input(std::string const& text);

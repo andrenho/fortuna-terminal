@@ -1,5 +1,6 @@
 #include "protocol.hh"
 #include "application/control.hh"
+#include "application/debug.hh"
 
 Protocol::Protocol(class Scene& scene)
     : ansi_(scene), fortuna_(scene), scene_(scene)
@@ -8,8 +9,16 @@ Protocol::Protocol(class Scene& scene)
 
 std::vector<uint8_t> Protocol::execute_outputs()
 {
-    // return events_.get_lastest_events() + fortuna_.get_lastest_fortuna_outputs() + fortuna_.output_collisions();
-    return fortuna_.get_lastest_fortuna_outputs();
+    std::vector<uint8_t> ansi_output = ansi_.output();
+    std::vector<uint8_t> fortuna_output = fortuna_.output();
+
+    std::vector<uint8_t> r;
+    r.reserve(ansi_output.size() + fortuna_output.size());
+
+    r.insert(r.end(), ansi_output.begin(), ansi_output.end());
+    r.insert(r.end(), fortuna_output.begin(), fortuna_output.end());
+
+    return r;
 }
 
 void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
@@ -59,6 +68,8 @@ void Protocol::event_text_input(std::string const &text)
         ansi_.event_text_input(text);
     else
         fortuna_.event_text_input(text);
+
+    debug().info("Text input: \"%s\"", text.c_str());
 }
 
 void Protocol::event_key(uint8_t key, bool is_down, KeyMod mod)
@@ -67,6 +78,8 @@ void Protocol::event_key(uint8_t key, bool is_down, KeyMod mod)
         ansi_.event_key(key, is_down, mod);
     else
         fortuna_.event_key(key, is_down, mod);
+
+    debug().info("Key %s: %s", is_down ? "pressed" : "released", Debug::key_name(key, mod).c_str());
 }
 
 void Protocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
@@ -75,6 +88,8 @@ void Protocol::event_key(SpecialKey key, bool is_down, KeyMod mod)
         ansi_.event_key(key, is_down, mod);
     else
         fortuna_.event_key(key, is_down, mod);
+
+    debug().info("Key %s: %s", is_down ? "pressed" : "released", Debug::key_name(key, mod).c_str());
 }
 
 void Protocol::event_mouse_button(int button, int x, int y, bool is_down)

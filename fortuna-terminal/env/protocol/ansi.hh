@@ -45,6 +45,7 @@ private:
     static Char::Attrib translate_attrib(TMTATTRS tmtattrs);
     static void         tmt_callback(tmt_msg_t m, TMT *vt, void const *a, void *p);
     static bool         tmtchar_not_equals(TMTCHAR const &c1, TMTCHAR const &c2);
+    static std::optional<std::string> translate_special_key(SpecialKey special_key, KeyMod mod);
 
     void                initialize_cache();
 };
