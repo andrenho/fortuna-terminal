@@ -26,9 +26,10 @@ void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
     if (data_received.empty())
         return;
 
-    if (scene_.mode() == Mode::Text) {
-        ansi_.process_input(data_received);
-    }
+    if (scene_.mode() == Mode::Text)
+        execute_inputs_ansi(data_received);
+    else
+        execute_inputs_fortuna(data_received);
 
 #warning TODO - write Protocol::execute_inputs
 #if 0
@@ -51,6 +52,21 @@ void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
 #endif
 }
 
+void Protocol::execute_inputs_ansi(std::span<const uint8_t> const& data_received)
+{
+    if (data_received.empty())
+        return;
+
+    ansi_.process_input(data_received);
+}
+
+void Protocol::execute_inputs_fortuna(std::span<const uint8_t> const& data_received)
+{
+    if (data_received.empty())
+        return;
+
+}
+
 void Protocol::reset()
 {
     ansi_.reset_protocol();
@@ -59,7 +75,7 @@ void Protocol::reset()
 
 void Protocol::reset_mode()
 {
-    ansi_.process_input({ ' ', '\b' });
+    ansi_.process_input({ { ' ', '\b' } });
 }
 
 void Protocol::event_text_input(std::string const &text)

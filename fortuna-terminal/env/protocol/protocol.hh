@@ -32,6 +32,9 @@ private:
     ANSI            ansi_;
     FortunaProtocol fortuna_;
     Scene const&    scene_;
+
+    void execute_inputs_ansi(std::span<const uint8_t> const& data_received);
+    void execute_inputs_fortuna(std::span<const uint8_t> const& data_received);
 };
 
 #endif //PROTOCOL_HH_

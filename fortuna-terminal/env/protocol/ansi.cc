@@ -58,7 +58,7 @@ void ANSI::reset_protocol()
     current_mode_ = scene_.mode();
 }
 
-void ANSI::process_input(std::vector<uint8_t> const &bytes)
+void ANSI::process_input(std::span<const uint8_t> const &bytes)
 {
     if (bytes.empty())
         return;

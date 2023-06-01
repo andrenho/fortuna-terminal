@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <optional>
+#include <span>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -22,7 +23,7 @@ class ANSI : public NonCopyable {
 public:
     explicit ANSI(Scene& scene);
 
-    void     process_input(std::vector<uint8_t> const& bytes);
+    void     process_input(std::span<const uint8_t> const& bytes);
 
     void     reset_protocol();
 
