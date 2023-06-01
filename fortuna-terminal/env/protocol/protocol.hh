@@ -35,6 +35,8 @@ private:
 
     void execute_inputs_ansi(std::span<const uint8_t> const& data_received);
     void execute_inputs_fortuna(std::span<const uint8_t> const& data_received);
+
+    static constexpr uint8_t ENABLE_GRAPHICS[] = { 1, 24, 112, 5 };
 };
 
 #endif //PROTOCOL_HH_

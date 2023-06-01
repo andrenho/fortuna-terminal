@@ -57,7 +57,11 @@ void Protocol::execute_inputs_ansi(std::span<const uint8_t> const& data_received
     if (data_received.empty())
         return;
 
-    ansi_.process_input(data_received);
+    auto graphics_command_iterator = std::search(data_received.begin(), data_received.end(), std::begin(ENABLE_GRAPHICS), std::end(ENABLE_GRAPHICS));
+    if (graphics_command_iterator != data_received.end())
+        control_queue.emplace(ControlCommand::SetMode, Mode::Graphics);
+
+    ansi_.process_input({data_received.begin(), graphics_command_iterator });
 }
 
 void Protocol::execute_inputs_fortuna(std::span<const uint8_t> const& data_received)
@@ -65,6 +69,7 @@ void Protocol::execute_inputs_fortuna(std::span<const uint8_t> const& data_recei
     if (data_received.empty())
         return;
 
+    fortuna_.process_inputs(data_received);
 }
 
 void Protocol::reset()
