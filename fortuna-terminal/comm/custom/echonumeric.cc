@@ -1,6 +1,7 @@
 #include "echonumeric.hh"
 #include "env/protocol/varint.hh"
 
+#include <cstdio>
 #include <iostream>
 
 EchoNumeric::EchoNumeric()
@@ -14,7 +15,9 @@ EchoNumeric::EchoNumeric()
 
 std::vector<uint8_t> EchoNumeric::exchange(std::vector<uint8_t> data_to_send)
 {
-
+    for (auto byte: data_to_send)
+        printf("%02X ", byte);
+    fflush(stdout);
 
     std::vector<int> ints;
     numbers_.pop_all_into_noblock(ints);
