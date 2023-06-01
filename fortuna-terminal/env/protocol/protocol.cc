@@ -30,26 +30,6 @@ void Protocol::execute_inputs(std::vector<uint8_t> const& data_received)
         execute_inputs_ansi(data_received);
     else
         execute_inputs_fortuna(data_received);
-
-#warning TODO - write Protocol::execute_inputs
-#if 0
-    if (data_received.empty())
-        return;
-
-    if (scene_.mode() == Mode::Text) {
-        size_t pos = data_received.find("\xfd\x03");
-        if (pos == std::string::npos) {
-            ansi_.process_input(data_received);
-        } else {
-            ansi_.process_input(data_received.substr(0, pos));
-            fortuna_.process_inputs(data_received.substr(pos + 2));
-            control_queue.emplace(ControlCommand::SetMode, Mode::Graphics);
-        }
-
-    } else {
-        fortuna_.process_inputs(data_received);
-    }
-#endif
 }
 
 void Protocol::execute_inputs_ansi(std::span<const uint8_t> const& data_received)
