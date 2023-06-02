@@ -152,13 +152,16 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
 
                 case I_UPLOAD_MAP: {
                     auto pars = get_parameters(3);
-                    int idx = pars.at(0) % Tilemap::MAX_TILEMAPS;
+                    int tilemap_idx = pars.at(0) % Tilemap::MAX_TILEMAPS;
                     int w = pars.at(1);
                     int h = pars.at(2);
-                    auto indexes = get_parameters(w * h);
-
-                    // TODO...
-
+                    auto p = get_parameters(3 + w * h);
+                    Tilemap& tilemap = scene_.tilemaps[tilemap_idx];
+                    tilemap.w = w;
+                    tilemap.h = h;
+                    tilemap.image_indexes.clear();
+                    std::copy(p.begin() + 3, p.begin() + 3 + (w * h), std::back_inserter(tilemap.image_indexes));
+                    debug().info("fortuna: tilemap %d set to the size %zu x %zu", tilemap_idx, w, h);
                     break;
                 }
 
