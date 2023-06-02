@@ -124,8 +124,6 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                     control_queue.emplace(ControlCommand::SetMode, Mode::Text);
                     debug().info("fortuna: graphics mode disabled");
                     break;
-9abm8vzU!
-
 
                 case I_CHANGE_PALETTE: {
                     auto pars = get_parameters(4);
