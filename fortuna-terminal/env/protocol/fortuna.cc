@@ -150,6 +150,18 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                     break;
                 }
 
+                case I_UPLOAD_MAP: {
+                    auto pars = get_parameters(3);
+                    int idx = pars.at(0) % Tilemap::MAX_TILEMAPS;
+                    int w = pars.at(1);
+                    int h = pars.at(2);
+                    auto indexes = get_parameters(w * h);
+
+                    // TODO...
+
+                    break;
+                }
+
                 default:
                     debug().warning("fortuna: invalid command '%d'\n", command.at(0));
                     break;
