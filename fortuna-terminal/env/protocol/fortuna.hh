@@ -33,7 +33,7 @@ public:
 private:
     Scene&               scene_;
     std::vector<uint8_t> current_input_;
-    std::vector<int>     fortuna_output_queue_;
+    std::vector<int>     output_;
 
     size_t process_input_vector(std::span<const uint8_t> const &bytes);
     std::pair<uint8_t, uint8_t> checksum(std::vector<uint8_t> const& bytes) const;

@@ -69,6 +69,63 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                     debug().info("fortuna: reset protocol");
                     break;
 
+                case I_RESET_COMPUTER:
+                    control_queue.emplace(ControlCommand::ResetComputer);
+                    debug().info("fortuna: reset computer");
+                    break;
+
+                case I_ENABLE_VSYNC:
+                    control_queue.emplace(ControlCommand::EnableVSYNC, true);
+                    debug().info("fortuna: vsync enabled");
+                    break;
+
+                case I_DISABLE_VSYNC:
+                    control_queue.emplace(ControlCommand::EnableVSYNC, false);
+                    debug().info("fortuna: vsync disabled");
+                    break;
+
+                case I_TERMINAL_VERSION:
+                    output_.push_back(E_VERSION);
+                    output_.push_back(0);
+                    debug().info("fortuna: version requested");
+                    break;
+
+                case I_MOUSE_ENABLE:
+                    control_queue.emplace(ControlCommand::SetMouseActive, true);
+                    debug().info("fortuna: mouse enabled");
+                    break;
+
+                case I_MOUSE_DISABLE:
+                    control_queue.emplace(ControlCommand::SetMouseActive, false);
+                    debug().info("fortuna: mouse inactive");
+                    break;
+
+                case I_MOUSEMOVE_ENABLE:
+                    control_queue.emplace(ControlCommand::SetMouseMoveReport, true);
+                    debug().info("fortuna: mouse move report enabled");
+                    break;
+
+                case I_MOUSEMOVE_DISABLE:
+                    control_queue.emplace(ControlCommand::SetMouseMoveReport, false);
+                    debug().info("fortuna: mouse move report disabled");
+                    break;
+
+                case I_JOYEMU_ENABLE:
+                    control_queue.emplace(ControlCommand::SetJoystickEmulation, true);
+                    debug().info("fortuna: joystick emulation enabled");
+                    break;
+
+                case I_JOYEMU_DISABLE:
+                    control_queue.emplace(ControlCommand::SetJoystickEmulation, false);
+                    debug().info("fortuna: joystick emulation disabled");
+                    break;
+
+                case I_GRAPHICS_DISABLE:
+                    control_queue.emplace(ControlCommand::SetMode, Mode::Text);
+                    debug().info("fortuna: graphics mode disabled");
+                    break;
+
+
                 case I_CHANGE_PALETTE: {
                     auto pars = get_parameters(4);
                     scene_.palette[pars[0]] = { (uint8_t) pars[1], (uint8_t) pars[2], (uint8_t) pars[3] };
@@ -88,9 +145,9 @@ size_t FortunaProtocol::process_input_vector(std::span<const uint8_t> const &byt
                     debug().info("fortuna: image index %d created (transparent color is %d)", pars[0], image.transparent_color);
 
                     auto [v1, v2] = checksum({ pars.begin() + 2, pars.end() });
-                    fortuna_output_queue_.push_back(E_IMAGE_CHECKSUM);
-                    fortuna_output_queue_.push_back(v1);
-                    fortuna_output_queue_.push_back(v2);
+                    output_.push_back(E_IMAGE_CHECKSUM);
+                    output_.push_back(v1);
+                    output_.push_back(v2);
                     break;
                 }
 
@@ -116,8 +173,8 @@ void FortunaProtocol::reset_protocol()
 
 std::vector<uint8_t> FortunaProtocol::output()
 {
-    std::vector<uint8_t> output = to_varint(fortuna_output_queue_);
-    fortuna_output_queue_.clear();
+    std::vector<uint8_t> output = to_varint(output_);
+    output_.clear();
     return output;
 }
 
